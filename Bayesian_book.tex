@@ -1,5 +1,5 @@
 \documentclass[11pt,fullpage]{book}
-\title{\textbf{~~~~~~~~~~~~~~~}\newline Chapter 3 - Likelihoods}
+\title{\textbf{~~~~~~~~~~~~~~~}\newline Bayesian book}
 \author{}
 \usepackage{natbib}
 \usepackage{url,times}
@@ -25,11 +25,20 @@
 \maketitle
 
 \begin{document}
+\tableofcontents
+\chapter{How to best use this book}
+\part{Understanding the Bayesian formula}
+\chapter{The subjective worlds of frequentist and Bayesian statistics}
+
 \chapter{Likelihoods}
 \section{Chapter Mission statement}
 At the end of this chapter a reader will know how to choose an appropriate likelihood model for most situations. Further the reader will understand the basis behind maximum likelihood estimation.
 
-Insert a graphic with the likelihood part of Bayes' formula circled.
+Insert a graphic with the likelihood part of Bayes' formula circled, as in the equation shown below for the part highlighted in blue.
+
+\begin{equation}
+P(\theta|data) = \frac{{\color{blue}P(data|\theta)}\times P(\theta)}{P(data)}
+\end{equation}\label{eq:Likelihood_BayesHighlighted}
 
 \section{Chapter goals}
 The starting point of the right hand side of the Bayesian formula is the likelihood function. This chapter will explain what is meant by a likelihood function, and why it is incorrect to view it as a probability for Bayesians. Further the choice over which likelihood to use for a given situation is often difficult to those unfamiliar with statistics. This chapter will provide practical guidance to likelihood choice, which should allow the student to be confident in their choice of model. As an important stepping stone to Bayesian estimation, this chapter will also explain how classical maximum likelihood estimation works. 
@@ -79,8 +88,8 @@ The reason is that in Bayesian inference, we \textit{don't} keep the parameters 
 \begin{figure}
 \centering
 \scalebox{0.25} 
-{\includegraphics{Likelihood_posterior example.png}}
-\caption{The x-axis here is theta, ranging between 0 and 1, assuming that one he}\label{fig:Likelihood_coinLikelihood}
+{\includegraphics{Likelihood_likelihood.png}}
+\caption{The x-axis here is theta, ranging between 0 and 1, assuming that one head is obtained this graphs the likelihood, which does not sum to 1.}\label{fig:Likelihood_coinLikelihood}
 \end{figure}
 
 Checking off our necessary components of a probability distribution, we first note that all the values of the distribution in figure \ref{fig:Likelihood_coinLikelihood} are non-negative; which is what we require. However, if we look at the area underneath the curve in figure \ref{fig:Likelihood_coinLikelihood}, we find that it does not integrate to 1! Thus we have a violation of the second condition for a valid probability distribution. Hence, when we vary $\theta$ we find that, $P(data|\theta)$ is not a valid probability distribution! We thus introduce the term 'likelihood' to represent value of $P(data|\theta)$ when we vary the parameter, $\theta$. Often the following notation is used to emphasise that likelihood is a function of the parameter $\theta$ with the data held fixed:
@@ -94,9 +103,9 @@ However, in this book, we will persist with the original notation as this is mos
 To provide further justification for this argument, consider the following (albeit contrived) example. Suppose that, we throw a coin twice, and we are told beforehand that the probability of obtaining a head on a particular throw is one of six discrete values: $\theta\in\{0.0,0.2,0.4,0.6,0.8,1.0\}$. In this circumstance, we can calculate the probability of the number of heads, $X$, occurring as:
 
 \begin{align}\label{eq:Likelihood_OneHead}
-P(X = 0|\theta)& = (1-\theta)^2\\
-P(X = 1|\theta)& = 2\theta(1-\theta)\\\label{eq:Likelihood_TwoHead}
-P(X = 2|\theta)& = \theta^2
+P(X = 0|\theta)& = P(TT|\theta) = P(T|\theta)\times P(T|\theta) = (1-\theta)^2\\
+P(X = 1|\theta)& = P(HT|\theta) + P(TH|\theta) = 2\times P(T|\theta)\times P(H|\theta) = 2\theta(1-\theta)\\\label{eq:Likelihood_TwoHead}
+P(X = 2|\theta)& = P(HH|\theta) = P(H|\theta)\times P(H|\theta) = \theta^2
 \end{align}
 
 In (\ref{eq:Likelihood_OneHead}), the probability is simply given by the product of the probabilities of not obtaining a head on the first throw, $(1-\theta)$, by the probability of not obtaining a head in the second\footnote{Since we have assumed a model whereby the results of the first and second throws are independent, conditional on $\theta$. In other words, all the similarity between the two throws is captured in the parameter $\theta$.}, which is also $(1-\theta)$. The factor of two arises in (\ref{eq:Likelihood_TwoHead}) since there are two ways of getting one head: \{HT,TH\}.
@@ -124,17 +133,70 @@ In Bayesian inference, we always vary the parameter, and implicitly hold the dat
     \textbf{Total} & \multicolumn{1}{c}{\textbf{1.20}} & \multicolumn{1}{c}{\textbf{1.60}} & \multicolumn{1}{c}{\textbf{2.20}} &  \\
     
     \end{tabular}%
-  \label{tab:Likeihood_BayesBox}%
-  \caption{The values of likelihood for the case of tossing a coin twice, where the probability of heads is constrained to take on a discrete value: \{0.0,0.2,0.4,0.6,0.8,1.0\}. In each of the rows, the value of $theta$ is held constant, meaning that $P(data|\theta)$ is a proper probability distribution and thus the probabilities sum to 1. However, in the columns, the data - the number of heads thrown - is held constant, and thus the probabilities do not sum to 1, and we thus we are better off viewing these data as likelihoods, since they do not satisfy the properties of a proper probability distribution.}
-\end{table}%
+  %
+  \caption{The values of likelihood for the case of tossing a coin twice, where the probability of heads is constrained to take on a discrete value: \{0.0,0.2,0.4,0.6,0.8,1.0\}. In each of the rows, the value of $theta$ is held constant, meaning that $P(data|\theta)$ is a proper probability distribution and thus the probabilities sum to 1. However, in the columns, the data - the number of heads thrown - is held constant, and thus the probabilities do not sum to 1, and we thus we are better off viewing these data as likelihoods, since they do not satisfy the properties of a proper probability distribution.}\label{tab:Likeihood_BayesBox}
+\end{table}
+
+\section{What are models, and why do we need them?}
+All models are wrong. They are idealised representations of reality resultant from making assumptions, which if reasonable, may emulate some of the behaviour of a system of interest. Joshua Epstein in an article titled, 'Why model?' emphasises that we perennially build \textit{implicit} mental models for various phenomena \cite{epstein2008model}. Before we go to bed at night we set our alarms for the next morning on the basis of a model. We imagine an idealised - model - morning when it takes us 15 minutes to wake up as a result of an alarm. We use this model to predict how long it will take us to rise from bed, shower, and get changed into clothes in sufficient time to get to work. Whenever we go to the Doctor, they use an internalised biological model of the human body to advise on the best course of treatment for a particular ailment. Whenever we hear expert opinions on TV about the outcome of an upcoming election, the pundits are using mental models of society to explain the results of current polls, as well as make forecasts. As is the case with all models, some of these models are better than others. Hopefully, the models a Doctor uses to prescribe medicine are subject to less error than the opinions of pundits seen on TV! 
+
+Epstein goes on to emphasise that the question, 'Why model?' really means why should we build an \textit{explicit} - written down - model of a phenomena? The point being that \textit{implicit} models are by their very nature, opaque, and not subject to the sort of interrogation and calibration that can be obtained by writing the model on paper. 
+
+We can also ask more narrowly, what are we hoping to gain by building an \textit{explicit} model of a situation? Epstein goes on to suggest 16 reasons, other than prediction, to build a model, of which I list a selected few below:
+
+\begin{itemize}
+\item Explain
+\item Guide data collection
+\item Discover new questions
+\item Bound outcomes to plausible ranges
+\item Illuminate uncertainties
+\item Challenge the robustness of prevailing theory through perturbations
+\item Reveal the apparently simple (complex) to be complex (simple) 
+\end{itemize}
+
+There are of course other reasons to build models, but I believe that this list encapsulates the majority of them. However, we should not think of this list as static. Whenever we build a model, whether it is statistical, biological or sociological, we should ask, 'What are we hoping to gain by building this model, and how can I judge its success?'. Only when we have a grasp on the answers to these basic questions should we proceed to model building.
+
+\section{How to choose an appropriate model for likelihood?}
+Bayesians are acutely aware that their models are wrong. At best, they represent an abstraction from reality, and at worst, they can provide very misleading descriptions of a real phenomenon. Before we use a model for prediction, we should always require that a model is capable of \textit{explanation} of the past and present. With this in mind, I propose the following course of action to specifying a statistical model of which likelihood forms a core part.
+
+\begin{enumerate}
+\item Write down the real life behaviour/data patterns that your model should be capable of explaining.
+\item Write down the assumptions that we believe are reasonable in order to arrive at such a model.
+\item Search for an appropriate/similar model in the literature.
+\item Test your model's ability to explain said behaviour/data patterns. If unsuccessful go back to the second step and re-evaluate the appropriateness of your assumptions.
+\end{enumerate}
+
+Whilst this methodology is useful for building a statistical model in general, practically how do we go about specifying a likelihood for a given situation? To answer this we will start with going through a simple example.
+
+\subsection{A likelihood model of disease prevalence}
+Suppose we work for the NHS and we want to build a simple statistical model which is used to explain the prevalence of a certain disease within a sample, which can then be used to make inferences about the population incidence. Also, (unrealistically) let's assume that we start off by assuming that we have a sample of only one person, of which we have no prior information. Let the disease status of that individual be denoted by the variable $X$ which takes on the following binary outcome values dependent on the disease status the individual:
+
+\begin{equation}
+X =
+\begin{cases}
+O & , No\; disease \\
+1 & , Positive \; diagnosis
+\end{cases}
+\end{equation}
+
+The goal of a likelihood model which we specify is to be able to explain the prevalence of the disease in the population, as well as make predictions about disease incidence in new samples of individuals. We might assume that a fraction $\theta$ of the population has the disease, and that this individual has come from that population. For each possible outcome, we can use this simple model to specify the probability of each outcome:
+
+\begin{align}\label{eq:Likelihood_SimpleModel}
+P(X = 0|\theta)& = P(TT|\theta) = P(T|\theta)\times P(T|\theta) = (1-\theta)^2\\
+P(X = 1|\theta)& = P(HT|\theta) + P(TH|\theta) = 2\times P(T|\theta)\times P(H|\theta) = 2\theta(1-\theta)\\
+P(X = 2|\theta)& = P(HH|\theta) = P(H|\theta)\times P(H|\theta) = \theta^2
+\end{align}
 
 
+\subsection{A likelihood model of wage determinants}
 
 
-\section{How to choose an appropriate likelihood}
 \section{The subjectivity of model choice}
 \section{Maximum likelihood - a short introduction}
 \section{Chapter summary}
 
+
+\bibliographystyle{plain}
+\bibliography{Bayes}
 
 \end{document}
