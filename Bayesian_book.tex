@@ -168,7 +168,7 @@ Bayesians are acutely aware that their models are wrong. At best, they represent
 
 Whilst this methodology is useful for building a statistical model in general, practically how do we go about specifying a likelihood for a given situation? To answer this we will start with going through a simple example.
 
-\subsection{A likelihood model of disease prevalence}
+\subsection{A likelihood model for an individual's disease status}\label{sec:Likelihood_individualDisease}
 Suppose we work for the NHS and we want to build a simple statistical model which is used to explain the prevalence of a certain disease within a sample, which can then be used to make inferences about the population incidence. Also, (unrealistically) let's assume that we start off by assuming that we have a sample of only one person, of which we have no prior information. Let the disease status of that individual be denoted by the variable $X$ which takes on the following binary outcome values dependent on the disease status the individual:
 
 \begin{equation}
@@ -179,13 +179,112 @@ O & , No\; disease \\
 \end{cases}
 \end{equation}
 
-The goal of a likelihood model which we specify is to be able to explain the prevalence of the disease in the population, as well as make predictions about disease incidence in new samples of individuals. We might assume that a fraction $\theta$ of the population has the disease, and that this individual has come from that population. For each possible outcome, we can use this simple model to specify the probability of each outcome:
+The goal of a likelihood model which we specify is to be able to explain probabilistically the relative likelihood that an individual has a disease, as well as make predictions about disease incidence in new samples of individuals. We might assume that a fraction $\theta$ of the population has the disease, and that this individual has come from that population. For each possible outcome, we can use this simple model to specify the probability of each outcome:
 
-\begin{align}\label{eq:Likelihood_SimpleModel}
-P(X = 0|\theta)& = P(TT|\theta) = P(T|\theta)\times P(T|\theta) = (1-\theta)^2\\
-P(X = 1|\theta)& = P(HT|\theta) + P(TH|\theta) = 2\times P(T|\theta)\times P(H|\theta) = 2\theta(1-\theta)\\
-P(X = 2|\theta)& = P(HH|\theta) = P(H|\theta)\times P(H|\theta) = \theta^2
+\begin{align}\label{eq:Likelihood_SimpleModel1}
+P(X = 0|\theta)& = (1-\theta)\\
+P(X = 1|\theta)& = \theta\label{eq:Likelihood_SimpleModel2}
 \end{align}
+
+However, we would like to be able to write down a single rule which yields (\ref{eq:Likelihood_SimpleModel1}) or (\ref{eq:Likelihood_SimpleModel2}) respectively, dependent on whether $X=0$ or $X=1$ respectively. It transpires that we can do this via the following rule:
+
+\begin{equation}
+P(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
+\end{equation}\label{eq:Likelihood_bernoulli}
+
+Note that in (\ref{eq:Likelihood_bernoulli}) that $\alpha\in\{0,1\}$ refers to the numeric value taken by the variable $X$. Although this rule for calculating a probability of obtaining a disease status of value $\alpha$ at first looks relatively complex, we see that it reduces to (\ref{eq:Likelihood_SimpleModel1}) and (\ref{eq:Likelihood_SimpleModel2}) if the individual doesn't or does have the disease respectively:
+
+\begin{align}\label{eq:Likelihood_SimpleModel3}
+P(X = 0|\theta)& = \theta^0(1-\theta)^1 = (1-\theta)\\
+P(X = 1|\theta)& = \theta^1(1-\theta)^0 = \theta\label{eq:Likelihood_SimpleModel4}
+\end{align}
+
+Since (\ref{eq:Likelihood_bernoulli}) yields the probability of obtaining any possible value of data, for a given $\theta$, we conclude that this expression is the likelihood. However, we need to be careful, strictly this expression is only a likelihood if we hold the data fixed and vary the parameter $\theta$. Figure \ref{fig:Likelihood_bernoulli} shows that for a fixed value of $theta$ the sum (here we mean the vertical sum) of the two probability densities is always equal to 1. However, when we hold the data fixed, (therefore choosing either the red or green line), we find that the sum of likelihoods across values of $theta$ does not in general equal 1; again demonstrating that when varying parameters that likelihood is not a valid probability density.
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{likelihood_bernoulli.png}}
+\caption{The likelihood function as theta varies for the case of the two possible data. For a fixed value of $\theta$ we find that the sum across the values of the probability is always 1. This is because when viewed in this way, the likelihood is really a discrete probability density across the two values which x can take on. However, when we hold the data fixed (choose either the red or blue line) and sum the likelihood horizontally across the values of $theta$ we do not find that the sum is generally equal to 1. }\label{fig:Likelihood_bernoulli}
+\end{figure}
+
+\subsection{A likelihood model for disease prevalence of a group}
+Now we imagine that instead of this solitary individual, we have a group of $N$ individuals. What we would like to do is to calculate the develop a model which will tell us the probability of obtaining $Z$ disease cases within our sample. We would also like to be able to use our model to predict the most likely number of individuals who have the disease in a sample, for a given value of the parameters\footnote{We are starting off by assuming that we know the parameters. Later in this chapter we will obtain a point estimate of the parameters using \textit{Maximum likelihood} estimation.}. 
+
+In order to write down an idealised model we first of all need to make some assumptions to simplify the situation. We might assume that one individual's disease status tells us nothing about the probability of another individual in the sample having the disease\footnote{Other than, if the disease prevalence were unknown, through our ability to estimate overall disease prevalence from their individual status}. This would not be a reasonable assumption to make if the disease were contagious, and if the individuals in the sample came from the same neighbourhood or household. It also would not be a good assumption if (as is often the case with volunteer-dependent studies) the individuals who volunteered for the experiment, self-selected on the basis of some pre-existing ailment. For example, if the advert that attracted participants reads 'Psychological experiment on sleep disorders: participants wanted'. In this case we might suspect that there would be an over-presence of insomniacs than is found in the population as a whole. In other words one individual's status would convey extra information about the probability that another in the sample has the disease. This first assumption is that which in statistical language we call 'independence'. We also suppose that all individuals in our sample come from the same population - the one we are trying to draw conclusions about. If we knew beforehand that some individuals came from different populations, with significantly different prevalence rates, then we might abandon this assumption. In statistical language, we assume that individuals in our sample are 'identically distributed'.
+
+With our two assumptions in hand, that the individuals in our sample are independent and identically distributed, we can begin to formulate a model for the probability of obtaining $Z$ disease-positive individuals out of a total of $N$ individuals. Since we have assumed that the individuals are independent of one another\footnote{Apart from their individual dependence on the population disease prevalence $\theta$.}, we can treat each person individually and re-use our model that we found in section \ref{sec:Likelihood_individualDisease}. So, for each individual we model the probability of their disease status $X$ for a given value of $theta$ as:
+
+\begin{equation}
+P(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
+\end{equation}\label{eq:Likelihood_bernoulli1}
+
+Note that in (\ref{eq:Likelihood_bernoulli1}) the $\alpha\in\{0,1\}$ refers to a particular numeric value taken by the variable $X$. If we treat the individuals as independent of one another this means that we can get the overall probability by multiplying together the individual probabilities (include reference back to discussion of probabilities). In words, we need the probability that the first person has disease status $X1$ \textit{and} that the second person has status $X2$. When we use the word \textit{and} in probability, this is normally translated into $multiply$ in mathematical language.
+
+\begin{equation}
+\begin{align}
+\left P(X_1=\alpha_1,X_2=\alpha_2|\theta_1,\theta_2) &= P(X_1=\alpha_1|\theta_1)\;\times \;P(X_2=\alpha_2|\theta_2)\\
+ &= \theta_1^{\alpha_1}(1-\theta_1)^{1-\alpha_1}\times \theta_2^{\alpha_2}(1-\theta_2)^{1-\alpha_2}
+\end{align}
+\end{equation}\label{eq:Likelihood_bernoulli2}
+
+In (\ref{eq:Likelihood_bernoulli2}) we have assumed that each individual has a different predisposition to having the disease, denoted by $\theta_1$ and $\theta_2$ respectively.
+
+Now we use our second assumption - that of identically distributed individuals - to simplify the above expression by assuming that all individuals have the same pre-experimental disposition to the disease $\theta$:
+
+\begin{equation}
+\begin{align}
+\left P(X_1=\alpha_1,X_2=\alpha_2|\theta) &= P(X_1=\alpha_1|\theta)\;\times \;P(X_2=\alpha_2|\theta)\\
+ &= \theta^{\alpha_1}(1-\theta)^{1-\alpha_1}\times \theta^{\alpha_2}(1-\theta)^{1-\alpha_2}\\
+ &= \theta^{\alpha_1+\alpha_2}(1-\theta)^{2-\alpha_1-\alpha_2}
+\end{align}
+\end{equation}\label{eq:Likelihood_bernoulli3}
+
+In (\ref{eq:Likelihood_bernoulli3}) we have obtained the third line merely by using the simple exponent rule: $a^b\times a^c = a^{b+c}$, for the two components $\theta$ and $(1-\theta)$ respectively.
+
+For our sample of 2 we are now in a position to calculate the probability that we obtain $Z$ cases of the disease. We first realise that we can get from $X1$ and $X2$ to $Z$ by:
+
+\begin{equation}
+Z = X_1 + X_2
+\end{equation}\label{eq:Likelihood_binomialTwo}
+
+We can then use (\ref{eq:Likelihood_bernoulli3}) to generate the respective probabilities.
+
+\begin{equation}
+\begin{align}
+P(Z = 0|\theta)& = P(X_1=0,X_2=0|\theta) = \theta^{0+0}(1-\theta)^{2-0-0} = (1-\theta)^2\\
+P(Z = 1|\theta)& = P(X_1=1,X_2=0|\theta) + P(X_1=0,X_2=1|\theta)= 2\theta(1-\theta)\\
+P(Z = 2|\theta)& = P(X_1=1,X_2=1|\theta) = \theta^{1+1}(1-\theta)^{2-1-1} = \theta^2
+\end{align}
+\end{equation}\label{eq:Likelihood_binomialTwoProbs}
+
+In order to complete our probability model we need to try to write out a single rule for calculating the probability of any value taken on by $Z$. To do this we note that we could rewrite (\ref{eq:Likelihood_binomialTwoProbs}) as:
+
+\begin{equation}
+\begin{align}
+P(Z = 0|\theta)& = \;\theta^0(1-\theta)^2\\
+P(Z = 1|\theta)& = 2\theta^1(1-\theta)^1\\
+P(Z = 2|\theta)& = \;\theta^2(1-\theta)^0
+\end{align}
+\end{equation}\label{eq:Likelihood_binomialTwoProbsSimple}
+
+In (\ref{eq:Likelihood_binomialTwoProbsSimple}) we notice the common term $\theta^\beta(1-\theta)^{2-\beta}$ in each of the expressions, where $\beta\in\{0,1,2}\}$ represents the number of disease cases found. Therefore this suggests that we may be able to write down a single rule as something similar to:
+
+\begin{equation}
+P(Z = \beta|\theta) \sim \theta^\beta(1-\theta)^{2-\beta}
+\end{equation}\label{eq:Likelihood_binomialNearly}
+
+The only problem with matching (\ref{eq:Likelihood_binomialNearly}) with the previously obtained result is the factor of 2 on the middle line of (\ref{eq:Likelihood_binomialTwoProbsSimple}). However, we can get round this by taking an aside to note that when we expand a quadratic factor we get the following:
+
+\begin{equation}
+(a+b)^2 = a^2 + 2ab + b^2 = a^2 + 2a^1b + a^0b^2
+\end{equation}\label{eq:Likelihood_quadratic}
+
+The numbers $\{1,2,1\}$ correspond here to the non-b-dependent coefficients of $\{a^2,a^1,a^0\}$ respectively. This sequence of numbers normally appears in early secondary school maths classes, and is either known as the binomial expansion coefficients or simply nCr. The expansion coefficients are normally written in compact form:
+
+\begin{equation}
+{2 \choose \beta} = 
+\end{equation}\label{eq:Likelihood_nCr}
 
 
 \subsection{A likelihood model of wage determinants}
