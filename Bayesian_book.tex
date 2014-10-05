@@ -156,7 +156,7 @@ We can also ask more narrowly, what are we hoping to gain by building an \textit
 
 There are of course other reasons to build models, but I believe that this list encapsulates the majority of them. However, we should not think of this list as static. Whenever we build a model, whether it is statistical, biological or sociological, we should ask, 'What are we hoping to gain by building this model, and how can I judge its success?'. Only when we have a grasp on the answers to these basic questions should we proceed to model building.
 
-\section{How to choose an appropriate model for likelihood?}
+\section{How to choose an appropriate model for likelihood?}\label{sec:chooseLikelihood}
 Bayesians are acutely aware that their models are wrong. At best, they represent an abstraction from reality, and at worst, they can provide very misleading descriptions of a real phenomenon. Before we use a model for prediction, we should always require that a model is capable of \textit{explanation} of the past and present. With this in mind, I propose the following course of action to specifying a statistical model of which likelihood forms a core part.
 
 \begin{enumerate}
@@ -166,7 +166,7 @@ Bayesians are acutely aware that their models are wrong. At best, they represent
 \item Test your model's ability to explain said behaviour/data patterns. If unsuccessful go back to the second step and re-evaluate the appropriateness of your assumptions.
 \end{enumerate}
 
-Whilst this methodology is useful for building a statistical model in general, practically how do we go about specifying a likelihood for a given situation? To answer this we will start with going through a simple example.
+Whilst this methodology is useful for building a statistical model in general, it is more applicable for use with a full Bayesian model, resulting in a posterior distribution. In which case how do we go about specifying a likelihood for a given situation? To answer this we will start with going through a simple example.
 
 \subsection{A likelihood model for an individual's disease status}\label{sec:Likelihood_individualDisease}
 Suppose we work for the NHS and we want to build a simple statistical model which is used to explain the prevalence of a certain disease within a sample, which can then be used to make inferences about the population incidence. Also, (unrealistically) let's assume that we start off by assuming that we have a sample of only one person, of which we have no prior information. Let the disease status of that individual be denoted by the variable $X$ which takes on the following binary outcome values dependent on the disease status the individual:
@@ -192,7 +192,9 @@ However, we would like to be able to write down a single rule which yields (\ref
 P(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
 \end{equation}\label{eq:Likelihood_bernoulli}
 
-Note that in (\ref{eq:Likelihood_bernoulli}) that $\alpha\in\{0,1\}$ refers to the numeric value taken by the variable $X$. Although this rule for calculating a probability of obtaining a disease status of value $\alpha$ at first looks relatively complex, we see that it reduces to (\ref{eq:Likelihood_SimpleModel1}) and (\ref{eq:Likelihood_SimpleModel2}) if the individual doesn't or does have the disease respectively:
+Note that in (\ref{eq:Likelihood_bernoulli}) that $\alpha\in\{0,1\}$ refers to the numeric value taken by the variable $X$. The function given in (\ref{eq:Likelihood_bernoulli}) is known as a Bernoulli probability density.
+
+Although this rule for calculating a probability of obtaining a disease status of value $\alpha$ at first looks relatively complex, we see that it reduces to (\ref{eq:Likelihood_SimpleModel1}) and (\ref{eq:Likelihood_SimpleModel2}) if the individual doesn't or does have the disease respectively:
 
 \begin{align}\label{eq:Likelihood_SimpleModel3}
 P(X = 0|\theta)& = \theta^0(1-\theta)^1 = (1-\theta)\\
@@ -225,8 +227,8 @@ Note that in (\ref{eq:Likelihood_bernoulli1}) the $\alpha\in\{0,1\}$ refers to a
 \begin{align}
 \left P(X_1=\alpha_1,X_2=\alpha_2|\theta_1,\theta_2) &= P(X_1=\alpha_1|\theta_1)\;\times \;P(X_2=\alpha_2|\theta_2)\\
  &= \theta_1^{\alpha_1}(1-\theta_1)^{1-\alpha_1}\times \theta_2^{\alpha_2}(1-\theta_2)^{1-\alpha_2}
-\end{align}
-\end{equation}\label{eq:Likelihood_bernoulli2}
+\end{align}\label{eq:Likelihood_bernoulli2}
+\end{equation}
 
 In (\ref{eq:Likelihood_bernoulli2}) we have assumed that each individual has a different predisposition to having the disease, denoted by $\theta_1$ and $\theta_2$ respectively.
 
@@ -237,8 +239,8 @@ Now we use our second assumption - that of identically distributed individuals -
 \left P(X_1=\alpha_1,X_2=\alpha_2|\theta) &= P(X_1=\alpha_1|\theta)\;\times \;P(X_2=\alpha_2|\theta)\\
  &= \theta^{\alpha_1}(1-\theta)^{1-\alpha_1}\times \theta^{\alpha_2}(1-\theta)^{1-\alpha_2}\\
  &= \theta^{\alpha_1+\alpha_2}(1-\theta)^{2-\alpha_1-\alpha_2}
-\end{align}
-\end{equation}\label{eq:Likelihood_bernoulli3}
+\end{align}\label{eq:Likelihood_bernoulli3}
+\end{equation}
 
 In (\ref{eq:Likelihood_bernoulli3}) we have obtained the third line merely by using the simple exponent rule: $a^b\times a^c = a^{b+c}$, for the two components $\theta$ and $(1-\theta)$ respectively.
 
@@ -283,15 +285,92 @@ The only problem with matching (\ref{eq:Likelihood_binomialNearly}) with the pre
 The numbers $\{1,2,1\}$ correspond here to the non-b-dependent coefficients of $\{a^2,a^1,a^0\}$ respectively. This sequence of numbers normally appears in early secondary school maths classes, and is either known as the binomial expansion coefficients or simply nCr. The expansion coefficients are normally written in compact form:
 
 \begin{equation}
-{2 \choose \beta} = 
+{2 \choose \beta} = \frac{2!}{(2-\beta)!\beta!}
 \end{equation}\label{eq:Likelihood_nCr}
 
+In (\ref{eq:Likelihood_nCr}) the $!$ has its usual meaning of factorial. We can therefore use this notation to help us to write down a single model for the probability of obtaining $Z$ disease cases out of a total of 2 individuals using our model:
 
-\subsection{A likelihood model of wage determinants}
+\begin{equation}
+P(Z=\beta|\theta) = {2 \choose \beta} \theta^\beta (1-\theta)^{2-\beta}
+\end{equation}\label{eq:Likelihood_binomialTwoFull}
 
+This likelihood function is illustrated for the three possible numbers of disease cases found in our sample of 2 individuals, in figure \ref{fig:Likelihood_binomial}.
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{likelihood_binomial.png}}
+\caption{The likelihood function as theta varies for the case of the two possible data. For a fixed value of $\theta$ we find that the sum across the values of the probability is always 1. This is because when viewed in this way, the likelihood is really a discrete probability density across the two values which x can take on. However, when we hold the data fixed (choose either the red or blue line) and sum area under the likelihood curve across the values of $theta$ we do not find that the sum is generally equal to 1. }\label{fig:Likelihood_binomial}
+\end{figure}
+
+We will now extend the analysis to cover the case when we have a group of $N$ individuals. Firstly, consider the case when we have a group size of 3. If we assume that the individuals are identically distributed, then the 4 probabilities are of the form:
+
+\begin{equation}
+\begin{align}
+P(Z = 0|\theta)& = P(X_1=0,X_2=0,X_3=0|\theta)\\
+P(Z = 1|\theta)& = P(X_1=1,X_2=0,X_3=0|\theta)+P(X_1=0,X_2=1,X_3=0|\theta)\\
+&  + P(X_1=0,X_2=0,X_3=1|\theta)\\
+P(Z = 2|\theta)& = P(X_1=1,X_2=1,X_3=0|\theta) + P(X_1=1,X_2=0,X_3=1|\theta)\\
+& + P(X_1=0,X_2=1,X_3=1|\theta)\\
+P(Z = 3|\theta)& = P(X_1=1,X_2=1,X_3=1|\theta)
+\end{align}
+\end{equation}\label{eq:Likelihood_binomialThreeProbsSimple}
+
+If we continue to assume independence then we can simplify the probabilities to:
+
+\begin{equation}
+\begin{align}
+P(Z = 0|\theta)& = \;P(X_1=0|\theta) P(X_2=0|\theta)  P(X_3=0|\theta)\\
+P(Z = 1|\theta)& = 3P(X_1=1|\theta) P(X_2=0|\theta)  P(X_3=0|\theta)\\
+P(Z = 2|\theta)& = 3P(X_1=1|\theta) P(X_2=1|\theta)  P(X_3=0|\theta)\\
+P(Z = 3|\theta)& = \;P(X_1=1|\theta)P(X_2=1|\theta) P(X_3=1|\theta)
+\end{align}
+\end{equation}\label{eq:Likelihood_binomialThreeProbsSimpler}
+
+Again, we notice a numeric pattern in terms of the first part of each expression $\{1,3,3,1\}$, which happens to correspond exactly to the coefficients on terms for the expansion of $(1+x)^3$. Hence, we can again rewrite the likelihood using the binomial expansion notation:
+
+\begin{equation}
+P(Z=\beta|\theta) = {3 \choose \beta} \theta^\beta (1-\theta)^{3-\beta}
+\end{equation}\label{eq:Likelihood_binomialThreeFull}
+
+We recognise a pattern in the likelihoods of (\ref{eq:Likelihood_binomialTwoFull}) and (\ref{eq:Likelihood_binomialThreeFull}) which allows us to deduce that, for a sample size of N, that the model likelihood is given by:
+
+\begin{equation}
+P(Z=\beta|\theta) = {N \choose \beta} \theta^\beta (1-\theta)^{N-\beta}
+\end{equation}\label{eq:Likelihood_binomialNFull}
+
+The likelihood function given in (\ref{eq:Likelihood_binomialNFull}) is known as the binomial probability distribution.
+
+If we had data, then we could test whether the assumptions which we have made are appropriate by calculating the model-implied-probability of this outcome. For example, if we had a sample of 100 people of which 10 had the disease, and we assumed beforehand that the proportion of the population who have the disease is $\theta=1\%$, then we could calculate the probability that we would have achieved a number of cases as bad, or worse than this using the likelihood in \ref{eq:Likelihood_binomialNFull}:
+
+\begin{equation}
+P(Z\geq 10|\theta=0.01) = \sum\limits_{Z=10}^{100}{100 \choose Z} 0.01^Z (1-0.01)^{100-Z} = 7.63 \times 10^{-8}
+\end{equation}\label{eq:Likelihood_binomialTest}
+
+We have summed over all the disease cases from 10 to 100 here, because we wanted to work out the probability that we would have obtained a result as bad, or worse, than the one which we actually achieved. This is a particular way of carrying out a classical hypothesis test, which we will dispense with later on, but for now it seems a reasonable way of testing our model. 
+
+The probability which we found in this case was extremely small. What does this tell us? Well, it basically says that there is something wrong with our model which we have chosen here. It could be that the actual disease incidence in the population is much higher than the 1\% which we have assumed beforehand. It could also be that our assumption \textit{independence} is violated in this case, for example if we sampled whole households rather than individuals. This could mean that in a particular household, the chance of having the disease, if another member of your family has the disease is substantially higher than that given by the population as a whole. 
+
+It is difficult to gauge what in particular is wrong with our model without knowing further details of data collection as well as how the estimate of 1\% incidence was estimated for the population. However, it does suggest that we need to do adjust one or more of our assumptions, and reformulate the model to take these into account. We should never simply accept that our model is \textit{correct}. A model is only as good as its capability to reproduce the data which we see in real life. In this case we find it is not a good representation, and we should readjust appropriately.
+
+\subsection{The intelligence of a group of people}
+Here we are tasked with formulating a model for an intelligence test score for a group of individuals for which we have data. We are told that the test score is on a continuous scale from 0-200. We do not have any information on individual characteristics which might help us to predict scores, although we are going to, for this simplified example, assume that we do know the mean test score $\mu$, and its variance $\sigma^2$ in the population (although we will relax this assumption in section \ref{sec:Likelihood_MLE}). We might assume that there are a range of factors which overall result in an individual's performance on this test. For example, these might include their schooling, parental education, 'innate' ability, as well as how tired they were feeling on the day of the test. If we assume that there are a large range of such factors and the score which results is an average of all these, then we might assume that the Central Limit Theorem might be appropriate for determining the distribution of test scores. Don't worry if you are not aware of this theorem, we will cover it in due course, but basically it says, if there are a large number of factors\footnote{Technically a infinite number of factors which additively result in the overall score.} which average out to result in an intelligence score, then the normal distribution provides a reasonable approximation to the distribution of test scores. In which case, we might assume that a normal distribution might be reasonable to assume for our likelihood function for an individual's test score, $X$:\\
+
+\begin{equation}
+P(X=\alpha|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(\alpha-\mu)^2}{2\sigma^2}}
+\end{equation}\label{eq:Likelihood_normal}
+
+If we also assume that information regarding one individual's test score tells us nothing about another's\footnote{Apart from their joint reliance on $\mu$ and $\sigma^2$.}, then we might assume \textit{independence} for our data. We might also assume that all individuals come from the same  These two assumptions - independence and identical distribution - are equivalent to saying that the individually were randomly sampled from the population. 
+\subsection{Summing up - specifying a likelihood}
+It is hoped that the analysis in the preceding sections has given us a taste of how we can go about specifying a likelihood for a hitherto unknown circumstance. 
+
+\section{Maximum likelihood - a short introduction}\label{sec:Likelihood_MLE}
+The analysis in section \ref{sec:chooseLikelihood} assumes that we know beforehand the fraction, $\theta$, the populous that are predisposed to having the disease. In reality we rarely know such a thing. Often the main focus of building a statistical model is to try to estimate such parameters from our sample of data to which we have access. A popular frequentist method for achieving this goal is the estimation strategy known as Maximum Likelihood. In this section we will look at how this estimation strategy can yield estimates of parameters, and we will also go on to look at how these estimates can be used to make inferences about what is going on in the population as a whole.
+
+The principal used in Maximum Likelihood estimation is simple. Firstly, we assume a model which we use to approximate the data generating process which resulted in our sample; this we have spoken about at length in 
 
 \section{The subjectivity of model choice}
-\section{Maximum likelihood - a short introduction}
+
 \section{Chapter summary}
 
 
