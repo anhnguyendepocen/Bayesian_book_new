@@ -188,9 +188,9 @@ P(X = 1|\theta)& = \theta\label{eq:Likelihood_SimpleModel2}
 
 However, we would like to be able to write down a single rule which yields (\ref{eq:Likelihood_SimpleModel1}) or (\ref{eq:Likelihood_SimpleModel2}) respectively, dependent on whether $X=0$ or $X=1$ respectively. It transpires that we can do this via the following rule:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_bernoulli}
 P(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
-\end{equation}\label{eq:Likelihood_bernoulli}
+\end{equation}
 
 Note that in (\ref{eq:Likelihood_bernoulli}) that $\alpha\in\{0,1\}$ refers to the numeric value taken by the variable $X$. The function given in (\ref{eq:Likelihood_bernoulli}) is known as a Bernoulli probability density.
 
@@ -210,89 +210,89 @@ Since (\ref{eq:Likelihood_bernoulli}) yields the probability of obtaining any po
 \caption{The likelihood function as theta varies for the case of the two possible data. For a fixed value of $\theta$ we find that the sum across the values of the probability is always 1. This is because when viewed in this way, the likelihood is really a discrete probability density across the two values which x can take on. However, when we hold the data fixed (choose either the red or blue line) and sum the likelihood horizontally across the values of $theta$ we do not find that the sum is generally equal to 1. }\label{fig:Likelihood_bernoulli}
 \end{figure}
 
-\subsection{A likelihood model for disease prevalence of a group}
+\subsection{A likelihood model for disease prevalence of a group}\label{sec:Likelihood_diseaseGroup}
 Now we imagine that instead of this solitary individual, we have a group of $N$ individuals. What we would like to do is to calculate the develop a model which will tell us the probability of obtaining $Z$ disease cases within our sample. We would also like to be able to use our model to predict the most likely number of individuals who have the disease in a sample, for a given value of the parameters\footnote{We are starting off by assuming that we know the parameters. Later in this chapter we will obtain a point estimate of the parameters using \textit{Maximum likelihood} estimation.}. 
 
 In order to write down an idealised model we first of all need to make some assumptions to simplify the situation. We might assume that one individual's disease status tells us nothing about the probability of another individual in the sample having the disease\footnote{Other than, if the disease prevalence were unknown, through our ability to estimate overall disease prevalence from their individual status}. This would not be a reasonable assumption to make if the disease were contagious, and if the individuals in the sample came from the same neighbourhood or household. It also would not be a good assumption if (as is often the case with volunteer-dependent studies) the individuals who volunteered for the experiment, self-selected on the basis of some pre-existing ailment. For example, if the advert that attracted participants reads 'Psychological experiment on sleep disorders: participants wanted'. In this case we might suspect that there would be an over-presence of insomniacs than is found in the population as a whole. In other words one individual's status would convey extra information about the probability that another in the sample has the disease. This first assumption is that which in statistical language we call 'independence'. We also suppose that all individuals in our sample come from the same population - the one we are trying to draw conclusions about. If we knew beforehand that some individuals came from different populations, with significantly different prevalence rates, then we might abandon this assumption. In statistical language, we assume that individuals in our sample are 'identically distributed'.
 
 With our two assumptions in hand, that the individuals in our sample are independent and identically distributed, we can begin to formulate a model for the probability of obtaining $Z$ disease-positive individuals out of a total of $N$ individuals. Since we have assumed that the individuals are independent of one another\footnote{Apart from their individual dependence on the population disease prevalence $\theta$.}, we can treat each person individually and re-use our model that we found in section \ref{sec:Likelihood_individualDisease}. So, for each individual we model the probability of their disease status $X$ for a given value of $theta$ as:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_bernoulli1}
 P(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
-\end{equation}\label{eq:Likelihood_bernoulli1}
+\end{equation}
 
 Note that in (\ref{eq:Likelihood_bernoulli1}) the $\alpha\in\{0,1\}$ refers to a particular numeric value taken by the variable $X$. If we treat the individuals as independent of one another this means that we can get the overall probability by multiplying together the individual probabilities (include reference back to discussion of probabilities). In words, we need the probability that the first person has disease status $X1$ \textit{and} that the second person has status $X2$. When we use the word \textit{and} in probability, this is normally translated into $multiply$ in mathematical language.
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_bernoulli2}
 \begin{align}
 \left P(X_1=\alpha_1,X_2=\alpha_2|\theta_1,\theta_2) &= P(X_1=\alpha_1|\theta_1)\;\times \;P(X_2=\alpha_2|\theta_2)\\
  &= \theta_1^{\alpha_1}(1-\theta_1)^{1-\alpha_1}\times \theta_2^{\alpha_2}(1-\theta_2)^{1-\alpha_2}
-\end{align}\label{eq:Likelihood_bernoulli2}
+\end{align}
 \end{equation}
 
 In (\ref{eq:Likelihood_bernoulli2}) we have assumed that each individual has a different predisposition to having the disease, denoted by $\theta_1$ and $\theta_2$ respectively.
 
 Now we use our second assumption - that of identically distributed individuals - to simplify the above expression by assuming that all individuals have the same pre-experimental disposition to the disease $\theta$:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_bernoulli3}
 \begin{align}
 \left P(X_1=\alpha_1,X_2=\alpha_2|\theta) &= P(X_1=\alpha_1|\theta)\;\times \;P(X_2=\alpha_2|\theta)\\
  &= \theta^{\alpha_1}(1-\theta)^{1-\alpha_1}\times \theta^{\alpha_2}(1-\theta)^{1-\alpha_2}\\
  &= \theta^{\alpha_1+\alpha_2}(1-\theta)^{2-\alpha_1-\alpha_2}
-\end{align}\label{eq:Likelihood_bernoulli3}
+\end{align}
 \end{equation}
 
 In (\ref{eq:Likelihood_bernoulli3}) we have obtained the third line merely by using the simple exponent rule: $a^b\times a^c = a^{b+c}$, for the two components $\theta$ and $(1-\theta)$ respectively.
 
 For our sample of 2 we are now in a position to calculate the probability that we obtain $Z$ cases of the disease. We first realise that we can get from $X1$ and $X2$ to $Z$ by:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_binomialTwo}
 Z = X_1 + X_2
-\end{equation}\label{eq:Likelihood_binomialTwo}
+\end{equation}
 
 We can then use (\ref{eq:Likelihood_bernoulli3}) to generate the respective probabilities.
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_binomialTwoProbs}
 \begin{align}
 P(Z = 0|\theta)& = P(X_1=0,X_2=0|\theta) = \theta^{0+0}(1-\theta)^{2-0-0} = (1-\theta)^2\\
 P(Z = 1|\theta)& = P(X_1=1,X_2=0|\theta) + P(X_1=0,X_2=1|\theta)= 2\theta(1-\theta)\\
 P(Z = 2|\theta)& = P(X_1=1,X_2=1|\theta) = \theta^{1+1}(1-\theta)^{2-1-1} = \theta^2
 \end{align}
-\end{equation}\label{eq:Likelihood_binomialTwoProbs}
+\end{equation}
 
 In order to complete our probability model we need to try to write out a single rule for calculating the probability of any value taken on by $Z$. To do this we note that we could rewrite (\ref{eq:Likelihood_binomialTwoProbs}) as:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_binomialTwoProbsSimple}
 \begin{align}
 P(Z = 0|\theta)& = \;\theta^0(1-\theta)^2\\
 P(Z = 1|\theta)& = 2\theta^1(1-\theta)^1\\
 P(Z = 2|\theta)& = \;\theta^2(1-\theta)^0
 \end{align}
-\end{equation}\label{eq:Likelihood_binomialTwoProbsSimple}
+\end{equation}
 
 In (\ref{eq:Likelihood_binomialTwoProbsSimple}) we notice the common term $\theta^\beta(1-\theta)^{2-\beta}$ in each of the expressions, where $\beta\in\{0,1,2}\}$ represents the number of disease cases found. Therefore this suggests that we may be able to write down a single rule as something similar to:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_binomialNearly}
 P(Z = \beta|\theta) \sim \theta^\beta(1-\theta)^{2-\beta}
-\end{equation}\label{eq:Likelihood_binomialNearly}
+\end{equation}
 
 The only problem with matching (\ref{eq:Likelihood_binomialNearly}) with the previously obtained result is the factor of 2 on the middle line of (\ref{eq:Likelihood_binomialTwoProbsSimple}). However, we can get round this by taking an aside to note that when we expand a quadratic factor we get the following:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_quadratic}
 (a+b)^2 = a^2 + 2ab + b^2 = a^2 + 2a^1b + a^0b^2
-\end{equation}\label{eq:Likelihood_quadratic}
+\end{equation}
 
 The numbers $\{1,2,1\}$ correspond here to the non-b-dependent coefficients of $\{a^2,a^1,a^0\}$ respectively. This sequence of numbers normally appears in early secondary school maths classes, and is either known as the binomial expansion coefficients or simply nCr. The expansion coefficients are normally written in compact form:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_nCr}
 {2 \choose \beta} = \frac{2!}{(2-\beta)!\beta!}
-\end{equation}\label{eq:Likelihood_nCr}
+\end{equation}
 
 In (\ref{eq:Likelihood_nCr}) the $!$ has its usual meaning of factorial. We can therefore use this notation to help us to write down a single model for the probability of obtaining $Z$ disease cases out of a total of 2 individuals using our model:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_binomialTwoFull}
 P(Z=\beta|\theta) = {2 \choose \beta} \theta^\beta (1-\theta)^{2-\beta}
-\end{equation}\label{eq:Likelihood_binomialTwoFull}
+\end{equation}
 
 This likelihood function is illustrated for the three possible numbers of disease cases found in our sample of 2 individuals, in figure \ref{fig:Likelihood_binomial}.
 
@@ -305,7 +305,7 @@ This likelihood function is illustrated for the three possible numbers of diseas
 
 We will now extend the analysis to cover the case when we have a group of $N$ individuals. Firstly, consider the case when we have a group size of 3. If we assume that the individuals are identically distributed, then the 4 probabilities are of the form:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_binomialThreeProbsSimple}
 \begin{align}
 P(Z = 0|\theta)& = P(X_1=0,X_2=0,X_3=0|\theta)\\
 P(Z = 1|\theta)& = P(X_1=1,X_2=0,X_3=0|\theta)+P(X_1=0,X_2=1,X_3=0|\theta)\\
@@ -314,30 +314,30 @@ P(Z = 2|\theta)& = P(X_1=1,X_2=1,X_3=0|\theta) + P(X_1=1,X_2=0,X_3=1|\theta)\\
 & + P(X_1=0,X_2=1,X_3=1|\theta)\\
 P(Z = 3|\theta)& = P(X_1=1,X_2=1,X_3=1|\theta)
 \end{align}
-\end{equation}\label{eq:Likelihood_binomialThreeProbsSimple}
+\end{equation}
 
 If we continue to assume independence then we can simplify the probabilities to:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_binomialThreeProbsSimpler}
 \begin{align}
 P(Z = 0|\theta)& = \;P(X_1=0|\theta) P(X_2=0|\theta)  P(X_3=0|\theta)\\
 P(Z = 1|\theta)& = 3P(X_1=1|\theta) P(X_2=0|\theta)  P(X_3=0|\theta)\\
 P(Z = 2|\theta)& = 3P(X_1=1|\theta) P(X_2=1|\theta)  P(X_3=0|\theta)\\
 P(Z = 3|\theta)& = \;P(X_1=1|\theta)P(X_2=1|\theta) P(X_3=1|\theta)
 \end{align}
-\end{equation}\label{eq:Likelihood_binomialThreeProbsSimpler}
+\end{equation}
 
 Again, we notice a numeric pattern in terms of the first part of each expression $\{1,3,3,1\}$, which happens to correspond exactly to the coefficients on terms for the expansion of $(1+x)^3$. Hence, we can again rewrite the likelihood using the binomial expansion notation:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_binomialThreeFull}
 P(Z=\beta|\theta) = {3 \choose \beta} \theta^\beta (1-\theta)^{3-\beta}
-\end{equation}\label{eq:Likelihood_binomialThreeFull}
+\end{equation}
 
 We recognise a pattern in the likelihoods of (\ref{eq:Likelihood_binomialTwoFull}) and (\ref{eq:Likelihood_binomialThreeFull}) which allows us to deduce that, for a sample size of N, that the model likelihood is given by:
 
-\begin{equation}
+\begin{equation}\label{eq:Likelihood_binomialNFull}
 P(Z=\beta|\theta) = {N \choose \beta} \theta^\beta (1-\theta)^{N-\beta}
-\end{equation}\label{eq:Likelihood_binomialNFull}
+\end{equation}
 
 The likelihood function given in (\ref{eq:Likelihood_binomialNFull}) is known as the binomial probability distribution.
 
@@ -353,23 +353,137 @@ The probability which we found in this case was extremely small. What does this 
 
 It is difficult to gauge what in particular is wrong with our model without knowing further details of data collection as well as how the estimate of 1\% incidence was estimated for the population. However, it does suggest that we need to do adjust one or more of our assumptions, and reformulate the model to take these into account. We should never simply accept that our model is \textit{correct}. A model is only as good as its capability to reproduce the data which we see in real life. In this case we find it is not a good representation, and we should readjust appropriately.
 
-\subsection{The intelligence of a group of people}
-Here we are tasked with formulating a model for an intelligence test score for a group of individuals for which we have data. We are told that the test score is on a continuous scale from 0-200. We do not have any information on individual characteristics which might help us to predict scores, although we are going to, for this simplified example, assume that we do know the mean test score $\mu$, and its variance $\sigma^2$ in the population (although we will relax this assumption in section \ref{sec:Likelihood_MLE}). We might assume that there are a range of factors which overall result in an individual's performance on this test. For example, these might include their schooling, parental education, 'innate' ability, as well as how tired they were feeling on the day of the test. If we assume that there are a large range of such factors and the score which results is an average of all these, then we might assume that the Central Limit Theorem might be appropriate for determining the distribution of test scores. Don't worry if you are not aware of this theorem, we will cover it in due course, but basically it says, if there are a large number of factors\footnote{Technically a infinite number of factors which additively result in the overall score.} which average out to result in an intelligence score, then the normal distribution provides a reasonable approximation to the distribution of test scores. In which case, we might assume that a normal distribution might be reasonable to assume for our likelihood function for an individual's test score, $X$:\\
+\subsection{The intelligence of a group of people}\label{sec:Likelihood_normal}
+Here we are tasked with formulating a model for an intelligence test score for a group of individuals for which we have data. We are told that the test score is on a continuous scale from 0-200. We do not have any information on individual characteristics which might help us to predict scores, although we are going to, for this simplified example, assume that we do know the mean test score $\mu=70$, and its variance $\sigma^2=10$ in the population (although we will relax this assumption in section \ref{sec:Likelihood_MLE}). We might assume that there are a range of factors which overall result in an individual's performance on this test. For example, these might include their schooling, parental education, 'innate' ability, as well as how tired they were feeling on the day of the test. If we assume that there are a large range of such factors and the score which results is an average of all these, then we might assume that the Central Limit Theorem might be appropriate for determining the distribution of test scores. Don't worry if you are not aware of this theorem, we will cover it in due course, but basically it says, if there are a large number of factors\footnote{Technically a infinite number of factors which additively result in the overall score.} which average out to result in an intelligence score, then the normal distribution provides a reasonable approximation to the distribution of test scores. In which case, we might assume that a normal distribution might be reasonable to assume for our likelihood function for an individual's test score, $X$:\\
 
 \begin{equation}
-P(X=\alpha|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(\alpha-\mu)^2}{2\sigma^2}}
+P(X=\alpha|\mu,\sigma^2) &= \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(\alpha-\mu)^2}{2\sigma^2}}
 \end{equation}\label{eq:Likelihood_normal}
 
-If we also assume that information regarding one individual's test score tells us nothing about another's\footnote{Apart from their joint reliance on $\mu$ and $\sigma^2$.}, then we might assume \textit{independence} for our data. We might also assume that all individuals come from the same  These two assumptions - independence and identical distribution - are equivalent to saying that the individually were randomly sampled from the population. 
-\subsection{Summing up - specifying a likelihood}
-It is hoped that the analysis in the preceding sections has given us a taste of how we can go about specifying a likelihood for a hitherto unknown circumstance. 
+
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{likelihood_normal.png}}
+\caption{A figure with LHS showing a normal distribution with the area to the right of 140 indicated by shading. The RHS shows a normal CDF with the value of 140 indicated.}\label{fig:Likelihood_normal}
+\end{figure}
+
+If we obtain an individual within our sample who has achieved a test score of 140, we can ask what is the probability of achieving a result as extreme as this, using our idealised model, by simply integrating the probability density (this is the continuous analogue to the discrete summing that we did in (\ref{eq:Likelihood_binomialTest})):
+
+\begin{equation}
+\begin{align}
+P(X\geq 140|\mu=70,\sigma^2=10) &= \int\limits_{140}^{\infty}\frac{1}{\sqrt{2\pi\times 10}}e^{-\frac{(\alpha-70)^2}{2\times 10}} \mathrm{d}\alpha\\
+ & = 1-\Phi\left(\frac{140-70}{\sqrt{10}}\right) \approx 0
+\end{align}\label{eq:Likelihood_normalSampleOne}
+\end{equation}
+
+In (\ref{eq:Likelihood_normalSampleOne}), $\Phi$ stands for the value of the \textit{standard} normal cumulative distribution function\footnote{A standard normal has mean 0, and a variance of 1. By taking away the mean of 70, and dividing through by the standard deviation, we transform from an arbitrary mean- and variance-normal, to a \textit{standard} one.} at the value of 140 (see figure \ref{fig:Likelihood_normal} for an explanation). Since we find that the probability of obtaining this data point under our current model is extremely small, we conclude that there is something wrong with our model, and go back to examine the various assumptions that were made in deriving it.
+
+If we also assume that information regarding one individual's test score tells us nothing about another's\footnote{Apart from their joint reliance on $\mu$ and $\sigma^2$.}, then we might assume \textit{independence} for our data. We might also assume that all individuals come from the same population.  These two assumptions - independence and identical distribution - are equivalent to saying that the individually were randomly sampled from the population. We can use these two assumptions to calculate the joint probability density for a sample of N individuals by simply multiplying together the individual densities:
+
+
+\begin{equation}
+P(X_1=\alpha_1,X_2 =\alpha_2,...,X_N=\alpha_N|\mu,\sigma^2) = \prod\limits_{i=1}^{N}\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(\alpha_i-\mu)^2}{2\sigma^2}}
+\end{equation}\label{eq:Likelihood_normalN}
+
+
+We could then use (\ref{eq:Likelihood_normalN}) to calculate the probability of obtaining a given sample of observations as extreme as the values obtained, again by integrating. However, here it would be slightly more complicated than that of (\ref{eq:Likelihood_normalSampleOne}) since we would have to integrate across all individual's variables. For example if we obtained a sample of $\{75,71\}$ then we could obtain the probability of obtaining a sample as extreme as this under our model:
+
+\begin{equation}
+\begin{align}
+P(X_1\geq 75,X_2\geq 71|\mu=70,\sigma^2=10) &= \int\limits_{75}^{\infty}\int\limits_{71}^{\infty}\frac{1}{\sqrt{2\pi\times 10}}e^{-\frac{(\alpha_1-70)^2}{2\times 10}}\times e^{-\frac{(\alpha_2-70)^2}{2\times 10}} \mathrm{d}\alpha_1 \mathrm{d}\alpha_2\\
+& = \int\limits_{75}^{\infty} \frac{1}{\sqrt{2\pi\times 10}}e^{-\frac{(\alpha_1-70)^2}{2\times 10}} \mathrm{d}\alpha_1  \int\limits_{71}^{\infty} \frac{1}{\sqrt{2\pi\times 10}}e^{-\frac{(\alpha_2-70)^2}{2\times 10}} \mathrm{d}\alpha_2\\
+& = (1-\Phi\left(\frac{75-70}{\sqrt(10)}\right))\times (1-\Phi\left(\frac{71-70}{\sqrt(10)}\right)) \approx 0.02
+\end{align}
+\end{equation}\label{eq:Likelihood_normalSampleN}
+
+In (\ref{eq:Likelihood_normalSampleN}), the integrals are easily separated because we have assumed that the individuals' test scores are independent. If we had not assumed this, then we would have to have done a double integral of a multivariate normal distribution. Again, we have found that it is unlikely that we would have obtained two observations as extreme as this, if our model's assumptions are in fact true. This should prompt us to go back and re-examine these steps.
+
+\section{The subjectivity of model choice}
+It is hoped that the analysis in the preceding sections has given us a taste of how we can go about specifying a likelihood for a hitherto unknown circumstance. We start by making assumptions which allow us to simplify the situation, then look for a likelihood which is a good fit to the simplified model, which is then used to test the validity of the assumptions with the sample of data obtained. If the model struggles to explain the data, then we should go back and iteratively modify, then test our model, until it adequately can be thought to represent the real life data obtained.
+
+However, it should be re-emphasised that by its nature, a model is always a simplification of reality. As such, no one model is \textit{correct}. There are often many models that could be used to explain the data which we have to hand. We should always take care to test each of these against its ability to explain the aspect of the data with which we are interested, and only proceed with it if it is adequate in this regard. Real life is complicated, and thus with each of the assumptions that were used to justify a particular model, there will inevitably be a degree of \textit{subjectivity}. As such, no analysis - whether frequentist or Bayesian - can be thought to be purely \textit{objective}. Hence, the human analyst can not, and should not, be replaced by automata for statistical analysis. A degree of subjective judgement is always necessary in statistics, as in all other walks of life.
 
 \section{Maximum likelihood - a short introduction}\label{sec:Likelihood_MLE}
 The analysis in section \ref{sec:chooseLikelihood} assumes that we know beforehand the fraction, $\theta$, the populous that are predisposed to having the disease. In reality we rarely know such a thing. Often the main focus of building a statistical model is to try to estimate such parameters from our sample of data to which we have access. A popular frequentist method for achieving this goal is the estimation strategy known as Maximum Likelihood. In this section we will look at how this estimation strategy can yield estimates of parameters, and we will also go on to look at how these estimates can be used to make inferences about what is going on in the population as a whole.
 
-The principal used in Maximum Likelihood estimation is simple. Firstly, we assume a model which we use to approximate the data generating process which resulted in our sample; this we have spoken about at length in 
+The principal used in Maximum Likelihood estimation is simple. Firstly, we assume a model which we use to approximate the data generating process which resulted in our sample, based on the various assumptions about the real life process which we make. We then calculate what is known as the joint probability of obtaining the sample of observations, assuming that we do not know the parameters which specify completely those distributions. We then choose the parameters which \textit{maximise} the likelihood of obtaining that particular sample of observations. The resultant joint probability distribution gives the highest probability of achieving those observations given this choice of parameters. We will go through some simple examples to illustrate this process. 
 
-\section{The subjectivity of model choice}
+\subsection{Estimating disease prevalence}\label{sec:Likelihood_diseaseMLE}
+In section \ref{sec:Likelihood_diseaseGroup} we assumed that we knew beforehand the fraction of the population from which our sampled individuals came. As mentioned previously, it is uncommon that such a thing be known before carrying out an analysis. In fact, the reason for undertaking a statistical analysis of the situation is often to try to estimate the underlying prevalence of disease within the population.
+
+If we find that under a sample of 100 individuals, that 10 tested positively (and assuming for simplicity that there are no false-positives), and we make the same assumptions as in section \ref{sec:Likelihood_diseaseGroup} - that of independence and identically-distributed - then we can write down the overall likelihood function using (\ref{eq:Likelihood_binomialNFull}) as:
+
+\begin{equation}\label{eq:Likelihood_binomialNew}
+L(\theta|data) = {100 \choose 10} \theta^{10} (1-\theta)^{100-10}
+\end{equation}
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{likelihood_logMonotonicity.png}}
+\caption{A figure with four panes. The top-left is log-likelihood as a function of likelihood. The bottom-left is likelihood as a function of theta, and log-likelihood plotted on the same axis. Top-right is a weird function of likelihood as a function of likelihood. Below it a graph of likelihood as a function of theta, with a different maximum reached for the weird function.}\label{fig:Likelihood_logMonotonicity}
+\end{figure}
+
+Remember, that since we are varying $\theta$ and holding the data constant here, that (\ref{eq:Likelihood_binomialNew}) is a \textit{likelihood}, not a probability. We then need to simply choose $\theta$ so that we can maximise the likelihood. We could simply differentiate (\ref{eq:Likelihood_binomialNew}) as it stands, and set the derivative equal to 0; rearranging the resultant equation for $\theta$. However, to make life a little easier for us, we are first going to take the \textit{log} of this expression, then differentiate it, setting the derivative to 0; resulting in the same value of $\theta$. We are able to do this because of the simple properties of the log transformation (see figure \ref{fig:Likelihood_logMonotonicity}):
+
+\begin{equation}\label{eq:Likelihood_logLikelihoodBinomial}
+l(\theta|data) = log{100 \choose 10}+ 10log(\theta)+ 90 log(1-\theta)
+\end{equation}
+
+Where to get the result (\ref{eq:Likelihood_logLikelihoodBinomial}), we have used the log rules:
+
+\begin{equation}\label{eq:Likelihood_logRules}
+\begin{align}
+log(ab) &= log(a) + log(b)\\
+log(a^b) &= blog(a)
+\end{align}
+\end{equation}
+
+We can now simply differentiate the log-likelihood $l(\theta|data)$:
+
+\begin{equation}\label{eq:Likelihood_binomialderiv}
+\frac{\partial l}{\partial \theta} = \frac{10}{\hat{\theta}}-\frac{90}{1-\hat{\theta}} = 0
+\end{equation}
+
+If we set the derivative to 0 we then obtain the maximum likelihood \textit{estimator}, $\hat{\theta} = \frac{1}{10}$ (see figure \ref{fig:Likelihood_MLE}). We have placed hats on $\theta$ to emphasise that this is an estimator for the variable. An estimator is a mathematical function which outputs an estimate of a parameter in our model.
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{Likelihood_ML.png}}
+\caption{A figure displaying log-likelihood as a function of theta, maximised at 1/10.}\label{fig:Likelihood_MLE}
+\end{figure}
+
+
+This estimator makes sense intuitively. The value of the parameter which results in the highest likelihood of obtaining the data occurs when the population prevalence exactly matches that obtained in our sample. In general if we found a number $\beta$ of individuals out of a sample of size $N$, who were disease-positive, then we would again find that the preceding analysis results in an estimator of the disease prevalence exactly equal to that in our sample:
+
+\begin{equation}\label{eq:Likelihood_binomialestimator}
+\hat{\theta} = \frac{\beta}{N}
+\end{equation}
+
+\subsection{Estimating the mean and variance in intelligence scores}
+We are given a sample of individuals with test scores $\{75,71\}$, and we model the test scores using a normal likelihood as described in section \ref{sec:Likelihood_normal}:
+
+\begin{equation}\label{eq:Likelihood_normalTwo}
+L(\mu,\sigma^2|X_1=75,X_2 =71) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(75-\mu)^2}{2\sigma^2}}\times \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(71-\mu)^2}{2\sigma^2}}
+\end{equation}
+
+We can then proceed as we did in section \ref{sec:Likelihood_diseaseMLE} by taking the log of this expression before we differentiate it:
+
+\begin{equation}\label{eq:Likelihood_diseaseLogLikelihood}
+l(\mu,\sigma^2|X_1=75,X_2 =71) = 2log\left(\frac{1}{\sqrt{2\pi\sigma^2}}\right)-{\frac{(75-\mu)^2}{2\sigma^2}}-{\frac{(71-\mu)^2}{2\sigma^2}}
+\end{equation}
+
+Where we have again used the log rules in (\ref{eq:Likelihood_logRules}) to achieve (\ref{eq:Likelihood_normalTwo}). We can now proceed to differentiate (\ref{eq:Likelihood_diseaseLogLikelihood}) with respect to both variables, holding the other constant, setting each to 0, to achieve the following:
+
+\begin{equation}\label{eq:Likelihood_diseaseDerivativeOne}
+\begin{align}
+\frac{\partial l}{\partial \mu} &= {\frac{(75-\hat{\mu})}{\hat{\sigma^2}}}+{\frac{(71-\hat{\mu})}{\hat{\sigma^2}}} = 0\\
+\frac{\partial l}{\partial \sigma^2} &= 
+\end{align}
+\end{equation}
 
 \section{Chapter summary}
 
