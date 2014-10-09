@@ -30,7 +30,7 @@
 \part{Understanding the Bayesian formula}
 \chapter{The subjective worlds of frequentist and Bayesian statistics}
 
-\chapter{Likelihoods}
+\chapter{Likelihoods}\label{chap:Likelihoods}
 \section{Chapter Mission statement}
 At the end of this chapter a reader will know how to choose an appropriate likelihood model for most situations. Further the reader will understand the basis behind maximum likelihood estimation.
 
@@ -505,6 +505,62 @@ We have now detailed how to derive point estimates of parameters using the metho
 
 \section{Chapter summary}
 We should now understand what is meant by a likelihood, and how to build probabilistic models of real life processes. Of course, the difficulty of modelling a process is governed by its degree of complexity and sensitivity to violations of assumptions. Further we should also understand how the frequentist method of Maximum Likelihood can be used to yield point estimates of parameters. We are however, currently restricted in our ability to make inferences based on full probability distributions over parameters. Bayes' rule tells us how we can convert from a likelihood - itself not a proper probability distribution - to a posterior (\textit{correct}) probability distribution for parameters. In order to use to do this though, we need to understand what is meant by a \textit{prior} distribution and how we can specify this distribution to suit the particular situation. This is what is covered in the next chapter.
+
+\chapter{Priors}
+\section{Chapter Mission statement}
+At the end of this chapter a reader will know what is meant by a prior, and the different philosophies that are used to construct and understand them. 
+
+Insert a graphic with the likelihood part of Bayes' formula circled, as in the equation shown below for the part highlighted in blue.
+
+\begin{equation}
+P(\theta|data) = \frac{P(data|\theta)\times {\color{blue}P(\theta)}}{P(data)}
+\end{equation}\label{eq:Prior_BayesHighlighted}
+
+\section{Chapter goals}
+Bayes' rule tells us how to convert a likelihood - itself not a proper probability distribution - into a posterior probability distribution for parameters, which can then be used for inference. The likelihood tells us what the data implies are most likely values of the parameters, but without a prior weighting of the probability of each of these parameter values, it is not that useful. Bayesian analysis requires that we specify this pre-data weighting ascribed to different parameter values in a full probability distribution which is known as a \textit{prior}. Priors are without doubt the most controversial aspect of Bayesian statistics, with its opponents criticising its inherent \textit{subjectivity}. It is hoped that by the end of the chapter we will have convinced the reader that, not only is subjectivity inherent in \textit{all} statistical models - both frequentist and Bayesian - but the explicit subjectivity of priors is more transparent, and hence open to interrogation, than the implicit subjectivity abound elsewhere.
+
+This chapter will also explain the differing interpretations which are ascribed to priors. The reader will come to understand the types of method that can be used to construct prior distributions, and how they can be chosen to be minimally subjective or less so. Finally, the reader will understand that if significant data are available then the conclusions drawn should be insensitive to the initial choice of prior.
+
+\section{What are priors, and what do they represent?}
+Two representations of a prior. The data converts our prior knowledge in a logical way to a posterior distribution. Alternatively, the prior tells us how to convert the likelihood into a proper probability distribution.
+
+Chapter \ref{chap:Likelihoods} introduced us to the concept of formulating a likelihood, and how this can be used to derive frequentist estimates of parameters, using the method of maximum likelihood. This pre-supposes that the parameters in question are immutable, fixed quantities that actually exist, and can be estimated by methods that can be repeated, or imagined to be repeated many times \cite{gill2007bayesian}. As Gill (2007) indicates, this is unrealistic for the vast majority of social science research.
+
+\begin{quotation}
+It is simply not possible to rerun elections, repeat surveys under exactly the same conditions, replay the stock market with exactly matching market forces, or re-expose clinical subjects to identical stimuli.
+\end{quotation}
+
+For Bayesians, it is the data that are treated as fixed, and the parameters that vary. The likelihood is then combined with the prior distribution, in the numerator of Bayes' rule to help us to deduce the post-data distribution of the parameter in question. But what does it actually mean for a parameter to have a prior distribution?
+
+Gelman et al. (2013) suggests that there are two different interpretations of priors: the \textit{population} interpretation where the current value of a parameter is the result of a draw from a true population distribution; alternatively, in the more subjective \textit{state of knowledge} interpretation, we specify our knowledge and uncertainty in a parameter as if regarding it as a draw from a probability distribution \cite{gelman2013bayesian}.
+
+\section{Why don't we just normalise likelihood by choosing a unity prior?}
+Why can't be simply let the prior be unity for all values of $\theta$, in other words set $P(\theta) = 1$ in the numerator of Bayes' rule; resulting in a posterior that takes the form of a normalised likelihood:
+
+\begin{equation}
+P(\theta|data) = \frac{P(data|\theta)} {P(data)}
+\end{equation}\label{eq:Prior_BayesNormalisedLikelihood}
+
+
+This would surely negate the need for specification of a prior, and thwart all attempts to denounce Bayesian statistics as \textit{subjective}. So won't don't we do just that? 
+
+It is hoped that 
+
+
+\section{The explicit subjectivity of priors}
+\section{An urn of balls} 
+Bayes' box from Bolstad.
+\section{Disease proportions revisited}
+\section{Constructing priors}
+\subsection{Vague priors}
+\subsection{Informative priors}
+\subsection{Conjugate priors}
+\subsection{Eliciting priors}
+Gill example. x and z.
+\section{A strong model is independent of priors}
+\section{Chapter summary}
+
+
 
 \bibliographystyle{plain}
 \bibliography{Bayes}
