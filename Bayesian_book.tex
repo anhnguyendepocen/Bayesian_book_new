@@ -606,11 +606,18 @@ In (\ref{eq:Prior_bernoulli}), $\alpha\in\{0,1,2,3,4,5\}$ represents the number 
 
 We can then illustrate the functioning of Bayes' rule in the \textit{Bayes' box} shown in table \ref{tab:Prior_bayesBoxDiscreteUrns}. We start by listing all the possible numbers of red balls that can exist in the Urn in the leftmost column. We then introduce our prior probabilities that we associate with each of the six potential numbers of red balls that can be in the urn. In the third column we then calculate the likelihoods for each of the outcomes using the simple rule given in (\ref{eq:Prior_bernoulli}). We then multiply the prior by the likelihood in the fourth column, which on summation gives us $P(data)=\frac{1}{2}$, which we use to create a proper probability distribution for the posterior in the last column. For a mathematical description of this process see section \ref{app:Prior_bayesUrn}.
 
-The Bayes' box illustrates the straightforward and mechanical working of Bayes' rule for the case of discrete data. We also note that when we sum the likelihood over all possible numbers of red balls in the urn - in this case the parameter which we are trying to infer - we find that this to be equal to 3; illustrating again that a likelihood is not a valid probability distribution. We also see that at a particular parameter value, if either the prior or the likelihood are found to be zero as is the case of 0 red balls being in the urn (impossible since we have at least one), then this ensures that the posterior distribution is zero at this point. This makes it important that we use a prior that gives a positive weight to \textit{all} possible ranges of parameter values. The results are also displayed graphically in figure \ref{fig:Prior_UrnStacked}.
+The Bayes' box illustrates the straightforward and mechanical working of Bayes' rule for the case of discrete data. We also note that when we sum the likelihood over all possible numbers of red balls in the urn - in this case the parameter which we are trying to infer - we find that this to be equal to 3; illustrating again that a likelihood is not a valid probability distribution. We also see that at a particular parameter value, if either the prior or the likelihood are found to be zero as is the case of 0 red balls being in the urn (impossible since we have at least one), then this ensures that the posterior distribution is zero at this point. This makes it important that we use a prior that gives a positive weight to \textit{all} possible ranges of parameter values. The results are also displayed graphically in figure \ref{fig:Prior_urnStacked}.
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{Prior_urnStacked.png}}
+\caption{The prior, likelihood and posterior for the urn of balls example described in \ref{sec:Prior_urn}. The prior in the upper panel gives uniform weighting to all possible numbers of red balls. This is then multiplied by the likelihood (in the middle panel) at each number of balls, and normalised to make the posterior density shown in the bottom panel.}\label{fig:Prior_urnStacked}
+\end{figure}
 
 \begin{table}[htbp]
   \centering
-  \caption{A Bayes' box showing how to calculate the posterior for the case of drawing balls from an urn containing 5 red and white balls.}\label{tab:Prior_bayesBoxDiscreteUrns}
+  \caption{A Bayes' box showing how to calculate the posterior for the case of drawing balls from an urn containing 5 red and white balls, one of which has been drawn and shown to be red. Here we assume that pre-experiment all possible numbers of red balls are equally likely, by adopting a uniform prior.}\label{tab:Prior_bayesBoxDiscreteUrns}
     \begin{tabular}{ccccc}
     \toprule
     \textbf{Number of red balls} & \textbf{Prior} & \textbf{Likelihood} & \textbf{Prior x likelihood} & \textbf{Posterior$=\frac{Prior\times Likelihood}{P(data)}$} \\
@@ -628,10 +635,38 @@ The Bayes' box illustrates the straightforward and mechanical working of Bayes' 
   \label{tab:addlabel}%
 \end{table}%
 
-Now suppose that we had reason to believe that the urn-maker had a prejudice towards more equal numbers of red and white balls, and as a result we alter our prior to be reflect this (see table \ref{tab:Prior_bayesBoxUrnUpdated})....
+Now suppose that we had reason to believe that the urn-maker had a prejudice towards more equal numbers of both balls, and as a result we alter our prior to have a greater weight towards these numbers of red balls (see table \ref{tab:Prior_bayesBoxUrnUpdated} and figure \ref{fig:Prior_bayesUrnUpdated}).
 
-\subsection{Disease proportions revisited}
-Suppose that we substitute our urn from section \ref{sec:Prior_urn} for a sample of 100 individuals taken from the UK population. Suppose also that we continue to assert the independence of individuals within our sample, and make explicit the assumption that individuals are from the same population, and are hence identically-distributed. We are now interested in making conclusions about the overall proportion of individuals within the population who have the disease, $\theta$. Since the parameter of interest is now continuous, we cannot use Bayes' box as there would be infinitely many terms over which to sum. Let's suppose that within our sample of 100 we find 3 of them who are disease-positive\footnote{We also suppose that there are no false-positives here.}. We could then use the assumptions of independence and identical-distribution to write down a likelihood of the form introduced in section \ref{sec:Likelihood_diseaseGroup}:
+
+\begin{table}[htbp]
+  \centering
+  \caption{A Bayes' box showing how to calculate the posterior for the case of drawing balls from an urn containing 5 red and white balls, one of which has been drawn and shown to be red. Here a higher weighting is given to more equal numbers of red and white balls in the prior.}\label{tab:Prior_bayesBoxUrnUpdated}%
+    \begin{tabular}{ccccc}
+    \toprule
+    \textbf{Number of red balls} & \textbf{Prior} & \textbf{Likelihood} & \textbf{Prior x likelihood} & \textbf{Posterior$=\frac{Prior\times Likelihood}{P(data)}$} \\
+    \midrule
+    0     &   1/12 & 0     & 0       & 0       \\
+    1     &   1/6  &  1/5  &   1/30 &   1/15 \\
+    2     &   1/4  &  2/5  &   1/10 &   1/5  \\
+    3     &   1/4  &  3/5  &   3/20 &   3/10 \\
+    4     &   1/6  &  4/5  &   2/15 &   4/15 \\
+    5     &   1/12 & 1     &   1/12 &   1/6  \\
+    \bottomrule
+    Total & \textbf{1      } & \textbf{3    } & \textbf{  1/2 } & \textbf{1      } \\
+    \bottomrule
+    \end{tabular}%
+  
+\end{table}%
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{Prior_bayesUrnUpdated.png}}\caption{The prior, likelihood and posterior for the urn of balls example described in \ref{sec:Prior_urn}. The prior in the upper panel gives more weighting to more equal numbers of red and white balls. This is then multiplied by the likelihood (in the middle panel) at each number of balls, and normalised to make the posterior density shown in the bottom panel.}\label{fig:Prior_bayesUrnUpdated}
+\end{figure}
+
+
+\subsection{Disease proportions revisited}\label{sec:Prior_diseaseProp}
+Suppose that we substitute our urn from section \ref{sec:Prior_urn} for a sample of 100 individuals taken from the UK population. Suppose also that we continue to assert the independence of individuals within our sample, and make explicit the assumption that individuals are from the same population, and are hence identically-distributed. We are now interested in making conclusions about the overall proportion of individuals within the population who have the disease, $\theta$. Since the parameter of interest is now continuous, we cannot use Bayes' box as there would be infinitely many rows (corresponding to the continuum of possible $\theta$) over which to sum. Let's suppose that within our sample of 100 we find 3 of them who are disease-positive\footnote{We also suppose that there are no false-positives here.}. We could then use the assumptions of independence and identical-distribution to write down a likelihood of the form introduced in section \ref{sec:Likelihood_diseaseGroup}:
 
 \begin{equation}\label{eq:Prior_binomial}
 P(Z=3|\theta) = {100 \choose 3} \theta^\beta (1-\theta)^{100-3}
@@ -639,10 +674,31 @@ P(Z=3|\theta) = {100 \choose 3} \theta^\beta (1-\theta)^{100-3}
 
 The reason for the ${100 \choose 3}=161,700$ term at the beginning of (\ref{eq:Prior_binomial}) is that we have to count the number of different permutations of getting 3 individuals who are disease-positive within a sample size of 100. 
 
-We suppose that previous studies have suggested that the prevalence of this disease is closer to 5\% within the population. To illustrate the effect of an overly simplistic prior we choose a triangular prior of the form shown in figure \ref{fig:Prior_disease}, which is peaked at 5\%\footnote{We will later use the more appropriate beta distribution after it has been introduced in chapter \ref{chap:distributions}.}.
+We suppose that at the beginning of the experiment all values of $\theta$ we deem to be equally likely. However, we would expect researchers to have a pre-experimental idea as to the most probable frequencies of the disease within the population, meaning that a flat prior which is given is likely understating a prejudice towards a certain range of $\theta$ values. Whilst, this is the case, it is often assumed in research papers - for the sake of objectivity - that priors are flat, in order to try to minimise the effect which assumptions here make on the outcome of an analysis.
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{Prior_disease.png}}
+\caption{The prior, likelihood and posterior for the disease proportion example described in section \ref{sec:Prior_diseaseProp}. Each point in $\theta$ along the continuous prior curve (top panel) is multiplied by the corresponding value of likelihood (middle panel), to form the numerator of Bayes' rule. The numerator is then normalised to make the posterior probability density shown in the bottom panel.}\label{fig:Prior_disease}
+\end{figure}
+
+
+\subsection{The numerator of Bayes' rule determines the shape}
+We notice that for both the examples described in sections \ref{sec:Prior_urn} and \ref{sec:Prior_diseaseProp} that the overall shape of the posterior distribution is determined by the prior, $P(\theta)$, multiplied by the likelihood, $P(data|\theta)$. This is the numerator of Bayes' rule:
+
+\begin{equation}
+P(\theta|data) = \frac{{\color{blue}P(\theta)\times P(data|\theta)}}{P(data)} \propto {\color{blue}P(\theta)\times P(data|\theta)}
+\end{equation}\label{eq:Prior_BayesNumerator}
+
+The shape of the posterior is given by how it varies with $\theta$. Since the denominator is independent of $\theta$, the numerator completely describes how the gradient and curvature of the posterior density varies with $\theta$, which allows us to write the above  $ \propto {\color{blue}P(\theta)\times P(data|\theta)}$ statement. Viewed another way, the denominator is a nuisance normalisation factor which allows us to ensure that the posterior density when summed (discrete) or integrated (continuous) is equal to 1. We will return to a discussion of these concepts in depth in the chapter \ref{chap:denominator}, but it doesn't hurt to see where we may be headed at present.
 
 \section{Constructing priors}
+There are a number of different methodologies and philosophies when it comes to the construction of a prior density. In this section we consider briefly how priors can be engineered so as to be relatively uninformative - better-termed vague - or can be used to assemble pre-experimental knowledge in a logical manner.
+
 \subsection{Vague priors}
+When there is a premium placed on the objectivity of analysis, as is often the case in regulatory work - drug trials, public policy and the like - then use of a relatively 'uninformative' prior is often desired. If we were uncertain as to the proportion of individuals within a population who have a particular disease, then a uniform prior (see top panel of figure \ref{fig:Prior_jeffreysIntro}) is often employed to this end. The flatness of the prior distribution is often deemed uninformative, but this term is misleading. If we assume the same model as described in section \ref{sec:Prior_diseaseProp}, then the probability that one individual has the disease is $\theta$, and the probability that two randomly sampled individuals both have the disease is $\theta^2$. If we assume a flat prior for $\theta$, then this implies the type of prior shown in the middle panel of figure \ref{fig:Prior_jeffreysIntro} for the probability of these two individuals having the disease.
+
 \subsection{Informative priors}
 \subsection{Conjugate priors}
 \subsection{Eliciting priors}
@@ -661,7 +717,7 @@ P(Y=\alpha|X=1) &= \frac{P(X=1|Y=\alpha)\times P(Y=\alpha)}{P(X=1)}\\
 \end{align}
 \end{equation}
 
-\chapter{The difficulty is in the denominator}
+\chapter{The difficulty is in the denominator}\label{chap:denominator}
 
 \chapter{An introduction to distributions for the mathematically-un-inclined}\label{chap:distributions}
 
