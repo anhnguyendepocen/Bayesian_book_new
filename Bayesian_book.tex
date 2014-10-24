@@ -562,7 +562,7 @@ Alternatively, imagine we are tasked with estimating the proportion of the UK po
 
 Adopting the \textit{population} perspective described by Gelman, we imagine the value of a parameter of current interest to be drawn from a population distribution. If we imagine the process of flipping a coin, we could if we knew the angle at which it is tossed, as well as the height from which it is thrown above the surface\footnote{Also assuming that we knew the physical properties of the coin and surface.} predict deterministically the side on which the coin would fall face up. We could then hypothetically enumerate the (infinitely) many angles and heights of the coin, and for each set determine whether the coin would fall face up or down. Each time we throw the coin we are implicitly choosing an angle and height from the set of all possible combinations, which determines whether a heads or tails falls face up. Some ranges of the angle and the height will be more frequently chosen than others, albeit agnostic with regards to final face up side of the coin.  Hence we could think of this choice as the realisation from a distribution of all possible sets. Thus we could think about the choice of angle and height as being a realisation from this \textit{population} distribution, and hence determines the fate of the coin toss.
 
-\section{Why don't we just normalise likelihood by choosing a unity prior?}
+\section{Why don't we just normalise likelihood by choosing a unity prior?}\label{sec:Prior_unityPrior}
 Why can't be simply let the prior be unity for all values of $\theta$, in other words set $P(\theta) = 1$ in the numerator of Bayes' rule; resulting in a posterior that takes the form of a normalised likelihood:
 
 \begin{equation}
@@ -696,13 +696,59 @@ The shape of the posterior is given by how it varies with $\theta$. Since the de
 \section{Constructing priors}
 There are a number of different methodologies and philosophies when it comes to the construction of a prior density. In this section we consider briefly how priors can be engineered so as to be relatively uninformative - better-termed vague - or can be used to assemble pre-experimental knowledge in a logical manner.
 
-\subsection{Vague priors}
-When there is a premium placed on the objectivity of analysis, as is often the case in regulatory work - drug trials, public policy and the like - then use of a relatively 'uninformative' prior is often desired. If we were uncertain as to the proportion of individuals within a population who have a particular disease, then a uniform prior (see top panel of figure \ref{fig:Prior_jeffreysIntro}) is often employed to this end. The flatness of the prior distribution is often deemed uninformative, but this term is misleading. If we assume the same model as described in section \ref{sec:Prior_diseaseProp}, then the probability that one individual has the disease is $\theta$, and the probability that two randomly sampled individuals both have the disease is $\theta^2$. If we assume a flat prior for $\theta$, then this implies the type of prior shown in the middle panel of figure \ref{fig:Prior_jeffreysIntro} for the probability of these two individuals having the disease.
+\subsection{Vague priors}\label{sec:Prior_vague}
+When there is a premium placed on the objectivity of analysis, as is often the case in regulatory work - drug trials, public policy and the like - then use of a relatively 'uninformative' prior is often desired. If we were uncertain as to the proportion of individuals within a population who have a particular disease, then a uniform prior (see figure \ref{fig:Prior_jeffreysIntro}) is often employed to this end. 
+
+The use of a prior that has a constant value, $P(\theta)=constant$, is attractive because in this case:
+
+\begin{equation}
+\begin{align}
+P(\theta|data) &= \frac{P(\theta)\times P(data|\theta)}{P(data)}\\
+& \propto P(\theta)\times P(data|\theta)\\
+& \propto P(data|\theta)
+\end{align}
+\end{equation}\label{eq:Prior_BayesFlatPrior}
+
+In (\ref{eq:Prior_BayesFlatPrior}) we thus see that the shape of the posterior distribution is solely determined by the likelihood function. This is seen as a merit of uniform priors since they 'let the data speak for itself' through the likelihood. This is used as the justification for using a flat prior in many analyses.
+
+The flatness of the uniform prior distribution is often termed 'uninformative', but this is misleading. If we assume the same model as described in section \ref{sec:Prior_diseaseProp}, then the probability that one individual has the disease is $\theta$, and the probability that two randomly sampled individuals both have the disease is $\theta^2$. If we assume a flat prior for $\theta$, then this implies the type of prior shown in figure \ref{fig:Prior_jeffreysIntro} for the probability of these two individuals having the disease. Furthermore, when we consider the probability that within a sample of ten individuals, all are diseased, we see that a flat prior for $\theta$ implies an even more accentuated prior for this event. For the mathematical details of these graphs see section \ref{app:Prior_diseaseJeffreys}.
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{Prior_jeffreysIntro.pdf}}\caption{The probability density for obtaining all diseased individuals within sample sizes of 1, 2 and 10 respectively. Starting out with a flat prior for the probability that one individual has a disease has resulted in non-flat priors for the other 2 probabilities.}\label{fig:Prior_jeffreysIntro}
+\end{figure}
+
+We can hence see that even though a uniform prior for an event looks, on first glances, to convey no information, we are actually making quite informative statements about other events. In general, this aspect of choosing flat priors is swept under the carpet for most analyses, partly because often we care most about the particular parameter to which we create a prior. However, it is important to key this property of flat priors in mind when conducting analyses. All priors contain some information, so we prefer the use of the terms "vague" or "diffuse" to represent situations where a premium is placed on drawing conclusions from only the data at hand.
+
+There are methods for constructing priors that seek to limit the information contained within priors, so as to not colour the analysis with pre-experimental prejudices. However, we will leave a discussion of these methods until chapter \ref{chap:ObjectiveBayes} on \textit{Objective Bayes}.
+
+Whilst uniform priors are relatively straightforward to specify when we aim to infer about a parameter which is bounded - such as in the previous example where $\theta\in\{0,1\}$, or in the case of discrete parameters - we run into issues for parameters which have no predefined range. An example of this would be if we were aiming to determine the mean, $\mu$, time of onset of lung cancer for individuals who develop the disease, after they begin to smoke. If we remove all background cases (assumed not to be caused by smoking), then $\mu$ has a lower bound of 0. However, there is no obvious point at which to draw an upper bound. A naive solution to this would be to use a prior for $\mu\sim Unif(0,\infty)$. This solution, although at first appears to be reasonable, is not viable for two reasons; one statistical, another which is practical. The statistical reason is that $\mu\sim Unif(0,\infty)$ is not a valid probability density, because any non-zero constant value for the pdf will mean that the area under the curve is $\infty$ because the $\mu$ axis stretches out forever. The common sense argument is that we would never ascribe the same likelihood to an individual having the onset of lung cancer after 10 years as we would to it occurring after 250 years! The finiteness of human lifespan dictates that we select a more appropriate prior. If we were to ignore these two concerns although it is possible that the posterior could be a proper probability distribution\footnote{Although not assured.}, it would not actually be one (see section \ref{sec:Prior_unityPrior} for an explanation). A better choice of prior to use in this example would be one which ascribes zero probability to negative values of $\mu$, and ever decreasing values of the pdf for high values of $\mu$ such as the one shown in figure \ref{fig:Prior_lungcancerFlatandGammaPriors}. Alternatively, we could choose a uniform prior on a reasonable range of $\mu$, and allow the pdf to be zero elsewhere (see the right hand panel of figure \ref{fig:Prior_lungcancerFlatandGammaPriors}).
+
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{Prior_lungcancerFlatandGammaPriors.pdf}}\caption{Two viable prior distributions for the average time taken before the onset of lung cancer after patients begin smoking.}\label{fig:Prior_lungcancerFlatandGammaPriors}
+\end{figure}
 
 \subsection{Informative priors}
-\subsection{Conjugate priors}
-\subsection{Eliciting priors}
+We have seen in section \ref{sec:Prior_vague} that priors are frequently chosen to give a strong voice to the recent data; minimising the impact on conclusions drawn due to existing prejudices. There are however occasions when the choice of prior acknowledges that the analysis is based on more than the latest data. This choice of prior can be used to incorporate previous data, conclusions from older studies, or to include expert opinion. 
+
+In cases where data is available from previous studies, the construction of a prior can proceed methodically via a method that is known as \textit{moment-matching}. Suppose that we have the data shown in figure \ref{fig:Prior_SATScoresHistogram} for SAT scores of past participants of a particular class. We might think that to a reasonable approximation the data could be modelled as having come from a normal distribution\footnote{A weakness of this model is that it allows for scores outside of the 600-2400 range of permissible SAT scores.}. We typically characterise normal distributions via two parameters: its mean, $\mu$, and variance, $\sigma^2$. In moment-matching a normal prior to this previous data, we choose the mean and variance to be equal to their sample equivalents, in this case $\mu=1404$, and $\sigma^2 = 79,716$, respectively.
+
+\begin{figure}
+\centering
+\scalebox{0.75} 
+{\includegraphics{Prior_SATScoresHistogram.pdf}}\caption{The SAT scores for past students of a class. The mean and variance of this hypothetical sample are 1404, and 79,716 respectively, which are used to fit a normal distribution to the data, and is shown in red.}\label{fig:Prior_SATScoresHistogram}
+\end{figure}
+
+
+Whilst this simple methodology can result in priors that closely approximate pre-experimental datasets, note that it was a arbitrary choice to fit the first two centred moments of the sample. We could have used the skewness and kurtosis (measures related to the third and fourth centred moments respectively). Also, moment-matching is not Bayesian in nature, and can often be difficult to apply in practice. When we discuss hierarchical models in chapter \ref{chap:hierarchicalModels}, we will learn a more pure Bayesian method which can be used to create prior densities.
+
 Gill example. x and z.
+
+
 \section{A strong model is independent of priors}
 \section{Chapter summary}
 \section{Appendix}
@@ -717,9 +763,19 @@ P(Y=\alpha|X=1) &= \frac{P(X=1|Y=\alpha)\times P(Y=\alpha)}{P(X=1)}\\
 \end{align}
 \end{equation}
 
+\subsection{The probabilities of having a disease}\label{app:Prior_diseaseJeffreys}
+
 \chapter{The difficulty is in the denominator}\label{chap:denominator}
 
+\chapter{Inference using the posterior}
+
 \chapter{An introduction to distributions for the mathematically-un-inclined}\label{chap:distributions}
+
+\chapter{Conjugate priors and their place in Bayesian analysis}
+
+\chapter{Objective Bayesian analysis}\label{chap:ObjectiveBayes}
+
+\chapter{Hierarchical models}\label{chap:hierarchicalModels}
 
 \bibliographystyle{plain}
 \bibliography{Bayes}
