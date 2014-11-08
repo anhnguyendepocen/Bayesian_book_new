@@ -36,6 +36,10 @@
 \chapter{The posterior - the goal of Bayesian inference}
 
 \chapter{Likelihoods}\label{chap:Likelihoods}
+\begin{quotation}
+The world is everything that is the case. \textbf{Wittgenstein}
+\end{quotation}
+
 \section{Chapter Mission statement}
 At the end of this chapter a reader will know how to go about selecting a likelihood which is appropriate to a given situation. Further the reader will understand the basis behind maximum likelihood estimation.
 
@@ -505,7 +509,7 @@ We have now detailed how to derive point estimates of parameters using the metho
 \section{Chapter summary}
 We should now understand what is meant by a likelihood, and how to build probabilistic models of real life processes. However, the difficulty of modelling a process is governed by its degree of complexity and sensitivity to violations of assumptions. Further we should also understand how the frequentist method of Maximum Likelihood can be used to yield point estimates of parameters. We are however, currently restricted in our ability to make inferences based on full probability distributions over parameters. Bayes' rule tells us how we can convert a likelihood - itself not a proper probability distribution - to a posterior (\textit{correct}) probability distribution for parameters. In order to use to do this though, we need to understand what is meant by a \textit{prior} distribution and how we can specify this distribution to suit the particular situation. This is what is covered in the next chapter.
 
-\chapter{Priors}
+\chapter{Priors}\label{chap:Prior}
 \section{Chapter Mission statement}
 At the end of this chapter a reader will know what is meant by a prior, and the different philosophies that are used to understand and construct them. 
 
@@ -724,7 +728,7 @@ In cases where data is available from previous studies, the construction of a pr
 
 Whilst this simple methodology can result in priors that closely approximate pre-experimental datasets, note that it was a arbitrary choice to fit the first two moments of the sample. We could have used the skewness and kurtosis (measures related to the third and fourth centred moments respectively). Also, moment-matching is not Bayesian in nature, and can often be difficult to apply in practice. When we discuss hierarchical models in chapter \ref{chap:hierarchicalModels}, we will learn a more pure Bayesian method which can be used to create prior densities.
 
-\subsection{The numerator of Bayes' rule determines the shape}
+\subsection{The numerator of Bayes' rule determines the shape}\label{sec:Prior_numerator}
 We notice for both the examples described in sections \ref{sec:Prior_urn} and \ref{sec:Prior_diseaseProp} that the overall shape of the posterior distribution is determined by the prior, $P(\theta)$, multiplied by the likelihood, $P(data|\theta)$. This is the numerator of Bayes' rule:
 
 \begin{equation}
@@ -807,13 +811,118 @@ P(Y) = \frac{1}{2\sqrt{Y}}
 \end{equation}
 
 
-\chapter{The difficulty is in the denominator}\label{chap:denominator}
+\chapter{The devil's in the denominator}\label{chap:denominator}
+\section{Chapter mission}
+At the end of this chapter, the reader will understand what is represented by the denominator term, $P(data)$, in Bayes' rule. Furthermore, they will also have an appreciation of the inherent complexity of this term, as well as an idea of how modern computational methods can be used to bi-pass this.
 
+Insert a graphic with the likelihood part of Bayes' formula circled, as in the equation shown below for the part highlighted in blue.
+
+\begin{equation}
+P(\theta|data) = \frac{P(data|\theta)\times P(\theta)}{{\color{blue}P(data)}}
+\end{equation}\label{eq:Denominator_BayesHighlighted}
+
+
+\section{Chapter goals}
+Bayesian inference uses probability distributions, called \textit{posteriors}, to make inferences about the world at large. However, to be able to use these powerful tools, we must ensure are probability distributions. The denominator of Bayes' rule, $P(data)$, ensures that the posterior distribution is a \textit{valid} probability distribution, by constraining the sum of its values to be 1. 
+
+The denominator is obtained by a sum across all parameter values of the numerator. The seeming simplicity of the previous statement belies the fact that for many circumstances its calculation can be complicated, and often practically intractable. In this chapter we will learn the circumstances when this difficultly arises, as well as a basic appreciation as to how modern computational methods sidestep this issue. We will the details of how these methods work in practice to part \ref{part:computationalBayes}, but this chapter will lay the foundations for this later study.
+
+\section{An introduction the denominator}
+\subsection{The denominator as a normalising factor}
+We know from chapter \ref{chap:Likelihoods} that the likelihood is not a valid probability density, and hence we reason that the numerator of Bayes' rule - the likelihood multiplied by the prior - is similarly not constrained to be one either. The numerator will satisfy the first condition of a valid probability density: that its values are non-negative. However, the sum of the numerator across all parameter values will not generally be 1; meaning it fails the second test.
+
+A natural way to normalise the numerator to ensure that the posterior is a valid probability density, is to divide by its sum; thus ensuring that its transformed sum is always 1. The denominator of Bayes' rule, $P(data)$, is just this normalising factor. Notice that it does not contain the parameter, $\theta$, due to the fact that we sum across \textit{all} values of $\theta$ to obtain it. This parameter-independence of the denominator ensures that the dependence of the posterior distribution $P(\theta|data)$ on $\theta$ is solely through the numerator (see sections \ref{sec:Prior_numerator} and \ref{sec:Denominator_dispensingWithNumerator}). 
+
+There are two varieties of Bayes' rule which we will employ in this chapter, which use slightly different\footnote{Although conceptually identical.} formulations of the denominator. When $\theta$ is a discrete parameter we are required to \textit{sum} over all possible parameter values, in order to normalise the denominator:
+
+\begin{equation}\label{eq:Denominator_discreteDenominator}
+P(data) = \sum\limits_{All\;\theta} P(data|\theta) \times P(\theta)
+\end{equation}
+
+We will leave multiple-parameter inference largely to chapter $\ref{chap:conjugate}$, although will discuss how this leads to added complexity in section \ref{sec:Denominator_difficulty}. However, the method proceeds in an analogous manner to (\ref{eq:Denominator_discreteDenominator}), with the single sum is replaced by a number of summations\footnote{The number of summations corresponds to the number of parameters in the model.}
+
+For continuous parameters we use the continuous analogue of the sum - an integral, resulting in a denominator of the form:
+
+\begin{equation}\label{eq:Denominator_continuousDenominator}
+P(data) = \int\limits_{All\;\theta} P(data|\theta) \times P(\theta) \mathrm{d}\theta
+\end{equation}
+
+Similarly, for multiple-parameter systems the single integral is replaced by a multiple-integral. We will now demonstrate how to use (\ref{eq:Denominator_discreteDenominator}) and (\ref{eq:Denominator_continuousDenominator}) through two examples in sections \ref{sec:Denominator_discreteExample} and \ref{sec:Denominator_continuousExample} respectively.
+
+\subsection{Example: disease}\label{sec:Denominator_discreteExample}
+As an example imagine that we are a medical practitioner tasked with evaluating the probability that a given patient has a particular disease. We use $\theta$ to represent the two possible outcomes: 
+
+\begin{equation}
+\theta =
+\begin{cases}
+O & , Disease \; negative \\
+1 & ,  Disease \; positive
+\end{cases}
+\end{equation}
+
+Using our experience and the patient's medical history we estimate that there is a probability of $\frac{1}{4}$ that this patient has the disorder; representing our prior. We then obtain test information, and are asked to re-evaluate the probability that the patient is disease-positive. In order to do this, we are required to state our likelihood. In this case we choose a likelihood of the form:
+
+\begin{equation}\label{eq:Denominator_discreteLikelihood}
+P(positive|\theta) =
+\begin{cases}
+\frac{1}{10} & , \theta=0\\
+\frac{4}{5} & ,  \theta=1
+\end{cases}
+\end{equation}
+
+In (\ref{eq:Denominator_discreteLikelihood}), we implicitly assume that the probability of a negative test result is given by 1 minus the positive test probabilities. 
+
+Suppose that the individual tests positive for the disease. We can now use (\ref{eq:Denominator_discreteDenominator}) to calculate the denominator of Bayes' rule in this case:
+
+\begin{equation}
+\begin{align}
+P(positive) &= \sum\limits_{\theta=0}^{1} P(positive|\theta) \times P(\theta)\\
+&= P(positive|\theta=0) \times P(\theta=0) + P(positive|\theta=1) \times P(\theta=1)\\
+&= \frac{1}{10} \times \frac{3}{4} + \frac{4}{5} \times \frac{1}{4} = \frac{11}{40}
+\end{align}
+\end{equation}
+
+Furthermore, it turns out the denominator is also a valid probability density, meaning that we can calculate the counterfactual $P(negative) = 1 - P(positive) = \frac{29}{40}$. We need to be careful with interpreting this last result, since it didn't actually occur. It's best to think of $P(negative)$ as the probability that an individual \textit{could} test negative.
+
+We can then use Bayes' rule to obtain the posterior probability that the individual has the disease, given that they tested positively:
+
+\begin{equation}\label{eq:Denominator_discreteExamplePosterior}
+\begin{align}
+P(\theta=1|positive) &= \frac{P(positive|\theta=1)\times P(\theta=1)}{P(positive)}\\
+&= \frac{\frac{4}{5} \times \frac{1}{4}}{\frac{1}{10} \times \frac{3}{4} + \frac{4}{5} \times \frac{1}{4}}\\
+&= \frac{8}{11}
+\end{align}
+\end{equation}
+
+We see that in this case, even though we started off with a fairly optimistic prejudice - a probability that the individual has the disease of $\frac{1}{4}$ - the strength of the data has shone through, and we now are fairly confident of the alternative (see figure \ref{fig:Denominator_discreteExample} for a graphical depiction of this change of heart). Bayesians are fickle by design!
+
+\begin{figure}
+\centering
+\scalebox{0.40} 
+{\includegraphics{Denominator_discreteExample.pdf}}\caption{The prior (top is multiplied by the likelihood (middle), which when summed over $\theta\in\{0,1\}$ yields $P(data)$ which is used to normalise the numerator,...perhaps have another panel here for the numerator!}\label{fig:Denominator_discreteExample}
+\end{figure}
+
+\subsection{Example: }\label{sec:Denominator_continuousExample}
+
+\subsection{The denominator as the probability of data}
+Another way to view the 
+Include the 3D visualisation of $P(data,\theta)$ in discrete and continuous cases.
+
+\section{The difficulty with the denominator}\label{sec:Denominator_difficulty}
+
+\section{How to dispense with the difficulty: Bayesian computation}\label{sec:Denominator_dispensingWithNumerator}
+
+\section{Chapter summary}
+
+
+\part{Analytic Bayesian methods}
 \chapter{An introduction to distributions for the mathematically-un-inclined}\label{chap:distributions}
 
-\chapter{Conjugate priors and their place in Bayesian analysis}
+\chapter{Conjugate priors and their place in Bayesian analysis}\label{chap:conjugate}
 
 \chapter{Objective Bayesian analysis}\label{chap:ObjectiveBayes}
+
+\part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
 
 \chapter{Hierarchical models}\label{chap:hierarchicalModels}
 
