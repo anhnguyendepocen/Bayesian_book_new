@@ -1,0 +1,616 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     23228,        607]
+NotebookOptionsPosition[     22475,        575]
+NotebookOutlinePosition[     22994,        597]
+CellTagsIndexPosition[     22909,        592]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Discrete example", "Section",
+ CellChangeTimes->{{3.624318820308584*^9, 3.6243188225907145`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"vPrior", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"3", "/", "4"}], ",", 
+     RowBox[{"1", "/", "4"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vLikelihood", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"1", "/", "10"}], ",", 
+     RowBox[{"4", "/", "5"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vNumerator", " ", "=", " ", 
+   RowBox[{"vPrior", "*", "vLikelihood"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vPosterior", " ", "=", " ", 
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"vPrior", "*", "vLikelihood"}], ")"}], "/", 
+    RowBox[{"Total", "[", 
+     RowBox[{"vPrior", "*", "vLikelihood"}], "]"}]}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.624318883197181*^9, 3.624319085772768*^9}, {
+  3.625066348032922*^9, 3.6250663561993885`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g1", "=", 
+   RowBox[{"BarChart", "[", 
+    RowBox[{"vPrior", ",", 
+     RowBox[{"ChartLabels", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}]}], ",", 
+     RowBox[{"ChartStyle", "\[Rule]", 
+      RowBox[{"{", "Gray", "}"}]}], ",", 
+     RowBox[{"BaseStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"FontSize", "\[Rule]", "16"}], "}"}]}], ",", 
+     RowBox[{"AxesLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\[Theta]", ",", "\"\<pmf\>\""}], "}"}]}], ",", 
+     RowBox[{"PlotLabel", "\[Rule]", "\"\<Prior\>\""}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g2", " ", "=", " ", 
+   RowBox[{"BarChart", "[", 
+    RowBox[{"vLikelihood", ",", 
+     RowBox[{"ChartLabels", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}]}], ",", 
+     RowBox[{"ChartStyle", "\[Rule]", 
+      RowBox[{"{", "Gray", "}"}]}], ",", 
+     RowBox[{"BaseStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"FontSize", "\[Rule]", "16"}], "}"}]}], ",", 
+     RowBox[{"AxesLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\[Theta]", ",", "\"\<likelihood\>\""}], "}"}]}], ",", 
+     RowBox[{"PlotLabel", "\[Rule]", "\"\<Likelihood\>\""}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g3", " ", "=", " ", 
+   RowBox[{"BarChart", "[", 
+    RowBox[{"vNumerator", ",", 
+     RowBox[{"ChartLabels", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}]}], ",", 
+     RowBox[{"ChartStyle", "\[Rule]", 
+      RowBox[{"{", "Gray", "}"}]}], ",", 
+     RowBox[{"BaseStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"FontSize", "\[Rule]", "16"}], "}"}]}], ",", 
+     RowBox[{"AxesLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\[Theta]", ",", "\"\<numerator value\>\""}], "}"}]}], ",", 
+     RowBox[{"PlotLabel", "\[Rule]", "\"\<Numerator\>\""}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g4", " ", "=", " ", 
+   RowBox[{"BarChart", "[", 
+    RowBox[{"vPosterior", ",", 
+     RowBox[{"ChartLabels", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "1"}], "}"}]}], ",", 
+     RowBox[{"ChartStyle", "\[Rule]", 
+      RowBox[{"{", "Gray", "}"}]}], ",", 
+     RowBox[{"BaseStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"FontSize", "\[Rule]", "16"}], "}"}]}], ",", 
+     RowBox[{"AxesLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\[Theta]", ",", "\"\<pmf\>\""}], "}"}]}], ",", 
+     RowBox[{"PlotLabel", "\[Rule]", "\"\<Posterior\>\""}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Show", "[", 
+  RowBox[{
+   RowBox[{"GraphicsColumn", "[", 
+    RowBox[{"{", 
+     RowBox[{"g1", ",", "g2", ",", "g3", ",", "g4"}], "}"}], "]"}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", "Large"}]}], 
+  "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.6243190891609616`*^9, 3.624319192757887*^9}, {
+  3.624319430006457*^9, 3.6243194422681584`*^9}, {3.62431949981645*^9, 
+  3.624319587850485*^9}, {3.625066336699273*^9, 3.625066398916832*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {InsetBox[
+     GraphicsBox[{
+       {Opacity[0], PointBox[{{0.44545454545454544`, 0.}}]}, {{}, 
+        {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+         EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+         {GrayLevel[0.5], EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{0.5454545454545454, 0.}, {1.4545454545454546`, 
+                0.75}, "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{66.95371921111523, 
+               140.30368827825723`}, {-122.1770311898344, \
+-22.174528301886795`}}],
+             StatusArea[#, 
+              Rational[3, 4]]& ,
+             TagBoxNote->"3/4"],
+            StyleBox[
+             FractionBox["3", "4"], {
+              GrayLevel[0]}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[
+             Rational[3, 4], {
+              GrayLevel[0]}], "Tooltip"]& ]}, 
+         {GrayLevel[0.5], EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{1.5454545454545454`, 0.}, {2.4545454545454546`, 
+                0.25}, "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{147.08868518497144`, 
+               220.43865425211345`}, {-55.842029264535995`, \
+-22.174528301886795`}}],
+             StatusArea[#, 
+              Rational[1, 4]]& ,
+             TagBoxNote->"1/4"],
+            StyleBox[
+             FractionBox["1", "4"], {
+              GrayLevel[0]}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[
+             Rational[1, 4], {
+              GrayLevel[0]}], "Tooltip"]& ]}}, {}, {}}, {}, {}, 
+       GraphicsGroupBox[
+        {GrayLevel[0], 
+         StyleBox[
+          StyleBox[
+           StyleBox[{
+             {Thickness[Tiny], 
+              LineBox[{{0.44545454545454544`, 0.}, {2.4545454545454546`, 
+               0.}}], InsetBox["\[Theta]", 
+               Offset[{10., 0.}, {2.4545454545454546`, 0.}], {-1, 0}, 
+               Automatic, {1, 0}]}, 
+             {Thickness[Tiny], 
+              LineBox[{{0.5454545454545454, 0.}, 
+                Offset[{-1.102182119232618*^-15, -6.}, {0.5454545454545454, 
+                 0.}]}], 
+              LineBox[{{2.4545454545454546`, 0.}, 
+                Offset[{-1.102182119232618*^-15, -6.}, {2.4545454545454546`, 
+                 0.}]}], {{}, {}, {
+                LineBox[{{1.4545454545454546`, 0.}, 
+                  Offset[{-7.347880794884119*^-16, -4.}, {1.4545454545454546`,
+                    0.}]}], 
+                LineBox[{{1.5454545454545454`, 0.}, 
+                  Offset[{-7.347880794884119*^-16, -4.}, {1.5454545454545454`,
+                    0.}]}]}, {}}, {
+               InsetBox["0", Offset[{0., -2.}, {1., 0.}], {0, 1}, Automatic, {
+                1, 0}], 
+               InsetBox["1", Offset[{0., -2.}, {2., 0.}], {0, 1}, Automatic, {
+                1, 0}]}}},
+            Antialiasing->False], "GraphicsAxes",
+           StripOnInput->False],
+          Antialiasing->False]}]},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{False, True},
+      AxesLabel->{
+        FormBox["\[Theta]", TraditionalForm], 
+        FormBox["\"pmf\"", TraditionalForm]},
+      AxesOrigin->{0.44545454545454544`, 0},
+      BaseStyle->{FontSize -> 16},
+      FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+      GridLines->{None, None},
+      PlotLabel->FormBox["\"Prior\"", TraditionalForm],
+      PlotRangePadding->Scaled[0.02],
+      Ticks->{None, Automatic}], {189., -120.14580741297955`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}], InsetBox[
+     GraphicsBox[{
+       {Opacity[0], PointBox[{{0.44545454545454544`, 0.}}]}, {{}, 
+        {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+         EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+         {GrayLevel[0.5], EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{0.5454545454545454, 0.}, {1.4545454545454546`, 
+                0.1}, "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{70.45371921111519, 
+               143.80368827825725`}, {-35.11234116288021, \
+-22.17452830188676}}],
+             StatusArea[#, 
+              Rational[1, 10]]& ,
+             TagBoxNote->"1/10"],
+            StyleBox[
+             FractionBox["1", "10"], {
+              GrayLevel[0]}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[
+             Rational[1, 10], {
+              GrayLevel[0]}], "Tooltip"]& ]}, 
+         {GrayLevel[0.5], EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{1.5454545454545454`, 0.}, {2.4545454545454546`, 
+                0.8}, "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{150.58868518497144`, 
+               223.9386542521135}, {-122.1770311898344, \
+-22.174528301886767`}}],
+             StatusArea[#, 
+              Rational[4, 5]]& ,
+             TagBoxNote->"4/5"],
+            StyleBox[
+             FractionBox["4", "5"], {
+              GrayLevel[0]}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[
+             Rational[4, 5], {
+              GrayLevel[0]}], "Tooltip"]& ]}}, {}, {}}, {}, {}, 
+       GraphicsGroupBox[
+        {GrayLevel[0], 
+         StyleBox[
+          StyleBox[
+           StyleBox[{
+             {Thickness[Tiny], 
+              LineBox[{{0.44545454545454544`, 0.}, {2.4545454545454546`, 
+               0.}}], InsetBox["\[Theta]", 
+               Offset[{10., 0.}, {2.4545454545454546`, 0.}], {-1, 0}, 
+               Automatic, {1, 0}]}, 
+             {Thickness[Tiny], 
+              LineBox[{{0.5454545454545454, 0.}, 
+                Offset[{-1.102182119232618*^-15, -6.}, {0.5454545454545454, 
+                 0.}]}], 
+              LineBox[{{2.4545454545454546`, 0.}, 
+                Offset[{-1.102182119232618*^-15, -6.}, {2.4545454545454546`, 
+                 0.}]}], {{}, {}, {
+                LineBox[{{1.4545454545454546`, 0.}, 
+                  Offset[{-7.347880794884119*^-16, -4.}, {1.4545454545454546`,
+                    0.}]}], 
+                LineBox[{{1.5454545454545454`, 0.}, 
+                  Offset[{-7.347880794884119*^-16, -4.}, {1.5454545454545454`,
+                    0.}]}]}, {}}, {
+               InsetBox["0", Offset[{0., -2.}, {1., 0.}], {0, 1}, Automatic, {
+                1, 0}], 
+               InsetBox["1", Offset[{0., -2.}, {2., 0.}], {0, 1}, Automatic, {
+                1, 0}]}}},
+            Antialiasing->False], "GraphicsAxes",
+           StripOnInput->False],
+          Antialiasing->False]}]},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{False, True},
+      AxesLabel->{
+        FormBox["\[Theta]", TraditionalForm], 
+        FormBox["\"likelihood\"", TraditionalForm]},
+      AxesOrigin->{0.44545454545454544`, 0},
+      BaseStyle->{FontSize -> 16},
+      FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+      GridLines->{None, None},
+      PlotLabel->FormBox["\"Likelihood\"", TraditionalForm],
+      PlotRangePadding->Scaled[0.02],
+      Ticks->{None, Automatic}], {189., -360.43742223893867`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996215`}], InsetBox[
+     GraphicsBox[{
+       {Opacity[0], PointBox[{{0.44545454545454544`, 0.}}]}, {{}, 
+        {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+         EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+         {GrayLevel[0.5], EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{0.5454545454545454, 0.}, {1.4545454545454546`, 
+                0.075}, "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{79.95371921111517, 
+               153.30368827825723`}, {-59.98796688486712, \
+-22.174528301886767`}}],
+             StatusArea[#, 
+              Rational[3, 40]]& ,
+             TagBoxNote->"3/40"],
+            StyleBox[
+             FractionBox["3", "40"], {
+              GrayLevel[0]}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[
+             Rational[3, 40], {
+              GrayLevel[0]}], "Tooltip"]& ]}, 
+         {GrayLevel[0.5], EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{1.5454545454545454`, 0.}, {2.4545454545454546`, 
+                0.2}, "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{160.0886851849714, 
+               
+               233.43865425211348`}, {-122.17703118983441`, \
+-22.174528301886767`}}],
+             StatusArea[#, 
+              Rational[1, 5]]& ,
+             TagBoxNote->"1/5"],
+            StyleBox[
+             FractionBox["1", "5"], {
+              GrayLevel[0]}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[
+             Rational[1, 5], {
+              GrayLevel[0]}], "Tooltip"]& ]}}, {}, {}}, {}, {}, 
+       GraphicsGroupBox[
+        {GrayLevel[0], 
+         StyleBox[
+          StyleBox[
+           StyleBox[{
+             {Thickness[Tiny], 
+              LineBox[{{0.44545454545454544`, 0.}, {2.4545454545454546`, 
+               0.}}], InsetBox["\[Theta]", 
+               Offset[{10., 0.}, {2.4545454545454546`, 0.}], {-1, 0}, 
+               Automatic, {1, 0}]}, 
+             {Thickness[Tiny], 
+              LineBox[{{0.5454545454545454, 0.}, 
+                Offset[{-1.102182119232618*^-15, -6.}, {0.5454545454545454, 
+                 0.}]}], 
+              LineBox[{{2.4545454545454546`, 0.}, 
+                Offset[{-1.102182119232618*^-15, -6.}, {2.4545454545454546`, 
+                 0.}]}], {{}, {}, {
+                LineBox[{{1.4545454545454546`, 0.}, 
+                  Offset[{-7.347880794884119*^-16, -4.}, {1.4545454545454546`,
+                    0.}]}], 
+                LineBox[{{1.5454545454545454`, 0.}, 
+                  Offset[{-7.347880794884119*^-16, -4.}, {1.5454545454545454`,
+                    0.}]}]}, {}}, {
+               InsetBox["0", Offset[{0., -2.}, {1., 0.}], {0, 1}, Automatic, {
+                1, 0}], 
+               InsetBox["1", Offset[{0., -2.}, {2., 0.}], {0, 1}, Automatic, {
+                1, 0}]}}},
+            Antialiasing->False], "GraphicsAxes",
+           StripOnInput->False],
+          Antialiasing->False]}]},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{False, True},
+      AxesLabel->{
+        FormBox["\[Theta]", TraditionalForm], 
+        FormBox["\"numerator value\"", TraditionalForm]},
+      AxesOrigin->{0.44545454545454544`, 0},
+      BaseStyle->{FontSize -> 16},
+      FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+      GridLines->{None, None},
+      PlotLabel->FormBox["\"Numerator\"", TraditionalForm],
+      PlotRangePadding->Scaled[0.02],
+      Ticks->{None, Automatic}], {189., -600.7290370648977}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996215`}], InsetBox[
+     GraphicsBox[{
+       {Opacity[0], PointBox[{{0.44545454545454544`, 0.}}]}, {{}, 
+        {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+         EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+         {GrayLevel[0.5], EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{0.5454545454545454, 0.}, {1.4545454545454546`, 
+                0.2727272727272727}, "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{66.95371921111526, 
+               140.30368827825723`}, {-59.98796688486715, \
+-22.174528301886824`}}],
+             StatusArea[#, 
+              Rational[3, 11]]& ,
+             TagBoxNote->"3/11"],
+            StyleBox[
+             FractionBox["3", "11"], {
+              GrayLevel[0]}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[
+             Rational[3, 11], {
+              GrayLevel[0]}], "Tooltip"]& ]}, 
+         {GrayLevel[0.5], EdgeForm[{Opacity[0.7], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], 
+               
+               RectangleBox[{1.5454545454545454`, 0.}, {2.4545454545454546`, 
+                0.7272727272727273}, "RoundingRadius" -> 0]},
+              
+              ImageSizeCache->{{147.0886851849714, 
+               220.4386542521134}, {-122.1770311898344, \
+-22.174528301886824`}}],
+             StatusArea[#, 
+              Rational[8, 11]]& ,
+             TagBoxNote->"8/11"],
+            StyleBox[
+             FractionBox["8", "11"], {
+              GrayLevel[0]}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[
+             Rational[8, 11], {
+              GrayLevel[0]}], "Tooltip"]& ]}}, {}, {}}, {}, {}, 
+       GraphicsGroupBox[
+        {GrayLevel[0], 
+         StyleBox[
+          StyleBox[
+           StyleBox[{
+             {Thickness[Tiny], 
+              LineBox[{{0.44545454545454544`, 0.}, {2.4545454545454546`, 
+               0.}}], InsetBox["\[Theta]", 
+               Offset[{10., 0.}, {2.4545454545454546`, 0.}], {-1, 0}, 
+               Automatic, {1, 0}]}, 
+             {Thickness[Tiny], 
+              LineBox[{{0.5454545454545454, 0.}, 
+                Offset[{-1.102182119232618*^-15, -6.}, {0.5454545454545454, 
+                 0.}]}], 
+              LineBox[{{2.4545454545454546`, 0.}, 
+                Offset[{-1.102182119232618*^-15, -6.}, {2.4545454545454546`, 
+                 0.}]}], {{}, {}, {
+                LineBox[{{1.4545454545454546`, 0.}, 
+                  Offset[{-7.347880794884119*^-16, -4.}, {1.4545454545454546`,
+                    0.}]}], 
+                LineBox[{{1.5454545454545454`, 0.}, 
+                  Offset[{-7.347880794884119*^-16, -4.}, {1.5454545454545454`,
+                    0.}]}]}, {}}, {
+               InsetBox["0", Offset[{0., -2.}, {1., 0.}], {0, 1}, Automatic, {
+                1, 0}], 
+               InsetBox["1", Offset[{0., -2.}, {2., 0.}], {0, 1}, Automatic, {
+                1, 0}]}}},
+            Antialiasing->False], "GraphicsAxes",
+           StripOnInput->False],
+          Antialiasing->False]}]},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{False, True},
+      AxesLabel->{
+        FormBox["\[Theta]", TraditionalForm], 
+        FormBox["\"pmf\"", TraditionalForm]},
+      AxesOrigin->{0.44545454545454544`, 0},
+      BaseStyle->{FontSize -> 16},
+      FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+      GridLines->{None, None},
+      PlotLabel->FormBox["\"Posterior\"", TraditionalForm],
+      PlotRangePadding->Scaled[0.02],
+      Ticks->{None, Automatic}], {189., -841.0206518908569}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996204`}]}, {}},
+  ContentSelectable->True,
+  ImageSize->Large,
+  PlotRangePadding->{6, 5}]], "Output",
+ CellChangeTimes->{{3.6243195640431232`*^9, 3.624319588774538*^9}, {
+  3.6250663853390555`*^9, 3.625066399766881*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "ImageSize"}]], "Input",
+ CellChangeTimes->{{3.6243195977210493`*^9, 3.6243196025743275`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox["\<\"ImageSize is an option that specifies the overall size of an \
+image to display for an object. \"\>", "MSG"], "\[NonBreakingSpace]", 
+  ButtonBox[
+   StyleBox["\[RightSkeleton]", "SR"],
+   Active->True,
+   BaseStyle->"Link",
+   ButtonData->"paclet:ref/ImageSize"]}]], "Print", "PrintUsage",
+ CellChangeTimes->{3.6250663890932703`*^9},
+ CellTags->"Info3625066388-8742869"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1350, 633},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+ShowSelection->True,
+FrontEndVersion->"9.0 for Microsoft Windows (64-bit) (November 20, 2012)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "Info3625066388-8742869"->{
+  Cell[22036, 561, 411, 10, 42, "Print",
+   CellTags->"Info3625066388-8742869"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"Info3625066388-8742869", 22804, 586}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 103, 1, 79, "Section"],
+Cell[685, 25, 870, 24, 92, "Input"],
+Cell[CellGroupData[{
+Cell[1580, 53, 3031, 78, 132, "Input"],
+Cell[4614, 133, 17260, 419, 735, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21911, 557, 122, 2, 31, "Input"],
+Cell[22036, 561, 411, 10, 42, "Print",
+ CellTags->"Info3625066388-8742869"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

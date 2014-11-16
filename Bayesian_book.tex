@@ -32,6 +32,7 @@
 \chapter{How to best use this book}
 \part{Understanding the Bayesian formula}
 \chapter{The subjective worlds of frequentist and Bayesian statistics}
+\subsection{Probability distributions}\label{sec:Intro_probabilityDistributions}
 
 \chapter{The posterior - the goal of Bayesian inference}
 
@@ -823,25 +824,25 @@ P(\theta|data) = \frac{P(data|\theta)\times P(\theta)}{{\color{blue}P(data)}}
 
 
 \section{Chapter goals}
-Bayesian inference uses probability distributions, called \textit{posteriors}, to make inferences about the world at large. However, to be able to use these powerful tools, we must ensure are probability distributions. The denominator of Bayes' rule, $P(data)$, ensures that the posterior distribution is a \textit{valid} probability distribution, by constraining the sum of its values to be 1. 
+Bayesian inference uses probability distributions, called \textit{posteriors}, to make inferences about the world at large. However, to be able to use these powerful tools, we must ensure they are probability distributions. The denominator of Bayes' rule, $P(data)$, ensures that the posterior distribution is a \textit{valid} probability distribution, by constraining the sum of its values to be 1. 
 
-The denominator is obtained by a sum across all parameter values of the numerator. The seeming simplicity of the previous statement belies the fact that for many circumstances its calculation can be complicated, and often practically intractable. In this chapter we will learn the circumstances when this difficultly arises, as well as a basic appreciation as to how modern computational methods sidestep this issue. We will the details of how these methods work in practice to part \ref{part:computationalBayes}, but this chapter will lay the foundations for this later study.
+$P(data)$ is a marginal probability density obtained by a sum across all parameter values of the numerator. The seeming simplicity of the previous statement belies the fact that for many circumstances its calculation can be complicated, and often practically intractable. In this chapter we will learn the circumstances when this difficultly arises, as well as a basic appreciation as to how modern computational methods sidestep this issue. We will leave the details of how these methods work in practice to part \ref{part:computationalBayes}, but this chapter will lay the foundations for this later study.
 
 \section{An introduction the denominator}
 \subsection{The denominator as a normalising factor}
 We know from chapter \ref{chap:Likelihoods} that the likelihood is not a valid probability density, and hence we reason that the numerator of Bayes' rule - the likelihood multiplied by the prior - is similarly not constrained to be one either. The numerator will satisfy the first condition of a valid probability density: that its values are non-negative. However, the sum of the numerator across all parameter values will not generally be 1; meaning it fails the second test.
 
-A natural way to normalise the numerator to ensure that the posterior is a valid probability density, is to divide by its sum; thus ensuring that its transformed sum is always 1. The denominator of Bayes' rule, $P(data)$, is just this normalising factor. Notice that it does not contain the parameter, $\theta$, due to the fact that we sum across \textit{all} values of $\theta$ to obtain it. This parameter-independence of the denominator ensures that the dependence of the posterior distribution $P(\theta|data)$ on $\theta$ is solely through the numerator (see sections \ref{sec:Prior_numerator} and \ref{sec:Denominator_dispensingWithNumerator}). 
+A natural way to normalise the numerator to ensure that the posterior is a valid probability density, is to divide by its sum; thus ensuring that its transformed sum is always 1. The denominator of Bayes' rule, $P(data)$, is just this normalising factor. Notice that it does not contain the parameter, $\theta$. This is because $P(data)$ is a \textit{marginal} probability density (see section \ref{sec:Intro_probabilityDistributions}), obtained by summing/integrating out all dependence on $\theta$. This parameter-independence of the denominator ensures that the dependence of the posterior distribution $P(\theta|data)$ on $\theta$ is solely through the numerator (see sections \ref{sec:Prior_numerator} and \ref{sec:Denominator_dispensingWithNumerator}). 
 
-There are two varieties of Bayes' rule which we will employ in this chapter, which use slightly different\footnote{Although conceptually identical.} formulations of the denominator. When $\theta$ is a discrete parameter we are required to \textit{sum} over all possible parameter values, in order to normalise the denominator:
+There are two varieties of Bayes' rule which we will employ in this chapter, which use slightly different\footnote{Although conceptually identical.} formulations of the denominator. When $\theta$ is a discrete parameter we are required to \textit{sum} over all possible parameter values, in order to obtain a factor which normalises the numerator:
 
 \begin{equation}\label{eq:Denominator_discreteDenominator}
 P(data) = \sum\limits_{All\;\theta} P(data|\theta) \times P(\theta)
 \end{equation}
 
-We will leave multiple-parameter inference largely to chapter $\ref{chap:conjugate}$, although will discuss how this leads to added complexity in section \ref{sec:Denominator_difficulty}. However, the method proceeds in an analogous manner to (\ref{eq:Denominator_discreteDenominator}), with the single sum is replaced by a number of summations\footnote{The number of summations corresponds to the number of parameters in the model.}
+We will leave multiple-parameter inference largely to chapter $\ref{chap:conjugate}$, although will discuss how this leads to added complexity in section \ref{sec:Denominator_difficulty}. However, the method proceeds in an analogous manner to (\ref{eq:Denominator_discreteDenominator}), with the single sum replaced by a number of summations\footnote{The number of summations corresponds to the number of parameters in the model.}.
 
-For continuous parameters we use the continuous analogue of the sum - an integral, resulting in a denominator of the form:
+For continuous parameters we use the continuous analogue of the sum - an integral - resulting in a denominator of the form:
 
 \begin{equation}\label{eq:Denominator_continuousDenominator}
 P(data) = \int\limits_{All\;\theta} P(data|\theta) \times P(\theta) \mathrm{d}\theta
@@ -850,7 +851,7 @@ P(data) = \int\limits_{All\;\theta} P(data|\theta) \times P(\theta) \mathrm{d}\t
 Similarly, for multiple-parameter systems the single integral is replaced by a multiple-integral. We will now demonstrate how to use (\ref{eq:Denominator_discreteDenominator}) and (\ref{eq:Denominator_continuousDenominator}) through two examples in sections \ref{sec:Denominator_discreteExample} and \ref{sec:Denominator_continuousExample} respectively.
 
 \subsection{Example: disease}\label{sec:Denominator_discreteExample}
-As an example imagine that we are a medical practitioner tasked with evaluating the probability that a given patient has a particular disease. We use $\theta$ to represent the two possible outcomes: 
+Imagine that we are a medical practitioner tasked with evaluating the probability that a given patient has a particular disease. We use $\theta$ to represent the two possible outcomes: 
 
 \begin{equation}
 \theta =
@@ -870,7 +871,7 @@ P(positive|\theta) =
 \end{cases}
 \end{equation}
 
-In (\ref{eq:Denominator_discreteLikelihood}), we implicitly assume that the probability of a negative test result is given by 1 minus the positive test probabilities. 
+In (\ref{eq:Denominator_discreteLikelihood}), we implicitly assume that the probability of a negative test result is given by 1 minus the positive test probabilities. Also, by stating that there is a non-zero probability for $P(positive|\theta=0)$, we are assuming that false-positives do occur.
 
 Suppose that the individual tests positive for the disease. We can now use (\ref{eq:Denominator_discreteDenominator}) to calculate the denominator of Bayes' rule in this case:
 
@@ -882,7 +883,7 @@ P(positive) &= \sum\limits_{\theta=0}^{1} P(positive|\theta) \times P(\theta)\\
 \end{align}
 \end{equation}
 
-Furthermore, it turns out the denominator is also a valid probability density, meaning that we can calculate the counterfactual $P(negative) = 1 - P(positive) = \frac{29}{40}$. We need to be careful with interpreting this last result, since it didn't actually occur. It's best to think of $P(negative)$ as the probability that an individual \textit{could} test negative.
+Furthermore, it turns out the denominator is also a valid probability density\footnote{Due to the fact that we have removed the $\theta$ dependence that confounds attempts to view the numerator as one.}, meaning that we can calculate the counterfactual $P(negative) = 1 - P(positive) = \frac{29}{40}$. We need to be careful with interpreting this last result, since it didn't actually occur. It's best to think of $P(negative)$ as the probability that we would assign to an individual testing negative before we carry out the test.
 
 We can then use Bayes' rule to obtain the posterior probability that the individual has the disease, given that they tested positively:
 
@@ -898,15 +899,76 @@ We see that in this case, even though we started off with a fairly optimistic pr
 
 \begin{figure}
 \centering
-\scalebox{0.40} 
-{\includegraphics{Denominator_discreteExample.pdf}}\caption{The prior (top is multiplied by the likelihood (middle), which when summed over $\theta\in\{0,1\}$ yields $P(data)$ which is used to normalise the numerator,...perhaps have another panel here for the numerator!}\label{fig:Denominator_discreteExample}
+\scalebox{0.8} 
+{\includegraphics{Denominator_discreteExample.pdf}}\caption{The prior is multiplied through by the likelihood, resulting in the numerator (the penultimate panel), which is then normalised by the sum over its values, to obtain the denominator.}\label{fig:Denominator_discreteExample}
 \end{figure}
 
-\subsection{Example: }\label{sec:Denominator_continuousExample}
+\subsection{Example: the proportion of people who vote for conservatively}\label{sec:Denominator_continuousExample}
+We now are in the position of interpreting exit polls in a general election, and are tasked with inferring the proportion of voters, $\theta$, that have voted for the conservative party. We suppose that conservatives are relatively unpopular at the time of the election, and hence we assume that, at most, 45\% of the electorate will vote for them, meaning we choose a cut-off uniform prior of the form shown in figure \ref{fig:Denominator_continuousExample}\footnote{This isn't really a reasonable prior in this case, since it is unrealistic to allow the probability density to jump from 0 at 46\% to above 2 at 46\%! However, we will stick with it to demonstrate its effect on inference.}. For data we obtain voter preference data from 100 individuals leaving a particular polling station. To simplify the analysis, we will assume that there are only two political parties, and all voters must choose between either of these two options. We will assume that the polling station chosen is thought to be representative of the electorate as a whole, and voters' choices are independent of one another. In this situation we can use the results of section \ref{sec:Likelihood_diseaseGroup}, and use a binomial likelihood function:
 
+\begin{equation}\label{eq:Denominator_binomial}
+P(Z=\beta|\theta) = {100 \choose \beta} \theta^\beta (1-\theta)^{100-\beta}
+\end{equation}
+
+In (\ref{eq:Denominator_binomial}), Z is a variable that represents the number of individuals who vote conservatively in the sample. $\beta\in\{0,100\}$ is the value which corresponds to the number of conservative voters. We assume in this case that 40 people out of the sample of 100 voted conservatively resulting in the likelihood shown in figure \ref{fig:Denominator_continuousExample}, which is peaked at the Maximum Likelihood estimate of $\theta=40\%$.
+
+\begin{figure}
+\centering
+\scalebox{0.8} 
+{\includegraphics{Denominator_continuousExample.pdf}}\caption{The prior, likelihood and posterior for the proportion of individuals voting for the conservative party in a general election, where we have found 40 people out of a sample of 100 voted conservative.}\label{fig:Denominator_continuousExample}
+\end{figure}
+
+We then find the denominator by using (\ref{eq:Denominator_continuousDenominator}), where $\theta\in\{0,1\}$:
+
+\begin{equation}\label{eq:Denominator_continuousExampleApprox}
+\begin{align}
+P(Z=40) &= \int\limits_{0}^{1} P(Z=40|\theta) \times P(\theta) \mathrm{d}\theta\\
+&= \int\limits_{0}^{0.45} {100 \choose 40} \theta^{40} (1-\theta)^{60} \times \frac{20}{9} \mathrm{d}\theta\\
+&\approx 0.018
+\end{align}
+\end{equation}
+
+In (\ref{eq:Denominator_continuousExampleApprox}), we have used the fact that since $P(\theta)=0$ for $\theta>0.45$, we can restrict the integral to only the region below that value\footnotetext{The factor $\frac{20}{9}$ is from the uniform density for $\theta\leq 0.45$.}. The value $\theta\approx 0.018$ has come by numerically integrating the second line.
+
+Now that we have the value of the denominator, we can use it to normalise the product of the prior and the likelihood, resulting in the posterior distribution seen in figure \ref{fig:Denominator_continuousExample}. Notice the effect of truncating the uniform distribution at $\theta=0.45$ is to truncate the posterior distribution at this value; resulting in a discontinuous jump in the posterior, which could be seen as an undesirable consequence of this prior.
+ 
 \subsection{The denominator as the probability of data}
-Another way to view the 
+Another way to view the denominator is as the \textit{probability of the data given choice of model}. Where \textit{model} here encompasses both the likelihood and the prior. The quantity represents the accumulation of evidence for our particular model, where the result represents a trade-off between our the data and our pre-experimental pre-conceptions. It represents the \textit{average} fit of our model to the data across all parameter values. To see this note that the denominator is actually the expected value of the likelihood - the fit - given choice of prior\footnote{This comes from the mathematical definition of the expected value of a quantity.}:
+
+\begin{equation}\label{eq:Denominator_expectedLikelihood}
+p(data) = \mathbb{E}_\theta\left[p(data|\theta)\right] = \int\limits_{All\; \theta} p(data|\theta) \times p(\theta) \mathrm{d}\theta
+\end{equation}
+
+In (\ref{eq:Denominator_expectedLikelihood}) we have assumed that the parameter(s) are continuous, necessitating an integral rather than a discrete sum.
+
+Since it really represents the evidence for our model, we can use it to compare two competing models. We could simply calculate the ratio of $\frac{p(data|model_1)}{p(data|model_2)}$, and use this as a guide to choose between models, but we would ideally like to do model selection in a more complete Bayesian manner. What we really care about for model choice is $p(model|data)$, rather than what we currently have $p(data|model)$. To obtain this we can use Bayes' rule, but now conditioning on choice of \textit{model} rather than \textit{parameter}:
+
+\begin{equation}\label{eq:Denominator_modelProbability}
+p(model|data) = \frac{p(data|model)\times p(model)}{p(data)}
+\end{equation} 
+
+In (\ref{eq:Denominator_modelProbability}), the denominator is \textit{not} the same as that which we see in our previous applications of Bayes' rule, and represents the probability of obtaining the data across \textit{all} models. Notice that we also have introduced $p(model)$ which represents our prior faith in this particular model. We can now use (\ref{eq:Denominator_modelProbability}) to choose between two models by calculating the ratio:
+
+\begin{equation}\label{eq:Denominator_modelComparison}
+\frac{p(model_1|data)}{p(model_2|data)} = \frac{p(data|model_1)}{p(data|model_2)}\times \frac{p(model_1)}{p(model_2)}
+\end{equation} 
+
+If we have no prior leaning towards either of the two models then it seems reasonable to set $p(model_1)=p(model_2)$, and we are reduced to our previously proposed way of choosing between models. In fact the first ratio on the RHS of (\ref{eq:Denominator_modelComparison}) is sufficiently used to merit its own name, the \textit{Bayes' factor} is:
+
+\begin{equation}\label{eq:Denominator_bayesFactor}
+Bayes\; factor(model_1,model_2) = \frac{p(data|model_1)}{p(data|model_2)}
+\end{equation}
+
+We shall come to discuss the usefulness of the Bayes factor in chapter \ref{chap:ModelFit} for choosing between models, as well as comparing hypotheses.
+
+The denominator does not really have a use in itself, without comparing it to something else.
+
+It is actually a \textit{marginal} probability density that is obtained by summing/integrating out the dependence on the parameter(s) of the joint density $P(data,\theta)$.
+
 Include the 3D visualisation of $P(data,\theta)$ in discrete and continuous cases.
+The Bayes' factor/probability of data and its use in model comparison. P64. Why doesn't Kruscke use the Bayes' factor when comparing models? See 184 in Gelman. 
+The difficulty calculating P(data) with an improper prior.
+Go through and correct P to p for probability.
 
 \section{The difficulty with the denominator}\label{sec:Denominator_difficulty}
 
@@ -925,6 +987,12 @@ Include the 3D visualisation of $P(data,\theta)$ in discrete and continuous case
 \part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
 
 \chapter{Hierarchical models}\label{chap:hierarchicalModels}
+
+\part{Regression analysis and hierarchical models}
+\chapter{Hypothesis testing I: Classical frequentist vs Bayesian approaches}
+
+\chapter{Evaluation of model fit}\label{chap:ModelFit}
+Formerly hypothesis testing II. Definitely use something similar to Kruscke's P67 example for choosing between models.
 
 \bibliographystyle{plain}
 \bibliography{Bayes}
