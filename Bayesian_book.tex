@@ -932,7 +932,7 @@ In (\ref{eq:Denominator_continuousExampleApprox}), we have used the fact that si
 
 Now that we have the value of the denominator, we can use it to normalise the product of the prior and the likelihood, resulting in the posterior distribution seen in figure \ref{fig:Denominator_continuousExample}. Notice the effect of truncating the uniform distribution at $\theta=0.45$ is to truncate the posterior distribution at this value; resulting in a discontinuous jump in the posterior, which could be seen as an undesirable consequence of this prior.
 
-\subsection{The denominator as a probability}
+\subsection{The denominator as a probability}\label{sec:Denominator_asAProbability}
 Another way to view the denominator is as the \textit{probability of the data given choice of model}. Where \textit{model} here encompasses both the likelihood and the prior. It is actually a \textit{marginal} probability density that is obtained by summing/integrating out the dependence on the parameter(s) of the joint density $P(data,\theta)$:
 
 \begin{equation}\label{eq:Denominator_jointDensity}
@@ -954,7 +954,7 @@ We are thus able to characterise the joint density of the data and $\theta$ in B
 \begin{table}[htbp]
   \centering
   
-    \begin{tabular}{rr|cc}
+    \begin{tabular}{rr|cccc}
     
      &       & \multicolumn{2}{c}{\textbf{Disease status}} \\
     \toprule
@@ -968,25 +968,25 @@ We are thus able to characterise the joint density of the data and $\theta$ in B
     \textbf{Prior} &       & 0.75  & 0.25 \\
     &       & \multicolumn{1}{r}{} & \multicolumn{1}{r}{} \\
           & \textbf{} & \textbf{=} & \textbf{=} \\
-&      \textbf{Test Results} & \multicolumn{1}{r}{} & \multicolumn{1}{r}{} \\
-    \textbf{Joint density} & \multicolumn{1}{c}{0} \vline& 0.675 & 0.05 \\
-          & \multicolumn{1}{c}{1}\vline & 0.075 & 0.20 \\
+&      \textbf{Test Results} & \multicolumn{1}{r}{} & \multicolumn{1}{r}{} & $p(data)$ \\
+    \textbf{Joint density} & \multicolumn{1}{c}{0} \vline& 0.675 & 0.05  & \textbf{0.725}\\
+          & \multicolumn{1}{c}{1}\vline & 0.075 & 0.20 & \textbf{0.275}\\
     \bottomrule
     \end{tabular}%
-    \caption{Shows the derivation of the joint density for the disease example described in section \ref{sec:Denominator_discreteExample}. Each column of the likelihood - corresponding to a given disease status - is multiplied by the corresponding prior, resulting in the joint density. See figure \ref{fig:Denominator_discreteJointDensity} for a graphical depiction of this joint density.}
+    \caption{Shows the derivation of the joint density for the disease example described in section \ref{sec:Denominator_discreteExample}. Each column of the likelihood - corresponding to a given disease status - is multiplied by the corresponding prior, resulting in the joint density. By summing the joint density across the different disease statuses of the patient, this results in $p(data)$. \textbf{Add pluses and equals to the calculation of $p(data)$. Also add in the posterior calculation.} See figure \ref{fig:Denominator_discreteJointDensity} for a graphical depiction of this joint density.}
   \label{tab:Denominator_discreteJoint}%
 \end{table}%
 
 \begin{figure}
 \centering
 \scalebox{0.8} 
-{\includegraphics{Denominator_discreteJointDensity.pdf}}\caption{The joint density of the data and the parameter for the disease example described in section \ref{sec:Denominator_discreteExample}. When we uncover that the test result is positive, we are confined to look at the bars in dark grey; finding that the probability that an individual is diseased is significantly higher than the alternative (see the bottom panel of figure \ref{fig:Denominator_discreteExample}). \textbf{Perhaps redo this figure with a contour plot opposed to a 3D graph, and show how the posterior is obtained in another panel.}}\label{fig:Denominator_discreteJointDensity}
+{\includegraphics{Denominator_discreteJointDensity.pdf}}\caption{The joint density of the data and the parameter for the disease example described in section \ref{sec:Denominator_discreteExample}. When we uncover that the test result is positive, we are confined to look at the bars in dark grey; finding that the probability that an individual is diseased is significantly higher than the alternative (see the bottom panel of figure \ref{fig:Denominator_discreteExample}). \textbf{Perhaps redo this figure with a contour plot opposed to a 3D graph, and show how the posterior is obtained in another panel. Or just get rid of it, the table does pretty much cover it.}}\label{fig:Denominator_discreteJointDensity}
 \end{figure}
 
 \begin{figure}
 \centering
 \scalebox{0.8} 
-{\includegraphics{Denominator_continuousJointDensity.pdf}}\caption{A contour plot of the joint density of the voting example described in section \ref{fig:Denominator_continuousJointDensity}. Note that in reality the data variable is discrete, but I have drawn it here as continuous to make the plot simpler to interpret. \textbf{I want to add a line at 40 and describe that the contour followed results in the posterior density shown below.}}\label{fig:Denominator_continuousJointDensity}
+{\includegraphics{Denominator_continuousJointDensity.pdf}}\caption{Top-left: a contour plot of the joint density of the voting example described in section \ref{fig:Denominator_continuousJointDensity}. Top-right: the marginal density of $p(data)$ obtained by summing across all values of $\theta$. Bottom-left: the posterior obtained by summing the joint density across the line shown at 40. Note that in reality the data variable is discrete, but I have drawn it here as continuous to make the plot simpler to interpret. \textbf{The line at 40 may be dashed in the final version. The axes all need to be aligned.}}\label{fig:Denominator_continuousJointDensity}
 \end{figure}
 
 
@@ -1027,9 +1027,42 @@ The difficulty calculating P(data) with an improper prior.
 Go through and correct P to p for probability.
 
 \section{The difficulty with the denominator}\label{sec:Denominator_difficulty}
+We have come to realise that the denominator of Bayes' rule is obtained by summing/integrating the joint density $p(data,\theta)$, where the latter is obtained by the product of the prior and the likelihood. The examples in section \ref{sec:Denominator_asAProbability} indicate how this procedure works when there is a single parameter in the model. However, in most real-life applications of statistics, the likelihood is a function of a number of parameters. For the case of a two parameter discrete model, the denominator is given by a double sum:
+
+\begin{equation}\label{eq:Denominator_doubleSum}
+p(data) = \sum\limits_{All\;\theta_1}\sum\limits_{All\;\theta_2}p(data,\theta_1,\theta_2)
+\end{equation}
+
+And for a two-dimensional continuous parameter vector, we are now required to do a double integral:
+
+\begin{equation}\label{eq:Denominator_doubleIntegral}
+p(data) = \int\limits_{All\;\theta_1}\int\limits_{All\;\theta_2}p(data,\theta_1,\theta_2)\mathrm{d}\theta_1\mathrm{d}\theta_2
+\end{equation}
+
+Whilst the two-parameter forms (\ref{eq:Denominator_doubleSum}) and (\ref{eq:Denominator_doubleIntegral}) may not look more intrinsically difficult than their single parameter counterparts, (\ref{eq:Denominator_discreteDenominator}) and (\ref{eq:Denominator_continuousDenominator}) respectively, this aesthetic similarity is misleading, particularly in the continuous case. Whilst in the discrete case, it is possible to enumerate all parameter values, and hence - by brute force - calculate the exact value of $p(data)$, for continuous parameters, the integral may be difficult to undertake. This difficulty is amplified the more parameters we include within the model, rendering the analytic\footnote{This just means to write down a relation for the denominator in closed form.} calculation of the denominator practically impossible, for all but the simplest models.
+
+
+
 Multi-dimensional parameters for discrete and continuous models respectively.
 
 \section{How to dispense with the difficulty: Bayesian computation}\label{sec:Denominator_dispensingWithNumerator}
+The Herculean task of calculating the denominator for continuous parameters would seem to put a real spanner in the works for Bayesian statistics, such its reliance on the denominator of Bayes' rule. However, all is not lost. There are two solutions to the difficulty:
+
+\begin{itemize}
+\item Use priors conjugate to the likelihood (See chapter \ref{chap:conjugate}).
+\item Abandon analyticity, and opt to sample from the posterior instead.
+\end{itemize}
+
+The first of these workarounds still allows for exact derivation of an expression for the posterior distribution, by choosing a mathematically \textit{nice} form for the prior distribution. This simplifies the analysis, since one can simply look up formulae for the posterior which have already been tabulated for us, avoiding to have to do any maths at all. However, frequently in real life applications of Bayesian statistics, we need to stray outside this realm of mathematical convenience. The price for a more varied choice of priors and likelihoods is that we have to give up our aspirations for closed-form calculation of the posterior density. However, it turns out in these circumstances we can still \textit{exactly} sample from the posterior, and then use sample summary statistics to describe the posterior distribution in a very adequate way. We will leave a full description of these computational methods to part \ref{part:computationalBayes}, but to provide a clue as to where we may be heading, we note that the posterior density can be written:
+
+\begin{equation}\label{eq:Denominator_proportional}
+\begin{align}
+p(\theta|data) &= \frac{p(data|\theta)\times p(\theta)}{p(data)}\\
+&\propto p(data|\theta)\times p(\theta)
+\end{align}
+\end{equation}
+
+In (\ref{eq:Denominator_proportional}) we have arrived at the second line due to $p(data)$ being independent of $\theta$; it is essentially a constant that we use to normalise the posterior. If we use the fact that we 
 
 \section{Chapter summary}
 
