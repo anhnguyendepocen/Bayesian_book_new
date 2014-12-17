@@ -33,6 +33,7 @@
 \part{Understanding the Bayesian formula}
 \chapter{The subjective worlds of frequentist and Bayesian statistics}
 \subsection{Probability distributions}\label{sec:Intro_probabilityDistributions}
+\subsection{Central Limit Theorems}\label{sec:Intro_CLT}
 
 \chapter{The posterior - the goal of Bayesian inference}
 
@@ -832,7 +833,7 @@ $P(data)$ is a marginal probability density obtained by a sum across all paramet
 \subsection{The denominator as a normalising factor}
 We know from chapter \ref{chap:Likelihoods} that the likelihood is not a valid probability density, and hence we reason that the numerator of Bayes' rule - the likelihood multiplied by the prior - is similarly not constrained to be one either. The numerator will satisfy the first condition of a valid probability density: that its values are non-negative. However, the sum of the numerator across all parameter values will not generally be 1; meaning it fails the second test.
 
-A natural way to normalise the numerator to ensure that the posterior is a valid probability density, is to divide by its sum; thus ensuring that its transformed sum is always 1. The denominator of Bayes' rule, $P(data)$, is just this normalising factor. Notice that it does not contain the parameter, $\theta$. This is because $P(data)$ is a \textit{marginal} probability density (see section \ref{sec:Intro_probabilityDistributions}), obtained by summing/integrating out all dependence on $\theta$. This parameter-independence of the denominator ensures that the dependence of the posterior distribution $P(\theta|data)$ on $\theta$ is solely through the numerator (see sections \ref{sec:Prior_numerator} and \ref{sec:Denominator_dispensingWithNumerator}). 
+A natural way to normalise the numerator to ensure that the posterior is a valid probability density, is to divide by its sum; thus ensuring that its transformed variable's sum is always 1. The denominator of Bayes' rule, $P(data)$, is just this normalising factor. Notice that it does not contain the parameter, $\theta$. This is because $P(data)$ is a \textit{marginal} probability density (see section \ref{sec:Intro_probabilityDistributions}), obtained by summing/integrating out all dependence on $\theta$. This parameter-independence of the denominator ensures that the dependence of the posterior distribution $P(\theta|data)$ on $\theta$ is solely through the numerator (see sections \ref{sec:Prior_numerator} and \ref{sec:Denominator_dispensingWithNumerator}). 
 
 There are two varieties of Bayes' rule which we will employ in this chapter, which use slightly different\footnote{Although conceptually identical.} formulations of the denominator. When $\theta$ is a discrete parameter we are required to \textit{sum} over all possible parameter values, in order to obtain a factor which normalises the numerator:
 
@@ -904,13 +905,13 @@ We see that in this case, even though we started off with a fairly optimistic pr
 \end{figure}
 
 \subsection{Example: the proportion of people who vote for conservatively}\label{sec:Denominator_continuousExample}
-We now are in the position of interpreting exit polls in a general election, and are tasked with inferring the proportion of voters, $\theta$, that have voted for the conservative party. We suppose that conservatives are relatively unpopular at the time of the election, and hence we assume that, at most, 45\% of the electorate will vote for them, meaning we choose a cut-off uniform prior of the form shown in figure \ref{fig:Denominator_continuousExample}\footnote{This isn't really a reasonable prior in this case, since it is unrealistic to allow the probability density to jump from 0 at 46\% to above 2 at 46\%! However, we will stick with it to demonstrate its effect on inference.}. For data we obtain voter preference data from 100 individuals leaving a particular polling station. To simplify the analysis, we will assume that there are only two political parties, and all voters must choose between either of these two options. We will assume that the polling station chosen is thought to be representative of the electorate as a whole, and voters' choices are independent of one another. In this situation we can use the results of section \ref{sec:Likelihood_diseaseGroup}, and use a binomial likelihood function:
+We now are in the position of interpreting exit polls in a general election, and are tasked with inferring the proportion of voters, $\theta$, that have voted for the conservative party. We suppose that conservatives are relatively unpopular at the time of the election, and hence we assume that, at most, 45\% of the electorate will vote for them, meaning we choose a cut-off uniform prior of the form shown in figure \ref{fig:Denominator_continuousExample}\footnote{This isn't really a reasonable prior in this case, since it is unrealistic to allow the probability density to jump from 0 at 46\% to above 2 at 45\%! However, we will stick with it to demonstrate its effect on inference.}. For data we obtain voter preference data from 100 individuals leaving a particular polling station. To simplify the analysis, we will assume that there are only two political parties, and all voters must choose between either of these two options. We will assume that the polling station chosen is thought to be representative of the electorate as a whole, and voters' choices are independent of one another. In this situation we can use the results of section \ref{sec:Likelihood_diseaseGroup}, and use a binomial likelihood function:
 
 \begin{equation}\label{eq:Denominator_binomial}
 P(Z=\beta|\theta) = {100 \choose \beta} \theta^\beta (1-\theta)^{100-\beta}
 \end{equation}
 
-In (\ref{eq:Denominator_binomial}), Z is a variable that represents the number of individuals who vote conservatively in the sample. $\beta\in\{0,100\}$ is the value which corresponds to the number of conservative voters. We assume in this case that 40 people out of the sample of 100 voted conservatively resulting in the likelihood shown in figure \ref{fig:Denominator_continuousExample}, which is peaked at the Maximum Likelihood estimate of $\theta=40\%$.
+In (\ref{eq:Denominator_binomial}), Z is a variable that represents the number of individuals who vote conservatively in the sample. $\beta\in[0,100]$ is the value which corresponds to the number of conservative voters. We assume in this case that 40 people out of the sample of 100 voted conservatively resulting in the likelihood shown in figure \ref{fig:Denominator_continuousExample}, which is peaked at the Maximum Likelihood estimate of $\theta=40\%$.
 
 \begin{figure}
 \centering
@@ -1041,9 +1042,88 @@ p(data) = \int\limits_{All\;\theta_1}\int\limits_{All\;\theta_2}p(data,\theta_1,
 
 Whilst the two-parameter forms (\ref{eq:Denominator_doubleSum}) and (\ref{eq:Denominator_doubleIntegral}) may not look more intrinsically difficult than their single parameter counterparts, (\ref{eq:Denominator_discreteDenominator}) and (\ref{eq:Denominator_continuousDenominator}) respectively, this aesthetic similarity is misleading, particularly in the continuous case. Whilst in the discrete case, it is possible to enumerate all parameter values, and hence - by brute force - calculate the exact value of $p(data)$, for continuous parameters, the integral may be difficult to undertake. This difficulty is amplified the more parameters we include within the model, rendering the analytic\footnote{This just means to write down a relation for the denominator in closed form.} calculation of the denominator practically impossible, for all but the simplest models.
 
+\subsection{Multi-parameter discrete model example: the comorbidity between depression and anxiety}\label{sec:Denominator_comorbidityTwoParameterDiscrete}
+In medicine comorbidity refers to the concurrence of two or more conditions. An example of this is the frequent coincidence of depression and anxiety in a patient. Let $D\in\{0,1\}$ and $A\in\{0,1\}$ be random variables representing the depression and anxiety statuses of a particular patient respectively. Now that we have two parameters, we must specify a joint prior distribution. An example prior is shown at of the top of table \ref{tab:Denominator_comorbidityTwoParameterDiscrete}, in which we have also calculated the marginal prior distributions by summing over all values of the other variable. We suppose that \textit{a priori} the clinician undertaking this case believes that the patient is unlikely to meet all the criteria necessary for them to be defined as having both disorders, which is reflected in a prior probability of $p(D=1,A=1)=0.6$.
+
+We can also use this joint distribution to calculate prior conditional probabilities. For example, we can calculate the probability that an individual has anxiety, \textit{given} that they have depression:
+
+\begin{equation}
+\begin{align}
+p(A=1|D=1) &= \frac{p(A=1,D=1)}{p(D=1)}\\
+&= \frac{0.2}{0.35}\\
+&=\frac{4}{7}\approx 0.57
+\end{align}
+\end{equation}
+
+This shows that it is considerably more likely that a patient has anxiety, if they are already depressed (compared with the unconditional $p(A=1)=0.25$), indicating our prior beliefs regarding the comorbidity of these two conditions.
+
+We assume that the patient takes a personality diagnostic test which provides some extra information regarding whether the individual has either of these conditions. Let's assume for simplicity that the result of the test, $X\in\{0,1\}$, has the likelihood shown in the second panel of table \ref{tab:Denominator_comorbidityTwoParameterDiscrete}. The maximum likelihood estimator would be that the individual has $(D=1,A=1)$, with the lowest likelihood going to the disorder-free case.
 
 
-Multi-dimensional parameters for discrete and continuous models respectively.
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{cccccc}
+    \toprule
+    \textbf{Prior} &       & \multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{A}} &  \\
+    
+    \textbf{} &       & \multicolumn{1}{c}{} & \textbf{0} & \textbf{1} & \textbf{$p(D)$} \\
+    \textbf{} & \textbf{D} & \multicolumn{1}{c}{\textbf{0}} & 0.6   & 0.05  & \textbf{0.65} \\
+    \textbf{} &       & \multicolumn{1}{c}{\textbf{1}} & 0.15  & 0.2   & \textbf{0.35} \\
+    \textbf{} &       & \multicolumn{1}{c}{\textbf{$p(A)$}} & \textbf{0.75} & \textbf{0.25} &  \\
+    \midrule
+    \textbf{Likelihood (X=1)} &       & \multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{A}} &  \\
+    \textbf{} &       & \multicolumn{1}{c}{} & \textbf{0} & \textbf{1} & \textbf{} \\
+    \textbf{} & \textbf{D} & \multicolumn{1}{c}{\textbf{0}} & 0.05  & 0.4   & \textbf{} \\
+    \textbf{} &       & \multicolumn{1}{c}{\textbf{1}} & 0.4   & 0.8   & \textbf{} \\
+    \midrule
+    \textbf{Numerator = Prior x Likelihood} &       & \multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{A}} &  \\
+    \textbf{} &       & \multicolumn{1}{c}{} & \textbf{0} & \textbf{1} &  \\
+    \textbf{} & \textbf{D} & \multicolumn{1}{c}{\textbf{0}} & 0.03  & 0.02  &  \\
+    \textbf{} & \textbf{} & \multicolumn{1}{c}{\textbf{1}} & 0.06  & 0.16  &  \\
+    $\textbf{p(X=1)=0.03+0.03+0.06+0.16=0.27}$} &     &  &  &       &  \\
+    \midrule
+    \textbf{Posterior} &       & \multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{A}} &  \\
+          &       & \multicolumn{1}{c}{} & \textbf{0} & \textbf{1} & \textbf{$p(D|X=1)$} \\
+          & \textbf{D} & \multicolumn{1}{c}{\textbf{0}} & 0.11  & 0.07  & \textbf{0.19} \\
+          & \textbf{} & \multicolumn{1}{c}{\textbf{1}} & 0.22  & 0.59  & \textbf{0.81} \\
+          &       & \multicolumn{1}{c}{\textbf{$p(A|X=1)$}} & \textbf{0.33} & \textbf{0.67} &  \\
+    \bottomrule
+    \end{tabular}%
+    \caption{}
+  \label{tab:Denominator_comorbidityTwoParameterDiscrete}%
+\end{table}%
+
+We would now like to calculate the joint posterior probability of the two conditions, given that an individual tests positive ($X=1$). We can write this using Bayes' rule, although now we must now make sure to condition the likelihood on both parameters. However, we can denote the parameter vector, $\boldsymbol{\theta}=(D,A)$, and apply Bayes' rule just as before:
+
+\begin{equation}\label{eq:Denominator_TwoParameterDiscreteBayesSimple}
+\begin{align}
+p(\boldsymbol{\theta}|X=1) &= \frac{p(X=1|\boldsymbol{\theta})\times p(\boldsymbol{\theta})}{p(X=1)}\\
+& = \frac{p(X=1|A,D)\times p(A,D)}{p(X=1)}
+\end{align}
+\end{equation}
+
+In (\ref{eq:Denominator_TwoParameterDiscreteBayesSimple}), we have simply substituted the definition of, $\boldsymbol{\theta}=(D,A)$, into the top line to get the final expression. Therefore, just like before we multiply the likelihood by the prior to obtain the numerator of Bayes' rule. We finally sum over all numerator values, and use this to obtain the posterior distribution (see table \ref{tab:Denominator_comorbidityTwoParameterDiscrete}). In table \ref{tab:Denominator_comorbidityTwoParameterDiscrete} we have also calculated the marginal conditional posterior probabilities by using the law of conditional probability, and we find an 81 \% probability that the individual has depression, and 67 \% chance that they have anxiety. The probability that they have both disorders is 59\%.
+
+\subsection{Continuous multi-parameter example: mean and variance of IQ}
+We now consider a situation where we are interested in estimating the mean IQ of some population of interest, of which we only possess a sample. We suppose that since intelligence - as measured by $IQ$ - is dependent on many additive factors, and hence as an approximation we assume a normal likelihood\footnote{We have used the central limit theorem here - see section \ref{sec:Intro_CLT} for a full explanation.}:
+
+\begin{equation}
+p(IQ_i|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} exp\left(-\frac{(IQ_i-\mu)^2}{2\sigma^2}\right)
+\end{equation}
+
+For sake of simplicity, we will assume that IQ is measured on a fixed scale, $IQ\in[0,300]$. We also assume that prior independence between $\mu$ and $\sigma^$, which means that we can calculate the joint prior by multiplying together the individual probabilities:
+
+\begin{equation}\label{sec:Denominator_continuousMultiparameterIndepedence}
+p(\mu,\sigma^2) = p(\mu) \times p(\sigma^2)
+\end{equation}
+
+Since $\sigma^2\geq 0$, we might be tempted to specify a prior distribution for $\sigma^2\sim Unif(0,\infty)$. However, this does not appear sensible because this would assign the same probability to an infinite variance, which is not possible on finite-scaled data. A frequently-used alternative is to specify a prior as uniform in $log(\sigma^2)$ space. This serves two purposes, firstly, because the inverse of a log (the exponent) is always non-negative for real inputs, this ensures that this condition is satisfied by $\sigma^$. Secondly, and most importantly, when we transform a uniform prior on $log(\sigma^2)$ back to $\sigma^$ space, we find that the prior density is equivalent to\footnote{See the chapter appendix for a full mathematical treatment of this result.}:
+
+\begin{equation}
+p(\sigma^2) \propto \frac{1}{\sigma^2}
+\end{equation}
+
+This results in a joint prior for $(\mu,\sigma^2)$ shown in figure . We importantly note that this prior is improper, since $\int\limits_{0}^{\infty} \frac{1}{\sigma^2}\mathrm{d}\sigma^2\rightarrow \infty$, and hence must take case when interpreting the resultant 'posterior' distribution (see section \ref{sec:Prior_vague}). 
 
 \section{How to dispense with the difficulty: Bayesian computation}\label{sec:Denominator_dispensingWithNumerator}
 The Herculean task of calculating the denominator for continuous parameters would seem to put a real spanner in the works for Bayesian statistics, such its reliance on the denominator of Bayes' rule. However, all is not lost. There are two solutions to the difficulty:
@@ -1062,10 +1142,12 @@ p(\theta|data) &= \frac{p(data|\theta)\times p(\theta)}{p(data)}\\
 \end{align}
 \end{equation}
 
-In (\ref{eq:Denominator_proportional}) we have arrived at the second line due to $p(data)$ being independent of $\theta$; it is essentially a constant that we use to normalise the posterior. If we use the fact that we 
+In (\ref{eq:Denominator_proportional}) we have arrived at the second line due to $p(data)$ being independent of $\theta$; it is essentially a constant that we use to normalise the posterior. The numerator of Bayes' rule tells us everything that we need to know about the \textit{shape}\footnote{It's dependence on $\theta$.} of the posterior distribution, whereas the denominator merely tells us about its \textit{height}. Computational methods use the shape of the posterior distribution to generate samples from it based on local comparison of relative probabilities. 
+
+This provides a little insight into the methodology of modern Bayesian methods, although we will cover this in more depth in Part \ref{part:computationalBayes}. 
 
 \section{Chapter summary}
-
+\section{Appendix}\label{sec:Denominator_appendix}
 
 \part{Analytic Bayesian methods}
 \chapter{An introduction to distributions for the mathematically-un-inclined}\label{chap:distributions}
