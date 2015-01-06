@@ -36,42 +36,20 @@
 \section{The world according to classical statistics}
 \section{The world according to Bayesian statistics}
 \section{Similarities and differences in approaches between classical and Bayesian statistics}
-\section{Introduction to probability perhaps?}
-\section{The Bayesian formula}
-\subsection{The intuition behind the formula}
-\section{The Bayesian inference process from the Bayesian formula}
-\section{Implicit vs Explicit subjectivity}
-\section{What are the tangible benefits of Bayesian statistics?}
-\section{Why don't more people use Bayesian statistics?}
-
-
-\chapter{The posterior - the goal of Bayesian inference}
-\section{Chapter Mission statement}
-At the end of this chapter the reader will understand the central importance, and use of the posterior probability distribution in Bayesian statistics.
-
-Insert a graphic with the likelihood part of Bayes' formula circled, as in the equation shown below for the part highlighted in blue.
-
-\begin{equation}
-{\color{blue}P(\theta|data)} = \frac{P(data|\theta)\times P(\theta)}{P(data)}
-\end{equation}\label{eq:Posterior_BayesHighlighted}
-
-\section{Chapter goals}
-Calculating the posterior distribution for a model's parameters is the focus of undertaking Bayesian analysis. This \textit{probability distribution} which results from the application of Bayes' rule (see \ref{eq:Posterior_BayesHighlighted}) can be used to infer the effects of given variables, to forecast, compare different models of phenomena, as well as test its own foundations! In order to do justice to the multitude of uses of the posterior distribution, it is necessary for us to first to learn the basics of probability distributions. After this we will be able to appreciate how the posterior distribution of Bayes' formula can be put to its many uses.
-
-\section{Probability distributions: helping us explicitly state our ignorance}\label{sec:Posterior_probabilityDistributions}
+\section{Probability distributions: helping us explicitly state our ignorance}\label{sec:Intro_probabilityDistributions}
 Before we look out the window in the morning, before we get our exam results, before the cards are dealt, we are uncertain of the world that lies in wait of us. In order to plan, as well as make sense of things, we frequently implicitly formulate an idea as to the relative likelihood of different outcomes. However, in order to allow interrogation of thought, with a view to transparency and self-improvement, we sometimes would like to state our pre-conceptions \textit{explicitly}, in the form of a suitable framework. 
 
-The mathematical theory of probability provides a logic and language which is suitable to describe the majority of cases in which we are uncertain. Imagine that before we roll a die - which we believe to be fair - we assign an equal probability of $\frac{1}{6}$ to each of six the possible outcomes. Although we haven't stated this world-view in mathematical notation, we have without realising it, formulated a valid probability distribution\footnote{This is technically a probability mass function, since we are describing a discrete random variable, but we prefer to not differentiate terminology.} for the number shown on the die (see figure \ref{fig:Posterior_die}). 
+The mathematical theory of probability provides a logic and language which is suitable to describe the majority of cases in which we are uncertain. Imagine that before we roll a die - which we believe to be fair - we assign an equal probability of $\frac{1}{6}$ to each of six the possible outcomes. Although we haven't stated this world-view in mathematical notation, we have without realising it, formulated a valid probability distribution\footnote{This is technically a probability mass function, since we are describing a discrete random variable, but we prefer to not differentiate terminology.} for the number shown on the die (see figure \ref{fig:Intro_die}). 
 
 \begin{figure}
 \centering
 \scalebox{0.5} 
-{\includegraphics{Posterior_die.pdf}}
-\caption{Left) A discrete uniform probability distribution for the number shown on a rolled fair die. Right) A continuous distribution to represent the probability of a coin coming up heads.\textbf{I want to remove the ticks from the discrete plot, simply placing a $\frac{1}{6}$ there instead.}}\label{fig:Posterior_die}
+{\includegraphics{Intro_die.pdf}}
+\caption{Left) A discrete uniform probability distribution for the number shown on a rolled fair die. Right) A continuous distribution to represent the probability of a coin coming up heads.\textbf{I want to remove the ticks from the discrete plot, simply placing a $\frac{1}{6}$ there instead.}}\label{fig:Intro_die}
 \end{figure}
 
-\subsection{What make a probability distribution \textit{valid}? The most important thing today}
-The die example given in section \ref{sec:Posterior_probabilityDistributions} refers to discrete probability distribution, since the variable we were measuring - the number shown on the die after a throw - is confined to take on finite set of values. However, we could similarly define a probability distribution where our variable is able to take on an infinity of values across a spectrum. Before we flip a coin we might be uncertain as to its innate bias, and might\footnote{Perhaps foolishly since typically we expect that coins are designed to be relatively \textit{fair} in this respect.} imagine that any value for the probability of it coming up heads, $\theta$, is equally likely. This results in the \textit{continuous} analogue of the discrete die example (see figure \ref{fig:Posterior_die}).
+\subsection{What make a probability distribution \textit{valid}? The most important thing today}\label{sec:Intro_validProbabilityDistribution}
+The die example given in section \ref{sec:Intro_probabilityDistributions} refers to discrete probability distribution, since the variable we were measuring - the number shown on the die after a throw - is confined to take on finite set of values. However, we could similarly define a probability distribution where our variable is able to take on an infinity of values across a spectrum. Before we flip a coin we might be uncertain as to its innate bias, and might\footnote{Perhaps foolishly since typically we expect that coins are designed to be relatively \textit{fair} in this respect.} imagine that any value for the probability of it coming up heads, $\theta$, is equally likely. This results in the \textit{continuous} analogue of the discrete die example (see figure \ref{fig:Intro_die}).
 
 The aforementioned examples are both examples of valid/proper probability distributions. So, what are its defining properties?
 
@@ -98,11 +76,80 @@ For the continuous case of the probability of a heads when flipping a coin, the 
 Although, it may seem that this definition is relatively arbitrary, and perhaps well-trodden-territory for some readers, it is of \textit{central} importance to Bayesian statistics. This is because Bayesians like to work with, and produce \textit{valid} probability distributions. The pursuit of this ideal underlies the majority of \textit{all} methods in applied Bayesian statistics - analytic and computational - and hence its importance cannot be overstated!
 
 \subsection{Generalising probability distributions to two dimensions}
+Life is often more complex than the examples of section \ref{sec:Intro_probabilityDistributions}. Often we are tasked with formulating opinions on a range of different outcomes; each of which may influence or shed light on the other results. We begin by considering the outcome of two measurements, in order to introduce the reader to the mechanics of probability. The great thing is that these rules do not become any more complex when we generalise to higher dimensional problems, meaning that if the reader is comfortable with the following examples, then they should be able to handle the vast majority of probability distribution operations encountered. In Bayesian statistics, being comfortable manipulating probability distributions is essential, since the output of the Bayesian formula - the posterior probability distribution - is used to derive all post-experiment quantities of interest. As such, it is important to devote some time to introduce two examples which we will use to describe and explain the manipulations of 2-dimensional probability distributions in the next few sections.
+
+\subsubsection{Biased coins: a 2-dimensional discrete probability example}\label{sec:Intro_biasedCoinsTwoDimensionalDiscrete}
+Imagine that you are given two coins, and you are told that both are biased towards the same particular outcome - heads or tails - although, before flipping them you are unaware as to their inherent prejudice. We are also have an inherent feeling, due to our prior experience with the experimenter, that a bias towards heads is more likely. We use a binary variable to represent the outcome of each coin flip, which takes on the value of 0 if the coin falls tails-up, and 1 if it falls heads-up. We could then represent our beliefs beforehand in the form of a probability distribution shown in table \ref{tab:Intro_coinBiased}.
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{rrcc}
+    \toprule
+          &       & \multicolumn{2}{c}{\textbf{Coin A}} \\
+    \midrule
+          &       & \textbf{0} & \textbf{1} \\
+    \multicolumn{1}{c}{\textbf{Coin B}} & \multicolumn{1}{c}{\textbf{0}} & 0.3   & 0.1 \\
+    \multicolumn{1}{c}{} & \multicolumn{1}{c}{\textbf{1}} & 0.1   & 0.5 \\
+    \bottomrule
+    \end{tabular}%
+  \caption{The probability distribution for the biased coins example described in section \ref{sec:Intro_biasedCoinsTwoDimensionalDiscrete}. $\{0,1\}$ refers to the coin falling tails- or heads-up respectively.}\label{tab:Intro_coinBiased}
+\end{table}
+
+How can we check whether this distribution satisfies the requirements for a valid probability distribution? We simply apply the rules described in section \ref{sec:Intro_validProbabilityDistribution}. Firstly, all the values of the distribution are real and non-negative; satisfying our first requirement. For the second rule rather than summing over the values of one random variable, we now have to sum over the outcome of two:
+
+\begin{equation}\label{eq:Intro_discreteTwoDimensionalCoinSum}
+\sum\limits_{X_A=0}^{1}\sum\limits_{X_B=0}^{1} p(X_A,X_B) = 0.3 + 0.1 + 0.1 + 0.5 = 1
+\end{equation}
+
+In (\ref{eq:Intro_discreteTwoDimensionalCoinSum}), $X_A$ and $X_B$ are random variables\footnote{A function which associates a unique numerical value with each outcome of an experiment. In this case the function gives value 0 if the result is a tails, and 1 if it is heads.} which refer to the outcome of Coin A and Coin B respectively. Notice that since we are now considering a situation with the outcome of two random variables, we are now required to index the probability, $p(X_A,X_B)$, by both. Due to the probability now being a function of two variables, we say that the probability distribution is 2-dimensional.
+
+How can we interpret the probability distribution shown in table \ref{tab:Intro_coinBiased}? The probability that both coins show tails (and hence both their random variables take on the value of 0), is simply read off from the top-left entry in the table, meaning $p(X_A=0,X_B=0)=0.3$. We ascribe a smaller likelihood to the coins coming up with different outcomes, $p(X_A=0,X_B=1)=0.1$ or $p(X_A=1,X_B=0)=0.1$, since we believe that the coins are biased in the same direction. We believe that the most likely outcome is that both coins show heads, since we believe that the experimenter is predisposed to this outcome, and hence ascribe the highest probability to this result, with $p(X_A,X_B)=0.5$.
+
+\subsection{Foot length and intelligence: a 2-dimensional continuous probability example}
+We suppose that we have a sample of individuals, and we measure their foot size, as well as how well they score on an IQ test. Both of these variables can be reasonably be assumed to be continuous, meaning that we are now required to represent our strength of belief, by specifying a probability distribution across a continuum of values (see figure \ref{fig:Intro_footSizeIntelligenceTwoDimensionalExample}). 
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Intro_footSizeIntelligenceTwoDimensionalExample.pdf}}
+\caption{A probability distribution describing the foot size and IQ for an individual within our sample. Left) Represented as a 3-dimensional plot, and Right) Contour lines specify isolines of probability.}\label{fig:Intro_footSizeIntelligenceTwoDimensionalExample}
+\end{figure}
+
+We could verify that the distribution shown in figure \ref{fig:Intro_footSizeIntelligenceTwoDimensionalExample} is in fact valid, by showing that the volume underneath the left hand plot is 1, via integration. However, since we don't want to overcomplicate things now, you will have to take our word for it.
+
+Notice that we have chosen to allow there to be a degree of correlation between foot size and IQ. Why might we choose to do this\footnote{Our sample of individuals here is a sample of children of various ages. Age is correlated with shoe size and intelligence.}?
+
 \subsection{Conditional distributions}
+We frequently receive partial information by observing only part of the system in which we are interested. In our coin example, we might flip of one of the coins finding it coming up heads, and on this basis then update our probabilities of heads or tails for the other. Alternatively, in the foot size - IQ example described before, we might measure an individual's shoe size, and determine the probabilities across a continuum of IQ values. 
+
+In probability, when we observe one variable, and reformulate the probability distribution for the other variable, we say that we are deriving the \textit{conditional} distribution of the latter. \textit{Conditional} refers to the fact that we are deriving the a probability distribution of one variable, \textit{conditional} on the value of the other(s).
+
+In each case, we have reduced some of the uncertainty in the system, by observing one of its characteristics. Hence in the two-dimensional examples described above the conditional distribution is only one-dimensional, because we are only now uncertain about one variable. 
+
 \subsection{Marginal distributions}
 
-\section{Central Limit Theorems: the most important thing ever}\label{sec:Posterior_CLT}
-Most distributions are not 
+\section{Central Limit Theorems: the most important thing ever}\label{sec:Intro_CLT}
+Most distributions are not
+\section{The Bayesian formula}
+\subsection{The intuition behind the formula}
+\section{The Bayesian inference process from the Bayesian formula}
+\section{Implicit vs Explicit subjectivity}
+\section{What are the tangible benefits of Bayesian statistics?}
+\section{Why don't more people use Bayesian statistics?}
+
+
+\chapter{The posterior - the goal of Bayesian inference}
+\section{Chapter Mission statement}
+At the end of this chapter the reader will understand the central importance, and use of the posterior probability distribution in Bayesian statistics.
+
+Insert a graphic with the likelihood part of Bayes' formula circled, as in the equation shown below for the part highlighted in blue.
+
+\begin{equation}
+{\color{blue}P(\theta|data)} = \frac{P(data|\theta)\times P(\theta)}{P(data)}
+\end{equation}\label{eq:Posterior_BayesHighlighted}
+
+\section{Chapter goals}
+Calculating the posterior distribution for a model's parameters is the focus of undertaking Bayesian analysis. This \textit{probability distribution} which results from the application of Bayes' rule (see \ref{eq:Posterior_BayesHighlighted}) can be used to infer the effects of given variables, to forecast, compare different models of phenomena, as well as test its own foundations! In order to do justice to the multitude of uses of the posterior distribution, it is necessary that the reader is familiar with the basics of probability distributions explained in section . After this we will be able to appreciate how the posterior distribution of Bayes' formula can be put to its many uses. 
 
 \section{Expressing uncertainty in a parameter through the posterior probability distribution}
 Unlike looking out the window, getting exam results, or playing a hand at blackjack, we frequently in inference never learn the \textit{true}\footnote{Whether a true value for a parameter actually exists we leave until section \ref{sec:Posterior_parametersExist}.} state of nature. The uncertainty here is both in the future and \textit{present}; the latter meaning we are unable to perfectly measure the state of the world today, and hence cannot hope to perfectly know the former.
@@ -492,7 +539,7 @@ The analysis in section \ref{sec:chooseLikelihood} assumes that we know beforeha
 The principle of Maximum Likelihood estimation is simple. Firstly, we assume a model which we use to approximate the data generating process which resulted in our sample, based on the various assumptions about the real life process which we make. We then calculate what is known as the joint probability of obtaining the sample of observations, assuming that we do not know the parameters which specify completely those distributions. We then choose the parameters which \textit{maximise} the likelihood of obtaining that particular sample of observations. We will go through some simple examples to illustrate this process. 
 
 \subsection{Estimating disease prevalence}\label{sec:Likelihood_diseaseMLE}
-In section \ref{sec:Likelihood_diseaseGroup} we assumed that we knew beforehand the fraction of individuals who are disease-positive within the population. As mentioned previously, it is uncommon that such a thing be known before carrying out an analysis. If in a sample of 100 individuals, 10 test positively\footenote{Assuming for simplicity that there are no false-positives}, and we make the same assumptions as in section \ref{sec:Likelihood_diseaseGroup} - that of a random sample - then we can write down the overall likelihood function using (\ref{eq:Likelihood_binomialNFull}) as:
+In section \ref{sec:Likelihood_diseaseGroup} we assumed that we knew beforehand the fraction of individuals who are disease-positive within the population. As mentioned previously, it is uncommon that such a thing be known before carrying out an analysis. If in a sample of 100 individuals, 10 test positively\footnote{Assuming for simplicity that there are no false-positives}, and we make the same assumptions as in section \ref{sec:Likelihood_diseaseGroup} - that of a random sample - then we can write down the overall likelihood function using (\ref{eq:Likelihood_binomialNFull}) as:
 
 \begin{equation}\label{eq:Likelihood_binomialNew}
 L(\theta|data) = {100 \choose 10} \theta^{10} (1-\theta)^{100-10}
@@ -1025,7 +1072,7 @@ p(data) &= \int\limits_{All\; \theta} p(data|\theta) \times p(\theta)\mathrm{d}\
 \end{align}
 \end{equation}
 
-In (\ref{eq:Denominator_jointDensity}) we have assumed that the parameter(s) is/are continuous. We have obtained the second line of (\ref{eq:Denominator_jointDensity}) from the first by using the conditional probability formula introduced in section \ref{sec:Posterior_probabilityDistributions}:
+In (\ref{eq:Denominator_jointDensity}) we have assumed that the parameter(s) is/are continuous. We have obtained the second line of (\ref{eq:Denominator_jointDensity}) from the first by using the conditional probability formula introduced in section \ref{sec:Intro_probabilityDistributions}:
 
 \begin{equation}
 p(data|\theta) = \frac{p(data,\theta)}{p(\theta)}
@@ -1189,7 +1236,7 @@ In (\ref{eq:Denominator_TwoParameterDiscreteBayesSimple}), we have simply substi
 \subsection{Continuous multi-parameter example: mean and variance of IQ}\label{sec:Denominator_continuousTwoParameterIQ}
 We now consider a situation where the parameters of interest are continuous. It is hoped that this section will provide evidence for the complexity of analytic multi-parameter inference in Bayesian statistics, and hence by its very nature, the material covered here may be difficult to fully grasp. However, we will cover it in more detail in part \ref{part:analyticalBayes}.
 
-We suppose we are interested in estimating the mean IQ of some population of interest, of which we only possess a sample of three persons' IQ data of $\boldsymbol{IQ}=\{100,50,150\}$. We suppose that since intelligence - as measured by $IQ$ - is dependent on many additive factors, and hence as an approximation we assume a normal likelihood\footnote{We have used the central limit theorem here - see section \ref{sec:Posterior_CLT} for a full explanation.}:
+We suppose we are interested in estimating the mean IQ of some population of interest, of which we only possess a sample of three persons' IQ data of $\boldsymbol{IQ}=\{100,50,150\}$. We suppose that since intelligence - as measured by $IQ$ - is dependent on many additive factors, and hence as an approximation we assume a normal likelihood\footnote{We have used the central limit theorem here - see section \ref{sec:Intro_CLT} for a full explanation.}:
 
 \begin{equation}\label{eq:Denominator_continuousTwoParameterLikelihood}
 p(IQ_i|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}} exp\left(-\frac{(IQ_i-\mu)^2}{2\sigma^2}\right)
