@@ -119,14 +119,42 @@ We could verify that the distribution shown in figure \ref{fig:Intro_footSizeInt
 
 Notice that we have chosen to allow there to be a degree of correlation between foot size and IQ. Why might we choose to do this\footnote{Our sample of individuals here is a sample of children of various ages. Age is correlated with shoe size and intelligence.}?
 
-\subsection{Conditional distributions}
-We frequently receive partial information by observing only part of the system in which we are interested. In our coin example, we might flip of one of the coins finding it coming up heads, and on this basis then update our probabilities of heads or tails for the other. Alternatively, in the foot size - IQ example described before, we might measure an individual's shoe size, and determine the probabilities across a continuum of IQ values. 
+\subsection{Marginal distributions}
+We may be interested in simplifying the preceding analysis, by stating the distribution of one variable, completely \textit{unconditional} of the other. In our coins example, we might be interested in say, only the value obtained when we flip coin A. Alternatively, we might want to remove the dependence on foot size, in our IQ example, and what remains would then be an \textit{unconditional} probability distribution for IQ.
 
-In probability, when we observe one variable, and reformulate the probability distribution for the other variable, we say that we are deriving the \textit{conditional} distribution of the latter. \textit{Conditional} refers to the fact that we are deriving the a probability distribution of one variable, \textit{conditional} on the value of the other(s).
+In order to do this, we essentially need to \textit{average} out the dependence of the other variable. In our coins example, if we are only interested in coin A, we can sum across the column values for coin B, obtaining the \textit{marginal} distribution of coin A, shown at the bottom of table \ref{tab:Intro_coinsMarginal}.
+
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{rrccr}
+    \toprule
+          &       & \multicolumn{2}{c}{\textbf{Coin A}} &  \\
+    \midrule
+          &       & \textbf{0} & \textbf{1} & \multicolumn{1}{c}{\textbf{p(B)}} \\
+    \multicolumn{1}{c}{\textbf{Coin B}} & \multicolumn{1}{c}{\textbf{0}} & 0.3   & 0.1   & \multicolumn{1}{c}{\textbf{0.4}} \\
+    \multicolumn{1}{c}{} & \multicolumn{1}{c}{\textbf{1}} & 0.1   & 0.5   & \multicolumn{1}{c}{\textbf{0.6}} \\
+          & \multicolumn{1}{c}{\textbf{p(A)}} & \textbf{0.4} & \textbf{0.6} & \multicolumn{1}{c}{} \\
+    \bottomrule
+    \end{tabular}%
+  \caption{The marginal distribution of coins A and B, achieved by summing the values in each column or row respectively.}\label{tab:Intro_coinsMarginal}%
+\end{table}%
+
+
+\subsection{Conditional distributions}
+We frequently receive partial information by observing only part of the system in which we are interested. In our coin example, we might flip of one of the coins finding it coming up heads, and on this basis then update our probabilities of obtaining heads or tails for the other. Alternatively, in the foot size - IQ example described before, we might measure an individual's shoe size, and then want to obtain the updated probability distribution for IQ scores.
+
+In probability, when we observe one variable, and reformulate the probability distribution for the other variable, we say that we are deriving the \textit{conditional} distribution of the latter. \textit{Conditional} refers to the fact that we are deriving the probability distribution of one variable, \textit{conditional} on the value of the other(s).
 
 In each case, we have reduced some of the uncertainty in the system, by observing one of its characteristics. Hence in the two-dimensional examples described above the conditional distribution is only one-dimensional, because we are only now uncertain about one variable. 
 
-\subsection{Marginal distributions}
+Luckily, there is a simple rule that we can use to obtain the probability of one variable, conditional on the value of the other:
+
+\begin{equation}\label{eq:Intro_conditionalProbability}
+p(A|B) = \frac{p(A,B)}{p(B)}
+\end{equation}
+
+In (\ref{eq:Intro_conditionalProbability}), $p(A|B)$ refers to the probability of $A$ occurring, given that $B$ has occurred. In the right hand side of (\ref{eq:Intro_conditionalProbability}), $p(B)$ is the \textit{marginal} distribution of B occurring, and $p(A,B)$ is the joint probability of $A$ and $B$ occurring.
 
 \section{Central Limit Theorems: the most important thing ever}\label{sec:Intro_CLT}
 Most distributions are not
