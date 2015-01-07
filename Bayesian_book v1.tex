@@ -75,6 +75,44 @@ For the continuous case of the probability of a heads when flipping a coin, the 
 
 Although, it may seem that this definition is relatively arbitrary, and perhaps well-trodden-territory for some readers, it is of \textit{central} importance to Bayesian statistics. This is because Bayesians like to work with, and produce \textit{valid} probability distributions. The pursuit of this ideal underlies the majority of \textit{all} methods in applied Bayesian statistics - analytic and computational - and hence its importance cannot be overstated!
 
+\subsection{Interpreting discrete and continuous probability distributions}
+The discrete probability distribution for a fair die shown on the left hand side in figure \ref{fig:Intro_die}, is straightforward to interpret. To calculate the probability that the die lands on a 1, we simply read off the probability from the graph corresponding to the height of the leftmost bar, and find that:
+
+\begin{equation}
+p(X=1)= \frac{1}{6}
+\end{equation}
+
+In the discrete case, if we want to calculate the probability that a random variable takes on a range of values, then we simply need to sum the individual probabilities corresponding to each specific event. In the die example, if we want to calculate the probability that the die lands on a number less than 4, we just add together the probabilities of it landing on 1, 2 and 3:
+
+\begin{equation}
+\begin{align}
+p(X<4) &= p(X=1) + p(X=2) + p(X=3)\\
+&= \frac{1}{6} + \frac{1}{6} + \frac{1}{6}\\
+&= \frac{1}{2}
+\end{align}
+\end{equation}
+
+How can we use the continuous probability distribution such as the one shown on the right hand side of figure \ref{fig:Intro_die}? If we want to calculate the probability that the bias of the coin is zero, in other words, the probability that $\theta=0.5$, then we could simply draw a vertical line from this point on the $\theta$ axis up to the line of the distribution; concluding that $p(\theta=0.5) = 1$! We know that this is not the intended result, since we supposed before that \textit{all} values of $\theta$ were equally likely. This means that the probability that $\theta$ takes on any particular value between 0 and 1 is \textit{actually} zero. Intuitively, this is because there are an infinity of particular values between 0 and 1 which $\theta$ can feasibly take on, meaning that picking one of them is infinitely unlikely. For example, the following values $\theta=\{0.5,0.501,0.50001,0.5000001\}$ are all equally likely, and we could generate an infinity of these test values of $\theta$, meaning that each one must have a zero likelihood of occurring. This means for a continuous random variable, we always have $p(\theta=number) = 0$. Hence, when we write $p(\theta)$ for a continuous random variable, we should be careful to interpret the value of it at a particular value as a probability \textit{density}, \textit{not} a probability. 
+
+However, we can use a continuous probability distribution to calculate the probability that a random variable lies between two bounds. To do this we use the continuous analogue of a sum, an \textit{integral}. For the coin example, we can hence calculate the probability that $0.25\leq \theta \leq 0.75$:
+
+\begin{equation}\label{eq:Intro_continuousProbabilityIntervalExample}
+\begin{align}
+Pr(0.25\leq \theta \leq 0.75) &= \int\limits_{0.25}^{0.75} p(\theta) \mathrm{d}\theta\\
+&= \int\limits_{0.25}^{0.75} 1 \mathrm{d}\theta\\
+&= \left[\theta\right]^{0.75}_{0.25} = (0.75-0.25) = 0.5
+\end{align}
+\end{equation}
+
+In (\ref{eq:Intro_continuousProbabilityIntervalExample}), we have used $Pr$ to explicitly state that the result is a \textit{probability}, whereas $p(\theta)$ is a probability density. Of course, the calculation carried out in (\ref{eq:Intro_continuousProbabilityIntervalExample}), is equivalent to working out the area under the graph within those limits (see figure \ref{fig:Intro_continuousInterval}).
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Intro_continuousInterval.pdf}}
+\caption{The probability that $\theta$, representing the probability that a heads is thrown, lies between 0.25 and 0.75.}\label{fig:Intro_continuousInterval}
+\end{figure}
+
 \subsection{Generalising probability distributions to two dimensions}
 Life is often more complex than the examples of section \ref{sec:Intro_probabilityDistributions}. Often we are tasked with formulating opinions on a range of different outcomes; each of which may influence or shed light on the other results. We begin by considering the outcome of two measurements, in order to introduce the reader to the mechanics of probability. The great thing is that these rules do not become any more complex when we generalise to higher dimensional problems, meaning that if the reader is comfortable with the following examples, then they should be able to handle the vast majority of probability distribution operations encountered. In Bayesian statistics, being comfortable manipulating probability distributions is essential, since the output of the Bayesian formula - the posterior probability distribution - is used to derive all post-experiment quantities of interest. As such, it is important to devote some time to introduce two examples which we will use to describe and explain the manipulations of 2-dimensional probability distributions in the next few sections.
 
@@ -122,7 +160,7 @@ Notice that we have chosen to allow there to be a degree of correlation between 
 \subsection{Marginal distributions}
 We may be interested in simplifying the preceding analysis, by stating the distribution of one variable, completely \textit{unconditional} of the other. In our coins example, we might be interested in say, only the value obtained when we flip coin A. Alternatively, we might want to remove the dependence on foot size, in our IQ example, and what remains would then be an \textit{unconditional} probability distribution for IQ.
 
-In order to do this, we essentially need to \textit{average} out the dependence of the other variable. In our coins example, if we are only interested in coin A, we can sum across the column values for coin B, obtaining the \textit{marginal} distribution of coin A, shown at the bottom of table \ref{tab:Intro_coinsMarginal}.
+In order to do this, we essentially need to \textit{average} out the dependence of the other variable. In our coins example, if we are only interested in coin A, we can sum down the column values for coin B, obtaining the \textit{marginal} distribution of coin A, shown at the bottom of table \ref{tab:Intro_coinsMarginal}.
 
 
 \begin{table}[htbp]
@@ -139,6 +177,44 @@ In order to do this, we essentially need to \textit{average} out the dependence 
     \end{tabular}%
   \caption{The marginal distribution of coins A and B, achieved by summing the values in each column or row respectively.}\label{tab:Intro_coinsMarginal}%
 \end{table}%
+
+Hence, we have that the \textit{marginal} probability of coin A coming up 'heads' is 0.6. This value is composed out of the two possible ways in which this \textit{single} event can occur:
+
+\begin{equation}\label{eq:Intro_marginalCoinsExample}
+p(X_A=1) = p(X_A=1,X_B=0) + p(X_A=1,X_B=1)
+\end{equation}
+
+In (\ref{eq:Intro_marginalCoinsExample}), we see that A can come up 'heads' with B being 'tails', or alternatively A can land on 'heads' with B also on 'heads'.
+
+Thus, in order to calculate the probability of a single event, we simply need to sum across all possible occurrences of it, allowing the other variable to take on its possible values. Mathematically, we can summarise this rule by the following for the case of two discrete random variables:
+
+\begin{equation}\label{eq:Intro_marginalDiscreteProbabilityTwoDimensions}
+p(A=\alpha) = \sum\limits_{\beta} p(A=\alpha,B=\beta)
+\end{equation}
+
+In (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}), $\alpha$ and $\beta$ refer to the specific values taken on by the random variables $A$ and $B$. We can use this rule for the coin example to calculate the probability that coin B lands up on 'tails':
+
+\begin{equation}
+\begin{align}
+p(X_B=0) &= \sum\limits_{\alpha=0}^{1} p(X_B=0,X_A=\alpha)\\
+&= p(X_B=0,X_A=0) + p(X_B=0,X_A=1)\\
+&= 0.3 + 0.1 = 0.4
+\end{align}
+\end{equation}
+
+For continuous random variables we need the continuous analogue of a sum, an \textit{integral}, in order to calculate the marginal distribution. Intuitively, this is because the other variable is now able to take on an continuum of values:
+
+\begin{equation}\label{eq:Intro_marginalContinuousProbabilityTwoDimensions}
+p_A(\alpha) = \int\limits_{All\;\beta} p_{AB}(\alpha,\beta) \mathrm{d}\beta
+\end{equation}
+
+In (\ref{eq:Intro_marginalContinuousProbabilityTwoDimensions}), $p_{AB}(\alpha,\beta)$ corresponds to the joint probability distribution of random variables $A$ and $B$ evaluated at $(A=\alpha,B=\beta)$. Similarly, $p_A(\alpha)$ refers to the marginal distribution of random variable A, evaluated at $A=\alpha$. Although it is somewhat of an abuse of notation, for simplicity, from now on we will now write $p_{AB}(\alpha,\beta)$ as $p(A,B)$, and $p_A(\alpha)$ as $p(A)$.
+
+In the foot size/IQ example, we may not be interested in foot size; wanting only the distribution of IQ in our sample. We can obtain this by simply integrating out the dependence on foot size:
+
+\begin{equation}\label{eq:Intro_marginalContinuousProbabilityTwoDimensionsFootExample}
+p(IQ) = \int\limits_{0}^{30} p(IQ,FS) \mathrm{d}FS
+\end{equation}
 
 
 \subsection{Conditional distributions}
@@ -383,7 +459,7 @@ P(X = 0|\theta)& = \theta^0(1-\theta)^1 = (1-\theta)\\
 P(X = 1|\theta)& = \theta^1(1-\theta)^0 = \theta\label{eq:Likelihood_SimpleModel4}
 \end{align}
 
-When we hold the datum $X$ fixed, and vary $\theta$ (\ref{eq:Likelihood_bernoulli}) represents a likelihood. However, figure \ref{fig:Likelihood_bernoulli} shows that for a fixed value of $theta$ the sum (here we mean the vertical sum) of the two probability densities is always equal to 1; demonstrating that in this case (\ref{eq:Likelihood_bernoulli}) is a valid probability density. Notice also in figure \ref{fig:Likelihood_bernoulli} that the sum of probability density is defined continuously on $\{0,1\}}$, whereas the sum of likelihoods is discrete.
+When we hold the datum $X$ fixed, and vary $\theta$ (\ref{eq:Likelihood_bernoulli}) represents a likelihood. However, figure \ref{fig:Likelihood_bernoulli} shows that for a fixed value of $theta$ the sum (here we mean the vertical sum) of the two probability densities is always equal to 1; demonstrating that in this case (\ref{eq:Likelihood_bernoulli}) is a valid probability density. Notice also in figure \ref{fig:Likelihood_bernoulli} that the sum of probability density is defined continuously on $\{0,1\}$, whereas the sum of likelihoods is discrete.
 
 \begin{figure}
 \centering
@@ -403,11 +479,11 @@ With our two assumptions in hand, we can begin to formulate a model for the prob
 P(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
 \end{equation}
 
-Note that in (\ref{eq:Likelihood_bernoulli1}) the $\alpha\in\{0,1\}$ refers to a particular numeric value taken by the variable $X$. The assumption of \textit{independence} means that we can get the overall probability by multiplying together the individual probabilities (include reference back to discussion of probabilities). In words, we obtain the probability that the first person has disease status $X1$ \textit{and} the second person has status $X2$:
+Note that in (\ref{eq:Likelihood_bernoulli1}) the $\alpha\in\{0,1\}$ refers to a particular numeric value taken by the variable $X$. The assumption of \textit{independence} means that we can get the overall probability by multiplying together the individual probabilities (include reference back to discussion of probabilities). In words, we obtain the probability that the first person has disease status $X_1$ \textit{and} the second person has status $X_2$:
 
 \begin{equation}\label{eq:Likelihood_bernoulli2}
 \begin{align}
-\left P(X_1=\alpha_1,X_2=\alpha_2|\theta_1,\theta_2) &= P(X_1=\alpha_1|\theta_1)\;\times \;P(X_2=\alpha_2|\theta_2)\\
+P(X_1=\alpha_1,X_2=\alpha_2|\theta_1,\theta_2) &= P(X_1=\alpha_1|\theta_1)\;\times \;P(X_2=\alpha_2|\theta_2)\\
  &= \theta_1^{\alpha_1}(1-\theta_1)^{1-\alpha_1}\times \theta_2^{\alpha_2}(1-\theta_2)^{1-\alpha_2}
 \end{align}
 \end{equation}
@@ -418,8 +494,8 @@ The second assumption of \textit{identically-distributed} individuals means that
 
 \begin{equation}\label{eq:Likelihood_bernoulli3}
 \begin{align}
-\left P(X_1=\alpha_1,X_2=\alpha_2|\theta) &= \theta^{\alpha_1}(1-\theta)^{1-\alpha_1}\times \theta^{\alpha_2}(1-\theta)^{1-\alpha_2}\\
- &= \theta^{\alpha_1+\alpha_2}(1-\theta)^{2-\alpha_1-\alpha_2}
+ P(X_1=\alpha_1,X_2=\alpha_2|\theta) &= \theta^{\alpha_1}(1-\theta)^{1-\alpha_1}\times \theta^{\alpha_2}(1-\theta)^{1-\alpha_2}\\
+&= \theta^{\alpha_1+\alpha_2}(1-\theta)^{2-\alpha_1-\alpha_2}
 \end{align}
 \end{equation}
 
@@ -451,7 +527,7 @@ P(Z = 2|\theta)& = \;\theta^2(1-\theta)^0
 \end{align}
 \end{equation}
 
-In (\ref{eq:Likelihood_binomialTwoProbsSimple}) we notice the common term $\theta^\beta(1-\theta)^{2-\beta}$ in each of the expressions, where $\beta\in\{0,1,2}\}$ represents the number of disease cases found. Therefore this suggests that we may be able to write down a single rule as something similar to:
+In (\ref{eq:Likelihood_binomialTwoProbsSimple}) we notice the common term $\theta^\beta (1-\theta)^{2-\beta}$ in each of the expressions, where $\beta\in\{0,1,2\}$ represents the number of disease cases found. Therefore this suggests that we may be able to write down a single rule as something similar to:
 
 \begin{equation}\label{eq:Likelihood_binomialNearly}
 P(Z = \beta|\theta) \sim \theta^\beta(1-\theta)^{2-\beta}
@@ -525,7 +601,7 @@ It is difficult to gauge what in particular is wrong with our model without know
 We are now tasked with formulating a model of intelligence test scores for a group of individuals for whom we have data. We are told that the test score is on a continuous scale from 0-200. We do not have any information on individual characteristics which might help us to predict scores, although we are going to, for this simplified example, assume that we do know the mean test score $\mu=70$, and its variance $\sigma^2=81$ in the population (although we will relax this assumption in section \ref{sec:Likelihood_MLE}). We might assume that there are a range of factors which overall result in an individual's performance on this test. For example, these might include their schooling, parental education, 'innate' ability, as well as how tired they were feeling on the day of the test. If we assume that there are a large range of such factors and the score which results is an average of all these, then we might assume that the Central Limit Theorem might be appropriate for determining the distribution of test scores. Don't worry if you are not aware of this theorem, we will cover it in due course, but basically it says, if there are a large number of factors whose average results in an intelligence score, then the normal distribution provides a reasonable approximation to the distribution of test scores. In which case, we assume that a normal distribution for our likelihood function for an individual's test score, $X$:
 
 \begin{equation}
-P(X=\alpha|\mu,\sigma^2) &= \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(\alpha-\mu)^2}{2\sigma^2}}
+P(X=\alpha|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(\alpha-\mu)^2}{2\sigma^2}}
 \end{equation}\label{eq:Likelihood_normal}
 
 \begin{figure}
