@@ -216,9 +216,21 @@ In the foot size/IQ example, we may not be interested in foot size; wanting only
 p(IQ) = \int\limits_{0}^{30} p(IQ,FS) \mathrm{d}FS
 \end{equation}
 
+The result of carrying out the step in (\ref{eq:Intro_marginalContinuousProbabilityTwoDimensionsFootExample}) is that we are left with the distribution shown on the right of figure \ref{fig:Intro_footSizeIntelligenceMarginal}. We have rotated this graph to emphasise that it is the result of essentially summing\footnote{We really mean integrating, but it is more intuitive to think about this in terms of discrete summing.} across the joint density at each particular value of IQ. 
+
+Another way to think about marginal densities, is imagine that you are walking along the landscape of the joint density. The height of the marginal density is given by the length of the path you have to walk along a particular line of constant IQ. If the path is relatively flat, indicating a low value of joint density, then the corresponding marginal density is low. However, if the path encompasses a large hill, indicating a high value of joint density, then the marginal density will be relatively high.
+
+Add a 3D version of the figure with the contours traced out on the landscape, and leading to the height of the marginals, perhaps with stick figures walking along lines of iso-IQ.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Intro_footSizeIntelligenceMarginal.pdf}}
+\caption{Top-left: the joint density of foot size and intelligence. Right: the marginal density of IQ. Bottom: the marginal density of foot size. \textbf{I want to add a line at a particular value of IQ, and at a particular value of FS, to illustrate the horizontal and vertical summing.}}\label{fig:Intro_footSizeIntelligenceMarginal}
+\end{figure}
 
 \subsection{Conditional distributions}
-We frequently receive partial information by observing only part of the system in which we are interested. In our coin example, we might flip of one of the coins finding it coming up heads, and on this basis then update our probabilities of obtaining heads or tails for the other. Alternatively, in the foot size - IQ example described before, we might measure an individual's shoe size, and then want to obtain the updated probability distribution for IQ scores.
+We frequently receive partial information by observing only part of the system in which we are interested. In our coin example, we might flip of one of the coins finding lands heads-up, and on this basis update our probabilities of obtaining heads or tails for the other. Alternatively, in the foot size - IQ example described before, we might measure an individual's shoe size, and then want to obtain the updated probability distribution for IQ scores.
 
 In probability, when we observe one variable, and reformulate the probability distribution for the other variable, we say that we are deriving the \textit{conditional} distribution of the latter. \textit{Conditional} refers to the fact that we are deriving the probability distribution of one variable, \textit{conditional} on the value of the other(s).
 
@@ -231,6 +243,13 @@ p(A|B) = \frac{p(A,B)}{p(B)}
 \end{equation}
 
 In (\ref{eq:Intro_conditionalProbability}), $p(A|B)$ refers to the probability of $A$ occurring, given that $B$ has occurred. In the right hand side of (\ref{eq:Intro_conditionalProbability}), $p(B)$ is the \textit{marginal} distribution of B occurring, and $p(A,B)$ is the joint probability of $A$ and $B$ occurring.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Intro_Venn.pdf}}
+\caption{.}}\label{fig:Intro_Venn}
+\end{figure}
 
 \section{Central Limit Theorems: the most important thing ever}\label{sec:Intro_CLT}
 Most distributions are not
