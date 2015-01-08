@@ -169,10 +169,10 @@ In order to do this, we essentially need to \textit{average} out the dependence 
     \toprule
           &       & \multicolumn{2}{c}{\textbf{Coin A}} &  \\
     \midrule
-          &       & \textbf{0} & \textbf{1} & \multicolumn{1}{c}{\textbf{p(B)}} \\
+          &       & \textbf{0} & \textbf{1} & \multicolumn{1}{c}{\textbf{$p(X_B)$}} \\
     \multicolumn{1}{c}{\textbf{Coin B}} & \multicolumn{1}{c}{\textbf{0}} & 0.3   & 0.1   & \multicolumn{1}{c}{\textbf{0.4}} \\
     \multicolumn{1}{c}{} & \multicolumn{1}{c}{\textbf{1}} & 0.1   & 0.5   & \multicolumn{1}{c}{\textbf{0.6}} \\
-          & \multicolumn{1}{c}{\textbf{p(A)}} & \textbf{0.4} & \textbf{0.6} & \multicolumn{1}{c}{} \\
+          & \multicolumn{1}{c}{\textbf{$p(X_A)$}} & \textbf{0.4} & \textbf{0.6} & \multicolumn{1}{c}{} \\
     \bottomrule
     \end{tabular}%
   \caption{The marginal distribution of coins A and B, achieved by summing the values in each column or row respectively.}\label{tab:Intro_coinsMarginal}%
@@ -192,7 +192,9 @@ Thus, in order to calculate the probability of a single event, we simply need to
 p(A=\alpha) = \sum\limits_{\beta} p(A=\alpha,B=\beta)
 \end{equation}
 
-In (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}), $\alpha$ and $\beta$ refer to the specific values taken on by the random variables $A$ and $B$. We can use this rule for the coin example to calculate the probability that coin B lands up on 'tails':
+In (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}), $\alpha$ and $\beta$ refer to the specific values taken on by the random variables $A$ and $B$. 
+
+We can use (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}) for the coin example to calculate the probability that coin B lands up on 'tails':
 
 \begin{equation}
 \begin{align}
@@ -229,6 +231,21 @@ Add a 3D version of the figure with the contours traced out on the landscape, an
 \caption{Top-left: the joint density of foot size and intelligence. Right: the marginal density of IQ. Bottom: the marginal density of foot size. \textbf{I want to add a line at a particular value of IQ, and at a particular value of FS, to illustrate the horizontal and vertical summing.}}\label{fig:Intro_footSizeIntelligenceMarginal}
 \end{figure}
 
+An alternative way of thinking about marginal distributions is provided by the Venn diagram shown in figure \ref{fig:Intro_Venn}. In a Venn diagram, the area of a particular event indicates its probability, and the rectangular area represents all the events that can possibly happen, and so has an area of 1. We have chosen to specify arbitrary events A and B as sub-areas in the diagram, which overlap indicating a region of joint probability, $p(A,B)$. In this setup it is straightforward to calculate the marginal probability of events A or B; we find the area of the elliptic shapes A or B respectively. Considering event A, when we calculate the area of the entire ellipse, we are implicitly carrying out the sum of the form indicated in (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}):
+
+\begin{equation}\label{eq:Intro_vennMarginals}
+p(A) = p(A,B) + p(A,not\; B)
+\end{equation}
+
+In (\ref{eq:Intro_vennMarginals}), the terms on the right hand side correspond to the overlap region, and the remaining part of A (where B does not occur) respectively.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Intro_Venn.pdf}}
+\caption{A Venn diagram showing one way of interpreting marginal and conditional distributions.}}\label{fig:Intro_Venn}
+\end{figure}
+
 \subsection{Conditional distributions}
 We frequently receive partial information by observing only part of the system in which we are interested. In our coin example, we might flip of one of the coins finding lands heads-up, and on this basis update our probabilities of obtaining heads or tails for the other. Alternatively, in the foot size - IQ example described before, we might measure an individual's shoe size, and then want to obtain the updated probability distribution for IQ scores.
 
@@ -244,12 +261,47 @@ p(A|B) = \frac{p(A,B)}{p(B)}
 
 In (\ref{eq:Intro_conditionalProbability}), $p(A|B)$ refers to the probability of $A$ occurring, given that $B$ has occurred. In the right hand side of (\ref{eq:Intro_conditionalProbability}), $p(B)$ is the \textit{marginal} distribution of B occurring, and $p(A,B)$ is the joint probability of $A$ and $B$ occurring.
 
+We can use (\ref{eq:Intro_conditionalProbability}) for the coins example to calculate the probability that \textit{given} that coin A lands heads-up, what is the probability of coin B also landing heads-up when we flip it?
+
+\begin{equation}\label{eq:Intro_conditionalDiscreteCoins}
+\begin{align}
+p(X_B=1|X_A=1) &= \frac{p(X_A=1,X_B=1)}{p(X_A=1)}\\
+&= \frac{p(X_A=1,X_B=1)}{p(X_A=1,X_B=0)+p(X_A=1,X_B=1)}\\
+&= \frac{0.5}{0.1 + 0.5}\\ 
+&= \frac{5}{6}
+\end{align}
+\end{equation}
+
+In (\ref{eq:Intro_conditionalDiscreteCoins}), we have used the rule we discussed earlier for calculating marginal probabilities, shown in (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}), to calculate the denominator, $p(X_A=1)$.
+
+Another way to see the workings of this calculation is shown in table \ref{tab:Intro_coinsConditionalDiscrete}. When we uncover that coin A is heads-up, we essentially reduce our solution space to only the central column (highlighted in blue). Therefore we need to renormalise the solution space such that it has a probability of 1, by dividing each of its entries through by its original total of probabilities, 0.6; yielding the conditional probabilities shown in the right hand column of table \ref{tab:Intro_coinsConditionalDiscrete}.
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{rrccr}
+    \toprule
+          &       & \multicolumn{2}{c}{\textbf{Coin A}} &  \\
+    \midrule
+          &       & \textbf{0} & \textbf{1} & \multicolumn{1}{c}{\textbf{$p(X_B|X_A=1)$}} \\
+    \multicolumn{1}{c}{\textbf{Coin B}} & \multicolumn{1}{c}{\textbf{0}} & 0.3   & {\color{blue}0.1}   & \multicolumn{1}{c}{\textbf{=0.1/0.6 = 1/6}} \\
+    \multicolumn{1}{c}{} & \multicolumn{1}{c}{\textbf{1}} & 0.1   & {\color{blue}0.5}   & \multicolumn{1}{c}{\textbf{=0.5/0.6 = 5/6}} \\
+          & \multicolumn{1}{c}{\textbf{$p(X_A)$}} & \textbf{0.4} & {\color{blue}\textbf{0.6}} & \multicolumn{1}{c}{} \\
+    \bottomrule
+    \end{tabular}%
+\caption{The highlighted region indicates the new solution space, since we know that coin A has landed heads-up.}
+\label{tab:Intro_coinsConditionalDiscrete}
+\end{table}
+
+The Venn diagram in figure \ref{fig:Intro_Venn} shows another way of interpreting conditional distributions. If we are told that a particular event B occurs, then our event space collapses to only the area specified by B. The conditional probability, $p(A|B)$ is then simply given by the ratio of the area of overlap between A and B to the total area of B. This makes intuitive sense, since this is the only way that event A can occur, given that B has already occurred.
+
 \begin{figure}
 \centering
 \scalebox{0.5} 
-{\includegraphics{Intro_Venn.pdf}}
-\caption{.}}\label{fig:Intro_Venn}
+{\includegraphics{Intro_footSizeIntelligenceConditional.pdf}}
+\caption{The dashed blue lines indicate the new event space in each case. The height walked following these lines is related to the magnitude of the conditional distributions shown on the right.}}\label{fig:Intro_footSizeIntelligenceConditional}
 \end{figure}
+
+We can also use (\ref{eq:Intro_conditionalProbability}) to allow us to calculate the conditional distribution of IQ for individuals after we have measured their shoe size. The only difference with the discrete example is that we now have to use an integral to work out the marginal probability for foot size; the denominator of (\ref{eq:Intro_conditionalProbability}). Figure \ref{fig:Intro_footSizeIntelligenceConditional} shows the conditional distributions traced out when we measure an individual's foot size to be 10cm and 20cm respectively. The blue dashed lines show the new event space, since we have lost our uncertainty over foot size in each of the cases. Therefore the heights traversed on the walk along these lines indicate the relative likelihood of different values of IQ. 
 
 \section{Central Limit Theorems: the most important thing ever}\label{sec:Intro_CLT}
 Most distributions are not
@@ -1081,7 +1133,7 @@ Bayesian inference uses probability distributions, called \textit{posteriors}, t
 
 $P(data)$ is a marginal probability density obtained by a sum across all parameter values of the numerator. The seeming simplicity of the previous statement belies the fact that for many circumstances its calculation can be complicated, and often practically intractable. In this chapter we will learn the circumstances when this difficultly arises, as well as a basic appreciation as to how modern computational methods sidestep this issue. We will leave the details of how these methods work in practice to part \ref{part:computationalBayes}, but this chapter will lay the foundations for this later study.
 
-\section{An introduction the denominator}
+\section{An introduction to the denominator}
 \subsection{The denominator as a normalising factor}
 We know from chapter \ref{chap:Likelihoods} that the likelihood is not a valid probability density, and hence we reason that the numerator of Bayes' rule - the likelihood multiplied by the prior - is similarly not constrained to be one either. The numerator will satisfy the first condition of a valid probability density: that its values are non-negative. However, the sum of the numerator across all parameter values will not generally be 1; meaning it fails the second test.
 
