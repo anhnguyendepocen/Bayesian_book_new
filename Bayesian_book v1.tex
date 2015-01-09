@@ -303,12 +303,94 @@ The Venn diagram in figure \ref{fig:Intro_Venn} shows another way of interpretin
 
 We can also use (\ref{eq:Intro_conditionalProbability}) to allow us to calculate the conditional distribution of IQ for individuals after we have measured their shoe size. The only difference with the discrete example is that we now have to use an integral to work out the marginal probability for foot size; the denominator of (\ref{eq:Intro_conditionalProbability}). Figure \ref{fig:Intro_footSizeIntelligenceConditional} shows the conditional distributions traced out when we measure an individual's foot size to be 10cm and 20cm respectively. The blue dashed lines show the new event space, since we have lost our uncertainty over foot size in each of the cases. Therefore the heights traversed on the walk along these lines indicate the relative likelihood of different values of IQ. 
 
+\section{Higher dimensional probability densities: no harder than 2-D, just looks it!}
+
+\section{Independence}\label{sec:Intro_independence}
+
 \section{Central Limit Theorems: the most important thing ever}\label{sec:Intro_CLT}
 Most distributions are not
-\section{The Bayesian formula}
+
+
+\section{The Bayesian formula}\label{sec:Intro_BayesianFormula}
+We first of all rewrite the conditional probability formula (\ref{eq:Intro_conditionalProbability}), regarding the probability of event A occurring, \textit{given} that event B has occurred:
+
+\begin{equation}\label{eq:Intro_conditionalProbabilityAB}
+p(A|B) = \frac{p(A,B)}{p(B)}
+\end{equation}
+
+However, we could also swap A and B around leading to the following for the probability of B \textit{given} that A has already occurred:
+
+\begin{equation}\label{eq:Intro_conditionalProbabilityBA}
+p(B|A) = \frac{p(B,A)}{p(A)}
+\end{equation}
+
+We however reason from the Venn diagram in figure \ref{fig:Intro_Venn}, that the overlap region of $p(A,B)$ really translated means, the probability of A \textit{and} B occurring. This means that this is exactly the same as the reverse; the probability of B \textit{and} A coinciding, $p(B,A)$. We can therefore rearrange (\ref{eq:Intro_conditionalProbabilityBA}) for this joint probability:
+
+\begin{equation}\label{eq:Intro_jointConditionalProbability}
+p(A,B) = p(B|A)\times p(A)
+\end{equation}
+
+We can use (\ref{eq:Intro_jointConditionalProbability}) to break down the probability of both A and B occurring into two steps. Firstly, for this to happen we require that A \textit{must} happen, with its corresponding probability $p(A)$. Then for both to occur, we straightforwardly require the probability of B occurring, \textit{given} that A has already occurred, which is given by $p(B|A)$. This reasoning provides a little intuition as to the workings of the conditional probability law that we wrote down in (\ref{eq:Intro_conditionalProbability}).
+
+We can finally substitute (\ref{eq:Intro_jointConditionalProbability}) into the numerator of the fraction in (\ref{eq:Intro_conditionalProbabilityAB}), to yield the famous Bayesian formula!
+
+\begin{equation}\label{eq:Intro_BayesianFormula}
+p(A|B) = \frac{p(B|A)\times p(A)}{p(B)}
+\end{equation}
+
+The Bayesian formula importantly tells us how to correctly convert from $p(B|A)$ to its inverse $p(A|B)$, which is central to Bayesian statistics.
+
 \subsection{The intuition behind the formula}
+If we multiply both sides of (\ref{eq:Intro_BayesianFormula}) by $p(B)$, we arrive at the following alternative statement of Bayes' rule:
+
+\begin{equation}\label{eq:Intro_BayesianIntuition}
+p(A|B)\times p(B) = p(B|A)\times p(A) \;\;\;[= p(A,B)]
+\end{equation}
+
+In (\ref{eq:Intro_BayesianIntuition}), we have added the final part in square parentheses due to the reasoning of section \ref{sec:Intro_BayesianFormula}, that both sides are equivalent to the joint probability of A and B.
+
+What the relation (\ref{eq:Intro_BayesianIntuition}) tells us however, is that there are two ways of arriving at this joint probability (see figure \ref{fig:Intro_BayesianIntuition}). The first way is given by the left hand side, and is due to B occurring, with probability $p(B)$, followed by A \textit{given} that B has occurred, with probability $p(A|B)$. An exactly equivalent way route to both A and B occurring is given by the right hand side of the leftmost equals sign. Here we require that A occurs first, with probability $p(A)$, followed by B \textit{given} that A has occurred, with probability $p(B|A)$.
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Intro_BayesianIntuition.pdf}}
+\caption{The two ways of arriving at the joint probability $p(A,B)$; providing some intuition behind Bayes' rule.}\label{fig:Intro_BayesianIntuition}
+\end{figure}
+
 \section{The Bayesian inference process from the Bayesian formula}
-\section{Implicit vs Explicit subjectivity}
+In Bayesian statistics we aim to use probability distributions to describe all components of our system. Our starting point is Bayes' rule:
+
+\begin{equation}\label{eq:Intro_BayesianFormula1}
+p(A|B) = \frac{p(B|A)\times p(A)}{p(B)}
+\end{equation}
+
+In statistics we typically are looking to estimate a number of parameters, which we will from now on call $\theta$, which represent a component of a statistical model which we build to represent a particular phenomena. These parameters - whether they are merely abstractions, or are real quantities - are defined in terms of a particular population of interest. However, we typically do not have data for the whole population, and hence we must make do with a sample of \textit{data}. 
+
+In Bayesian statistics, we want to derive our beliefs for parameters \textit{given} that we have obtained a particular sample of data. Being Bayesians, we would like to represent these beliefs via a probability distribution, which we write as $p(\theta|data)$. However, we can use (\ref{eq:Intro_BayesianFormula1}), (if we associate $A$ with $\theta$, and $B$ with the \textit{data}) to write:
+
+\begin{equation}\label{eq:Intro_BayesianInferenceFormula}
+p(\theta|data) = \frac{p(data|\theta)\times p(\theta)}{p(data)}
+\end{equation}
+
+Although we have straightforwardly made two substitutions to arrive at (\ref{eq:Intro_BayesianInferenceFormula}) from (\ref{eq:Intro_BayesianFormula1}), what have we gained by doing so? Also, what exactly do the terms on the right hand side actually mean?
+
+Starting with the numerator on the right hand side of (\ref{eq:Intro_BayesianFormula1}), we come across the term $p(data|\theta)$, which we call the \textit{likelihood}. This tells us the probability of generating the particular sample of \textit{data}, if the parameters in our statistical model were equal to $\theta$. When we write down a statistical model, we can generally calculate the probability of particular outcomes, so this is easily obtained. Imagine that we have a coin that we believe to be fair. By \textit{fair}, we typically mean that the probability of the coin falling 'heads-up' is $\theta=\frac{1}{2}$. If we flip the coin twice, we might suppose that it is reasonable to model the outcomes as independent (see section \ref{sec:Intro_independence}), and hence we can calculate the probabilities of the four possible outcomes, by multiplying the probabilities of the individual outcomes together:
+
+\begin{equation}
+\begin{align}
+p(HH) &= p(H)\times p(H) = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4}\\
+p(HT) &= p(H)\times p(T) = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4}\\
+p(TH) &= p(T)\times p(H) = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4}\\
+p(TT) &= p(H)\times p(H) = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4}\\
+\end{align}
+\end{equation}
+
+Hence, we obtained a \textit{sample} of two heads, we could write down the corresponding likelihood, $p(HH|\theta=\frac{1}{2})=\frac{1}{4}$.
+
+The next term in the numerator of the right hand side, $p(\theta)$ is the most controversial\footnote{Although this controversy is unwarranted, as we explain in section \ref{sec:Intro_implicitExplicitSubjectivity}.} part of the Bayesian formula, which we call the \textit{prior} distribution of $\theta$. It is a probability distribution which represents our pre-data beliefs as to the likely values of the parameters in our model, $\theta$. This appears at first to be slightly counter-intuitive, particularly if you are used to the world of classical statistics, which does not require us to state our preferences \textit{explicitly}\footnote{Although, we always do \textit{implicitly}, as we explain in section \ref{sec:Intro_implicitExplicitSubjectivity}.}. Continuing the coin example, we might assume that we do not know whether the coin is fair or biased beforehand, so we might think that all possible values of $\theta\in[0,1]$ - which represents the probability of the coin falling 'heads-up' are equally likely. We might represent these beliefs by a continuous uniform probability density on this interval (see figure ).
+
+\section{Implicit vs Explicit subjectivity}\label{sec:Intro_implicitExplicitSubjectivity}
 \section{What are the tangible benefits of Bayesian statistics?}
 \section{Why don't more people use Bayesian statistics?}
 
