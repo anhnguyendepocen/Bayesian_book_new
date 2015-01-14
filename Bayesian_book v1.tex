@@ -29,8 +29,14 @@
 
 \begin{document}
 \tableofcontents
+
+
 \chapter{How to best use this book}
+
+
+
 \part{Understanding the Bayesian formula}
+
 \chapter{The subjective worlds of frequentist and Bayesian statistics}
 \section{The purpose of statistics}
 \section{The world according to classical statistics}
@@ -43,7 +49,7 @@ The mathematical theory of probability provides a logic and language which is su
 
 \begin{figure}
 \centering
-\scalebox{0.5} 
+\scalebox{0.65} 
 {\includegraphics{Intro_die.pdf}}
 \caption{Left) A discrete uniform probability distribution for the number shown on a rolled fair die. Right) A continuous distribution to represent the probability of a coin coming up heads.\textbf{I want to remove the ticks from the discrete plot, simply placing a $\frac{1}{6}$ there instead.}}\label{fig:Intro_die}
 \end{figure}
@@ -74,6 +80,8 @@ For the continuous case of the probability of a heads when flipping a coin, the 
 \end{equation}
 
 Although, it may seem that this definition is relatively arbitrary, and perhaps well-trodden-territory for some readers, it is of \textit{central} importance to Bayesian statistics. This is because Bayesians like to work with, and produce \textit{valid} probability distributions. The pursuit of this ideal underlies the majority of \textit{all} methods in applied Bayesian statistics - analytic and computational - and hence its importance cannot be overstated!
+
+\subsection{Mean and variance of distributions}
 
 \subsection{Interpreting discrete and continuous probability distributions}
 The discrete probability distribution for a fair die shown on the left hand side in figure \ref{fig:Intro_die}, is straightforward to interpret. To calculate the probability that the die lands on a 1, we simply read off the probability from the graph corresponding to the height of the leftmost bar, and find that:
@@ -157,7 +165,7 @@ We could verify that the distribution shown in figure \ref{fig:Intro_footSizeInt
 
 Notice that we have chosen to allow there to be a degree of correlation between foot size and IQ. Why might we choose to do this\footnote{Our sample of individuals here is a sample of children of various ages. Age is correlated with shoe size and intelligence.}?
 
-\subsection{Marginal distributions}
+\subsection{Marginal distributions}\label{sec:Intro_marginal}
 We may be interested in simplifying the preceding analysis, by stating the distribution of one variable, completely \textit{unconditional} of the other. In our coins example, we might be interested in say, only the value obtained when we flip coin A. Alternatively, we might want to remove the dependence on foot size, in our IQ example, and what remains would then be an \textit{unconditional} probability distribution for IQ.
 
 In order to do this, we essentially need to \textit{average} out the dependence of the other variable. In our coins example, if we are only interested in coin A, we can sum down the column values for coin B, obtaining the \textit{marginal} distribution of coin A, shown at the bottom of table \ref{tab:Intro_coinsMarginal}.
@@ -375,6 +383,7 @@ p(\theta|data) = \frac{p(data|\theta)\times p(\theta)}{p(data)}
 
 Although we have straightforwardly made two substitutions to arrive at (\ref{eq:Intro_BayesianInferenceFormula}) from (\ref{eq:Intro_BayesianFormula1}), what have we gained by doing so? Also, what exactly do the terms on the right hand side actually mean?
 
+\subsection{Likelihoods}\label{sec:Intro_likelihoods}
 Starting with the numerator on the right hand side of (\ref{eq:Intro_BayesianFormula1}), we come across the term $p(data|\theta)$, which we call the \textit{likelihood}. This tells us the probability of generating the particular sample of \textit{data}, if the parameters in our statistical model were equal to $\theta$. When we write down a statistical model, we can generally calculate the probability of particular outcomes, so this is easily obtained. Imagine that we have a coin that we believe to be fair. By \textit{fair}, we typically mean that the probability of the coin falling 'heads-up' is $\theta=\frac{1}{2}$. If we flip the coin twice, we might suppose that it is reasonable to model the outcomes as independent (see section \ref{sec:Intro_independence}), and hence we can calculate the probabilities of the four possible outcomes, by multiplying the probabilities of the individual outcomes together:
 
 \begin{equation}
@@ -388,14 +397,79 @@ p(TT) &= p(H)\times p(H) = \frac{1}{2} \times \frac{1}{2} = \frac{1}{4}\\
 
 Hence, we obtained a \textit{sample} of two heads, we could write down the corresponding likelihood, $p(HH|\theta=\frac{1}{2})=\frac{1}{4}$.
 
-The next term in the numerator of the right hand side, $p(\theta)$ is the most controversial\footnote{Although this controversy is unwarranted, as we explain in section \ref{sec:Intro_implicitExplicitSubjectivity}.} part of the Bayesian formula, which we call the \textit{prior} distribution of $\theta$. It is a probability distribution which represents our pre-data beliefs as to the likely values of the parameters in our model, $\theta$. This appears at first to be slightly counter-intuitive, particularly if you are used to the world of classical statistics, which does not require us to state our preferences \textit{explicitly}\footnote{Although, we always do \textit{implicitly}, as we explain in section \ref{sec:Intro_implicitExplicitSubjectivity}.}. Continuing the coin example, we might assume that we do not know whether the coin is fair or biased beforehand, so we might think that all possible values of $\theta\in[0,1]$ - which represents the probability of the coin falling 'heads-up' are equally likely. We might represent these beliefs by a continuous uniform probability density on this interval (see figure ).
+Do not worry if you do not fully understand this concept, as we will be devoting an entire chapter to likelihoods in chapter \ref{chap:Likelihoods}.
+
+\subsection{Priors}\label{sec:Intro_priors}
+The next term in the numerator of the right hand side, $p(\theta)$ is the most controversial\footnote{Although this controversy is unwarranted, as we explain in section \ref{sec:Intro_implicitExplicitSubjectivity}.} part of the Bayesian formula, which we call the \textit{prior} distribution of $\theta$. It is a probability distribution which represents our pre-data beliefs as to the likely values of the parameters in our model, $\theta$. This appears at first to be slightly counter-intuitive, particularly if you are used to the world of classical statistics, which does not require us to state our preferences \textit{explicitly}\footnote{Although, we always do \textit{implicitly}, as we explain in section \ref{sec:Intro_implicitExplicitSubjectivity}.}. Continuing the coin example, we might assume that we do not know whether the coin is fair or biased beforehand, so we might think that all possible values of $\theta\in[0,1]$ - which represents the probability of the coin falling 'heads-up' are equally likely. We might represent these beliefs by a continuous uniform probability density on this interval (see the left-hand graph of figure \ref{fig:Intro_priors}). Normally however, we might think that coins are manufactured such that the weight distribution is fairly symmetrical on either face; meaning that we expect that the majority of coins are reasonably fair. These latter beliefs of unbiasedness might be fairly well represented by the right-hand graph of figure \ref{fig:Intro_priors}.
+
+\begin{figure}
+\centering
+\scalebox{0.6} 
+{\includegraphics{Intro_priors.pdf}}
+\caption{Left: All values of a the bias of a coin are equally likely. Right: It is believed that the coin is most likely fair.}\label{fig:Intro_priors}
+\end{figure}
+
+The concept of \textit{priors} will be covered in detail in chapter \ref{chap:Prior}.
+
+\subsection{The denominator}
+The final term on the right hand side, on the denominator is $p(data)$. This represents the probability of obtaining our particular sample of data, if we assume a particular model and prior. We will mostly postpone further discussion of this term until chapter \ref{chap:denominator}, when we understand better the significance of \textit{likelihoods} and \textit{priors} respectively. However, note that this denominator is actually a marginal probability density (see section \ref{sec:Intro_marginal}), which can be obtained from summing/integrating the joint density $p(\theta,data)$ with respect to the parameter(s) of the model.
+
+The concept of \textit{the denominator} will be covered in detail in chapter \ref{chap:denominator}.
+
+\subsection{Posteriors: the goal of Bayesian inference}
+The posterior probability distribution $p(\theta|data)$ is often the main goal of Bayesian inference. For example, in the coin example described before, we might want to derive a probability distribution representing our post-experimental beliefs of the inherent bias, $\theta$, of a coin, \textit{given} that we flipped it 10 times, and it came up 'heads' 7 times. If we use (\ref{eq:Intro_BayesianInferenceFormula}), assuming the likelihood model specified in \ref{sec:Intro_likelihoods} and the flat uniform prior shown in figure \ref{fig:Intro_priors}, then we would end up with a posterior distribution shown in figure \ref{fig:Intro_posterior}. Notice that the peak of the distribution occurs at $\theta=0.7$, which corresponds exactly with the percentage of 'heads' seen in the experiment\footnote{Note that if we chose a non-uniform prior, this peak would most likely shift.}. 
+
+\begin{figure}
+\centering
+\scalebox{0.6} 
+{\includegraphics{Intro_posterior.pdf}}
+\caption{The posterior distribution for, $\theta$, the bias of a coin when flipped, assuming a flat uniform prior and Bernoulli likelihood. We assume that 7/10 times the coin came up 'heads'.}\label{fig:Intro_posterior}
+\end{figure}
+
+The posterior distribution summaries our uncertainty in parameter values. If the distribution is more peaked, then this emphasises that there is a greater degree of certainty with a particular value for a parameter. This increased certainty over a parameter value is frequently obtained by collecting more data. In figure \ref{fig:Intro_posteriorPeaked}, we compare the posterior distribution for the previous case of 7/10 times a coin appearing 'heads' up, with a new, larger, sample where 70/100 times the same coin comes up 'heads'. In both cases the same ratio of 'heads' to 'tails' appeared, resulting in the same peak value of $\theta=0.7$. However, in the latter case, since we have more evidence to support our claim, we end up with greater certainty over the parameter value after the experiment.
+
+\begin{figure}
+\centering
+\scalebox{0.6} 
+{\includegraphics{Intro_posteriorPeaked.pdf}}
+\caption{Posterior distributions for, $\theta$, the bias of a coin when flipped, assuming a flat uniform prior and Bernoulli likelihood. The grey line assumes that 7/10 times the coin came up 'heads'. The blue line is for the case where 70/100 times the coin came up 'heads'.}\label{fig:Intro_posteriorPeaked}
+\end{figure}
+
+The posterior distribution is also used as a starting point for prediction of future outcomes of an experiment, as well as for model testing. However, we will leave discussion of these until later chapters.
 
 \section{Implicit vs Explicit subjectivity}\label{sec:Intro_implicitExplicitSubjectivity}
-\section{What are the tangible benefits of Bayesian statistics?}
+One of the major arguments levied against Bayesian statistics is that it is by its nature \textit{subjective}, due to its dependence on the analyst specifying their pre-experimental beliefs through \textit{priors}. This experimenter prejudice towards certain outcomes is said to bias the results away from the types of fair, objective outcomes resultant from a classical analysis. 
+
+We argue that \textit{all} analyses involve a degree of subjectivity, which is \textit{implicitly} assumed. In a classical analysis, the statistician typically states a model for probability which depends on a range of assumptions, which are generally justified. This process of justification is indicative of the subjective nature of the assumptions on which most analyses rest. For example, the choice to use a simple \textit{linear regression model} in many applied classical analyses assumes that the response of a dependent variable is linear in the model's parameters, and frequently the independent variables. This choice of model architecture is generally arbitrary, and used mostly to simplify the analysis. 
+
+In science, there is a tendency amongst scientists to use data to suit one's needs, although this practice should really be discouraged (see ref for 'why most analyses are wrong'). This choice as to which data points to include is subjective, and will remain independent of the type of analysis applied. 
+
+A further source of subjectivity is in the way in which models are checked and tested. In analyses, both classical and Bayesian, there is a need to exercise (subjective) judgement in suggesting a methodology which will be used in this process. We would argue that a Bayesian analysis allows greater flexibility, and suitable methodologies for these processes, since the prior- and posterior- predictive distributions are straightforwardly manipulated to suit most situations. A Bayesian methodology also allows different models to be compared in a logically-coherent manner, whilst classical analysis relies on fairly arbitrary criteria \footnote{$\bar{R^2}$, AIC and BIC are examples} to do so.
+
+In contrast to the examples of \textit{subjectivity} which we have mentioned above, Bayesian \textit{priors} are \textit{explicitly} stated. This makes this part of the analysis openly available to the reader, allowing it to be as thoroughly interrogated and debated, as any part of an argument. This transparent nature of Bayesian statistics has lead many to suggest that it is \textit{honest}; whilst classical analyses hide behind a fake veil of \textit{objectivity}, Bayesian equivalents explicitly acknowledge the subjective nature of all analyses.
+
+Furthermore, the more data that is collected, the less impact the prior exerts on posterior distributions. In any case, if slight modification to priors results in a different conclusion being reached, it is the job of the researcher to report this sensitivity. In fact, in contrast to classical analyses, a Bayesian analysis allows for a range of models/priors to be stated, which can then be used to test the sensitivity of conclusions to any subjective assumptions made.
+
+\section{What are the tangible (non-academic) benefits of Bayesian statistics?}
+In Bayesian textbooks much discourse is devoted to advocating the academic reasons for choosing to use a Bayesian analysis over classical approaches. However, often authors neglect to promote the more tangible, everyday benefits of the former. Here, we list the following \textit{real} benefits of a Bayesian approach:
+
+\begin{itemize}
+\item \textbf{Simple and intuitive model testing and comparison}. The prior- and posterior-predictive distributions allow for in-depth testing of any particular aspect of a model, by comparing it with the same aspects from the data collected. The Bayesian approach also provides a logical framework in which to compare different models.
+\item \textbf{Straightforward interpretation of results.} In classical analyses, the \textit{confidence interval} is often taken to be a measure of uncertainty for a particular parameter. As we shall see in section \ref{sec:Posterior_classicalConfidenceInterval}, this is not the case, and interpretation of this concept is not straightforward. By contrast Bayesian \textit{credible intervals}, can be taken to be a measure of uncertainty in a parameter, as they are obtained directly from probability distributions.
+\item \textbf{Full model flexibility}. Modern Bayesian analyses use computational simulation in order to carry out analyses. Whilst this might appear excessive when compared to classical approaches, an additional benefit is the straightforward extension to almost arbitrarily complex models when using Bayesian approaches. This means that Bayesian models can be extended to encompass any complexity of data process. This is in contrast to classical approaches, where the intrinsic difficulty of analysis scales with the complexity of the model chosen.
+\item \textbf{The best predictions.} Leading figures both inside and outside of academia use Bayesian approaches for prediction. An example being Nate Silver's correct prediction of the 2008 US Presidential election results (insert reference).
+\end{itemize}
+
 \section{Why don't more people use Bayesian statistics?}
+Many are discouraged from using Bayesian approaches to analysis due to its supposed \textit{difficulty}, and dependence on mathematics. However, we would argue that this is, in part, a weakness of the existent literature on the subject, which this book looks to address. It also highlights how many books on classical statistics sweep their inherent complexity and assumptions under the carpet, resulting in texts which are easy to digest; meaning that for many the path of least resistance is to forge ahead with classical tools. 
 
+By its dependence on the logic of probability, this means on first glances, Bayesian statistics appears more mathematically-complex. However, what is often lost in introductory texts on Bayesian theory, is the intuitive explanations behind the mathematical formulae. In this text instead, we shift the emphasis towards the latter; choosing to focus on graphical and illustrative explanations rather than getting lost in the details of the mathematics, which to be honest, is not necessary for much of modern Bayesian analysis. We hope that by doing so, we shall lose fewer casualties to mathematical complexity, and redress the imbalance between classical and Bayesian analysis applications.
 
-\chapter{The posterior - the goal of Bayesian inference}
+Again, on first appearances, the concept of the \textit{prior} no doubt leads many to 'abandon ship' early on the path to understanding better Bayesian methodologies. However, as discussed in section \ref{sec:Intro_priors}, and will be covered in detail in chapter \ref{chap:Prior} which is fully-devoted to this subject, we hope to banish this particular thorn in the side of would-be Bayesian statisticians.
+
+The reliance on computing, in particular simulation, is also seen to add to the complexity of Bayesian approaches. Whilst, this is true, we argue that the modern algorithms used for simulation are straightforward to understand, and with modern software, easy to implement. Furthermore, the added complexity of simulation methods is more than compensated by the straightforward extension of Bayesian models to handle arbitrarily complex situations. Like most things worth learning, there is a slight learning curve to become acquainted with the languages used to write modern Bayesian simulations. However, we hope to make this curve sufficiently shallow by incremental introduction of elements used in these computational applications.
+
+\chapter{The posterior - the goal of Bayesian inference}\label{chap:posterior}
 \section{Chapter Mission statement}
 At the end of this chapter the reader will understand the central importance, and use of the posterior probability distribution in Bayesian statistics.
 
@@ -412,7 +486,8 @@ Calculating the posterior distribution for a model's parameters is the focus of 
 Unlike looking out the window, getting exam results, or playing a hand at blackjack, we frequently in inference never learn the \textit{true}\footnote{Whether a true value for a parameter actually exists we leave until section \ref{sec:Posterior_parametersExist}.} state of nature. The uncertainty here is both in the future and \textit{present}; the latter meaning we are unable to perfectly measure the state of the world today, and hence cannot hope to perfectly know the former.
 
 \subsection{Do parameters actually exist and have a point value? Bayesian vs classical standpoints}\label{sec:Posterior_parametersExist}
-\subsection{Failings of the classical confidence interval}
+\subsection{Failings of the classical confidence interval}\label{sec:Posterior_classicalConfidenceInterval}
+The asymptotic reliance of classical confidence intervals.
 \subsection{The HDI as a better alternative}
 \subsection{The central posterior interval}
 
