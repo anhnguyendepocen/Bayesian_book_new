@@ -38,10 +38,30 @@
 \part{Understanding the Bayesian formula}
 
 \chapter{The subjective worlds of frequentist and Bayesian statistics}
-\section{The purpose of statistics}
-\section{The world according to classical statistics}
-\section{The world according to Bayesian statistics}
+\section{Chapter mission statement}
+At the end of this chapter the reader will understand the similarities and differences between frequentist and Bayesian statistics. Furthermore, the reader will gain knowledge about probability distributions, as well as how they can be manipulated to calculate quantities of interest. Finally, we discuss the benefits of using Bayesian statistics for a particular analysis.
+ 
+\section{Chapter goals}
+When we wish to 
+
+\section{The purpose of statistical inference}
+What is the benefit of a particular drug to treatment success? What is the mean weight of a US female? How does income inequality vary in post-communist countries? We frequently use a sample of data to draw conclusions about the wider world. The issue with generalising from a sample to a population is that our data is subject to variance due to the way in which we select our sample, as well as any variance that is due to the actual process of interest. If we find in a sample of 100 individuals that the mean score of a particular test is 112, how does this generalise to the population of \textit{all} individuals taking this test? Is it that the true population mean is 112, or did we just happen to pick a sample of people who show higher than average performance on this test?
+
+Statistical inference provides us with a logical framework which allows us to extrapolate from the small to the big, dealing with this issue of \textit{sampling variation}. This contrasts with descriptive statistics, which simply aims to describe a dataset, without reference to the fact that it comes from a larger population.
+
+There are two schools of thought for carrying out this process of inference: frequentist and Bayesian. Although this book is devoted to the latter, we now spend some time comparing the two approaches, so that a reader is aware of the different paths taken to their shared goal.
+
+\section{The world according to frequentist inference}
+In frequentist inference, we suppose that our sample of data is the result of one of an infinite number of exactly-repeated experiments. Any conclusions that we draw from this approach are hence based on the supposition that events occur with probabilities, which represent long-run frequencies. For example, if we flip a coin, we might assume that any sequence of outcomes we obtain is indicative of the results that we might obtain if we were to conduct the experiment an infinite number of times. Further, we might take the proportion of heads observed in this infinite set of throws as defining the probability of obtaining a 'heads'. We suppose that this probability actually exists, and is fixed for each set of coin-throws that we carry out.
+
+In general, in frequentist statistics assume that the data is the result of \textit{sampling variation}, from a fixed, \textit{defined}, population distribution.  
+
+\section{The world according to Bayesian inference}
+The frequentist paradigm is not well-suited to answer what is meant by the statement, 'The probability of the Republicans winning the next Presidential election is 0.31'. 
+
 \section{Similarities and differences in approaches between classical and Bayesian statistics}
+
+
 \section{Probability distributions: helping us explicitly state our ignorance}\label{sec:Intro_probabilityDistributions}
 Before we look out the window in the morning, before we get our exam results, before the cards are dealt, we are uncertain of the world that lies in wait of us. In order to plan, as well as make sense of things, we frequently implicitly formulate an idea as to the relative likelihood of different outcomes. However, in order to allow interrogation of thought, with a view to transparency and self-improvement, we sometimes would like to state our pre-conceptions \textit{explicitly}, in the form of a suitable framework. 
 
@@ -234,12 +254,12 @@ Imagine that you are given two coins, and you are told that both are biased towa
 How can we check whether this distribution satisfies the requirements for a valid probability distribution? We simply apply the rules described in section \ref{sec:Intro_validProbabilityDistribution}. Firstly, all the values of the distribution are real and non-negative; satisfying our first requirement. For the second rule rather than summing over the values of one random variable, we now have to sum over the outcome of two:
 
 \begin{equation}\label{eq:Intro_discreteTwoDimensionalCoinSum}
-\sum\limits_{X_A=0}^{1}\sum\limits_{X_B=0}^{1} p(X_A,X_B) = 0.3 + 0.1 + 0.1 + 0.5 = 1
+\sum\limits_{X_A=0}^{1}\sum\limits_{X_B=0}^{1} Pr(X_A,X_B) = 0.3 + 0.1 + 0.1 + 0.5 = 1
 \end{equation}
 
-In (\ref{eq:Intro_discreteTwoDimensionalCoinSum}), $X_A$ and $X_B$ are random variables\footnote{A function which associates a unique numerical value with each outcome of an experiment. In this case the function gives value 0 if the result is a tails, and 1 if it is heads.} which refer to the outcome of Coin A and Coin B respectively. Notice that since we are now considering a situation with the outcome of two random variables, we are now required to index the probability, $p(X_A,X_B)$, by both. Due to the probability now being a function of two variables, we say that the probability distribution is 2-dimensional.
+In (\ref{eq:Intro_discreteTwoDimensionalCoinSum}), $X_A$ and $X_B$ are random variables\footnote{A function which associates a unique numerical value with each outcome of an experiment. In this case the function gives value 0 if the result is a tails, and 1 if it is heads.} which refer to the outcome of Coin A and Coin B respectively. Notice that since we are now considering a situation with the outcome of two random variables, we are now required to index the probability, $Pr(X_A,X_B)$, by both. Due to the probability now being a function of two variables, we say that the probability distribution is 2-dimensional.
 
-How can we interpret the probability distribution shown in table \ref{tab:Intro_coinBiased}? The probability that both coins show tails (and hence both their random variables take on the value of 0), is simply read off from the top-left entry in the table, meaning $p(X_A=0,X_B=0)=0.3$. We ascribe a smaller likelihood to the coins coming up with different outcomes, $p(X_A=0,X_B=1)=0.1$ or $p(X_A=1,X_B=0)=0.1$, since we believe that the coins are biased in the same direction. We believe that the most likely outcome is that both coins show heads, since we believe that the experimenter is predisposed to this outcome, and hence ascribe the highest probability to this result, with $p(X_A,X_B)=0.5$.
+How can we interpret the probability distribution shown in table \ref{tab:Intro_coinBiased}? The probability that both coins show tails (and hence both their random variables take on the value of 0), is simply read off from the top-left entry in the table, meaning $Pr(X_A=0,X_B=0)=0.3$. We ascribe a smaller likelihood to the coins coming up with different outcomes, $Pr(X_A=0,X_B=1)=0.1$ or $Pr(X_A=1,X_B=0)=0.1$, since we believe that the coins are biased in the same direction. We believe that the most likely outcome is that both coins show heads, since we believe that the experimenter is predisposed to this outcome, and hence ascribe the highest probability to this result, with $Pr(X_A,X_B)=0.5$.
 
 \subsection{Foot length and intelligence: a 2-dimensional continuous probability example}
 We suppose that we have a sample of individuals, and we measure their foot size, as well as how well they score on an IQ test. Both of these variables can be reasonably be assumed to be continuous, meaning that we are now required to represent our strength of belief, by specifying a probability distribution across a continuum of values (see figure \ref{fig:Intro_footSizeIntelligenceTwoDimensionalExample}). 
@@ -267,10 +287,10 @@ In order to do this, we essentially need to \textit{average} out the dependence 
     \toprule
           &       & \multicolumn{2}{c}{\textbf{Coin A}} &  \\
     \midrule
-          &       & \textbf{0} & \textbf{1} & \multicolumn{1}{c}{\textbf{$p(X_B)$}} \\
+          &       & \textbf{0} & \textbf{1} & \multicolumn{1}{c}{\textbf{$Pr(X_B)$}} \\
     \multicolumn{1}{c}{\textbf{Coin B}} & \multicolumn{1}{c}{\textbf{0}} & 0.3   & 0.1   & \multicolumn{1}{c}{\textbf{0.4}} \\
     \multicolumn{1}{c}{} & \multicolumn{1}{c}{\textbf{1}} & 0.1   & 0.5   & \multicolumn{1}{c}{\textbf{0.6}} \\
-          & \multicolumn{1}{c}{\textbf{$p(X_A)$}} & \textbf{0.4} & \textbf{0.6} & \multicolumn{1}{c}{} \\
+          & \multicolumn{1}{c}{\textbf{$Pr(X_A)$}} & \textbf{0.4} & \textbf{0.6} & \multicolumn{1}{c}{} \\
     \bottomrule
     \end{tabular}%
   \caption{The marginal distribution of coins A and B, achieved by summing the values in each column or row respectively.}\label{tab:Intro_coinsMarginal}%
@@ -279,7 +299,7 @@ In order to do this, we essentially need to \textit{average} out the dependence 
 Hence, we have that the \textit{marginal} probability of coin A coming up 'heads' is 0.6. This value is composed out of the two possible ways in which this \textit{single} event can occur:
 
 \begin{equation}\label{eq:Intro_marginalCoinsExample}
-p(X_A=1) = p(X_A=1,X_B=0) + p(X_A=1,X_B=1)
+Pr(X_A=1) = Pr(X_A=1,X_B=0) + Pr(X_A=1,X_B=1)
 \end{equation}
 
 In (\ref{eq:Intro_marginalCoinsExample}), we see that A can come up 'heads' with B being 'tails', or alternatively A can land on 'heads' with B also on 'heads'.
@@ -287,7 +307,7 @@ In (\ref{eq:Intro_marginalCoinsExample}), we see that A can come up 'heads' with
 Thus, in order to calculate the probability of a single event, we simply need to sum across all possible occurrences of it, allowing the other variable to take on its possible values. Mathematically, we can summarise this rule by the following for the case of two discrete random variables:
 
 \begin{equation}\label{eq:Intro_marginalDiscreteProbabilityTwoDimensions}
-p(A=\alpha) = \sum\limits_{\beta} p(A=\alpha,B=\beta)
+Pr(A=\alpha) = \sum\limits_{\beta} Pr(A=\alpha,B=\beta)
 \end{equation}
 
 In (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}), $\alpha$ and $\beta$ refer to the specific values taken on by the random variables $A$ and $B$. 
@@ -296,8 +316,8 @@ We can use (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}) for the coi
 
 \begin{equation}
 \begin{align}
-p(X_B=0) &= \sum\limits_{\alpha=0}^{1} p(X_B=0,X_A=\alpha)\\
-&= p(X_B=0,X_A=0) + p(X_B=0,X_A=1)\\
+Pr(X_B=0) &= \sum\limits_{\alpha=0}^{1} Pr(X_B=0,X_A=\alpha)\\
+&= Pr(X_B=0,X_A=0) + Pr(X_B=0,X_A=1)\\
 &= 0.3 + 0.1 = 0.4
 \end{align}
 \end{equation}
@@ -363,14 +383,14 @@ We can use (\ref{eq:Intro_conditionalProbability}) for the coins example to calc
 
 \begin{equation}\label{eq:Intro_conditionalDiscreteCoins}
 \begin{align}
-p(X_B=1|X_A=1) &= \frac{p(X_A=1,X_B=1)}{p(X_A=1)}\\
-&= \frac{p(X_A=1,X_B=1)}{p(X_A=1,X_B=0)+p(X_A=1,X_B=1)}\\
+Pr(X_B=1|X_A=1) &= \frac{Pr(X_A=1,X_B=1)}{Pr(X_A=1)}\\
+&= \frac{Pr(X_A=1,X_B=1)}{Pr(X_A=1,X_B=0)+Pr(X_A=1,X_B=1)}\\
 &= \frac{0.5}{0.1 + 0.5}\\ 
 &= \frac{5}{6}
 \end{align}
 \end{equation}
 
-In (\ref{eq:Intro_conditionalDiscreteCoins}), we have used the rule we discussed earlier for calculating marginal probabilities, shown in (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}), to calculate the denominator, $p(X_A=1)$.
+In (\ref{eq:Intro_conditionalDiscreteCoins}), we have used the rule we discussed earlier for calculating marginal probabilities, shown in (\ref{eq:Intro_marginalDiscreteProbabilityTwoDimensions}), to calculate the denominator, $Pr(X_A=1)$.
 
 Another way to see the workings of this calculation is shown in table \ref{tab:Intro_coinsConditionalDiscrete}. When we uncover that coin A is heads-up, we essentially reduce our solution space to only the central column (highlighted in blue). Therefore we need to renormalise the solution space such that it has a probability of 1, by dividing each of its entries through by its original total of probabilities, 0.6; yielding the conditional probabilities shown in the right hand column of table \ref{tab:Intro_coinsConditionalDiscrete}.
 
@@ -380,10 +400,10 @@ Another way to see the workings of this calculation is shown in table \ref{tab:I
     \toprule
           &       & \multicolumn{2}{c}{\textbf{Coin A}} &  \\
     \midrule
-          &       & \textbf{0} & \textbf{1} & \multicolumn{1}{c}{\textbf{$p(X_B|X_A=1)$}} \\
+          &       & \textbf{0} & \textbf{1} & \multicolumn{1}{c}{\textbf{$Pr(X_B|X_A=1)$}} \\
     \multicolumn{1}{c}{\textbf{Coin B}} & \multicolumn{1}{c}{\textbf{0}} & 0.3   & {\color{blue}0.1}   & \multicolumn{1}{c}{\textbf{=0.1/0.6 = 1/6}} \\
     \multicolumn{1}{c}{} & \multicolumn{1}{c}{\textbf{1}} & 0.1   & {\color{blue}0.5}   & \multicolumn{1}{c}{\textbf{=0.5/0.6 = 5/6}} \\
-          & \multicolumn{1}{c}{\textbf{$p(X_A)$}} & \textbf{0.4} & {\color{blue}\textbf{0.6}} & \multicolumn{1}{c}{} \\
+          & \multicolumn{1}{c}{\textbf{$Pr(X_A)$}} & \textbf{0.4} & {\color{blue}\textbf{0.6}} & \multicolumn{1}{c}{} \\
     \bottomrule
     \end{tabular}%
 \caption{The highlighted region indicates the new solution space, since we know that coin A has landed heads-up.}
@@ -402,11 +422,70 @@ The Venn diagram in figure \ref{fig:Intro_Venn} shows another way of interpretin
 We can also use (\ref{eq:Intro_conditionalProbability}) to allow us to calculate the conditional distribution of IQ for individuals after we have measured their shoe size. The only difference with the discrete example is that we now have to use an integral to work out the marginal probability for foot size; the denominator of (\ref{eq:Intro_conditionalProbability}). Figure \ref{fig:Intro_footSizeIntelligenceConditional} shows the conditional distributions traced out when we measure an individual's foot size to be 10cm and 20cm respectively. The blue dashed lines show the new event space, since we have lost our uncertainty over foot size in each of the cases. Therefore the heights traversed on the walk along these lines indicate the relative likelihood of different values of IQ. 
 
 \section{Higher dimensional probability densities: no harder than 2-D, just looks it!}
+Now that we are equipped with the tools to calculate marginal and conditional distributions in two dimensions, we can use these to work with probability distributions that depend on arbitrary many variables. Although formulae appear more complex, this is really just a result of having to keep track of each individual variable.
+
+For example, suppose that we have a posterior density that is defined in terms of three parameters, $p(\alpha,\beta,\sigma)$. If we wish to determine the posterior solely as a function of $\alpha$ and $\beta$, then we start by defining the parameter vector $\boldsymbol{\theta} = (\alpha,\beta)$, meaning we are left with $p(\boldsymbol{\theta},\sigma)$. Note that all we have done is defined a new composite variable, $\boldsymbol{\theta}$. Now our density is of the '2-dimensional' form shown in (\ref{eq:Intro_marginalContinuousProbabilityTwoDimensions}), and we can apply this relation:\\
+
+\begin{equation}\label{eq:Intro_higherDimensionalMarginal}
+\begin{align}
+p(\alpha,\beta) &= p(\boldsymbol{\theta})\\
+&= \int\limits_{All\; \sigma} p(\boldsymbol{\theta},\sigma)\mathrm{d}\sigma
+\end{align}
+\end{equation}
+
+If we wish to find the marginal distribution for $\alpha$ \textit{only}, then all we do is integrate the resultant distribution in (\ref{eq:Intro_higherDimensionalMarginal}) with respect to $\beta$.
+
+We can use exactly the same trick to calculate the \textit{conditional} density of $\alpha$ and $\beta$, conditional on observing $\sigma$:
+
+\begin{equation}\label{eq:Intro_higherDimensionsConditional}
+\begin{align}
+p(\alpha,\beta|\sigma) &= p(\boldsymbol{\theta}|\sigma)\\
+&= \frac{p(\boldsymbol{\theta},\sigma)}{p(\sigma)}
+\end{align}
+\end{equation}
+
+In (\ref{eq:Intro_higherDimensionsConditional}), we have used (\ref{eq:Intro_conditionalProbability}) to arrive at the second line.
+
+Finally, note that combining all parameters of interest into a single parameter vector $\boldsymbol{\theta}$ allows us to calculate \textit{marginal} and \textit{conditional} distributions for probability distributions that depend on an arbitrary number of parameters.
 
 \section{Independence}\label{sec:Intro_independence}
+If we think that there is a relationship between two random variables, then we say that they are \textit{dependent}. This does not necessarily mean \textit{causal} dependence, as it is sometimes supposed, in that the behaviour of variable $A$ affects the outcome of variable $B$. What it really means is that the value taken on by $A$ is informative as to the likely value of $B$. 
+
+An example of dependence might be the \textit{colour} and \textit{suit} of a playing card. If we are told that the colour of a playing card is $red$, this means that our other variable \textit{suit} is constrained to be either \textit{hearts} or \textit{diamonds}. In this case, knowing with certainty the value of the first variable, \textit{colour}, helps us to narrow down the list of outcomes of the second variable, \textit{suit} (See figure \ref{fig:Intro_IndependenceCards}).
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Intro_IndependenceCards.pdf}}
+\caption{Knowledge of the colour of a card provides information about the suit of the card. The colour and suit of a card are \textit{dependent}.}\label{fig:Intro_IndependenceCards}
+\end{figure}
+
+Another example of dependent variables, is the weather outside and the suntan of a particular, vein, individual\footnote{Discounting sunbeds.}. If it is sunny, then we assume it is more likely that an individual is tanned. Whereas, if the weather is cloudy, it is less so.
+
+If two variables, $A$ and $B$ are \textit{disjoint}, then if one occurs, then the other cannot. In this case, it is often mistakenly believed that the variables are \textit{independent}, although this is very much not the case (see the left hand panel of figure \ref{fig:Intro_VennIndependence}). In this case, knowledge of variable $A$, provides significant information about variable $B$. If $A$ occurs, then we know for \textit{certain} that $B$ cannot!
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Intro_VennIndependence.pdf}}
+\caption{Venn diagram depictions of left: disjoint, and right: independent, events $A$ and $B$.}\label{fig:Intro_VennIndependence}
+\end{figure}
+
+By contrast, if two events are \textit{independent}, then knowledge of $B$ provides no additional information on $A$. Mathematically, this means that the conditional probability of $A$ is equal to the marginal:
+
+\begin{equation}\label{eq:Intro_independentConditionalEqualMarginal}
+p(A|B) = p(A)
+\end{equation}
+
+Using our conditional probability rule given in (\ref{eq:Intro_conditionalProbability}), we can then use this to rewrite the above as:
+
+\begin{equation}\label{eq:Intro_independentConditionalEqualMarginal1}
+\frac{p(A,B)}{p(B)} = p(A)
+\end{equation}
+
+In words, the ratio of the area of overlap between $A$ and $B$ to the area of $B$, is the same as the overall probability of $A$ (see the right hand panel of figure \ref{fig:Intro_VennIndependence}). This makes intuitive sense, since uncovering that $B$ has occurred (being in $B$) should result in no change to the probability of $A$ occurring (now $p(A|B)$).
 
 \section{Central Limit Theorems: the most important thing ever}\label{sec:Intro_CLT}
-Most distributions are not
 
 
 \section{The Bayesian formula}\label{sec:Intro_BayesianFormula}
@@ -547,7 +626,7 @@ In Bayesian textbooks much discourse is devoted to advocating the academic reaso
 \item \textbf{Simple and intuitive model testing and comparison}. The prior- and posterior-predictive distributions allow for in-depth testing of any particular aspect of a model, by comparing it with the same aspects from the data collected. The Bayesian approach also provides a logical framework in which to compare different models.
 \item \textbf{Straightforward interpretation of results.} In classical analyses, the \textit{confidence interval} is often taken to be a measure of uncertainty for a particular parameter. As we shall see in section \ref{sec:Posterior_classicalConfidenceInterval}, this is not the case, and interpretation of this concept is not straightforward. By contrast Bayesian \textit{credible intervals}, can be taken to be a measure of uncertainty in a parameter, as they are obtained directly from probability distributions.
 \item \textbf{Full model flexibility}. Modern Bayesian analyses use computational simulation in order to carry out analyses. Whilst this might appear excessive when compared to classical approaches, an additional benefit is the straightforward extension to almost arbitrarily complex models when using Bayesian approaches. This means that Bayesian models can be extended to encompass any complexity of data process. This is in contrast to classical approaches, where the intrinsic difficulty of analysis scales with the complexity of the model chosen.
-\item \textbf{The best predictions.} Leading figures both inside and outside of academia use Bayesian approaches for prediction. An example being Nate Silver's correct prediction of the 2008 US Presidential election results (insert reference).
+\item \textbf{The best predictions.} Leading figures both inside and outside of academia use Bayesian approaches for prediction. An example being Nate Silver's correct prediction of the 2008 US Presidential election results \cite{silver2012signal}.
 \end{itemize}
 
 \section{Why don't more people use Bayesian statistics?}
