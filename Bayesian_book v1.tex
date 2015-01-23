@@ -45,22 +45,62 @@ At the end of this chapter the reader will understand the similarities and diffe
 When we wish to 
 
 \section{The purpose of statistical inference}
-What is the benefit of a particular drug to treatment success? What is the mean weight of a US female? How does income inequality vary in post-communist countries? We frequently use a sample of data to draw conclusions about the wider world. The issue with generalising from a sample to a population is that our data is subject to variance due to the way in which we select our sample, as well as any variance that is due to the actual process of interest. If we find in a sample of 100 individuals that the mean score of a particular test is 112, how does this generalise to the population of \textit{all} individuals taking this test? Is it that the true population mean is 112, or did we just happen to pick a sample of people who show higher than average performance on this test?
+What is the benefit of a particular drug to treatment success? What is the return on a college education? Will the Democrats win the next US Presidential election? We frequently in life want to test theories, and go on to draw conclusions about processes of interest.
 
-Statistical inference provides us with a logical framework which allows us to extrapolate from the small to the big, dealing with this issue of \textit{sampling variation}. This contrasts with descriptive statistics, which simply aims to describe a dataset, without reference to the fact that it comes from a larger population.
+However, it is often impossible to exactly isolate the parts of a system which we want to examine. The outcome of history is hence determined by a nexus of interacting elements; each of which contributes to the reality that we witness. In the case of a drug trial, we may not be able to control the diets of participants, and are certainly unable to control for their idiosyncratic metabolisms, both of which could impact the results we see. Evaluating the return to a college education - there are a range of factors which affect the wage which an individual ultimately commands, of which education is only one element. The outcome of the next US Presidential election depends on party politics, the performance of the incumbent government, as well as the media's portrayal of the candidates. 
 
-There are two schools of thought for carrying out this process of inference: frequentist and Bayesian. Although this book is devoted to the latter, we now spend some time comparing the two approaches, so that a reader is aware of the different paths taken to their shared goal.
+In life noise obfuscates the signal. The wind, rain, sleet and snow make it difficult to forge a path to where we want to go.
 
-\section{The world according to frequentist inference}
-In frequentist inference, we suppose that our sample of data is the result of one of an infinite number of exactly-repeated experiments. Any conclusions that we draw from this approach are hence based on the supposition that events occur with probabilities, which represent long-run frequencies. For example, if we flip a coin, we might assume that any sequence of outcomes we obtain is indicative of the results that we might obtain if we were to conduct the experiment an infinite number of times. Further, we might take the proportion of heads observed in this infinite set of throws as defining the probability of obtaining a 'heads'. We suppose that this probability actually exists, and is fixed for each set of coin-throws that we carry out.
+Statistical inference allows us to draw conclusions in this blustery landscape; separating the signal from the noise. It is the logic which means we can trial our beliefs against \textit{data}. 
 
-In general, in frequentist statistics assume that the data is the result of \textit{sampling variation}, from a fixed, \textit{defined}, population distribution.  
+In statistics, we formalise our beliefs in models of \textit{probability}. The models are probabilistic because we assume we are ignorant to most of the multitude of interacting parts of a system, meaning we cannot say with certainty whether something will, or will not, occur.
 
-\section{The world according to Bayesian inference}
-The frequentist paradigm is not well-suited to answer what is meant by the statement, 'The probability of the Republicans winning the next Presidential election is 0.31'. 
+Suppose we are evaluating the efficacy of a drug in a trial. We might suppose that \textit{on average}, the drug might have a given probability of working as desired. However, before we carry out any trials, we are unaware of its exact treatment success rate. Fortunately, statistical inference allows us to estimate this unknown characteristic, or \textit{parameter}, from the data we are given. 
 
-\section{Similarities and differences in approaches between classical and Bayesian statistics}
+There are two schools of thought for carrying out this process of inference: \textit{frequentist} and \textit{Bayesian}. Although this book is devoted to the latter, we now spend some time comparing the two approaches, so that a reader is aware of the different paths taken to their shared goal.
 
+\section{The world according to frequentists}
+In frequentist or classical statistics, we suppose that our sample of data is the result of one of an infinite number of exactly-repeated experiments. The sample we see in this context is hence assumed to be the outcome of some probabilistic process. Any conclusions that we draw from this approach are based on the supposition that events occur with probabilities, which represent long-run frequencies. 
+
+For example, if we flip a coin, we might assume that any sequence of outcomes we obtain is indicative of the results that we might obtain if we were to conduct the experiment an infinite number of times. Further, we might take the proportion of heads observed in this infinite set of throws as defining the probability of obtaining a 'heads'. We suppose that this probability actually exists, and is fixed for each set of coin-throws that we carry out.
+
+In general, in frequentist statistics assume that the data is \textit{random} and results from \textit{sampling}, from a fixed and defined \textit{population} distribution. For a frequentist the noise that obscures the true signal of the population relationship in which we are interested is due to \textit{sampling variation}; the fact that the sample that we pick will each time be slightly different, and not exactly representative of the population. 
+
+We may flip our coin 10 times, obtaining 7 heads even if the long-run proportion of heads is $\frac{1}{2}$. To a frequentist, this is because we have picked a slightly odd sample from the population of infinitely-many repeated throws. Further, if we flip the coin another 10 times, we will likely get a different result, because we have picked a different sample.
+
+\section{The world according to Bayesians}
+Bayesians do not imagine repetitions of an experiment in order to define and specify a probability. It is merely taken as a measure of certainty of a particular belief. From this viewpoint, the probability of us throwing a 'heads' measures and quantifies our underlying belief, that before we flip the coin, it will land this way. 
+
+In this sense, Bayesians do not view probabilities as concrete entities that actually exist. They are merely abstractions which we can use to help express our uncertainty. In this frame of reference there is no necessity for events to be repeatable in order to define a probability. We are thus equally able to say, 'The probability of a heads is 0.5', or, 'The probability of the democrats winning the 2020 US Presidential election is 0.75'. Probability is merely seen as a scale from: 0 where we are certain an event will not happen, to 1 where we are certain it will. 
+
+A statement such as 'The probability of the democrats winning the 2020 US Presidential election is 0.56' is hard to explain using the frequentist definition of a probability. There is only ever one possible sample - the history that we witness - and what would we actually mean by a 'population of all possible US elections which happen in the year 2020'? 
+
+Probabilities are therefore seen as an expression of subjective beliefs, meaning they can be updated in light of new data. The formula invented by the Reverend Thomas Bayes provides the \textit{only} logical manner in which to carry out this process, and is central to Bayesian inference, where we aim to express probabilistically our uncertainty in parameters after we have seen the \textit{data}. 
+
+Bayesians assume, since we are witness to the data, that it is \textit{fixed}, and therefore does not vary. We do not need to imagine that there are an infinite number of possible samples. We 'see' our data, and hence do not need to view it as the outcome of some random process.
+
+In contrast, we do not ever learn exactly the value of an unknown parameter. This epistemic uncertainty means that in Bayesian inference we choose to view the parameter as a quantity that is probabilistic in nature. We can view this in one of two perspectives. Either we view the unknown parameter as truly being \textit{fixed} in some absolute sense, but our beliefs are uncertain, and thus probabilistic. Alternatively, we can take the view that there isn't some definitive \textit{population} process, and for each sample we take, we get a slightly different parameter.
+
+In the latter perspective we get different results from the coin flipping because each time we are subjecting our system to a slightly different probability of it landing 'heads' up. This could be because we mildly altered our throwing technique, or started with the coin in a different position. In the former perspective, we view the sample as a noisy representation of the signal, and hence we get different results for each set of throws.
+
+Although these two descriptions are different philosophically, they are not mathematically, meaning we can apply the same analysis to both.
+
+\section{Frequentist and Bayesian inference}
+The Bayesian inference process is the only logical way to modify our beliefs to take into account new data. We start out before we collect data with a probabilistic description of our beliefs, which we call a \textit{prior}. We then collect data, and together with a model describing our theory, Bayes' formula for probability allows us to calculate our post-data or \textit{posterior} belief:
+
+\begin{equation}
+prior + data \xrightarrow{model} posterior
+\end{equation}
+
+In Bayesian inference, we want to draw conclusions based on purely probabilistic descriptions of phenomena. If we wish to summarise our evidence for a particular hypothesis, we describe this probabilistically, as the 'probability of the hypothesis \textit{given} the data obtained'. 
+
+The difficulty in obtaining this type of conclusion is that when we write down a probability model describing our process of interest, we can only use it to compute the 'probability of obtaining our data \textit{given} our hypothesis being true'. Frequentists stop here. Using this probability as evidence for a particular hypothesis in question. If the probability of obtaining data\footnote{Actually technically obtaining a result as or more extreme than the data.} given a hypothesis is small, then we reject the hypothesis in question.
+
+Bayesians allow inversion of this probability.
+
+Diagram explaining the difference between Bayesians and frequentists.
+
+\subsection{Locating a submarine: example}
 
 \section{Probability distributions: helping us explicitly state our ignorance}\label{sec:Intro_probabilityDistributions}
 Before we look out the window in the morning, before we get our exam results, before the cards are dealt, we are uncertain of the world that lies in wait of us. In order to plan, as well as make sense of things, we frequently implicitly formulate an idea as to the relative likelihood of different outcomes. However, in order to allow interrogation of thought, with a view to transparency and self-improvement, we sometimes would like to state our pre-conceptions \textit{explicitly}, in the form of a suitable framework. 
