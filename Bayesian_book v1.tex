@@ -94,11 +94,25 @@ prior + data \xrightarrow{model} posterior
 
 In Bayesian inference, we want to draw conclusions based on purely probabilistic descriptions of phenomena. If we wish to summarise our evidence for a particular hypothesis, we describe this probabilistically, as the 'probability of the hypothesis \textit{given} the data obtained'. 
 
-The difficulty in obtaining this type of conclusion is that when we write down a probability model describing our process of interest, we can only use it to compute the 'probability of obtaining our data \textit{given} our hypothesis being true'. Frequentists stop here. Using this probability as evidence for a particular hypothesis in question. If the probability of obtaining data\footnote{Actually technically obtaining a result as or more extreme than the data.} given a hypothesis is small, then we reject the hypothesis in question.
+The difficulty in obtaining this type of conclusion is that when we write down a probability model describing our process of interest, we can only use it to compute the 'probability of obtaining our data \textit{given} our hypothesis being true'. This probability is calculated by taking into account all the possible samples that we could have obtained from the population, if we assume the hypothesis is true. Frequentists stop here; using this probability as evidence for a particular hypothesis in question. If the probability of obtaining the data, or a data sample more extreme, given a hypothesis is small, then it is assumed that it is unlikely that the hypothesis is true, and is rejected. Note however if reject a hypothesis, we have no way of telling whether it is true, and we just witnessed a weird sample, or that it is actually false. Also, note that in this inference process, we have also had to imagine obtaining a sample more extreme than our result, in order to get a usable probability. 
 
-Bayesians allow inversion of this probability.
+Bayes' formula allows us to circumvent these difficulties, by inverting the frequentist probability to get the 'probability of the hypothesis given the \textit{actual} data we obtained'. There is no need for an arbitrary cut-off in the probability in order to validate the hypothesis; all information is summarised in this probability, and hence can be viewed as the end point of an analysis in itself.
 
-Diagram explaining the difference between Bayesians and frequentists.
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Intro_BayesVsFrequentist.pdf}}
+\caption{Frequentist and Bayesian inference.}\label{fig:Intro_BayesVsFrequentist}
+\end{figure}
+
+\subsection{The frequentist and Bayesian murder trials}
+Assume you find yourself in the unfortunate situation where you are (hopefully falsely) accused of murder, and face a trial by jury. A slight twist in the usual tale is that you personally have a choice over the method used by the jury to assign guilt: either frequentist or Bayesian.
+
+Let's assume that you have been shown by a security camera to have definitely been in the same house as the victim - Sally - on the night of their demise. Let's also assume that, in this bizarre legal framework, that the jury starts off by assuming \textit{guilt}, rather than innocence.
+
+If you choose the frequentist trial, your jurors start by coming up with a model based on previous trials, which assigns a probability of you being seen by the security camera if you were guilty. They then use this to make the statement that, 'If you did commit the murder, then 30\% of the time you would have been seen by the security camera', based on a hypothetical infinity of repetitions of the same conditions. Since this is not sufficiently unlikely, the jurors cannot reject the null hypothesis of \textit{guilt}, and you are sentenced to life in prison.
+
+In a Bayesian trial, the jury are first introduced to an array of evidence, that suggests that you neither knew Sally, nor had any previous record of violent conduct; being otherwise a perfectly respectable citizen. Furthermore, the ex-boyfriend of Sally is a multiple-violent-offending convict on the run from prison after being sentenced by a judge on the basis of witness testimony by Sally. On this basis, the jury determine a \textit{prior} probability in the hypothesis that you are guilty that is $\frac{1}{1000}$. They then use the same model as the frequentists, to determine that the probability of you being seen by the security camera given your guilt is 30\%. However, they then coolly use Bayes' rule, and conclude that the probability of you committing the crime is $\frac{1}{1000}$ (see section \ref{sec:Intro_appendixMurder} for a full description of this calculation). Based on this evidence, the jury acquits you, and  you go home to your family.
 
 \subsection{Locating a submarine: example}
 
@@ -677,6 +691,20 @@ By its dependence on the logic of probability, this means on first glances, Baye
 Again, on first appearances, the concept of the \textit{prior} no doubt leads many to 'abandon ship' early on the path to understanding better Bayesian methodologies. However, as discussed in section \ref{sec:Intro_priors}, and will be covered in detail in chapter \ref{chap:Prior} which is fully-devoted to this subject, we hope to banish this particular thorn in the side of would-be Bayesian statisticians.
 
 The reliance on computing, in particular simulation, is also seen to add to the complexity of Bayesian approaches. Whilst, this is true, we argue that the modern algorithms used for simulation are straightforward to understand, and with modern software, easy to implement. Furthermore, the added complexity of simulation methods is more than compensated by the straightforward extension of Bayesian models to handle arbitrarily complex situations. Like most things worth learning, there is a slight learning curve to become acquainted with the languages used to write modern Bayesian simulations. However, we hope to make this curve sufficiently shallow by incremental introduction of elements used in these computational applications.
+
+\section{Appendix}
+\subsection{The frequentist and Bayesian murder trial}\label{sec:Intro_appendixMurder}
+In the Bayesian trial the probability that you are guilty given being seen by the security camera on the night of the murder is:
+
+\begin{equation}\label{eq:Intro_murder}
+\begin{align}
+p(guilt|security\; camera footage) &= \frac{p(security\; camera footage|guilt)\times p(guilt)}{p(security\; camera footage)}\\
+&= \frac{\frac{30}{100}\times \frac{1}{1000}}{\frac{30}{100}\times \frac{999}{1000}+\frac{30}{100}\times \frac{1}{1000}}\\
+&= \frac{1}{1000}
+\end{align}
+\end{equation}
+
+In (\ref{eq:Intro_murder}) we have implicitly assumed that the security camera is hidden, and hence the murderer does not alter his behaviour to avoid being seen. 
 
 \chapter{The posterior - the goal of Bayesian inference}\label{chap:posterior}
 \section{Chapter Mission statement}
