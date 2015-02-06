@@ -51,9 +51,9 @@ However, it is often impossible to exactly isolate the parts of a system which w
 
 In life noise obfuscates the signal. The wind, rain, sleet and snow make it difficult to forge a path to where we want to go.
 
-Statistical inference allows us to draw conclusions in this blustery landscape; separating the signal from the noise. It is the logic which means we can trial our beliefs against \textit{data}. 
+Statistical inference allows us to draw conclusions in this blustery landscape; separating the signal from the noise. It is the logical framework which we can use to trial our beliefs against \textit{data}. 
 
-In statistics, we formalise our beliefs in models of \textit{probability}. The models are probabilistic because we assume we are ignorant to most of the multitude of interacting parts of a system, meaning we cannot say with certainty whether something will, or will not, occur.
+In statistics, we formalise our beliefs in models of \textit{probability}. The models are probabilistic because we assume we are ignorant to many of the multitude of interacting parts of a system, meaning we cannot say with certainty whether something will, or will not, occur.
 
 Suppose we are evaluating the efficacy of a drug in a trial. We might suppose that \textit{on average}, the drug might have a given probability of working as desired. However, before we carry out any trials, we are unaware of its exact treatment success rate. Fortunately, statistical inference allows us to estimate this unknown characteristic, or \textit{parameter}, from the data we are given. 
 
@@ -73,7 +73,7 @@ Bayesians do not imagine repetitions of an experiment in order to define and spe
 
 In this sense, Bayesians do not view probabilities as concrete entities that actually exist. They are merely abstractions which we can use to help express our uncertainty. In this frame of reference there is no necessity for events to be repeatable in order to define a probability. We are thus equally able to say, 'The probability of a heads is 0.5', or, 'The probability of the democrats winning the 2020 US Presidential election is 0.75'. Probability is merely seen as a scale from: 0 where we are certain an event will not happen, to 1 where we are certain it will. 
 
-A statement such as 'The probability of the democrats winning the 2020 US Presidential election is 0.56' is hard to explain using the frequentist definition of a probability. There is only ever one possible sample - the history that we witness - and what would we actually mean by a 'population of all possible US elections which happen in the year 2020'? 
+A statement such as 'The probability of the democrats winning the 2020 US Presidential election is 0.75' is hard to explain using the frequentist definition of a probability. There is only ever one possible sample - the history that we witness - and what would we actually mean by a 'population of all possible US elections which happen in the year 2020'? 
 
 Probabilities are therefore seen as an expression of subjective beliefs, meaning they can be updated in light of new data. The formula invented by the Reverend Thomas Bayes provides the \textit{only} logical manner in which to carry out this process, and is central to Bayesian inference, where we aim to express probabilistically our uncertainty in parameters after we have seen the \textit{data}. 
 
@@ -81,9 +81,7 @@ Bayesians assume, since we are witness to the data, that it is \textit{fixed}, a
 
 In contrast, we do not ever learn exactly the value of an unknown parameter. This epistemic uncertainty means that in Bayesian inference we choose to view the parameter as a quantity that is probabilistic in nature. We can view this in one of two perspectives. Either we view the unknown parameter as truly being \textit{fixed} in some absolute sense, but our beliefs are uncertain, and thus probabilistic. Alternatively, we can take the view that there isn't some definitive \textit{population} process, and for each sample we take, we get a slightly different parameter.
 
-In the latter perspective we get different results from the coin flipping because each time we are subjecting our system to a slightly different probability of it landing 'heads' up. This could be because we mildly altered our throwing technique, or started with the coin in a different position. In the former perspective, we view the sample as a noisy representation of the signal, and hence we get different results for each set of throws.
-
-Although these two descriptions are different philosophically, they are not mathematically, meaning we can apply the same analysis to both.
+In the latter perspective we get different results from the coin flipping because each time we are subjecting our system to a slightly different probability of it landing 'heads' up. This could be because we mildly altered our throwing technique, or started with the coin in a different position. In the former perspective, we view the sample as a noisy representation of the signal, and hence we get different results for each set of throws. Although these two descriptions are different philosophically, they are not mathematically, meaning we can apply the same analysis to both.
 
 \section{Frequentist and Bayesian inference}
 The Bayesian inference process is the only logical way to modify our beliefs to take into account new data. We start out before we collect data with a probabilistic description of our beliefs, which we call a \textit{prior}. We then collect data, and together with a model describing our theory, Bayes' formula for probability allows us to calculate our post-data or \textit{posterior} belief:
@@ -94,7 +92,7 @@ prior + data \xrightarrow{model} posterior
 
 In Bayesian inference, we want to draw conclusions based on purely probabilistic descriptions of phenomena. If we wish to summarise our evidence for a particular hypothesis, we describe this probabilistically, as the 'probability of the hypothesis \textit{given} the data obtained'. 
 
-The difficulty in obtaining this type of conclusion is that when we write down a probability model describing our process of interest, we can only use it to compute the 'probability of obtaining our data \textit{given} our hypothesis being true'. This probability is calculated by taking into account all the possible samples that we could have obtained from the population, if we assume the hypothesis is true. Frequentists stop here; using this probability as evidence for a particular hypothesis in question. If the probability of obtaining the data, or a data sample more extreme, given a hypothesis is small, then it is assumed that it is unlikely that the hypothesis is true, and is rejected. Note however if reject a hypothesis, we have no way of telling whether it is true, and we just witnessed a weird sample, or that it is actually false. Also, note that in this inference process, we have also had to imagine obtaining a sample more extreme than our result, in order to get a usable probability. 
+The difficulty in obtaining this type of conclusion is that when we write down a probability model describing our process of interest, we can only use it to compute the 'probability of obtaining our data \textit{given} our hypothesis being true'; the inverse of that which we desire. This probability is calculated by taking into account all the possible samples that we could have obtained from the population, if we assume the hypothesis is true. Frequentists stop here; using this probability as evidence for a particular hypothesis in question. If the probability of obtaining the data, or a data sample more extreme, given a hypothesis is small, then it is assumed that it is unlikely that the hypothesis is true, and is rejected. Note however if reject a hypothesis, we have no way of telling whether it is true, and we just witnessed a weird sample, or that it is actually false. Also, note that in this inference process, we have also had to imagine obtaining a sample more extreme than our result, in order to get a usable probability. 
 
 Bayes' formula allows us to circumvent these difficulties, by inverting the frequentist probability to get the 'probability of the hypothesis given the \textit{actual} data we obtained'. There is no need for an arbitrary cut-off in the probability in order to validate the hypothesis; all information is summarised in this probability, and hence can be viewed as the end point of an analysis in itself.
 
@@ -108,7 +106,7 @@ Bayes' formula allows us to circumvent these difficulties, by inverting the freq
 \subsection{The frequentist and Bayesian murder trials}
 Assume you find yourself in the unfortunate situation where you are (hopefully falsely) accused of murder, and face a trial by jury. A slight twist in the usual tale is that you personally have a choice over the method used by the jury to assign guilt: either frequentist or Bayesian.
 
-Let's assume that you have been shown by a security camera to have definitely been in the same house as the victim - Sally - on the night of their demise. Let's also assume that, in this bizarre legal framework, that the jury starts off by assuming \textit{guilt}, rather than innocence.
+Let's assume that you have been shown by a security camera to have definitely been in the same house as the victim - Sally - on the night of her demise. Let's also assume that, in this bizarre legal framework, that the jury starts off by assuming \textit{guilt}, rather than innocence.
 
 If you choose the frequentist trial, your jurors start by coming up with a model based on previous trials, which assigns a probability of you being seen by the security camera if you were guilty. They then use this to make the statement that, 'If you did commit the murder, then 30\% of the time you would have been seen by the security camera', based on a hypothetical infinity of repetitions of the same conditions. Since this is not sufficiently unlikely, the jurors cannot reject the null hypothesis of \textit{guilt}, and you are sentenced to life in prison.
 
@@ -539,8 +537,20 @@ Using our conditional probability rule given in (\ref{eq:Intro_conditionalProbab
 
 In words, the ratio of the area of overlap between $A$ and $B$ to the area of $B$, is the same as the overall probability of $A$ (see the right hand panel of figure \ref{fig:Intro_VennIndependence}). This makes intuitive sense, since uncovering that $B$ has occurred (being in $B$) should result in no change to the probability of $A$ occurring (now $p(A|B)$).
 
-\section{Central Limit Theorems: the most important thing ever}\label{sec:Intro_CLT}
+\section{Central Limit Theorems}\label{sec:Intro_CLT}
+Life is rarely simple, and in stating statistical models of phenomena we are attempting to, at best, \textit{approximate} what is actually happening. In this environment, anything that brings a degree of certainty and coherence to our models is most welcome. 
 
+Imagine that we are tasked with coming up with a model of probability for the \textit{mean} IQ test score in a particular school. Furthermore, as a simplification, we imagine that IQ is constrained to lie in the range $\left[0,300\right]$, and we believe that a reasonable probability distribution for an individual's test score is uniform on this range\footnote{Albeit this isn't a particularly good model, but suspend your disbelief for this thought experiment.} (see figure ).
+
+Before we consider a sample size of $N$, we imagine that we only have a sample of two individuals, and we are asked to describe the distribution for the mean of their scores. If we use our assumption of uniformity, we might then ask, whether any mean scores are more likely than others, or are \textit{all} values equally likely, as per the individual case? We start by considering the extremes: there is only one way to achieve a mean test score of 300; both individuals would have to had scored 300. Similarly, to obtain a mean of 0, both individuals must score 0. However, consider obtaining a mean of 150. This could have been obtained with a number\footnote{Technically an infinity.} of combinations of scores, for example $\left(score_A,score_B\right)=$: $\left(150,150\right),\;\left(100,200\right),\;\left(125,175\right)$. Intuitively, there are many more ways of obtaining moderate values for the sample mean, that there are for the extremes. 
+
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Intro_CLTNormalSum.pdf}}
+\caption{The convergence to a normal distribution for the mean of a sum of uniform distributions for IQ. The pdf for the average is shown in blue, with a normal distribution of the same mean and variance indicated in grey.}\label{fig:Intro_CLTNormalSum}
+\end{figure}
 
 \section{The Bayesian formula}\label{sec:Intro_BayesianFormula}
 We first of all rewrite the conditional probability formula (\ref{eq:Intro_conditionalProbability}), regarding the probability of event A occurring, \textit{given} that event B has occurred:
@@ -704,7 +714,7 @@ p(guilt|security\; camera footage) &= \frac{p(security\; camera footage|guilt)\t
 \end{align}
 \end{equation}
 
-In (\ref{eq:Intro_murder}) we have implicitly assumed that the security camera is hidden, and hence the murderer does not alter his behaviour to avoid being seen. 
+In (\ref{eq:Intro_murder}) we have implicitly assumed that the security camera is hidden, and hence the murderer does not alter his behaviour to avoid being seen; meaning that the probability of being seen by the security camera in each case is 30\%. 
 
 \chapter{The posterior - the goal of Bayesian inference}\label{chap:posterior}
 \section{Chapter Mission statement}
