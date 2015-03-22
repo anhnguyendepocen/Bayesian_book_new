@@ -37,7 +37,7 @@
 
 \part{Understanding the Bayesian formula}
 
-\chapter{The subjective worlds of frequentist and Bayesian statistics}
+\chapter{The subjective worlds of frequentist and Bayesian statistics}\label{chap:subjectiveFrequentistBayes}
 \section{Chapter mission statement}
 At the end of this chapter the reader will understand the similarities and differences between frequentist and Bayesian statistics. Furthermore, the reader will gain knowledge about probability distributions, as well as how they can be manipulated to calculate quantities of interest. Finally, we discuss the benefits of using Bayesian statistics for a particular analysis.
  
@@ -727,16 +727,115 @@ Insert a graphic with the likelihood part of Bayes' formula circled, as in the e
 \end{equation}\label{eq:Posterior_BayesHighlighted}
 
 \section{Chapter goals}
-Calculating the posterior distribution for a model's parameters is the focus of undertaking Bayesian analysis. This \textit{probability distribution} which results from the application of Bayes' rule (see \ref{eq:Posterior_BayesHighlighted}) can be used to infer the effects of given variables, to forecast, compare different models of phenomena, as well as test its own foundations! In order to do justice to the multitude of uses of the posterior distribution, it is necessary that the reader is familiar with the basics of probability distributions explained in section . After this we will be able to appreciate how the posterior distribution of Bayes' formula can be put to its many uses. 
+Calculating the posterior distribution for a model's parameters is the focus of undertaking Bayesian analysis. This \textit{probability distribution} which results from the application of Bayes' rule (see \ref{eq:Posterior_BayesHighlighted}) can be used to infer the effects of given variables, to forecast, compare different models of phenomena, as well as test its own foundations! In order to do justice to the multitude of uses of the posterior distribution, it is necessary that the reader is familiar with the basics of probability distributions explained in chapter \ref{chap:subjectiveFrequentistBayes}. After this we will be able to appreciate how the posterior distribution of Bayes' formula can be put to its many uses. 
 
-\section{Expressing uncertainty in a parameter through the posterior probability distribution}
+\section{Expressing uncertainty in a parameter through the posterior probability distribution}\label{sec:Posterior_parameterUncertainty}
 Unlike looking out the window, getting exam results, or playing a hand at blackjack, we frequently in inference never learn the \textit{true}\footnote{Whether a true value for a parameter actually exists we leave until section \ref{sec:Posterior_parametersExist}.} state of nature. The uncertainty here is both in the future and \textit{present}; the latter meaning we are unable to perfectly measure the state of the world today, and hence cannot hope to perfectly know the former.
 
+A way of representing our ignorance, or uncertainty in a parameter's value is through probability distributions. For example, suppose that we wanted to know the proportion of individuals that would vote for the democrats in an upcoming election. We might, on the basis of past exit poll surveys, we might calculate a posterior\footnote{Via Bayes' rule - don't worry if you don't know how to do this, that is the goal of this whole first part!} uncertainty which is represented by the probability distribution which is shown in figure \ref{fig:Posterior_electionProportion}. 
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Posterior_electionProportion.pdf}}
+\caption{A probability distribution representing uncertainty over the proportion of the electorate that will vote for the Democrats in an upcoming election.}\label{fig:Posterior_electionProportion}
+\end{figure}
+
+How can we interpret the probability distribution shown in figure \ref{fig:Posterior_electionProportion}? And further, how can we use it to express our uncertainty to a non-mathematician? 
+
+Often we describe a distribution by its summary characteristics. These are aspects of the distribution that we commonly want to know. For example, we normally want to know the \textit{mean} value of a parameter. This is a measure of central tendency of our estimates, that is essentially a weighted mean (where the weights are provided by the values of the probability density function). If we have the mathematical description of the distribution shown in figure \ref{fig:Posterior_electionProportion}, we can calculate this by simply finding its mean, by taking the expectation:
+
+\begin{equation}
+\mathbb{E}[\theta] = \int\limits_{0}^{1} p(\theta)\theta \mathrm{d}\theta = 54\%
+\end{equation}
+
+This provides a point estimate of the proportion of individuals - 54\% - that we expect to vote for the Democrats, which may be a useful piece of information to pass on to an interested party. 
+
+A point estimate of the proportion of individuals that we expect to vote for the Democrats is not useful in itself, (and quite dangerous to pass on), without some measure of our inherent confidence/uncertainty in this particular value. One measure of uncertainty in a parameter's value is its variance:
+
+\begin{equation}
+var(\theta)=  \int\limits_{0}^{1} p(\theta)(\theta-\mathbb(E)[\theta])^2 \mathrm{d}\theta
+\end{equation}
+
+In many cases, it is easier to understand the meaning of uncertainty if it is expressed in the same units as the mean, which we do by taking the square root of the variance, yielding 5.3\% for the case of figure \ref{fig:Posterior_electionProportion}. A larger variance indicates that we view a wider range of outcomes as being feasible. In this case, a wider variance would mean that we would be less surprised if the electorate voted in the Republican party. 
+
+In sections \ref{sec:Posterior_HDI} and \ref{sec:Posterior_CPI} we will introduce other summary measures of distributions, that are also often presented in research articles, and books. However, the important thing to note is that all of these are derived from the posterior distribution for our parameters. 
+
+Another example of the use of posteriors can be illustrated by a regression example. Suppose that we are investigating the effect of military participation on lifetime earnings\footnote{See Angrist's fantastic 1990 article for a detailed study of this effect for Vietnam war veterans \cite{angrist1990lifetime}.}. We suppose that the effect is, on average, negative due in part to the psychological stresses of warfare. We suppose that the effect is can be modelled as being linear, and hence our relationship of interest can be represented as:
+
+\begin{equation}\label{eq:Posterior_militaryParticipation}
+LI_i = \alpha + \beta MP_i + \epsilon_i
+\end{equation}
+
+where we expect that $\beta$ is negative. Here $\epsilon_i$ represents the myriad of other factors that are important for determination of an individual's income.
+
+If we formulate a Bayesian model, with a given prior and likelihood, then we might end up with a posterior density for $\beta$, that is shown in figure \ref{fig:Posterior_regressionMilitaryParticipation}. We can use this density to help us to calculate the posterior probability that the given parameter is in fact non-negative, by finding the area under the curve corresponding to $\beta\geq 0$ (shown as the shaded region in figure \ref{fig:Posterior_regressionMilitaryParticipation}), which we find in this case to be approximately 25\%. This suggests that we are not all that confident in the fact that the parameter is negative (at 75\%), and cannot reasonably go along with our hypothesis.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Posterior_regressionMilitaryParticipation.pdf}}
+\caption{An estimated posterior probability distribution for the parameter $\beta$ in (\ref{eq:Posterior_militaryParticipation}). The shaded region represents the posterior probability that the parameter lies is positive.}\label{fig:Posterior_regressionMilitaryParticipation}
+\end{figure}
+
+\subsection{Bayesian statistics: updating our pre-analysis uncertainty}
+Describe that prior + data = posterior.
+
+In Bayesian statistics the posterior distribution summarises the combination of our pre-study, and post-analysis knowledge about a given situation, and is used as the starting point for any further analysis or descriptions of our results. This central role of the posterior is why we devote so much energy to its derivation (and why I have devoted an entire part of this book to understanding how we can use Bayes' rule to find it).
+
 \subsection{Do parameters actually exist and have a point value? Bayesian vs classical standpoints}\label{sec:Posterior_parametersExist}
-\subsection{Failings of the classical confidence interval}\label{sec:Posterior_classicalConfidenceInterval}
-The asymptotic reliance of classical confidence intervals.
-\subsection{The HDI as a better alternative}
-\subsection{The central posterior interval}
+Frequentist statisticians view the unseen part of the system - the parameters of the probability model - as being fixed, whereas the known parts of the system - the data - as varying. Whereas for Bayesians, the parameters of the system are seen to vary, whereas the known part of the system - the data - is taken as given. Whether you agree with one of these views more than the other mainly comes down to how you want to interpret the parameters of a given statistical model.
+
+The Bayesian perspective on parameters can be viewed as having a duality of meaning. Either we view the parameters as truly \textit{varying}, or we view our knowledge about the parameters as imperfect. The fact that we will get different estimates of parameters from different studies can be taken to reflect either of these two views. Either we view the parameters of interest as varying - taking on different values in each of the samples we pick. Alternatively, we can view our uncertainty over a parameter's value as the reason we will estimate slightly different values in different samples. Bayesians are more at ease with using parameters as a means to an end - taking them not as real immutable constants, but as tools from which to make inferences about a given situation.
+
+The Frequentist perspective is less flexible, and assumes that these parameters are constant; alternatively representing the average of a long run - typically infinite number - of identical experiments. There are occasions when we might think that this is a reasonable assumption. For example, if our parameter represented the proportion of the electorate that voted for the Democrat party in the last election, or the probability that an individual taken at random from the UK population will have dyslexia. In both these examples, it is reasonable to assume that there is a \textit{true}, or fixed \textit{population} value of the parameter of question. Whilst the Frequentist view might be reasonable here, the Bayesian view easily extends here to encompass these two situations by assuming that we are uncertain about the value of these fixed parameters before we measure them, and using a probability distribution to represent this lack of perfect knowledge. 
+
+However, there are circumstances when the Frequentist view runs into trouble. When we are estimating parameters of an arbitrarily complicated distribution, we normally do not view them as actually existing. Unless you view the universe as being built from mathematical building blocks\footnote{See \cite{tegmark2014our} for an interesting argument for this hypothesis}, then it seems incorrect to assert that a given parameter has any deeper existence than that with which we endow it. The less restrictive Bayesian perspective here seems more reasonable.
+
+The Frequentist view of parameters as a limiting value of an average across an infinity of identically repeated experiments also runs into difficulty when we think about one-off events, such as the 2016 US Presidential Election result. Any parameter we wish to estimate about such an event cannot easily be existentially justified on these grounds, since elections cannot be rerun.
+
+\subsection{Failings of the Frequentist confidence interval}\label{sec:Posterior_classicalConfidenceInterval}
+A mainstay of the Frequentist estimation procedure is the \textit{confidence interval}. In empirical research we often see these intervals as stated for a given parameter (where for now we assume that the parameters are unknown and fixed). For example,
+
+\textbf{'From our research, we concluded that the percentage of penguins with red tails, $RT$, has a 95\% confidence interval of $1\%\leq RT \leq 5\%$.'}
+
+This is often incorrectly taken as having an implicit meaning, 'We are 95\% sure that the true percentage of penguins with red tails lies in the range of 1\% to 5\%.' However, what it actually captures is not uncertainty about the parameter in question, but about the interval we calculate. 
+
+In the Frequentist paradigm we imagine that we are taking repeated samples from a population of interest, and for each of the samples, we estimate a confidence interval (see figure \ref{fig:Posterior_classicalConfidenceInterval}). A 95\% confidence interval means that across all of the intervals we calculate, the true value of the parameter will lie in this range 95\% of the time. 
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Posterior_classicalConfidenceInterval.pdf}}
+\caption{The classical confidence interval. In each sample, we can calculate a 95\% confidence interval. Across repeated samples from a given population distribution, the classical confidence interval will contain the true parameter value 95\% of time.}\label{fig:Posterior_classicalConfidenceInterval}
+\end{figure}
+
+However, what is important to note here is that in reality, we only draw one sample from the population, and we have no way of knowing whether the confidence interval we calculate contains the true parameter value. This means that although 95\% of the time the confidence intervals we calculate will contain the true value of the parameter, 5\% of confidence intervals will be nonsense! 
+
+A 95\% confidence interval represents the uncertainty about the interval we obtained, rather than a statement of probability about the parameter of interest.
+
+\subsection{Credible intervals}
+Credible intervals, in contrast to confidence intervals, describe our uncertainty in the location of the parameter values and thus can be interpreted as a probabilistic statement about the parameters. They are a Bayesian concept, that is calculated from the posterior density.
+
+In particular, a 95\% credible region satisfies the condition that 95\% of the posterior density's area lies in this range for the parameter. There are usually an infinite number of regions which satisfy this condition, as figure \ref{fig:Posterior_infiniteCredibleIntervals} indicates for the regression example used in section \ref{sec:Posterior_parameterUncertainty}.
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Posterior_infiniteCredibleIntervals.pdf}}
+\caption{Three examples of a 95\% credible interval for the regression example described in section \ref{sec:Posterior_parameterUncertainty}.}\label{fig:Posterior_infiniteCredibleIntervals}
+\end{figure}
+
+\subsubsection{The central posterior interval}\label{sec:Posterior_CPI}
+\subsubsection{The HDI as a better alternative}\label{sec:Posterior_HDI}
+
+
+\subsection{Reconciling the difference between confidence and credible intervals}
+Maybe do as a video. Stack exchange 'whats the difference between a confidence interval and a credible interval cookie jar example.
+
+
+
+
 
 \section{Prediction using a posterior distribution}
 \subsection{Before experiment, using prior}
