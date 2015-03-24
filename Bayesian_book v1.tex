@@ -812,30 +812,64 @@ In the Frequentist paradigm we imagine that we are taking repeated samples from 
 
 However, what is important to note here is that in reality, we only draw one sample from the population, and we have no way of knowing whether the confidence interval we calculate contains the true parameter value. This means that although 95\% of the time the confidence intervals we calculate will contain the true value of the parameter, 5\% of confidence intervals will be nonsense! 
 
-A 95\% confidence interval represents the uncertainty about the interval we obtained, rather than a statement of probability about the parameter of interest.
+In general, a confidence interval represents the uncertainty about the interval we obtained, rather than a statement of probability about the parameter of interest. The uncertainty is quantified in terms of all the samples we \textit{could}
+have taken, not only the one we have in our hands.
 
 \subsection{Credible intervals}
 Credible intervals, in contrast to confidence intervals, describe our uncertainty in the location of the parameter values and thus can be interpreted as a probabilistic statement about the parameters. They are a Bayesian concept, that is calculated from the posterior density.
 
-In particular, a 95\% credible region satisfies the condition that 95\% of the posterior density's area lies in this range for the parameter. There are usually an infinite number of regions which satisfy this condition, as figure \ref{fig:Posterior_infiniteCredibleIntervals} indicates for the regression example used in section \ref{sec:Posterior_parameterUncertainty}.
+In particular, a 95\% credible region satisfies the condition that 95\% of the posterior density's area lies in this parameter range. The statement below,
+
+\textbf{'From our research, we concluded that the percentage of penguins with red tails, $RT$, has a 95\% credible interval of $0\%\leq RT \leq 4\%$.'}
+
+can be interpreted as, 'From our research, we conclude that there is a 95\% probability that the percentage of penguins with red tails, lies in the range $0\%\leq RT \leq 4\%$'.
+
+In general an arbitrary credible interval of $X$\% can be constructed from the posterior density, by finding a region whose area is equal to $\frac{X}{100}$. 
 
 \begin{figure}
 \centering
-\scalebox{0.4} 
+\scalebox{0.35} 
 {\includegraphics{Posterior_infiniteCredibleIntervals.pdf}}
-\caption{Three examples of a 95\% credible interval for the regression example described in section \ref{sec:Posterior_parameterUncertainty}.}\label{fig:Posterior_infiniteCredibleIntervals}
+\caption{Three examples of a 95\% credible interval for the regression parameter $\beta$ of the example described in section \ref{sec:Posterior_parameterUncertainty}.}\label{fig:Posterior_infiniteCredibleIntervals}
 \end{figure}
 
-\subsubsection{The central posterior interval}\label{sec:Posterior_CPI}
-\subsubsection{The HDI as a better alternative}\label{sec:Posterior_HDI}
+In contrast to the classical confidence interval, a credible interval is more straightforward to understand. It is a probability statement of confidence in the location of a parameter. Also, in contrast to the classical confidence intervals, the uncertainty here refers to our inherent uncertainty in the value of the parameter, rather than counter-factual samples.
+
+There are usually an infinite number of regions which satisfy this condition, as figure \ref{fig:Posterior_infiniteCredibleIntervals} indicates for the regression example used in section \ref{sec:Posterior_parameterUncertainty}. All three of the examples shown in figure \ref{fig:Posterior_infiniteCredibleIntervals} satisfy the condition, that given our choice of model and prior, we conclude that there is a 95\% probability that the parameter lies in this range. 
+
+In order to reduce the number of credible intervals down to one, there are 'industry standards' that are followed in most applied research. We introduce two of the most frequently used metrics now.
+
+\subsubsection{Treasure hunting: The central posterior and highest density intervals}\label{sec:Posterior_CPI}\label{sec:Posterior_HDI}
+Imagine you (as a pirate) were told by a fortune-teller that treasure of \$1000 is buried somewhere along the seashore of an imagined island. Further, imagine that the mystic has gone to the trouble of using his past experience, and intuition, to arrive at a posterior density for the location of the treasure, along the x-axis seashore, that is shown in figure \ref{fig:Posterior_CPIvsHDI}, which is supposed to be divine. The cost to hire a digger to dig up 1km of coastline is \$100.
+
+Suppose you want to find the gold with 95\% certainty, and maximise your profit in doing so\footnote{This is really a Bayesian Decision Theory question, where you are choosing an \textit{action}, which corresponds to an interval; specifying a constant cost function across the domain.}. In order to reach this level of confidence in plundering the gold, you have the choice of the two 95\% credible intervals shown in figure \ref{fig:Posterior_CPIvsHDI}: the left-hand \textit{central posterior interval}, and the right-hand \textit{highest density interval}.
+
+Both of these intervals have the same area, so we are equally likely to find the gold in either. So which one would be best to choose?
+
+The central posterior interval spans a range of $0.25km-9.75km$ along the beach. This would entail a cost of $9.5\times \$100 = \$950$.
+
+The highest density interval by contrast spans two non-contiguous regions, given by $0km-2.5km$ and $7.5km-10km$. Each has a cost of $2.5\times\$100 = \$250$, meaning a total cost of \$500. We pick the right-hand strategy, and cross our fingers!
+
+Intuitively, we should avoid the left-hand central posterior interval since it this involves digging up more coastline which has a very low probability of containing the gold. The right-hand highest density interval avoids this misspent effort by directing our search efforts towards the areas most likely to contain the treasure.
+
+If it was costly to drive a digger a given distance, without digging, then we might change our minds, and favour the contiguous region of the \textit{central posterior interval} over the \textit{highest density interval}. However, in most practical (non-pirate) situations, the most sensible thing to do is to report the highest density interval.
+
+The most simple way of summarising a posterior density is to treat a given credible interval symmetrically. In the case of a 95\% credible interval, this involves finding the 2.5\% and 97.5\% quantiles of the posterior distribution. This will mean that we will get an interval that is centred on the median parameter value, and corresponds to the \textit{central posterior interval}.
+
+In general an $X$\% central posterior interval is constructed by finding the $\frac{X}{2}\%$ and $(100-\frac{X}{2})\%$.
+
+\begin{figure}
+\centering
+\scalebox{0.35} 
+{\includegraphics{Posterior_CPIvsHDI.pdf}}
+\caption{The posterior probability for treasure being found along the seashore (represented by a linear x-axis).}\label{fig:Posterior_CPIvsHDI}
+\end{figure}
+
+For a unimodal, symmetric distribution the central posterior density and highest density intervals will be the same. However, for more complex distributions, this is no longer the case (see figure \ref{fig:Posterior_CPIvsHDI}), and the contiguous range of the former may contain very low probability density values in places. 
 
 
 \subsection{Reconciling the difference between confidence and credible intervals}
 Maybe do as a video. Stack exchange 'whats the difference between a confidence interval and a credible interval cookie jar example.
-
-
-
-
 
 \section{Prediction using a posterior distribution}
 \subsection{Before experiment, using prior}
