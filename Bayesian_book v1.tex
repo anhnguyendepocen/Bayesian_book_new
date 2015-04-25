@@ -42,14 +42,14 @@
 At the end of this chapter the reader will understand the similarities and differences between frequentist and Bayesian statistics. Furthermore, the reader will gain knowledge about probability distributions, as well as how they can be manipulated to calculate quantities of interest. Finally, we discuss the benefits of using Bayesian statistics for a particular analysis.
  
 \section{Chapter goals}
-When we wish to 
+In life, we are often tasked with building predictive models to understand complex phenomena. As a first approximation, we often disregard parts of the system, which are not directly of interest; making the models \textit{statistical} rather than deterministic. There are two distinct approaches to statistical modelling: Frequentist or Classical inference, and Bayesian. This chapter will explain the similarities between these two approaches, and importantly, indicate where they differ substantively. Bayesian statistics formulates models in terms of entities called \textit{probability distributions}. It is thus paramount to understand how to interpret, and manipulate these objects, and a significant proportion of this chapter will be devoted to this cause. Finally, the central part of Bayesian inference - the \textit{Bayesian formula} - will be introduced.
 
 \section{The purpose of statistical inference}
-What is the benefit of a particular drug to treatment success? What is the return on a college education? Will the Democrats win the next US Presidential election? We frequently in life want to test theories, and go on to draw conclusions about processes of interest.
+How much does a particular drug contribute to treatment success? What can an average student earn after obtaining a college education? Will the Democrats win the next US Presidential election? In life we often want to test theories, then go on to draw conclusions.
 
 However, it is often impossible to exactly isolate the parts of a system which we want to examine. The outcome of history is hence determined by a nexus of interacting elements; each of which contributes to the reality that we witness. In the case of a drug trial, we may not be able to control the diets of participants, and are certainly unable to control for their idiosyncratic metabolisms, both of which could impact the results we see. Evaluating the return to a college education - there are a range of factors which affect the wage which an individual ultimately commands, of which education is only one element. The outcome of the next US Presidential election depends on party politics, the performance of the incumbent government, as well as the media's portrayal of the candidates. 
 
-In life noise obfuscates the signal. The wind, rain, sleet and snow make it difficult to forge a path to where we want to go.
+In life noise obfuscates the signal. The wind, rain, snow and sleet make it difficult to forge a path to where we want to go.
 
 Statistical inference allows us to draw conclusions in this blustery landscape; separating the signal from the noise. It is the logical framework which we can use to trial our beliefs against \textit{data}. 
 
@@ -62,16 +62,23 @@ There are two schools of thought for carrying out this process of inference: \te
 \section{The world according to frequentists}
 In frequentist or classical statistics, we suppose that our sample of data is the result of one of an infinite number of exactly-repeated experiments. The sample we see in this context is hence assumed to be the outcome of some probabilistic process. Any conclusions that we draw from this approach are based on the supposition that events occur with probabilities, which represent long-run frequencies. 
 
-For example, if we flip a coin, we might assume that any sequence of outcomes we obtain is indicative of the results that we might obtain if we were to conduct the experiment an infinite number of times. Further, we might take the proportion of heads observed in this infinite set of throws as defining the probability of obtaining a 'heads'. We suppose that this probability actually exists, and is fixed for each set of coin-throws that we carry out.
+For example, if we flip a coin, we might assume that any sequence of outcomes we obtain is indicative of the results that we might obtain if we were to conduct the experiment an infinite number of times. Further, we might take the proportion of heads observed in this infinite set of throws as defining the probability of obtaining a 'heads'. We suppose that this probability actually exists, and is fixed for each set of coin-throws that we carry out (see figure \ref{fig:Intro_FrequentistBayesProbability}).
 
 In general, in frequentist statistics assume that the data is \textit{random} and results from \textit{sampling}, from a fixed and defined \textit{population} distribution. For a frequentist the noise that obscures the true signal of the population relationship in which we are interested is due to \textit{sampling variation}; the fact that the sample that we pick will each time be slightly different, and not exactly representative of the population. 
 
 We may flip our coin 10 times, obtaining 7 heads even if the long-run proportion of heads is $\frac{1}{2}$. To a frequentist, this is because we have picked a slightly odd sample from the population of infinitely-many repeated throws. Further, if we flip the coin another 10 times, we will likely get a different result, because we have picked a different sample.
 
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Intro_FrequentistBayesProbability.pdf}}
+\caption{The Frequentist and Bayesian approaches to probability.}\label{fig:Intro_FrequentistBayesProbability}
+\end{figure}
+
 \section{The world according to Bayesians}
 Bayesians do not imagine repetitions of an experiment in order to define and specify a probability. It is merely taken as a measure of certainty of a particular belief. From this viewpoint, the probability of us throwing a 'heads' measures and quantifies our underlying belief, that before we flip the coin, it will land this way. 
 
-In this sense, Bayesians do not view probabilities as concrete entities that actually exist. They are merely abstractions which we can use to help express our uncertainty. In this frame of reference there is no necessity for events to be repeatable in order to define a probability. We are thus equally able to say, 'The probability of a heads is 0.5', or, 'The probability of the democrats winning the 2020 US Presidential election is 0.75'. Probability is merely seen as a scale from: 0 where we are certain an event will not happen, to 1 where we are certain it will. 
+In this sense, Bayesians do not view probabilities as concrete entities that actually exist. They are merely abstractions which we can use to help express our uncertainty. In this frame of reference there is no necessity for events to be repeatable in order to define a probability. We are thus equally able to say, 'The probability of a heads is 0.5', or, 'The probability of the democrats winning the 2020 US Presidential election is 0.75'. Probability is merely seen as a scale from: 0 where we are certain an event will not happen, to 1 where we are certain it will (see figure \ref{fig:Intro_FrequentistBayesProbability}). 
 
 A statement such as 'The probability of the democrats winning the 2020 US Presidential election is 0.75' is hard to explain using the frequentist definition of a probability. There is only ever one possible sample - the history that we witness - and what would we actually mean by a 'population of all possible US elections which happen in the year 2020'? 
 
@@ -92,7 +99,9 @@ prior + data \xrightarrow{model} posterior
 
 In Bayesian inference, we want to draw conclusions based on purely probabilistic descriptions of phenomena. If we wish to summarise our evidence for a particular hypothesis, we describe this probabilistically, as the 'probability of the hypothesis \textit{given} the data obtained'. 
 
-The difficulty in obtaining this type of conclusion is that when we write down a probability model describing our process of interest, we can only use it to compute the 'probability of obtaining our data \textit{given} our hypothesis being true'; the inverse of that which we desire. This probability is calculated by taking into account all the possible samples that we could have obtained from the population, if we assume the hypothesis is true. Frequentists stop here; using this probability as evidence for a particular hypothesis in question. If the probability of obtaining the data, or a data sample more extreme, given a hypothesis is small, then it is assumed that it is unlikely that the hypothesis is true, and is rejected. Note however if reject a hypothesis, we have no way of telling whether it is true, and we just witnessed a weird sample, or that it is actually false. Also, note that in this inference process, we have also had to imagine obtaining a sample more extreme than our result, in order to get a usable probability. 
+The difficulty in obtaining this type of conclusion is that when we write down a probability model describing our process of interest, we can only use it to compute the 'probability of obtaining our data \textit{given} our hypothesis being true'; the inverse of that which we desire. This probability is calculated by taking into account all the possible samples that we could have obtained from the population, if we assume the hypothesis is true. 
+
+Frequentists stop here; using this probability as evidence for a particular hypothesis in question. If the probability of obtaining the data, or a data sample more extreme, given a hypothesis is small, then it is assumed that it is unlikely that the hypothesis is true, and is rejected. Note however if reject a hypothesis, we have no way of telling whether it is true, and we just witnessed a weird sample, or that it is actually false. Also, note that in this inference process, we have also had to imagine obtaining a sample more extreme than our result, in order to get a usable probability. 
 
 Bayes' formula allows us to circumvent these difficulties, by inverting the frequentist probability to get the 'probability of the hypothesis given the \textit{actual} data we obtained'. There is no need for an arbitrary cut-off in the probability in order to validate the hypothesis; all information is summarised in this probability, and hence can be viewed as the end point of an analysis in itself.
 
@@ -104,49 +113,49 @@ Bayes' formula allows us to circumvent these difficulties, by inverting the freq
 \end{figure}
 
 \subsection{The frequentist and Bayesian murder trials}
-Assume you find yourself in the unfortunate situation where you are (hopefully falsely) accused of murder, and face a trial by jury. A slight twist in the usual tale is that you personally have a choice over the method used by the jury to assign guilt: either frequentist or Bayesian.
+Assume you find yourself in the unfortunate situation where you are (hopefully falsely) accused of murder, and face a trial by jury. A variation in the usual tale is that you personally have a choice over the method used by the jury to assign guilt: either frequentist or Bayesian. Another unfortunate twist is that the legal system of the country starts by presuming \textit{guilt} rather than \textit{innocence}.
 
-Let's assume that you have been shown by a security camera to have definitely been in the same house as the victim - Sally - on the night of her demise. Let's also assume that, in this bizarre legal framework, that the jury starts off by assuming \textit{guilt}, rather than innocence.
+Let's assume that you have been shown by a security camera to have definitely been in the same house as the victim - Sally - on the night of her demise. 
 
-If you choose the frequentist trial, your jurors start by coming up with a model based on previous trials, which assigns a probability of you being seen by the security camera if you were guilty. They then use this to make the statement that, 'If you did commit the murder, then 30\% of the time you would have been seen by the security camera', based on a hypothetical infinity of repetitions of the same conditions. Since this is not sufficiently unlikely, the jurors cannot reject the null hypothesis of \textit{guilt}, and you are sentenced to life in prison.
+If you choose the frequentist trial, your jurors start by coming up with a model based on previous trials, which assigns a probability of you being seen by the security camera if you were guilty. They then use this to make the statement that, 'If you did commit the murder, then 30\% of the time you would have been seen by the security camera', based on a hypothetical infinity of repetitions of the same conditions. Since this is not sufficiently unlikely (the p value is not below 5\%), the jurors cannot reject the null hypothesis of \textit{guilt}, and you are sentenced to life in prison.
 
 In a Bayesian trial, the jury are first introduced to an array of evidence, that suggests that you neither knew Sally, nor had any previous record of violent conduct; being otherwise a perfectly respectable citizen. Furthermore, the ex-boyfriend of Sally is a multiple-violent-offending convict on the run from prison after being sentenced by a judge on the basis of witness testimony by Sally. On this basis, the jury determine a \textit{prior} probability in the hypothesis that you are guilty that is $\frac{1}{1000}$. They then use the same model as the frequentists, to determine that the probability of you being seen by the security camera given your guilt is 30\%. However, they then coolly use Bayes' rule, and conclude that the probability of you committing the crime is $\frac{1}{1000}$ (see section \ref{sec:Intro_appendixMurder} for a full description of this calculation). Based on this evidence, the jury acquits you, and  you go home to your family.
 
 \subsection{Locating a submarine: example}
 
 \section{Probability distributions: helping us explicitly state our ignorance}\label{sec:Intro_probabilityDistributions}
-Before we look out the window in the morning, before we get our exam results, before the cards are dealt, we are uncertain of the world that lies in wait of us. In order to plan, as well as make sense of things, we frequently implicitly formulate an idea as to the relative likelihood of different outcomes. However, in order to allow interrogation of thought, with a view to transparency and self-improvement, we sometimes would like to state our pre-conceptions \textit{explicitly}, in the form of a suitable framework. 
+Before we look out the window in the morning, before we get our exam results, before the cards are dealt, we are uncertain of the world that lies in wait of us. In order to plan, as well as make sense of things, we often predict the relative likelihood of different outcomes. However, in order to allow interrogation of thought, with a view to transparency and self-improvement, we sometimes would like to state our pre-conceptions \textit{explicitly}, using a suitable framework. 
 
-The mathematical theory of probability provides a logic and language which is suitable to describe the majority of cases in which we are uncertain. Imagine that before we roll a die - which we believe to be fair - we assign an equal probability of $\frac{1}{6}$ to each of six the possible outcomes. Although we haven't stated this world-view in mathematical notation, we have without realising it, formulated a valid probability distribution\footnote{This is technically a probability mass function, since we are describing a discrete random variable, but we prefer to not differentiate terminology.} for the number shown on the die (see figure \ref{fig:Intro_die}). 
+The mathematical theory of probability provides a logic and language which is suitable to describe the majority of cases in which we are uncertain. Imagine that we enter a lottery, where we select a number from 1-100, to have a chance of winning \$1000. We suppose that in the lottery only one ball is drawn, and it is fair with all numbers being equally likely to win. Although we haven't stated this world-view in mathematical notation, we have without realising it, formulated a valid probability distribution\footnote{This is technically a probability mass function, since we are describing a discrete random variable, but I prefer to not differentiate terminology.} for the number drawn in the lottery (see \ref{fig:Intro_lotterySecondhandCarProbability}).
 
 \begin{figure}
 \centering
-\scalebox{0.65} 
-{\includegraphics{Intro_die.pdf}}
-\caption{Left) A discrete uniform probability distribution for the number shown on a rolled fair die. Right) A continuous distribution to represent the probability of a coin coming up heads, $\theta$.\textbf{I want to remove the ticks from the discrete plot, simply placing a $\frac{1}{6}$ there instead.}}\label{fig:Intro_die}
+\scalebox{0.3} 
+{\includegraphics{Intro_lotterySecondhandCarProbability.pdf}}
+\caption{Probability distributions representing \textbf{left:} the chance of winning a lottery, and \textbf{right:} the value of a second-hand car.}\label{fig:Intro_lotterySecondhandCarProbability}
 \end{figure}
 
-\subsection{What make a probability distribution \textit{valid}? The most important thing today}\label{sec:Intro_validProbabilityDistribution}
-The die example given in section \ref{sec:Intro_probabilityDistributions} refers to discrete probability distribution, since the variable we were measuring - the number shown on the die after a throw - is confined to take on finite set of values. However, we could similarly define a probability distribution where our variable is able to take on an infinity of values across a spectrum. Before we flip a coin we might be uncertain as to its innate bias, and might\footnote{Perhaps foolishly since typically we expect that coins are designed to be relatively \textit{fair} in this respect.} imagine that any value for the probability of it coming up heads, $\theta$, is equally likely. This results in the \textit{continuous} analogue of the discrete die example (see figure \ref{fig:Intro_die}).
+\subsection{What make a probability distribution \textit{valid}?}\label{sec:Intro_validProbabilityDistribution}
+The lottery example given in section \ref{sec:Intro_probabilityDistributions} refers to discrete probability distribution, since the variable we were measuring - the winning number - is confined to take on finite set of values. However, we could similarly define a probability distribution where our variable is able to take on an infinity of values across a spectrum. Imagine that before test drive a second-hand car we are uncertain about its value. We might think that from seeing pictures of the car, that it could be worth anywhere from \$2000 to \$4000, with all values being equally likely (see \ref{fig:Intro_lotterySecondhandCarProbability}).
 
-The aforementioned examples are both examples of valid/proper probability distributions. So, what are its defining properties?
+The aforementioned examples are both examples of valid/proper probability distributions. So, what are their defining properties?
 
 \begin{itemize}
 \item All values of the distribution must be real, and non-negative.
 \item The sum (integral) across all possible values of the discrete (continuous) random variable must be 1.
 \end{itemize}
 
-In the die case, this is satisfied since $p(X)=\frac{1}{6}\geq 0$, and:
+In the lottery case, this is satisfied since $p(X)=\frac{1}{100}\geq 0$, and:
 
 \begin{equation}
-\sum\limits_{i=1}^{6} \frac{1}{6} = 1
+\frac{1}{100} + \frac{1}{100} + ... + \frac{1}{100} = \sum\limits_{i=1}^{100} \frac{1}{100} = 1
 \end{equation}
 
-For the continuous case of the probability of a heads when flipping a coin, the probability density function is always $1\geq0$, and when we do the continuous analogue of summing - integrating - we find that:
+For the continuous case of the probability of a heads when flipping a coin, the probability density function is always $\frac{1}{2000}\geq 0$, and when we do the continuous analogue of summing - integrating - we find that:
 
 \begin{equation}
 \begin{align}
-\int\limits_{0}^{1} p(\theta) \mathrm{d}\theta &= \int\limits_{0}^{1} 1 \mathrm{d}\theta\\
+\int\limits_{2000}^{4000} p(v) \mathrm{d}v &= \int\limits_{0}^{1} \frac{1}{2000} \mathrm{d}v\\
 &= 1
 \end{align}
 \end{equation}
@@ -154,45 +163,47 @@ For the continuous case of the probability of a heads when flipping a coin, the 
 Although, it may seem that this definition is relatively arbitrary, and perhaps well-trodden-territory for some readers, it is of \textit{central} importance to Bayesian statistics. This is because Bayesians like to work with, and produce \textit{valid} probability distributions. The pursuit of this ideal underlies the majority of \textit{all} methods in applied Bayesian statistics - analytic and computational - and hence its importance cannot be overstated!
 
 \subsection{Interpreting discrete and continuous probability distributions}
-The discrete probability distribution for a fair die shown on the left hand side in figure \ref{fig:Intro_die}, is straightforward to interpret. To calculate the probability that the die lands on a 1, we simply read off the probability from the graph corresponding to the height of the leftmost bar, and find that:
+The discrete probability distribution for the lottery shown on the left hand side in figure \ref{fig:Intro_lotterySecondhandCarProbability}, is straightforward to interpret. To calculate the probability that the winning number is 3, we simply read off the probability from the graph corresponding to the height of the leftmost bar, and find that:
 
 \begin{equation}
-p(X=1)= \frac{1}{6}
+p(X=3)= \frac{1}{100}
 \end{equation}
 
-In the discrete case, if we want to calculate the probability that a random variable takes on a range of values, then we simply need to sum the individual probabilities corresponding to each specific event. In the die example, if we want to calculate the probability that the die lands on a number less than 4, we just add together the probabilities of it landing on 1, 2 and 3:
+In the discrete case, if we want to calculate the probability that a random variable takes on a range of values, then we simply need to sum the individual probabilities corresponding to each specific event. In the die example, if we want to calculate the probability that the winning number is 10 or less, we just add together the probabilities of it being \{1, 2, 3, 4, 5, 6, 7, 8, 9, 10\}:
 
 \begin{equation}
 \begin{align}
-p(X<4) &= p(X=1) + p(X=2) + p(X=3)\\
-&= \frac{1}{6} + \frac{1}{6} + \frac{1}{6}\\
-&= \frac{1}{2}
+p(X\leq 10) &= p(X=1) + p(X=2) + p(X=3) + ... + p(X=9) + p(X=10)\\
+&= \frac{1}{100} + \frac{1}{100} + \frac{1}{100} + ... + \frac{1}{100} + \frac{1}{100}\\
+&= \frac{1}{10}
 \end{align}
 \end{equation}
 
-How can we use the continuous probability distribution such as the one shown on the right hand side of figure \ref{fig:Intro_die}? If we want to calculate the probability that the bias of the coin is zero, in other words, the probability that $\theta=0.5$, then we could simply draw a vertical line from this point on the $\theta$ axis up to the line of the distribution; concluding that $p(\theta=0.5) = 1$! We know that this is not the intended result, since we supposed before that \textit{all} values of $\theta$ were equally likely. This means that the probability that $\theta$ takes on any particular value between 0 and 1 is \textit{actually} zero. Intuitively, this is because there are an infinity of particular values between 0 and 1 which $\theta$ can feasibly take on, meaning that picking one of them is infinitely unlikely. For example, the following values $\theta=\{0.5,0.501,0.50001,0.5000001\}$ are all equally likely, and we could generate an infinity of these test values of $\theta$, meaning that each one must have a zero likelihood of occurring. This means for a continuous random variable, we always have $p(\theta=number) = 0$. Hence, when we write $p(\theta)$ for a continuous random variable, we should be careful to interpret the value of it at a particular value as a probability \textit{density}, \textit{not} a probability. 
+How can we use the continuous probability distribution such as the one shown on the right hand side of figure \ref{fig:Intro_lotterySecondhandCarProbability}? If we want to calculate the probability that the value of the second-hand car is \$2,500, then we could simply draw a vertical line from this point on the $value$ axis up to the line of the distribution; concluding that $p(value=\$2,500) = \frac{1}{2000}$! However, under this logic, we could also deduce that the probability of the value of the car being \{\$2,500,\$2,500.10,\$2,500.01,\$2,500.001\} are all $\frac{1}{2000}$. Furthermore, we could generate an infinity of these test values of $value$, meaning that if we summed them all together we could get a total probability of $\infty$. 
 
-However, we can use a continuous probability distribution to calculate the probability that a random variable lies between two bounds. To do this we use the continuous analogue of a sum, an \textit{integral}. For the coin example, we can hence calculate the probability that $0.25\leq \theta \leq 0.75$:
+There is evidently something wrong with our method for interpreting continuous densities. If we reconsider the test values $\{\$2,500,\$2,500.10,\$2,500.01,\$2,500.001\}$, we reason that these are all equally unlikely, and part of a set of an infinity of potential values we could draw. This means for a continuous random variable, we always have $p(\theta=number) = 0$. Hence, when we write $p(\theta)$ for a continuous random variable, we should be careful to interpret the value of it at a particular value as a probability \textit{density}, \textit{not} a probability. 
+
+However, we can use a continuous probability distribution to calculate the probability that a random variable lies between two bounds. To do this we use the continuous analogue of a sum, an \textit{integral}. For the car example, we can calculate, $\$2,500\leq \theta \leq \$3,000$:
 
 \begin{equation}\label{eq:Intro_continuousProbabilityIntervalExample}
 \begin{align}
-Pr(0.25\leq \theta \leq 0.75) &= \int\limits_{0.25}^{0.75} p(\theta) \mathrm{d}\theta\\
-&= \int\limits_{0.25}^{0.75} 1 \mathrm{d}\theta\\
-&= \left[\theta\right]^{0.75}_{0.25} = (0.75-0.25) = 0.5
+Pr(2500\leq value \leq 3000) &= \int\limits_{2500}^{3000} p(v) \mathrm{d}v\\
+&= \int\limits_{2500}^{3000} \frac{1}{2000} \mathrm{d}v\\
+&= \left[\frac{1}{2000}\right v]^{2500}_{3000} = \frac{1}{2000}(3000-2500) = 0.25
 \end{align}
 \end{equation}
 
-In (\ref{eq:Intro_continuousProbabilityIntervalExample}), we have used $Pr$ to explicitly state that the result is a \textit{probability}, whereas $p(\theta)$ is a probability density. Of course, the calculation carried out in (\ref{eq:Intro_continuousProbabilityIntervalExample}), is equivalent to working out the area under the graph within those limits (see figure \ref{fig:Intro_continuousInterval}).
+In (\ref{eq:Intro_continuousProbabilityIntervalExample}), we have used $Pr$ to explicitly state that the result is a \textit{probability}, whereas $p(\theta)$ is a probability density. Of course, the calculation carried out in (\ref{eq:Intro_continuousProbabilityIntervalExample}), is equivalent to working out the area under the graph within those limits (see figure \ref{fig:Intro_continuousLotteryInterval}).
 
 \begin{figure}
 \centering
 \scalebox{0.5} 
-{\includegraphics{Intro_continuousInterval.pdf}}
-\caption{The probability that $\theta$, representing the probability that a heads is thrown, lies between 0.25 and 0.75.}\label{fig:Intro_continuousInterval}
+{\includegraphics{Intro_continuousLotteryInterval.pdf}}
+\caption{The probability that a second-hand car's value lies between \$2,500 and \$3,000.}\label{fig:Intro_continuousLotteryInterval}
 \end{figure}
 
 \subsection{Mean and variance of distributions}
-Often presentation of a distribution as a result in itself is interesting mainly due to the value of its summary measures. A popular way of summarising a distribution is via its \textit{mean}, which is one measure of central tendency of a distribution. More intuitively, a mean, or \textit{expected value}, of a distribution represents the long-run average value that would be obtained if we sampled from that particular distribution in question, an infinite number of times. 
+A popular way of summarising a distribution is via its \textit{mean}, which is one measure of central tendency of a distribution. More intuitively, a mean, or \textit{expected value}, of a distribution represents the long-run average value that would be obtained if we sampled from that particular distribution in question, an infinite number of times. 
 
 The way in which we calculate the \textit{mean} of a distribution depends on whether it is \textit{discrete} or \textit{continuous} in nature. However, the concept is essentially the same in both cases. The mean is calculated as a weighted sum of the values taken on by the random variable in question, where the weights are provided by the probability distribution. This results in the following forms for the mean of a discrete and continuous variable respectively:
 
@@ -206,42 +217,42 @@ The way in which we calculate the \textit{mean} of a distribution depends on whe
 
 In (\ref{eq:Intro_meanDistributionDiscrete}) and (\ref{eq:Intro_meanDistributionContinuous}), $\alpha$ represents the multitude, or continuum of \textit{values} taken on by the random variable $X$ respectively.  We have chosen to use $Pr$ in (\ref{eq:Intro_meanDistributionDiscrete}), and $p$ in (\ref{eq:Intro_meanDistributionContinuous}), to illustrate that these represent probabilities and probability \textit{densities} respectively.
 
-We can now apply (\ref{eq:Intro_meanDistributionDiscrete}) to allow us to calculate the mean of the fair die distribution shown in the left-hand panel of figure \ref{fig:Intro_die}:
+We can now apply (\ref{eq:Intro_meanDistributionDiscrete}) to allow us to calculate the mean winning number from the lottery:
 
-\begin{equation}\label{eq:Intro_meanFairDie}
+\begin{equation}\label{eq:Intro_meanLottery}
 \begin{align}
-\mathbb{E}(X) &= \sum\limits_{\alpha=1}^{6} \alpha Pr(X=\alpha)\\
-&= 1\times\frac{1}{6} +  2\times\frac{1}{6} + 3\times\frac{1}{6} + 4\times\frac{1}{6} + 5\times\frac{1}{6} + 6\times\frac{1}{6}\\
-&= 3\tfrac{1}{2}
+\mathbb{E}(X) &= \sum\limits_{\alpha=1}^{100} \alpha Pr(X=\alpha)\\
+&= 1\times\frac{1}{100} +  2\times\frac{1}{100} +  3\times\frac{1}{100} + ... +  99\times\frac{1}{100} +  100\times\frac{1}{100}\\
+&= 50\tfrac{1}{2}
 \end{align}
 \end{equation}
 
-We can also demonstrate the \textit{long-run} nature of the mean value of $3\tfrac{1}{2}$ found in (\ref{eq:Intro_meanFairDie}) by simulating a number of rolls of a fair die computationally (see figure \ref{fig:Intro_meanDiscreteLongRun}). As the number of rolls increases, the running mean tends towards this value.
+We can also demonstrate the \textit{long-run} nature of the mean value of $50\tfrac{1}{2}$ found in (\ref{eq:Intro_meanLottery}) by simulating a number of rolls of a fair die computationally (see figure \ref{fig:Intro_meanDiscreteLongRun}). As the number of rolls increases, the running mean tends towards this value.
 
 \begin{figure}
 \centering
-\scalebox{0.8} 
+\scalebox{0.55} 
 {\includegraphics{Intro_meanDiscreteLongRun.pdf}}
-\caption{Rolling a (computational) die. We show the running average for rolling a fair die a number of times.}\label{fig:Intro_meanDiscreteLongRun}
+\caption{Playing a computational lottery. We see the approach of the running mean of repeatedly playing the lottery to the long-run mean of $50\tfrac{1}{2}$, as the number of plays increases.}\label{fig:Intro_meanDiscreteLongRun}
 \end{figure}
 
-We can also apply (\ref{eq:Intro_meanDistributionContinuous}) to calculate the mean of the uniform distribution representing our beliefs as to the bias of a flipped coin, shown in the right-hand side of figure \ref{fig:Intro_die}:
+We can also apply (\ref{eq:Intro_meanDistributionContinuous}) to calculate our expectation of the second-hand car value:
 
 \begin{equation}\label{eq:Intro_meanCoinContinuous}
 \begin{align}
-\mathbb{E}(X) &= \int\limits_{0}^{1} \theta p(\theta)\mathrm{d}\theta\\
-&= \left[\frac{\theta^2}{2}\right]^{1}_{0} = (\frac{1}{2}-0)\\ 
-&= \frac{1}{2}
+\mathbb{E}(value) &= \int\limits_{2000}^{4000} v p(v)v\mathrm{d}v\\
+&= \frac{1}{2000}\left[\frac{v^2}{2}\right]^{4000}_{2000}\\ 
+&= \$3,000
 \end{align}
 \end{equation}
 
-Again, we can simulate the convergence of a running mean to the value of $\frac{1}{2}$ found in (\ref{eq:Intro_meanCoinContinuous}) by 'drawing' values of $\theta$ from this continuous uniform distribution a number of times (see figure \ref{fig:Intro_meanContinuousLongRun}).
+If we were to have a business buying (and selling) second-hand cars, we can imagine keeping tabs on the values of cars we buy over time. If all cars came from the same uniform distribution that we have proposed, then we would see the sample average value approaching the above long-run mean of \$3,000, as the number of cars we buy gets large\footnote{Technically, tends to infinity.} (see figure \ref{fig:Intro_meanContinuousLongRun}).
 
 \begin{figure}
 \centering
-\scalebox{0.8} 
+\scalebox{0.55} 
 {\includegraphics{Intro_meanContinuousLongRun.pdf}}
-\caption{Rolling a (computational) die. We show the running average for rolling a fair die a number of times.}\label{fig:Intro_meanContinuousLongRun}
+\caption{Career second-hand car sales. We can see the approach of the sample mean towards the long-run mean of \$3,500.}\label{fig:Intro_meanContinuousLongRun}
 \end{figure}
 
 If you can grasp the process undertaken to produce figures \ref{fig:Intro_meanDiscreteLongRun} and \ref{fig:Intro_meanContinuousLongRun} respectively, then you already understand the basis behind modern computational Bayesian statistics! If you need a bit more explanation of the theory of Bayesian computational, then fear not, we devote an entire Part of the book for this purpose (see Part \ref{part:computationalBayes}).  
@@ -265,22 +276,22 @@ var(X) = \sum\limits_{All\; \alpha} (\alpha-\mathbb{E}(X))^2 Pr(X=\alpha)
 var(X) = \int\limits_{All\; \alpha} (\alpha-\mathbb{E}(X))^2 p(\alpha)\mathrm{d}\alpha
 \end{equation}
 
-If the equations are starting to overwhelm, then fret not, we really only wanted to include them for completeness. What is more important is their significance. Essentially, a \textit{variance} measures the width of the distribution of values obtained around its mean. A wider variance therefore signifies a greater variety of values away from the mean. In figure \ref{fig:Intro_variance} we compare the variability of a fair die, with one heavily biased to take on the values 3 and 4. We see that the variability of the running mean for the loaded die is smaller than that of the fair die, particularly as the number of rolls increases. This is due to the fact that the fair die has a variance of:
+If the equations are starting to overwhelm, then fret not, we really only wanted to include them for completeness. What is more important is their significance. Essentially, a \textit{variance} measures the width of the distribution of values obtained around its mean. A wider variance therefore signifies a greater variety of values away from the mean. In figure \ref{fig:Intro_variance} we compare the variability of the fair lottery, with one heavily biased to take on the values between 40 and 60. We see that the variability of the running mean for the biased lottery is smaller than that of the fair one, particularly as the number of rolls increases. This is due to the fact that the fair lottery has a variance of:
 
 \begin{equation}
 \begin{align}
-var(X) &= \sum\limits_{\alpha=1}^{6} (\alpha-3\tfrac{1}{2})^2\times Pr(X=\alpha)\\
-&= \frac{35}{12}
+var(X) &= \sum\limits_{\alpha=1}^{100} (\alpha-50\tfrac{1}{2})^2\times Pr(X=\alpha)\\
+&= 833\tfrac{1}{4}
 \end{align}
 \end{equation}
 
-whereas similar calculations for the loaded die distribution shown in the middle of figure \ref{fig:Intro_variance}, yield a value of $\frac{7}{12}$. To be concrete, the variance of a distribution is an indicator of the long-run average square distance of values away from the mean. 
+whereas similar calculations for the loaded die distribution shown in the middle of figure \ref{fig:Intro_varianceLottery}, yield a value of approximately 265. To be concrete, the variance of a distribution is an indicator of the long-run average square distance of values away from the mean. 
 
 \begin{figure}
 \centering
 \scalebox{0.35} 
-{\includegraphics{Intro_variance.pdf}}
-\caption{Rolling a (computational) die. We run simulations of a fair die in grey (distribution shown in left graph), and a biased one in black (shown in middle graph), and compare the variability of values around the mean of $\frac{1}{2}$.}\label{fig:Intro_variance}
+{\includegraphics{Intro_varianceLottery.pdf}}
+\caption{.}\label{fig:Intro_varianceLottery}
 \end{figure} 
 
 \subsection{Generalising probability distributions to two dimensions}
@@ -779,9 +790,14 @@ If we formulate a Bayesian model, with a given prior and likelihood, then we mig
 \end{figure}
 
 \subsection{Bayesian statistics: updating our pre-analysis uncertainty}
-Describe that prior + data = posterior.
+Suppose we are stationed in a radio control tower, on a cliff of a rocky isle, and we are tasked with guiding the coast guard towards a distressed vessel, which we have been told radioed in earlier from an unknown location. We know from our prior experience that ships tend to travel West towards the island from a nearby port, and sometimes run into trouble in the most treacherous seas that start about 50km from the coastline. This stretch of sea is ...
 
-In Bayesian statistics the posterior distribution summarises the combination of our pre-study, and post-analysis knowledge about a given situation, and is used as the starting point for any further analysis or descriptions of our results. This central role of the posterior is why we devote so much energy to its derivation (and why I have devoted an entire part of this book to understanding how we can use Bayes' rule to find it).
+Suppose we are stationed in a radio control tower, on a cliff of a rocky isle. We are tasked with guiding the coast guard towards a sinking vessel, which signalled half an hour ago from an Easterly direction, 30km away, travelling West towards the island. We know that the ship's maximum speed is 20kmph, meaning that the closest the ship can be to the island is 10km away. We also know that it will not stray from its heading towards the island, since it is stuck on autopilot. What we don't know is whether the ship has engine trouble, meaning it could be travelling slower than its maximum speed.
+
+In Bayesian statistics the posterior distribution summarises the combination of our pre-study, and post-analysis knowledge about a given situation, and is used as the starting point for any further analysis or descriptions of our results. This central role of the posterior is why we devote so much energy to its derivation (and why I have devoted an entire part of this book to understanding how we can use Bayes' rule to find it). I introduce now a toy example, to help understand the significance of a prior, and posterior density.
+
+
+Describe that prior + data = posterior.
 
 \subsection{Do parameters actually exist and have a point value? Bayesian vs classical standpoints}\label{sec:Posterior_parametersExist}
 Frequentist statisticians view the unseen part of the system - the parameters of the probability model - as being fixed, whereas the known parts of the system - the data - as varying. Whereas for Bayesians, the parameters of the system are seen to vary, whereas the known part of the system - the data - is taken as given. Whether you agree with one of these views more than the other mainly comes down to how you want to interpret the parameters of a given statistical model.
@@ -854,9 +870,9 @@ Intuitively, we should avoid the left-hand central posterior interval since it t
 
 If it was costly to drive a digger a given distance, without digging, then we might change our minds, and favour the contiguous region of the \textit{central posterior interval} over the \textit{highest density interval}. However, in most practical (non-pirate) situations, the most sensible thing to do is to report the highest density interval.
 
-The most simple way of summarising a posterior density is to treat a given credible interval symmetrically. In the case of a 95\% credible interval, this involves finding the 2.5\% and 97.5\% quantiles of the posterior distribution. This will mean that we will get an interval that is centred on the median parameter value, and corresponds to the \textit{central posterior interval}.
+To work out the upper and lower bounds of an X\% central posterior interval, we find the $\frac{X}{2}\%$ and $(100-\frac{X}{2})\%$ quantiles of the posterior distribution. This will result in an interval that is centred on the median parameter value.
 
-In general an $X$\% central posterior interval is constructed by finding the $\frac{X}{2}\%$ and $(100-\frac{X}{2})\%$.
+To find the X\% highest posterior interval, we find the set of values which contains this percentage of the posterior density area, with the property that the probability density in this set is never lower than outside.
 
 \begin{figure}
 \centering
@@ -865,11 +881,11 @@ In general an $X$\% central posterior interval is constructed by finding the $\f
 \caption{The posterior probability for treasure being found along the seashore (represented by a linear x-axis).}\label{fig:Posterior_CPIvsHDI}
 \end{figure}
 
-For a unimodal, symmetric distribution the central posterior density and highest density intervals will be the same. However, for more complex distributions, this is no longer the case (see figure \ref{fig:Posterior_CPIvsHDI}), and the contiguous range of the former may contain very low probability density values in places. 
+For a unimodal, symmetric distribution the central posterior density and highest density intervals will be the same. However, for more complex distributions, this is no longer the case (compare the left and right hand panels of figure \ref{fig:Posterior_CPIvsHDI}).
 
 
 \subsection{Reconciling the difference between confidence and credible intervals}
-Maybe do as a video. Stack exchange 'whats the difference between a confidence interval and a credible interval cookie jar example.
+Maybe do as a video. Stack exchange 'whats the difference between a confidence interval and a credible interval cookie jar example. Illustrate the different importance of each, dependent on your goals.
 
 \section{Prediction using a posterior distribution}
 \subsection{Before experiment, using prior}
