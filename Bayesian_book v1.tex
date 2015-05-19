@@ -44,9 +44,9 @@ The reliance on computing, in particular simulation, is also seen to add to the 
 
 \part{Understanding the Bayesian formula}
 
-\chapter{The subjective worlds of frequentist and Bayesian statistics}\label{chap:subjectiveFrequentistBayes}
+\chapter{The subjective worlds of Frequentist and Bayesian statistics}\label{chap:subjectiveFrequentistBayes}
 \section{Chapter mission statement}
-At the end of this chapter the reader will understand the similarities and differences between frequentist and Bayesian statistics. Furthermore, the reader will gain knowledge about probability distributions, as well as how they can be manipulated to calculate quantities of interest. Finally, we discuss the benefits of using Bayesian statistics for a particular analysis.
+At the end of this chapter the reader will understand the similarities and differences between Frequentist and Bayesian statistics. Furthermore, the reader will gain knowledge about probability distributions, as well as how they can be manipulated to calculate quantities of interest. Finally, we discuss the benefits of using Bayesian statistics for a particular analysis.
  
 \section{Chapter goals}
 In life, we are often tasked with building predictive models to understand complex phenomena. As a first approximation, we often disregard parts of the system, which are not directly of interest; making the models \textit{statistical} rather than deterministic. There are two distinct approaches to statistical modelling: Frequentist or Classical inference, and Bayesian. This chapter will explain the similarities between these two approaches, and importantly, indicate where they differ substantively. Bayesian statistics formulates models in terms of entities called \textit{probability distributions}. It is thus paramount to understand how to interpret, and manipulate these objects, and a significant proportion of this chapter will be devoted to this cause. Finally, the central part of Bayesian inference - the \textit{Bayesian formula} - will be introduced.
@@ -64,16 +64,16 @@ In statistics, we formalise our beliefs in models of \textit{probability}. The m
 
 Suppose we are evaluating the efficacy of a drug in a trial. We might suppose that \textit{on average}, the drug might have a given probability of working as desired. However, before we carry out any trials, we are unaware of its exact treatment success rate. Fortunately, statistical inference allows us to estimate this unknown characteristic, or \textit{parameter}, from the data we are given. 
 
-There are two schools of thought for carrying out this process of inference: \textit{frequentist} and \textit{Bayesian}. Although this book is devoted to the latter, we now spend some time comparing the two approaches, so that a reader is aware of the different paths taken to their shared goal.
+There are two schools of thought for carrying out this process of inference: \textit{Frequentist} and \textit{Bayesian}. Although this book is devoted to the latter, we now spend some time comparing the two approaches, so that a reader is aware of the different paths taken to their shared goal.
 
-\section{The world according to frequentists}
-In frequentist or classical statistics, we suppose that our sample of data is the result of one of an infinite number of exactly-repeated experiments. The sample we see in this context is hence assumed to be the outcome of some probabilistic process. Any conclusions that we draw from this approach are based on the supposition that events occur with probabilities, which represent long-run frequencies. 
+\section{The world according to Frequentists}\label{sec:Intro_FrequentistsWorld}
+In Frequentist or classical statistics, we suppose that our sample of data is the result of one of an infinite number of exactly-repeated experiments. The sample we see in this context is hence assumed to be the outcome of some probabilistic process. Any conclusions that we draw from this approach are based on the supposition that events occur with probabilities, which represent long-run frequencies. 
 
 For example, if we flip a coin, we might assume that any sequence of outcomes we obtain is indicative of the results that we might obtain if we were to conduct the experiment an infinite number of times. Further, we might take the proportion of heads observed in this infinite set of throws as defining the probability of obtaining a 'heads'. We suppose that this probability actually exists, and is fixed for each set of coin-throws that we carry out (see figure \ref{fig:Intro_FrequentistBayesProbability}).
 
-In general, in frequentist statistics assume that the data is \textit{random} and results from \textit{sampling}, from a fixed and defined \textit{population} distribution. For a frequentist the noise that obscures the true signal of the population relationship in which we are interested is due to \textit{sampling variation}; the fact that the sample that we pick will each time be slightly different, and not exactly representative of the population. 
+In general, in Frequentist statistics assume that the data is \textit{random} and results from \textit{sampling}, from a fixed and defined \textit{population} distribution. For a Frequentist the noise that obscures the true signal of the population relationship in which we are interested is due to \textit{sampling variation}; the fact that the sample that we pick will each time be slightly different, and not exactly representative of the population. 
 
-We may flip our coin 10 times, obtaining 7 heads even if the long-run proportion of heads is $\frac{1}{2}$. To a frequentist, this is because we have picked a slightly odd sample from the population of infinitely-many repeated throws. Further, if we flip the coin another 10 times, we will likely get a different result, because we have picked a different sample.
+We may flip our coin 10 times, obtaining 7 heads even if the long-run proportion of heads is $\frac{1}{2}$. To a Frequentist, this is because we have picked a slightly odd sample from the population of infinitely-many repeated throws. Further, if we flip the coin another 10 times, we will likely get a different result, because we have picked a different sample.
 
 \begin{figure}
 \centering
@@ -87,7 +87,7 @@ Bayesians do not imagine repetitions of an experiment in order to define and spe
 
 In this sense, Bayesians do not view probabilities as concrete entities that actually exist. They are merely abstractions which we can use to help express our uncertainty. In this frame of reference there is no necessity for events to be repeatable in order to define a probability. We are thus equally able to say, 'The probability of a heads is 0.5', or, 'The probability of the democrats winning the 2020 US Presidential election is 0.75'. Probability is merely seen as a scale from: 0 where we are certain an event will not happen, to 1 where we are certain it will (see figure \ref{fig:Intro_FrequentistBayesProbability}). 
 
-A statement such as 'The probability of the democrats winning the 2020 US Presidential election is 0.75' is hard to explain using the frequentist definition of a probability. There is only ever one possible sample - the history that we witness - and what would we actually mean by a 'population of all possible US elections which happen in the year 2020'? 
+A statement such as 'The probability of the democrats winning the 2020 US Presidential election is 0.75' is hard to explain using the Frequentist definition of a probability. There is only ever one possible sample - the history that we witness - and what would we actually mean by a 'population of all possible US elections which happen in the year 2020'? 
 
 Probabilities are therefore seen as an expression of subjective beliefs, meaning they can be updated in light of new data. The formula invented by the Reverend Thomas Bayes provides the \textit{only} logical manner in which to carry out this process, and is central to Bayesian inference, where we aim to express probabilistically our uncertainty in parameters after we have seen the \textit{data}. 
 
@@ -110,7 +110,7 @@ The difficulty in obtaining this type of conclusion is that when we write down a
 
 Frequentists stop here; using this probability as evidence for a particular hypothesis in question. If the probability of obtaining the data, or a data sample more extreme, given a hypothesis is small, then it is assumed that it is unlikely that the hypothesis is true, and is rejected. Note however if reject a hypothesis, we have no way of telling whether it is true, and we just witnessed a weird sample, or that it is actually false. Also, note that in this inference process, we have also had to imagine obtaining a sample more extreme than our result, in order to get a usable probability. 
 
-Bayes' formula allows us to circumvent these difficulties, by inverting the frequentist probability to get the 'probability of the hypothesis given the \textit{actual} data we obtained'. There is no need for an arbitrary cut-off in the probability in order to validate the hypothesis; all information is summarised in this probability, and hence can be viewed as the end point of an analysis in itself.
+Bayes' formula allows us to circumvent these difficulties, by inverting the Frequentist probability to get the 'probability of the hypothesis given the \textit{actual} data we obtained'. There is no need for an arbitrary cut-off in the probability in order to validate the hypothesis; all information is summarised in this probability, and hence can be viewed as the end point of an analysis in itself.
 
 \begin{figure}
 \centering
@@ -119,16 +119,29 @@ Bayes' formula allows us to circumvent these difficulties, by inverting the freq
 \caption{Frequentist and Bayesian inference.}\label{fig:Intro_BayesVsFrequentist}
 \end{figure}
 
-\subsection{The frequentist and Bayesian murder trials}
-Assume you find yourself in the unfortunate situation where you are (hopefully falsely) accused of murder, and face a trial by jury. A variation in the usual tale is that you personally have a choice over the method used by the jury to assign guilt: either frequentist or Bayesian. Another unfortunate twist is that the legal system of the country starts by presuming \textit{guilt} rather than \textit{innocence}.
+The next few, albeit silly, and (more than) somewhat contrived, illustrate a difference both in methodology, but perhaps more significantly, in philosophy, between the two different approaches.
+
+\subsection{The Frequentist and Bayesian murder trials}
+Assume you find yourself in the unfortunate situation where you are (hopefully falsely) accused of murder, and face a trial by jury. A variation in the usual tale is that you personally have a choice over the method used by the jury to assign guilt: either Frequentist or Bayesian. Another unfortunate twist is that the legal system of the country starts by presuming \textit{guilt} rather than \textit{innocence}.
 
 Let's assume that you have been shown by a security camera to have definitely been in the same house as the victim - Sally - on the night of her demise. 
 
-If you choose the frequentist trial, your jurors start by coming up with a model based on previous trials, which assigns a probability of you being seen by the security camera if you were guilty. They then use this to make the statement that, 'If you did commit the murder, then 30\% of the time you would have been seen by the security camera', based on a hypothetical infinity of repetitions of the same conditions. Since this is not sufficiently unlikely (the p value is not below 5\%), the jurors cannot reject the null hypothesis of \textit{guilt}, and you are sentenced to life in prison.
+If you choose the Frequentist trial, your jurors start by coming up with a model based on previous trials, which assigns a probability of you being seen by the security camera if you were guilty. They then use this to make the statement that, 'If you did commit the murder, then 30\% of the time you would have been seen by the security camera', based on a hypothetical infinity of repetitions of the same conditions. Since this is not sufficiently unlikely (the p value is not below 5\%), the jurors cannot reject the null hypothesis of \textit{guilt}, and you are sentenced to life in prison.
 
-In a Bayesian trial, the jury are first introduced to an array of evidence, that suggests that you neither knew Sally, nor had any previous record of violent conduct; being otherwise a perfectly respectable citizen. Furthermore, the ex-boyfriend of Sally is a multiple-violent-offending convict on the run from prison after being sentenced by a judge on the basis of witness testimony by Sally. On this basis, the jury determine a \textit{prior} probability in the hypothesis that you are guilty that is $\frac{1}{1000}$. They then use the same model as the frequentists, to determine that the probability of you being seen by the security camera given your guilt is 30\%. However, they then coolly use Bayes' rule, and conclude that the probability of you committing the crime is $\frac{1}{1000}$ (see section \ref{sec:Intro_appendixMurder} for a full description of this calculation). Based on this evidence, the jury acquits you, and  you go home to your family.
+In a Bayesian trial, the jury are first introduced to an array of evidence, that suggests that you neither knew Sally, nor had any previous record of violent conduct; being otherwise a perfectly respectable citizen. Furthermore, the ex-boyfriend of Sally is a multiple-violent-offending convict on the run from prison after being sentenced by a judge on the basis of witness testimony by Sally. On this basis, the jury determine a \textit{prior} probability in the hypothesis that you are guilty that is $\frac{1}{1000}$. They then use the same model as the Frequentists, to determine that the probability of you being seen by the security camera given your guilt is 30\%. However, they then coolly use Bayes' rule, and conclude that the probability of you committing the crime is $\frac{1}{1000}$ (see section \ref{sec:Intro_appendixMurder} for a full description of this calculation). Based on this evidence, the jury acquits you, and you go home to your family.
 
-\subsection{Locating a submarine: example}
+\subsection{Radio control towers: example}
+In a hypothetical war two radio control workers sit side-by-side, Mr Pearson (from frequentland), and Mr Laplace (from the county of Bayesdom), and are tasked with finding an enemy plane that has been spotted over the country's borders. They will each feed this information to the nearest airforce base(s) which will respond by sending up aircraft of their own. There are however, administratively two different airforces, which correspond to the two different counties. Although the airforces of frequentland and Bayesdom share airbases, they are distinct, and only respond to Mr Pearson and Mr Laplace's advice respectively. The war, although short, has been costly to both allies, and they each want to avoid needless expenditure, as well as the unwarranted scaring of the local populace by sending up jets.
+
+Mr Pearson starts by inputting the radar information into a computer program which uses a model of a plane's position which has been calibrated against a dataset of historical plane data in this short war. The result comes out instantly. 
+
+"...The plane is most likely 5 miles from the town of Tunbridge Wells."
+
+Without another moment's thought, Mr Pearson radios the base of Tunbridge Wells, telling them to scramble all 10 available Frequentist fighter jets immediately. He then gets up to get himself a well-earned coffee.
+
+Laplace knows from experience there are three different flight paths that the enemy has used to attack previously. Accordingly, he gives these regions a high probability density in his prior for the plane's current location, and feeds this into the same computer program that Pearson used. The output this time is different. By using the optional input, the program now outputs a map with the most likely regions shown via a colour shading. There is the highest posterior density over the region near Tunbridge Wells, where Pearson radioed, although the map suggests there are two other towns which might be likely victims of the plane's bombing. Accordingly, Laplace radios to Tunbridge Wells, asking them to send up four jets, and to the other two towns, asking them to send up two jets each. At the end of this all, Laplace remains seated, tired but contented that he has done his best for his own.
+
+The enemy bomber turned out to be approaching berkstad, one of the towns which Laplace radioed. The Bayesdom jets intercept the encroaching aircraft, and escort it out of allied airspace. Laplace is awarded a medal in honour of his efforts. Pearson looks on jealously.
 
 \section{Probability distributions: helping us explicitly state our ignorance}\label{sec:Intro_probabilityDistributions}
 Before we look out the window in the morning, before we get our exam results, before the cards are dealt, we are uncertain of the world that lies in wait of us. In order to plan, as well as make sense of things, we often predict the relative likelihood of different outcomes. However, in order to allow interrogation of thought, with a view to transparency and self-improvement, we sometimes would like to state our pre-conceptions \textit{explicitly}, using a suitable framework. 
@@ -799,7 +812,7 @@ In Bayesian textbooks much discourse is devoted to advocating the academic reaso
 \end{itemize}
 
 \section{Appendix}
-\subsection{The frequentist and Bayesian murder trial}\label{sec:Intro_appendixMurder}
+\subsection{The Frequentist and Bayesian murder trial}\label{sec:Intro_appendixMurder}
 In the Bayesian trial the probability that you are guilty given being seen by the security camera on the night of the murder is:
 
 \begin{equation}\label{eq:Intro_murder}
@@ -823,12 +836,12 @@ Insert a graphic with the likelihood part of Bayes' formula circled, as in the e
 \end{equation}\label{eq:Posterior_BayesHighlighted}
 
 \section{Chapter goals}
-Calculating the posterior distribution for a model's parameters is the focus of undertaking Bayesian analysis. This \textit{probability distribution} which results from the application of Bayes' rule (see \ref{eq:Posterior_BayesHighlighted}) can be used to infer the effects of given variables, to forecast, compare different models of phenomena, as well as test its own foundations! In order to do justice to the multitude of uses of the posterior distribution, it is necessary that the reader is familiar with the basics of probability distributions explained in chapter \ref{chap:subjectiveFrequentistBayes}. After this we will be able to appreciate how the posterior distribution of Bayes' formula can be put to its many uses. 
+Calculating the posterior distribution for a model's parameters is the focus of Bayesian analysis. This \textit{probability distribution} which results from the application of Bayes' rule (see \ref{eq:Posterior_BayesHighlighted}) can be used to infer the effects of given variables, to forecast, compare different models of phenomena, as well as test its own foundations! In order to do justice to the multitude of uses of the posterior distribution, it is necessary that the reader is familiar with the basics of probability distributions explained in chapter \ref{chap:subjectiveFrequentistBayes}. 
 
-\section{Expressing uncertainty in a parameter through the posterior probability distribution}\label{sec:Posterior_parameterUncertainty}
+\section{Expressing uncertainty through the posterior probability distribution}\label{sec:Posterior_parameterUncertainty}
 Unlike looking out the window, getting exam results, or playing a hand at blackjack, we frequently in inference never learn the \textit{true}\footnote{Whether a true value for a parameter actually exists we leave until section \ref{sec:Posterior_parametersExist}.} state of nature. The uncertainty here is both in the future and \textit{present}; the latter meaning we are unable to perfectly measure the state of the world today, and hence cannot hope to perfectly know the former.
 
-A way of representing our ignorance, or uncertainty in a parameter's value is through probability distributions. For example, suppose that we wanted to know the proportion of individuals that would vote for the democrats in an upcoming election. We might, on the basis of past exit poll surveys, we might calculate a posterior\footnote{Via Bayes' rule - don't worry if you don't know how to do this, that is the goal of this whole first part!} uncertainty which is represented by the probability distribution which is shown in figure \ref{fig:Posterior_electionProportion}. 
+A way of representing our ignorance, or uncertainty in a parameter's value is through probability distributions. For example, suppose that we wanted to know the proportion of individuals that would vote for the democrats in an upcoming election. We might, on the basis of past exit poll surveys, calculate a posterior\footnote{Via Bayes' rule - don't worry if you don't know how to do this, that is the goal of this whole first part!} uncertainty which is represented by the probability distribution which is shown in figure \ref{fig:Posterior_electionProportion}. 
 
 \begin{figure}
 \centering
@@ -850,7 +863,7 @@ This provides a point estimate of the proportion of individuals - 54\% - that we
 A point estimate of the proportion of individuals that we expect to vote for the Democrats is not useful in itself, (and quite dangerous to pass on), without some measure of our inherent confidence/uncertainty in this particular value. One measure of uncertainty in a parameter's value is its variance:
 
 \begin{equation}
-var(\theta)=  \int\limits_{0}^{1} p(\theta)(\theta-\mathbb(E)[\theta])^2 \mathrm{d}\theta
+var(\theta)=  \int\limits_{0}^{1} p(\theta)(\theta-\mathbb(E[\theta])^2 \mathrm{d}\theta
 \end{equation}
 
 In many cases, it is easier to understand the meaning of uncertainty if it is expressed in the same units as the mean, which we do by taking the square root of the variance, yielding 5.3\% for the case of figure \ref{fig:Posterior_electionProportion}. A larger variance indicates that we view a wider range of outcomes as being feasible. In this case, a wider variance would mean that we would be less surprised if the electorate voted in the Republican party. 
@@ -871,21 +884,40 @@ If we formulate a Bayesian model, with a given prior and likelihood, then we mig
 \centering
 \scalebox{0.5} 
 {\includegraphics{Posterior_regressionMilitaryParticipation.pdf}}
-\caption{An estimated posterior probability distribution for the parameter $\beta$ in (\ref{eq:Posterior_militaryParticipation}). The shaded region represents the posterior probability that the parameter lies is positive.}\label{fig:Posterior_regressionMilitaryParticipation}
+\caption{An estimated posterior probability distribution for the parameter $\beta$ in (\ref{eq:Posterior_militaryParticipation}). The shaded region represents the posterior probability that the parameter is positive.}\label{fig:Posterior_regressionMilitaryParticipation}
+\end{figure}
+
+\subsection{Bayesian coastguard: introducing the prior and the posterior}
+Imagine you are stationed in a radio control tower at the top of a steep cliff, in the midst of a stormy night. The tower received a distress call over radio from a ship - The Frequentasy - which has got engine trouble, somewhere out in the bay. It is your job to direct a search helicopter to rescue the poor sailors.
+
+When you first receive the weak crackled radio signal, you are not made aware of their location. However, you know that the boat must be somewhere in the bay, less that 25km away from the tower, since this is the maximum possible range of the radio. Accordingly, you represent these views via the prior shown in the left hand panel of figure 1 (fairly flat prior in a circle from the tower, perhaps going down to zero gradually at 25km). The search area represented by this prior is currently far too wide for a rescue crew to reach the flagging ship in time!
+
+In an attempt to improve the odds, you radio to the ship, and ask that they switch on their emergency transmitter. After radioing a number of times, you receive a weak signal, which you feed into the computer, resulting in a posterior probability density for the ship's location shown in the central panel of figure 1. (This panel shows a broadly peaked density along a line from the ship to the station, near a particular location 15km away).
+
+The trouble is, the search area inferred from the aforementioned posterior is still wide. Luckily for the crew however, another nearby radio station has also picked up the signal, and they share this information with you. Finally, feeding this information into the computer, you obtain a final estimation of the ship's location, shown in the right hand panel of figure 1. 
+
+Since there is only a small area of high density, you direct the rescue helicopter to search this area, and they find the find the captain and crew in time.
+
+\begin{figure}
+\centering
+\scalebox{0.2} 
+{\includegraphics{Posterior_bayesianLighthouse.jpg}}
+\caption{Three plots. Left hand plot is a contour plot of probability radiated symmetrically in a semi-circle away from the lighthouse, with the density declining to zero at 25km. The middle plot shows a contour plot of probability, with a higher density towards the centre of the diagram (here the densities are still relatively smooth, indicating high uncertainty). The final plot shows a definite peak in intensity around a particular point about 10km away from the coast, just right of centre. The different contours will be increasing shades of a particular colour.}\label{fig:Posterior_bayesianLighthouse}
 \end{figure}
 
 \subsection{Bayesian statistics: updating our pre-analysis uncertainty}
-Suppose we are stationed in a radio control tower, on a cliff of a rocky isle, and we are tasked with guiding the coast guard towards a distressed vessel, which we have been told radioed in earlier from an unknown location. We know from our prior experience that ships tend to travel West towards the island from a nearby port, and sometimes run into trouble in the most treacherous seas that start about 50km from the coastline. This stretch of sea is ...
+In Bayesian statistics the posterior distribution summarises the combination of our pre-study, and post-analysis knowledge about a given situation, and is used as the starting point for any further analysis or descriptions of our results. In order to calculate it, we need to choose a probability model, which in turn defines uncertain parameters, over which we place priors. The model also provides us with a \textit{likelihood} of the data we obtained. The priors and likelihoods are then combined in a certain way - using Bayes' rule - to yield the posterior distribution.
 
-Suppose we are stationed in a radio control tower, on a cliff of a rocky isle. We are tasked with guiding the coast guard towards a sinking vessel, which signalled half an hour ago from an Easterly direction, 30km away, travelling West towards the island. We know that the ship's maximum speed is 20kmph, meaning that the closest the ship can be to the island is 10km away. We also know that it will not stray from its heading towards the island, since it is stuck on autopilot. What we don't know is whether the ship has engine trouble, meaning it could be travelling slower than its maximum speed.
+\begin{equation}
+prior + data \rightarrow posterior
+\end{equation}
 
-In Bayesian statistics the posterior distribution summarises the combination of our pre-study, and post-analysis knowledge about a given situation, and is used as the starting point for any further analysis or descriptions of our results. This central role of the posterior is why we devote so much energy to its derivation (and why I have devoted an entire part of this book to understanding how we can use Bayes' rule to find it). I introduce now a toy example, to help understand the significance of a prior, and posterior density.
+In the Bayesian lighthouse example, we started off with a fairly wide prior, since we were quite uncertain of the boat's location. We then fed the data from the ships' emergency transmitter, along with the prior, into the computer - which uses Bayes' rule - to provide an updated estimate of the ship's location. We actually went through this process twice, to emphasise the fact that Bayes' rule can be used iteratively to update knowledge about an uncertain situation.
 
+Statistical inference is useful whenever there is uncertainty regarding a parameter of interest. Bayesians use the posterior distribution, and various summaries of it, in order to describe the degree of uncertainty regarding a parameter. Before we delve too deep though, it is useful to take a step back, and ask the somewhat philosophical question, 'Do parameters actually exist?' 
 
-Describe that prior + data = posterior.
-
-\subsection{Do parameters actually exist and have a point value? Bayesian vs classical standpoints}\label{sec:Posterior_parametersExist}
-Frequentist statisticians view the unseen part of the system - the parameters of the probability model - as being fixed, whereas the known parts of the system - the data - as varying. Whereas for Bayesians, the parameters of the system are seen to vary, whereas the known part of the system - the data - is taken as given. Whether you agree with one of these views more than the other mainly comes down to how you want to interpret the parameters of a given statistical model.
+\subsection{Do parameters actually exist and have a point value?}\label{sec:Posterior_parametersExist}
+For Bayesians, the parameters of the system are seen to vary, whereas the known part of the system - the data - is taken as given. Whereas Frequentist statisticians view the unseen part of the system - the parameters of the probability model - as being fixed, whereas the known parts of the system - the data - as varying. Whether you agree with one of these views more than the other mainly comes down to how you want to interpret the parameters of a given statistical model. 
 
 The Bayesian perspective on parameters can be viewed as having a duality of meaning. Either we view the parameters as truly \textit{varying}, or we view our knowledge about the parameters as imperfect. The fact that we will get different estimates of parameters from different studies can be taken to reflect either of these two views. Either we view the parameters of interest as varying - taking on different values in each of the samples we pick. Alternatively, we can view our uncertainty over a parameter's value as the reason we will estimate slightly different values in different samples. Bayesians are more at ease with using parameters as a means to an end - taking them not as real immutable constants, but as tools from which to make inferences about a given situation.
 
@@ -970,7 +1002,77 @@ For a unimodal, symmetric distribution the central posterior density and highest
 
 
 \subsection{Reconciling the difference between confidence and credible intervals}
-Maybe do as a video. Stack exchange 'whats the difference between a confidence interval and a credible interval cookie jar example. Illustrate the different importance of each, dependent on your goals.
+It is easy to jump on the bandwagon, and dismiss classical confidence intervals as misleading and misleading; favouring the Bayesian alternative definitively. However, in doing so we are somewhat guilty of zealotry\footnote{Fanaticism.}. The two concepts really just represent different measures of uncertainty. As we explained in section \ref{sec:Intro_FrequentistsWorld}, Frequentists view data sets as one of an infinity of exactly repeated experiments, and hence design an interval which contains the true value X\% of the time across all these repetitions. The Frequentist confidence interval states uncertainty in terms of the interval itself. By contrast, Bayesians view the data as fixed, and the parameter as coming from an over-arching distribution. They correspondingly calculate an interval where X\% of the distribution of the parameter which has been drawn from the overall sits.
+
+The problem with the classical confidence interval is more that it is often interpreted \textit{incorrectly}, as a \textit{credible} interval. It is not a problem with the concept itself. It just depends on your personal preference, and situation, as to which you find more useful.
+
+The following (slightly silly) example hopefully makes this difference of viewpoint clearer. 
+
+\subsubsection{The interval ENIGMA}
+Suppose that at the outbreak of war, you are employed as a code breaker in hut 8 at Bletchley Park. By monitoring enemy communications we are able to identify the \textit{source} of the message, although the message \textit{contents} itself, is not. The source of the message is either submarine, boat, tank or aircraft. Messages on the frequencies being monitored contain details of the next domestic target of the enemy, and can either be dams, ports, towns or airfields.
+
+Fortunately, previous code-breakers have managed to decode a significant proportion of messages, and have tallied up the proportions of communications from each source, which resulted in a particular attack destination (see figure \ref{tab:Posterior_confidenceIntervalHistoric}).
+
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{ccccc}
+    \toprule
+          & \multicolumn{4}{c}{\textbf{Attack destination}} \\
+    \midrule
+    \textbf{Communication method} & Dam & Port & Town & Airfield \\
+    Submarine & 80\%  & 50\%  & 50\%  & 13\% \\
+    Boat  & 9\%   & 15\%  & 25\%  & 16\% \\
+    Tank  & 0\%   & 25\%  & 25\%  & 66\% \\
+    Aircraft & 11\%   & 10\%  & 0\%   & 5\% \\
+    \bottomrule
+    Total & 100\% & 100\% & 100\% & 100\% \\
+    \end{tabular}%
+  \caption{Historical communication frequencies resulting in an attack on a given location.}\label{tab:Posterior_confidenceIntervalHistoric}
+\end{table}%
+
+Our job is to predict the next attack destination \textit{given} that we have received the mode of communication used. Since there is uncertainty regarding the attack destination, we shall be making confidence intervals which consist of groups of these entities. We are told to use the most narrow\footnote{We suppose there is a cost to readying a destination against attack.} intervals of width greater than or equal to 75\% in all cases.
+
+From these historical evidence we first put the data into a 'statistics-machine', turning the knob that says 'classical confidence intervals'. The result are the confidence intervals shown in table \ref{tab:Posterior_confidenceIntervalClassical}. In words, this is because the sum of the interval values contained in each column exceeds the threshold. So, for every attack destination, our intervals ensure that the true attack destination lies within these bounds at least 75\% of the time.
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{cccccc}
+    \toprule
+          & \multicolumn{4}{c}{\textbf{Attack destination}} & \multicolumn{1}{c}{\textbf{}} \\
+    \midrule
+    \textbf{Communications method} & Dam & Port & Town & Airfield   & \textbf{Credibility} \\
+    Submarine & \color{red}{$[$80\%}  & \color{red}{50\%}  & \color{red}{50\%$]$}  & 13\%  & \textbf{93\%} \\
+    Boat  & 9\%   & \color{red}{$[$15\%}  & \color{red}{25\%}  & \color{red}{16\%$]$}  & \textbf{86\%} \\
+    Tank  & 0\%   & 25\%  & 25\%  & \color{red}{$[$66\%$]$}  & \textbf{57\%} \\
+    Aircraft & 11\%   & \color{red}{$[$10\%$]$}  & 0\%   & 5\%   & \textbf{38\%} \\
+    \bottomrule
+    \textbf{Coverage} & \textbf{80\%}  & \textbf{75\%}  & \textbf{75\%}  & \textbf{82\%} &  \\
+    \end{tabular}%
+  \caption{Classical confidence intervals calculated from data shown in table \ref{tab:Posterior_confidenceIntervalHistoric}. Confidence intervals greater than or equal to 75\% are indicated in red, surrounded by parentheses.}\label{tab:Posterior_confidenceIntervalClassical}%
+\end{table}%
+
+We next turn the dial to 'Bayesian credible intervals', and obtain the results shown in table \ref{tab:Posterior_confidenceIntervalBayesian} (see section \ref{sec:Posterior_appendixConfidenceInterval} for a full explanation). In this case, since the sum of interval values in each row exceeds 75\%, we have credible intervals. With these intervals, for each mode of communication, we will ensure that the true attack destination is contained within these destinations at least 75\% of the time.
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{cccccc}
+    \toprule
+          & \multicolumn{4}{c}{\textbf{Attack destination}} &  \\
+    \midrule
+    \textbf{Communication method} & Dam & Port & Town & Airfield   & \textbf{Credibility} \\
+    Submarine & \color{red}{$\left[$80\%}  & \color{red}{50\%}  & \color{red}{50\%$]$}  & 13\%  & \textbf{93}\% \\
+    Boat  & \color{red}{$[$9\%   & \color{red}{15\%}  & \color{red}{25\%$]$}  & 16\%  & \textbf{75}\% \\
+    Tank  & 0\%   & 25\%  & \color{red}{$[$25\%}  & \color{red}{66\%$]$}  & \textbf{78}\% \\
+    Aircraft & \color{red}{$[$11\%}   & \color{red}{10\%$]$}  & 0\%   & 5\%   &\textbf{ 81}\% \\
+    \bottomrule
+    \textbf{Coverage} & \textbf{100\%}  & \textbf{75\%} &\textbf{ 100\%}  & \textbf{66\%}  &  \\
+    \end{tabular}%
+   \caption{Bayesian credible intervals calculated from data shown in table \ref{tab:Posterior_confidenceIntervalHistoric}. Credible intervals greater than or equal to 75\% are indicated in red, surrounded by parentheses. Note: 'credibility' is calculated by dividing the sum of interval values in each row by the row's total (see section \ref{sec:Posterior_appendixConfidenceInterval} for a full explanation.)}\label{tab:Posterior_confidenceIntervalBayesian}%
+\end{table}%
+
+The difference between these two measures is subtle. In fact, as is often the case, the intervals are actually similar, and overlap considerably. But which should we choose? Using the classical confidence intervals, we are assured that whatever mode of attack the enemy chooses, our interval will contain the true attack mode at least 75\% of the time. A Bayesian would criticise the confidence interval for the case of the \textit{Aircraft} communication method, since it only gets the correct destination correct 38\% of the time. This could potentially be costly if attacking communicated by this method are particularly devastating. A Frequentist would argue that for attacks on airfields, the Bayesian confidence intervals only correct this as the attack destination 66\% of the time. Again, if these types of attack are particularly costly, then this interval might not be ideal\footnote{If we were to assign costs to each of these attack events, then we could work out optimal intervals, although this is the realm of Bayesian Decision Theory; not covered in this text.}.
+
 
 \section{Prediction using a posterior distribution}
 \subsection{Before experiment, using prior}
@@ -978,6 +1080,9 @@ Maybe do as a video. Stack exchange 'whats the difference between a confidence i
 
 \section{Model comparison using the posterior}
 \section{Model testing through the posterior}
+\section{Appendix}
+\subsection{The interval ENIGMA - explained in full}\label{sec:Posterior_appendixConfidenceInterval}
+
 
 \chapter{Likelihoods}\label{chap:Likelihoods}
 \begin{quotation}
@@ -1344,10 +1449,10 @@ We could then use (\ref{eq:Likelihood_normalN}) to calculate the probability of 
 \section{The subjectivity of model choice}
 It is hoped that the analysis in the preceding sections has given us a taste of how we can go about specifying a likelihood for a hitherto unknown circumstance. We start by writing down the behaviours that we want to emulate, then make simplifying assumptions, which we then use to look for an appropriate model in the literature. This model is then used to test the validity of the assumptions with the sample data. If the model struggles to explain the data, then we should go back and iteratively modify, then test our model, until it adequately explains the range of behaviours.
 
-However, it should be re-emphasised that by its nature, a model is always a simplification of reality. As such, no one model is \textit{correct}. There are often many models that could be used to explain the data which we have to hand. We should always take care to test each of these against its ability to explain the aspect of the data with which we are interested, and only proceed with it if it is adequate in this regard. Real life is complicated, and thus with each of the assumptions that were used to justify a particular model, there will inevitably be a degree of \textit{subjectivity}. As such, no analysis - whether frequentist or Bayesian - can be thought to be purely \textit{objective}. Hence, the human analyst cannot, and should not, be replaced by automata for statistical analysis. A degree of subjective judgement is always necessary in statistics, as in all other walks of life.
+However, it should be re-emphasised that by its nature, a model is always a simplification of reality. As such, no one model is \textit{correct}. There are often many models that could be used to explain the data which we have to hand. We should always take care to test each of these against its ability to explain the aspect of the data with which we are interested, and only proceed with it if it is adequate in this regard. Real life is complicated, and thus with each of the assumptions that were used to justify a particular model, there will inevitably be a degree of \textit{subjectivity}. As such, no analysis - whether Frequentist or Bayesian - can be thought to be purely \textit{objective}. Hence, the human analyst cannot, and should not, be replaced by automata for statistical analysis. A degree of subjective judgement is always necessary in statistics, as in all other walks of life.
 
 \section{Maximum likelihood - a short introduction}\label{sec:Likelihood_MLE}
-The analysis in section \ref{sec:chooseLikelihood} assumes that we know beforehand the fraction, $\theta$, of the populous that are predisposed to having the disease. In reality we rarely know such a thing. Often the main focus of building a statistical model is to try to estimate such parameters from our sample of data to which we have access. A popular frequentist method for achieving this goal is the estimation strategy known as \textit{Maximum Likelihood}. In this section we will examine how this estimation strategy yields estimates of parameters, as well as how these estimates can be used to make inferences about the population.
+The analysis in section \ref{sec:chooseLikelihood} assumes that we know beforehand the fraction, $\theta$, of the populous that are predisposed to having the disease. In reality we rarely know such a thing. Often the main focus of building a statistical model is to try to estimate such parameters from our sample of data to which we have access. A popular Frequentist method for achieving this goal is the estimation strategy known as \textit{Maximum Likelihood}. In this section we will examine how this estimation strategy yields estimates of parameters, as well as how these estimates can be used to make inferences about the population.
 
 The principle of Maximum Likelihood estimation is simple. Firstly, we assume a model which we use to approximate the data generating process which resulted in our sample, based on the various assumptions about the real life process which we make. We then calculate what is known as the joint probability of obtaining the sample of observations, assuming that we do not know the parameters which specify completely those distributions. We then choose the parameters which \textit{maximise} the likelihood of obtaining that particular sample of observations. We will go through some simple examples to illustrate this process. 
 
@@ -1440,7 +1545,7 @@ Notice that the maximum likelihood estimators for the population mean and varian
 \end{equation}
 
 \section{Frequentist inference in Maximum Likelihood}
-We have now detailed how to derive point estimates of parameters using the method of maximum likelihood. However, at the moment we are unable to make any conclusions about the population. This is because we do not have any idea as to whether we obtained a particular estimate of a parameter due to picking a weird sample, or because it \textit{actually} has a value in the population which is at this value. Frequentists get round this by examining a graph of log-likelihood near the maximum likelihood point estimate (see figure \ref{fig:Likelihood_likelihoodCurvature}). If the log-likelihood is strongly peaked near the maximum likelihood estimate, then this suggests that only a small range of parameters would yield a similar valued likelihood. By contrast, if the log-likelihood is gently peaked near the ML estimate, then it is feasible that a large range of parameters would yield estimates close to this value. In the latter case, it seems logical that we should be less confident in the particular value of the parameter which is given by maximum likelihood. We can measure the 'peakedness' in the log-likelihood by looking at the magnitude of the second derivative\footnote{The first derivative gives the gradient, the second derivative gives the rate of change of the gradient - a measure of curvature.} of the function at the ML point estimate value. The more curved the log-likelihood, the more confident we can be of our estimated parameter value, and any conclusions drawn from this. Note however, that the frequentist inference is not based on proper probability distributions (since we infer based on a likelihood). This contrasts with the Bayesian method which, by its nature, allows for a more adequate description of parameters, using probability distributions.
+We have now detailed how to derive point estimates of parameters using the method of maximum likelihood. However, at the moment we are unable to make any conclusions about the population. This is because we do not have any idea as to whether we obtained a particular estimate of a parameter due to picking a weird sample, or because it \textit{actually} has a value in the population which is at this value. Frequentists get round this by examining a graph of log-likelihood near the maximum likelihood point estimate (see figure \ref{fig:Likelihood_likelihoodCurvature}). If the log-likelihood is strongly peaked near the maximum likelihood estimate, then this suggests that only a small range of parameters would yield a similar valued likelihood. By contrast, if the log-likelihood is gently peaked near the ML estimate, then it is feasible that a large range of parameters would yield estimates close to this value. In the latter case, it seems logical that we should be less confident in the particular value of the parameter which is given by maximum likelihood. We can measure the 'peakedness' in the log-likelihood by looking at the magnitude of the second derivative\footnote{The first derivative gives the gradient, the second derivative gives the rate of change of the gradient - a measure of curvature.} of the function at the ML point estimate value. The more curved the log-likelihood, the more confident we can be of our estimated parameter value, and any conclusions drawn from this. Note however, that the Frequentist inference is not based on proper probability distributions (since we infer based on a likelihood). This contrasts with the Bayesian method which, by its nature, allows for a more adequate description of parameters, using probability distributions.
 
 \begin{figure}
 \centering
@@ -1451,7 +1556,7 @@ We have now detailed how to derive point estimates of parameters using the metho
 
 
 \section{Chapter summary}
-We should now understand what is meant by a likelihood, and how to build probabilistic models of real life processes. However, the difficulty of modelling a process is governed by its degree of complexity and sensitivity to violations of assumptions. Further we should also understand how the frequentist method of Maximum Likelihood can be used to yield point estimates of parameters. We are however, currently restricted in our ability to make inferences based on full probability distributions over parameters. Bayes' rule tells us how we can convert a likelihood - itself not a proper probability distribution - to a posterior (\textit{correct}) probability distribution for parameters. In order to use to do this though, we need to understand what is meant by a \textit{prior} distribution and how we can specify this distribution to suit the particular situation. This is what is covered in the next chapter.
+We should now understand what is meant by a likelihood, and how to build probabilistic models of real life processes. However, the difficulty of modelling a process is governed by its degree of complexity and sensitivity to violations of assumptions. Further we should also understand how the Frequentist method of Maximum Likelihood can be used to yield point estimates of parameters. We are however, currently restricted in our ability to make inferences based on full probability distributions over parameters. Bayes' rule tells us how we can convert a likelihood - itself not a proper probability distribution - to a posterior (\textit{correct}) probability distribution for parameters. In order to use to do this though, we need to understand what is meant by a \textit{prior} distribution and how we can specify this distribution to suit the particular situation. This is what is covered in the next chapter.
 
 \chapter{Priors}\label{chap:Prior}
 \section{Chapter Mission statement}
@@ -1464,14 +1569,14 @@ P(\theta|data) = \frac{P(data|\theta)\times {\color{blue}P(\theta)}}{P(data)}
 \end{equation}\label{eq:Prior_BayesHighlighted}
 
 \section{Chapter goals}
-Bayes' rule tells us how to convert a likelihood - itself not a proper probability distribution - into a posterior probability distribution for parameters, which can then be used for inference. We are required in the numerator to multiply the likelihood by a pre-experimental weighting of each set of parameter values described by a probability distribution, which is known as a \textit{prior}. Priors are without doubt the most controversial aspect of Bayesian statistics, with its opponents criticising its inherent \textit{subjectivity}. It is hoped that by the end of the chapter we will have convinced the reader that, not only is subjectivity inherent in \textit{all} statistical models - both frequentist and Bayesian - but the explicit subjectivity of priors is more transparent, and hence open to interrogation, than the implicit subjectivity abound elsewhere.
+Bayes' rule tells us how to convert a likelihood - itself not a proper probability distribution - into a posterior probability distribution for parameters, which can then be used for inference. We are required in the numerator to multiply the likelihood by a pre-experimental weighting of each set of parameter values described by a probability distribution, which is known as a \textit{prior}. Priors are without doubt the most controversial aspect of Bayesian statistics, with its opponents criticising its inherent \textit{subjectivity}. It is hoped that by the end of the chapter we will have convinced the reader that, not only is subjectivity inherent in \textit{all} statistical models - both Frequentist and Bayesian - but the explicit subjectivity of priors is more transparent, and hence open to interrogation, than the implicit subjectivity abound elsewhere.
 
 This chapter will also explain the differing interpretations which are ascribed to priors. The reader will come to understand the types of method that can be used to construct prior distributions, and how they can be chosen to be minimally subjective, or otherwise to contain informative pre-experimental insights from data or opinion. Finally, the reader will understand that if significant data are available then the conclusions drawn should be insensitive to the initial choice of prior.
 
 Inevitably, this chapter will be slightly more philosophical and abstract than other parts of this book, but it is hoped that the examples given will be sufficient to ensure its practical use.
 
 \section{What are priors, and what do they represent?}
-Chapter \ref{chap:Likelihoods} introduced us to the concept of formulating a likelihood, and how this can be used to derive frequentist estimates of parameters, using the method of maximum likelihood. This pre-supposes that the parameters in question are immutable, fixed quantities that actually exist, and can be estimated by methods that can be repeated, or imagined to be repeated many times \cite{gill2007bayesian}. As Gill (2007) indicates, this is unrealistic for the vast majority of social science research.
+Chapter \ref{chap:Likelihoods} introduced us to the concept of formulating a likelihood, and how this can be used to derive Frequentist estimates of parameters, using the method of maximum likelihood. This pre-supposes that the parameters in question are immutable, fixed quantities that actually exist, and can be estimated by methods that can be repeated, or imagined to be repeated many times \cite{gill2007bayesian}. As Gill (2007) indicates, this is unrealistic for the vast majority of social science research.
 
 \begin{quotation}
 It is simply not possible to rerun elections, repeat surveys under exactly the same conditions, replay the stock market with exactly matching market forces, or re-expose clinical subjects to identical stimuli.
@@ -1481,7 +1586,7 @@ Furthermore, parameters only exist because we have \textit{invented} a model, he
 
 For Bayesians, it is the data that are treated as fixed, and the parameters that vary. We know that the likelhood - however useful - is not a proper probability distribution. Bayes' rule tells us how to combine a likelihood with something called a \textit{prior} to obtain a proper posterior distribution for the parameter in question, which can then be used for inference. But what does it actually mean for a parameter to have a prior distribution?
 
-Gelman et al. (2013) suggests that there are two different interpretations of priors: the \textit{state of knowledge} interpretation, where we specify our knowledge and uncertainty in a parameter as if regarding it as a draw from a probability distribution; alternatively in the more objective \textit{population} interpretation where the current value of a parameter is the result of a draw from a true population distribution \cite{gelman2013bayesian}. In both viewpoints the model parameters are not viewed as static, unwavering constants as they are taken to be in frequentist theory.
+Gelman et al. (2013) suggests that there are two different interpretations of priors: the \textit{state of knowledge} interpretation, where we specify our knowledge and uncertainty in a parameter as if regarding it as a draw from a probability distribution; alternatively in the more objective \textit{population} interpretation where the current value of a parameter is the result of a draw from a true population distribution \cite{gelman2013bayesian}. In both viewpoints the model parameters are not viewed as static, unwavering constants as they are taken to be in Frequentist theory.
 
 \begin{figure}
 \centering
@@ -2138,7 +2243,7 @@ This provides a little insight into the methodology of modern Bayesian methods, 
 \chapter{Hierarchical models}\label{chap:hierarchicalModels}
 
 \part{Regression analysis and hierarchical models}
-\chapter{Hypothesis testing I: Classical frequentist vs Bayesian approaches}
+\chapter{Hypothesis testing I: Classical Frequentist vs Bayesian approaches}
 
 \chapter{Evaluation of model fit}\label{chap:ModelFit}
 Formerly hypothesis testing II. Definitely use something similar to Kruscke's P67 example for choosing between models.
