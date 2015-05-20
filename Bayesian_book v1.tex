@@ -1011,7 +1011,7 @@ The following (slightly silly) example hopefully makes this difference of viewpo
 \subsubsection{The interval ENIGMA}
 Suppose that at the outbreak of war, you are employed as a code breaker in hut 8 at Bletchley Park. By monitoring enemy communications we are able to identify the \textit{source} of the message, although the message \textit{contents} itself, is not. The source of the message is either submarine, boat, tank or aircraft. Messages on the frequencies being monitored contain details of the next domestic target of the enemy, and can either be dams, ports, towns or airfields.
 
-Fortunately, previous code-breakers have managed to decode a significant proportion of messages, and have tallied up the proportions of communications from each source, which resulted in a particular attack destination (see figure \ref{tab:Posterior_confidenceIntervalHistoric}).
+Fortunately, previous code-breakers have managed to decode a significant proportion of messages, and have tallied up the proportions of communications from each source, which resulted in a particular attack destination (see figure \ref{tab:Posterior_confidenceIntervalHistoric}). We also know from experience that the proportion of attacks on each destination are roughly similar.
 
 
 \begin{table}[htbp]
@@ -1021,10 +1021,10 @@ Fortunately, previous code-breakers have managed to decode a significant proport
           & \multicolumn{4}{c}{\textbf{Attack destination}} \\
     \midrule
     \textbf{Communication method} & Dam & Port & Town & Airfield \\
-    Submarine & 80\%  & 50\%  & 50\%  & 13\% \\
-    Boat  & 9\%   & 15\%  & 25\%  & 16\% \\
+    Submarine & 73\%  & 50\%  & 50\%  & 13\% \\
+    Boat  & 9\%   & 25\%  & 25\%  & 16\% \\
     Tank  & 0\%   & 25\%  & 25\%  & 66\% \\
-    Aircraft & 11\%   & 10\%  & 0\%   & 5\% \\
+    Aircraft & 18\%   & 0\%  & 0\%   & 5\% \\
     \bottomrule
     Total & 100\% & 100\% & 100\% & 100\% \\
     \end{tabular}%
@@ -1042,17 +1042,17 @@ From these historical evidence we first put the data into a 'statistics-machine'
           & \multicolumn{4}{c}{\textbf{Attack destination}} & \multicolumn{1}{c}{\textbf{}} \\
     \midrule
     \textbf{Communications method} & Dam & Port & Town & Airfield   & \textbf{Credibility} \\
-    Submarine & \color{red}{$[$80\%}  & \color{red}{50\%}  & \color{red}{50\%$]$}  & 13\%  & \textbf{93\%} \\
-    Boat  & 9\%   & \color{red}{$[$15\%}  & \color{red}{25\%}  & \color{red}{16\%$]$}  & \textbf{86\%} \\
+    Submarine & \color{red}{$[$73\%}  & \color{red}{50\%}  & \color{red}{50\%$]$}  & 13\%  & \textbf{93\%} \\
+    Boat  & \color{red}{$[$9\%}   & \color{red}{25\%}  & \color{red}{25\%}  & \color{red}{16\%$]$}  & \textbf{100\%} \\
     Tank  & 0\%   & 25\%  & 25\%  & \color{red}{$[$66\%$]$}  & \textbf{57\%} \\
-    Aircraft & 11\%   & \color{red}{$[$10\%$]$}  & 0\%   & 5\%   & \textbf{38\%} \\
+    Aircraft & 18\%   & 0\%  & 0\%   & 5\%   & \textbf{0\%} \\
     \bottomrule
-    \textbf{Coverage} & \textbf{80\%}  & \textbf{75\%}  & \textbf{75\%}  & \textbf{82\%} &  \\
+    \textbf{Coverage} & \textbf{82\%}  & \textbf{75\%}  & \textbf{75\%}  & \textbf{82\%} &  \\
     \end{tabular}%
   \caption{Classical confidence intervals calculated from data shown in table \ref{tab:Posterior_confidenceIntervalHistoric}. Confidence intervals greater than or equal to 75\% are indicated in red, surrounded by parentheses.}\label{tab:Posterior_confidenceIntervalClassical}%
 \end{table}%
 
-We next turn the dial to 'Bayesian credible intervals', and obtain the results shown in table \ref{tab:Posterior_confidenceIntervalBayesian} (see section \ref{sec:Posterior_appendixConfidenceInterval} for a full explanation). In this case, since the sum of interval values in each row exceeds 75\%, we have credible intervals. With these intervals, for each mode of communication, we will ensure that the true attack destination is contained within these destinations at least 75\% of the time.
+We next turn the dial to 'Bayesian credible intervals', and obtain the results shown in table \ref{tab:Posterior_confidenceIntervalBayesian} (see section \ref{sec:Posterior_appendixConfidenceInterval} for a full explanation). In this case, we are implicitly assuming that the choice of attack mode is a random variable, and that the enemy chooses amongst them uniformly\footnote{Which isn't unreasonable given that we know from experience that the enemy attacks each of these locations in similar proportions.}. In this case, since the sum of interval values in each row exceeds 75\%, we have credible intervals. With these intervals, for each mode of communication, we will ensure that the true attack destination is contained within these destinations at least 75\% of the time.
 
 \begin{table}[htbp]
   \centering
@@ -1061,22 +1061,72 @@ We next turn the dial to 'Bayesian credible intervals', and obtain the results s
           & \multicolumn{4}{c}{\textbf{Attack destination}} &  \\
     \midrule
     \textbf{Communication method} & Dam & Port & Town & Airfield   & \textbf{Credibility} \\
-    Submarine & \color{red}{$\left[$80\%}  & \color{red}{50\%}  & \color{red}{50\%$]$}  & 13\%  & \textbf{93}\% \\
-    Boat  & \color{red}{$[$9\%   & \color{red}{15\%}  & \color{red}{25\%$]$}  & 16\%  & \textbf{75}\% \\
-    Tank  & 0\%   & 25\%  & \color{red}{$[$25\%}  & \color{red}{66\%$]$}  & \textbf{78}\% \\
-    Aircraft & \color{red}{$[$11\%}   & \color{red}{10\%$]$}  & 0\%   & 5\%   &\textbf{ 81}\% \\
+    Submarine & \color{red}{$\left[$73\%}  & \color{red}{50\%}  & \color{red}{50\%$]$}  & 13\%  & \textbf{93}\% \\
+    Boat  & \color{red}{$[$9\%   & \color{red}{25\%}  & \color{red}{25\%$]$}  & 16\%  & \textbf{79}\% \\
+    Tank  & 0\%   & 25\%  & 25\%  & \color{red}{$\left[$\color{red}{66\%$]$}  & \textbf{78}\% \\
+    Aircraft & \color{red}{$[$18\%$]$}}   & 0\%  & 0\%   & 5\%   &\textbf{78\%} \\
     \bottomrule
     \textbf{Coverage} & \textbf{100\%}  & \textbf{75\%} &\textbf{ 100\%}  & \textbf{66\%}  &  \\
     \end{tabular}%
    \caption{Bayesian credible intervals calculated from data shown in table \ref{tab:Posterior_confidenceIntervalHistoric}. Credible intervals greater than or equal to 75\% are indicated in red, surrounded by parentheses. Note: 'credibility' is calculated by dividing the sum of interval values in each row by the row's total (see section \ref{sec:Posterior_appendixConfidenceInterval} for a full explanation.)}\label{tab:Posterior_confidenceIntervalBayesian}%
 \end{table}%
 
-The difference between these two measures is subtle. In fact, as is often the case, the intervals are actually similar, and overlap considerably. But which should we choose? Using the classical confidence intervals, we are assured that whatever mode of attack the enemy chooses, our interval will contain the true attack mode at least 75\% of the time. A Bayesian would criticise the confidence interval for the case of the \textit{Aircraft} communication method, since it only gets the correct destination correct 38\% of the time. This could potentially be costly if attacking communicated by this method are particularly devastating. A Frequentist would argue that for attacks on airfields, the Bayesian confidence intervals only correct this as the attack destination 66\% of the time. Again, if these types of attack are particularly costly, then this interval might not be ideal\footnote{If we were to assign costs to each of these attack events, then we could work out optimal intervals, although this is the realm of Bayesian Decision Theory; not covered in this text.}.
+The difference between these two measures is subtle. In fact, as is often the case, the intervals are actually similar, and overlap considerably. But which should we choose? Using the classical confidence intervals, we are assured that whatever mode of attack the enemy chooses, our interval will contain the true attack mode at least 75\% of the time. A Bayesian would criticise the confidence interval for the case of the \textit{Aircraft} communication method, since this is the empty interval! This clearly is nonsensical, since we know that one of the locations is about to be attacked. This error could be particularly costly if attacks coordinated via Aircraft are particularly costly. A Frequentist would argue that since, \textit{at most}, Aircraft communications happen 18\% of the time (for dams), this isn't something to worry about.
+
+A Bayesian would also criticise a classical confidence interval, since for a given communication mode, what is the use in worrying about all the other communication modes? We aren't uncertain about the communication mode!
+
+A Frequentist would argue that for attacks on airfields, the Bayesian confidence intervals only correctly predict this as the attack destination 66\% of the time. Again, if these types of attack are particularly costly, then this interval might not be ideal\footnote{If we were to assign costs to each of these attack events, then we could work out optimal intervals, although this is the realm of Bayesian Decision Theory; not covered in this text.}. A Bayesian would argue that, assuming a uniform prior, this type of attack only happens 25\% of the time, and so is not something to worry about. Further, for every mode of communication, our credible intervals are guaranteed to never be nonsense, in contrast to the classical confidence interval.
 
 
-\section{Prediction using a posterior distribution}
-\subsection{Before experiment, using prior}
-\subsection{After experiment, using posterior}
+\section{Prediction using predictive distributions}
+Parameters of a statistical distribution are typically only of interest insomuch as they influence \textit{real variables}, for which we collected data in the first place. Be it income levels, disease cases, or electoral votes; the data is what drove us to conduct a statistical analysis. As such, it is frequently useful to compare models (which may have very different statistical formulations) using this common currency, of \textit{data}.
+
+Before we have run our model, we only have our prior views of the likely values of parameters. It is often informative to convert from the currency of \textit{parameters}, to that of \textit{data}, in order to evaluate the tangible implications of the chosen priors\footnote{See chapter \ref{chap:Prior} for a much more in-detail discussion.}.
+
+Also, after we have fed our priors and likelihoods into the Bayesian formula, we are outputted with the posterior distribution for our parameters of interest. Fortunately, both of these are simple, due to the manipulable nature of probabilities.
+
+\subsection{Example: distributions and likelihoods directly line up easy}
+
+\subsection{Example: interest rate hedging}
+Suppose that you work as an analyst in an investment bank, focussing on predicting the actions of the central bank, so that your investments can be sufficiently hedged. The return of a certain investment, $x$, is probabilistically dictated by the rate of interest, and is also discrete; following a poisson distribution with rate parameter given by the chosen rate. Imagine that the current rate of interest is 1\%, and the bank sets rates at 0.5\% intervals; yielding a discrete distribution\footnote{The \textit{likelihood}.} of possible values: $i\in[0.5\%, 1.0\%, 1.5\%, 2.0\%, 2.5\%,3.0\% ]$; resulting in the likelihood shown in figure \ref{fig:Posterior_likelihoodInterestRate}.
+
+\begin{figure}
+\centering
+\scalebox{0.65} 
+{\includegraphics{Posterior_likelihoodInterestRate.pdf}}
+\caption{The likelihood of different rates of return across different central bank interest rates.}\label{fig:Posterior_likelihoodInterestRate}
+\end{figure}
+
+The pre-data-analysis probabilities that a group of economists within your company assign to each of these outcomes are shown in figure \ref{fig:Posterior_priorPosteriorInterestRate}. After combining these expert views with a probabilistic model, which looks at historical rate decisions, this results in the posterior distribution of probabilities shown in figure \ref{fig:Posterior_priorPosteriorInterestRate}; illustrating considerable discordance between the data's view, and those of your economist\footnote{This might indicate that your economist doesn't know his head from his hands, \textit{or} he believes there is reason to suggest that this rate decision will be different to those historically.}.
+
+\begin{figure}
+\centering
+\scalebox{0.45} 
+{\includegraphics{Posterior_priorPosteriorInterestRate.pdf}}
+\caption{The prior and posterior probabilities of different central ban interest rates.}\label{fig:Posterior_priorPosteriorInterestRate}
+\end{figure}
+
+From the prior distribution, $p(i)$, we would like to estimate the probability of particular rates of investment return. Mathematically, what we want is the marginal distribution of $x$ - $p(x)$. Fortunately, we know from section \ref{sec:Intro_marginal}, that we can get a marginal distribution from a joint distribution by summing (for a discrete parameter):
+
+\begin{equation}\label{eq:Posterior_priorPredictiveDistribution}
+\begin{align}
+p(x) &= \sum\limits_{i=0.5\%}^{3.0\%} p(x,i)\\
+&= \sum\limits_{i=0.5\%}^{3.0\%} p(x|i) p(i)
+\end{align}
+\end{equation}
+
+This distribution essentially weights each of the 
+
+\begin{figure}
+\centering
+\scalebox{0.65} 
+{\includegraphics{Posterior_priorPosteriorPredictiveInterestRate.pdf}}
+\caption{The prior and posterior predictive distributions for investment returns.}\label{fig:Posterior_priorPosteriorPredictiveInterestRate}
+\end{figure}
+
+Decide on graphs showing the construction of the prior predictive distribution.
+
+\subsection{Example: both continuous}
 
 \section{Model comparison using the posterior}
 \section{Model testing through the posterior}
@@ -1631,6 +1681,7 @@ Of course, in this example we would hope that by collecting more data, in this c
 \section{The explicit subjectivity of priors}
 Opponents of Bayesian approaches to inference criticise the subjectivity inherent with choice of prior. However, all analysis involves a degree of subjectivity, particularly in regard to choice of statistical model. This choice is often formulated implicitly as being \textit{objectively} correct, with little justification or discourse given to the underlying assumptions necessary to arrive there. The statement of a prior, necessary for any full description of a Bayesian analysis, is at least \textit{explicit}; leaving this aspect of the modelling subject to the same interrogation and academic examination to which any analysis should be subjected. A word that is often used by protagonists of Bayesian methods, is that it is \textit{honest} due to the \textit{explicit} statement of assumptions. The statement of pre-experimental biases actually forces the analyst to self-examine, and perhaps also leads to a decline in the temptation to manipulate the analysis to one's own ends.
 
+\section{Interpreting priors through prior predictive distributions}\label{sec:Priors_priorPredictiveDistribution}
 
 
 \section{Combining a prior and likelihood to form a posterior} 
