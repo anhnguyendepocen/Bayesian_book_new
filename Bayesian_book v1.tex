@@ -1085,10 +1085,40 @@ Before we have run our model, we only have our prior views of the likely values 
 
 Also, after we have fed our priors and likelihoods into the Bayesian formula, we are outputted with the posterior distribution for our parameters of interest. Fortunately, both of these are simple, due to the manipulable nature of probabilities.
 
-\subsection{Example: distributions and likelihoods directly line up easy}
+\subsection{Example: number of Republican voters within a sample}
+You find yourself working for a polling organisation, ahead of the next US Presidential election. Your job is to try to predict, out of a sample of 100 people, what will be the number voting for the Republican party. Based on previous work, you expect that the proportion of Republican voters in a sample, $\theta$, can be represented by the prior distribution, $p(\theta)$, shown in the top-left of figure \ref{fig:Posterior_priorPosteriorPredictiveVoting}. To evaluate the implications of this prior, we would like to know what this means in terms of number, $x$, of people out of our sample of 100, who will vote for the Republicans; in other words, the \textit{prior predictive distribution}. Fortunately, we can obtain this by manipulating probabilities, although we need to specify a likelihood function, $p(x|theta)$; in this case we pick a binomial distribution\footnote{The relevance and nice fit of this distribution is explained in full in chapter \ref{chap:Likelihoods}, so do not worry if you don't follow its use here.}. The prior predictive distribution here is essentially the marginal distribution of $x$, which we know from section \ref{sec:Intro_marginal} can be obtained by integrating\footnote{Since the parameter is continuous here.} out the dependence of the parameter $\theta$ from the joint distribution $p(x,\theta)$:
+
+\begin{equation}\label{eq:Posterior_priorPredictiveVoting}
+\begin{align}
+p(x) &= \int\limits_{0}^{1} p(x,\theta) \mathrm{d}\theta\\
+&= \int\limits_{0}^{1} p(x|\theta) p(\theta) \mathrm{d}\theta
+\end{align}
+\end{equation}
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Posterior_priorPosteriorPredictiveVoting.pdf}}
+\caption{Top-left: the prior proportion of people voting for the Republican party in a sample of 100, resulting in the prior predictive distribution shown in the bottom-left. Top-right: the posterior proportion of people voting Republican, resulting the bottom-right posterior predictive distribution.}\label{fig:Posterior_priorPosteriorPredictiveVoting}
+\end{figure}
+
+
+where to get to the second line from the first, we have used the conditional law of probability (\ref{eq:Intro_conditionalProbability}), to decompose the joint distribution into a conditional and prior. Notice that the prior predictive distribution is essentially a sum of the probability of $x$ conditional on $\theta$, weighted by our prior probability that we assign to that particular proportion of the sample voting Republican, $\theta$. In this case, this results in the intuitive result, where the prior density and the prior predictive distribution\label{This is predictably called a Beta-binomial distribution, since it is made from combining a Beta prior, with a Binomial likelihood. Don't worry though, we will discuss this in detail in chapter \ref{chap:conjugate}.} exactly line up (albeit on different scales).
+
+After our first sample of 100 people from that particular location, we find that 32 of them would vote Republican. We use this data to calculate our likelihood, then combine this with our prior via Bayes' rule; obtaining the posterior density shown in the top-right of figure \ref{fig:Posterior_priorPosteriorPredictiveVoting}. Our job is now to estimate the number of people who will vote republican in a new sample, of the same size. Ideally, we would like to have a probability distribution to describe all the possible outcomes. This distribution is known as the \textit{posterior predictive distribution}, because it is that which we would predict \textit{after} obtaining our data sample. It is written as $p(x'|x)$ where $x'$ represents the number of people voting Republican in the new sample, and $x$ is the number voting Republicans in the previous sample ($x=32$). We can use a method exactly analogous to that which we used previously, by integrating out $\theta$ dependence of the joint distribution of $x'$ and $\theta$, although now we have to condition on $x$:
+
+\begin{equation}\label{eq:Posterior_posteriorPredictiveVoting}
+\begin{align}
+p(x'|x) &= \int\limits_{0}^{1} p(x',\theta|x) \mathrm{d}\theta\\
+&= \int\limits_{0}^{1} p(x'|\theta,x) p(\theta|x) \mathrm{d}\theta\\
+&= \int\limits_{0}^{1} p(x'|\theta) p(\theta|x) \mathrm{d}\theta
+\end{align}
+\end{equation}
+
+Note that to get from the second line from the first, we have used the same conditional probability law  (\ref{eq:Intro_conditionalProbability}), as we used for the prior predictive case. The only difference here is that we are additionally conditioning on $x$. To get from the second to the third line we have used a typical assumption, which is that once $\theta$ is known, the likelihood for our new sample does not depend on the previous data $x$. Another way to think about this is that all the information in $x$ has been used to estimate $\theta$; meaning that it does not confer any further information which is helpful for predicting $x'$. Again, we note in figure \ref{fig:Posterior_priorPosteriorPredictiveVoting} how the posterior predictive distribution lines up exactly with the posterior distribution of $\theta$. This makes intuitive sense, since if we predict the most likely \textit{proportion} to vote Republicans is 0.32, we should expect that this will translate into the most likely \textit{number} of $0.32\times 100=32$, in a sample of 100.
 
 \subsection{Example: interest rate hedging}
-Suppose that you work as an analyst in an investment bank, focussing on predicting the actions of the central bank, so that your investments can be sufficiently hedged. The return of a certain investment, $x$, is probabilistically dictated by the rate of interest, and is also discrete; following a poisson distribution with rate parameter given by the chosen rate. Imagine that the current rate of interest is 1\%, and the bank sets rates at 0.5\% intervals; yielding a discrete distribution\footnote{The \textit{likelihood}.} of possible values: $i\in[0.5\%, 1.0\%, 1.5\%, 2.0\%, 2.5\%,3.0\% ]$; resulting in the likelihood shown in figure \ref{fig:Posterior_likelihoodInterestRate}.
+Suppose that you work as an analyst in an investment bank, focussing on predicting the actions of the central bank, so that your investments can be sufficiently hedged. The return of a certain investment, $x$, is probabilistically dictated by the rate of interest, and is also discrete; following a poisson distribution with rate parameter given by the chosen rate. Imagine that the current rate of interest is 1\%, and the bank sets rates at 0.5\% intervals; yielding a discrete distribution of possible values: $i\in[0.5\%, 1.0\%, 1.5\%, 2.0\%, 2.5\%,3.0\% ]$; resulting in the likelihood shown in figure \ref{fig:Posterior_likelihoodInterestRate}.
 
 \begin{figure}
 \centering
@@ -1097,7 +1127,7 @@ Suppose that you work as an analyst in an investment bank, focussing on predicti
 \caption{The likelihood of different rates of return across different central bank interest rates.}\label{fig:Posterior_likelihoodInterestRate}
 \end{figure}
 
-The pre-data-analysis probabilities that a group of economists within your company assign to each of these outcomes are shown in figure \ref{fig:Posterior_priorPosteriorInterestRate}. After combining these expert views with a probabilistic model, which looks at historical rate decisions, this results in the posterior distribution of probabilities shown in figure \ref{fig:Posterior_priorPosteriorInterestRate}; illustrating considerable discordance between the data's view, and those of your economist\footnote{This might indicate that your economist doesn't know his head from his hands, \textit{or} he believes there is reason to suggest that this rate decision will be different to those historically.}.
+The pre-data-analysis probabilities that your in-house economist gives to each different central bank rate are shown in figure \ref{fig:Posterior_priorPosteriorInterestRate}. After combining these expert views with a probabilistic model, which looks at historical rate decisions, this results in the posterior distribution of probabilities shown in figure \ref{fig:Posterior_priorPosteriorInterestRate}; illustrating considerable discordance between the data's view, and those of your economist\footnote{This might indicate that your economist doesn't know his head from his hands, \textit{or} he believes there is reason to suggest that this rate decision will be different to those historically.}.
 
 \begin{figure}
 \centering
@@ -1106,16 +1136,37 @@ The pre-data-analysis probabilities that a group of economists within your compa
 \caption{The prior and posterior probabilities of different central ban interest rates.}\label{fig:Posterior_priorPosteriorInterestRate}
 \end{figure}
 
-From the prior distribution, $p(i)$, we would like to estimate the probability of particular rates of investment return. Mathematically, what we want is the marginal distribution of $x$ - $p(x)$. Fortunately, we know from section \ref{sec:Intro_marginal}, that we can get a marginal distribution from a joint distribution by summing (for a discrete parameter):
+From the prior distribution, $p(i)$, we would like to estimate the probability of particular rates of investment return. Mathematically, what we want is the marginal distribution of investment return, $p(x)$. Fortunately, we know from section \ref{sec:Intro_marginal}, that we can get a marginal distribution from a joint distribution by summing (for a discrete parameter) across values of the parameter:
 
-\begin{equation}\label{eq:Posterior_priorPredictiveDistribution}
+\begin{equation}\label{eq:Posterior_InterestpriorPredictiveDistribution}
 \begin{align}
 p(x) &= \sum\limits_{i=0.5\%}^{3.0\%} p(x,i)\\
 &= \sum\limits_{i=0.5\%}^{3.0\%} p(x|i) p(i)
 \end{align}
 \end{equation}
 
-This distribution essentially weights each of the 
+This distribution essentially weights each of the conditional probabilities, $p(x|i)$, by its corresponding prior probability $p(i)$ (see the left-hand side of figure \ref{fig:Posterior_priorBuildInterestRate}), then sums them to yield the marginal probability of the data (see the right hand side of figure \ref{fig:Posterior_priorBuildInterestRate}).
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Posterior_priorBuildInterestRate.pdf}}
+\caption{Building the prior predictive distribution, as a sum of weighted conditional probabilities. Left: the weighted conditional probabilities (compare with figure \ref{fig:Posterior_likelihoodInterestRate}). Right: the cumulative weighted conditional probabilities, which converge on the prior predictive distribution.}\label{fig:Posterior_priorBuildInterestRate}
+\end{figure}
+
+To calculate the posterior predictive distribution, we proceed in an analogous way to the prior case. What we would like to obtain is $p(x'|x)$, where $x'$ indicates the predicted return on the investment, and $x$ represents the historical data that has been used to produce the posterior. We can again achieve this by summing out all $i$ dependence from the joint-conditional distribution $p(x',i|x)$:
+
+\begin{equation}
+\begin{align}
+p(x'|x) &= \sum\limits_{i=0.5\%}^{3.0\%} p(x',i|x)\\
+&= \sum\limits_{i=0.5\%}^{3.0\%} p(x'|i,x) p(i|x)\\
+&= \sum\limits_{i=0.5\%}^{3.0\%} p(x'|i) p(i|x)
+\end{align}
+\end{equation}
+
+Note that we have gone from the second line to the third line, because we suppose that, once $i$ is known, the likelihood is independent of past values of $x$, and thus $p(x'|i,x)=p(x'|i)$. Also, note the similarity between this derivation and that for the prior predictive distribution in \ref{eq:Posterior_InterestpriorPredictiveDistribution}; the only difference in both second lines, is that in the posterior case, everything is conditioned on the historical values of $x$. We suppose that the likelihood function remains constant, so that like the prior predictive distribution, the posterior predictive distribution is obtained by weighting each of the conditional probability lines $p(x'|i)$ by a probability - in this case, the posterior probability for that value of $i$. 
+
+The resultant prior and posterior distributions are shown in figure \ref{fig:Posterior_priorPosteriorPredictiveInterestRate}. We notice that the posterior predictive distribution is shifted rightwards, towards higher investment returns, because of the fact that the posterior expected interest rate is higher than for the prior case.
 
 \begin{figure}
 \centering
@@ -1123,10 +1174,6 @@ This distribution essentially weights each of the
 {\includegraphics{Posterior_priorPosteriorPredictiveInterestRate.pdf}}
 \caption{The prior and posterior predictive distributions for investment returns.}\label{fig:Posterior_priorPosteriorPredictiveInterestRate}
 \end{figure}
-
-Decide on graphs showing the construction of the prior predictive distribution.
-
-\subsection{Example: both continuous}
 
 \section{Model comparison using the posterior}
 \section{Model testing through the posterior}
