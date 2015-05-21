@@ -917,15 +917,23 @@ In the Bayesian lighthouse example, we started off with a fairly wide prior, sin
 Statistical inference is useful whenever there is uncertainty regarding a parameter of interest. Bayesians use the posterior distribution, and various summaries of it, in order to describe the degree of uncertainty regarding a parameter. Before we delve too deep though, it is useful to take a step back, and ask the somewhat philosophical question, 'Do parameters actually exist?' 
 
 \subsection{Do parameters actually exist and have a point value?}\label{sec:Posterior_parametersExist}
-For Bayesians, the parameters of the system are seen to vary, whereas the known part of the system - the data - is taken as given. Whereas Frequentist statisticians view the unseen part of the system - the parameters of the probability model - as being fixed, whereas the known parts of the system - the data - as varying. Whether you agree with one of these views more than the other mainly comes down to how you want to interpret the parameters of a given statistical model. 
+For Bayesians, the parameters of the system are taken to vary, whereas the known part of the system - the data - is taken as given. Whereas Frequentist statisticians view the unseen part of the system - the parameters of the probability model - as being fixed, whereas the known parts of the system - the data - as varying. Whether you agree with one of these views more than the other mainly comes down to how you want to interpret the parameters of a given statistical model. 
 
-The Bayesian perspective on parameters can be viewed as having a duality of meaning. Either we view the parameters as truly \textit{varying}, or we view our knowledge about the parameters as imperfect. The fact that we will get different estimates of parameters from different studies can be taken to reflect either of these two views. Either we view the parameters of interest as varying - taking on different values in each of the samples we pick. Alternatively, we can view our uncertainty over a parameter's value as the reason we will estimate slightly different values in different samples. Bayesians are more at ease with using parameters as a means to an end - taking them not as real immutable constants, but as tools from which to make inferences about a given situation.
+The Bayesian perspective on parameters can be viewed as having a duality of meaning. Either we view the parameters as truly \textit{varying}, or we view our knowledge about the parameters as imperfect. The fact that we will get different estimates of parameters from different studies can be taken to reflect either of these two views. Either we view the parameters of interest as varying - taking on different values in each of the samples we pick (see the bottom panel of figure \ref{fig:Posterior_manyWorldsDoParametersExist}). Alternatively, we can view our uncertainty over a parameter's value as the reason we will estimate slightly different values in different samples. This uncertainty is thought of as decreasing as we collect more data (see the middle panel of figure \ref{fig:Posterior_manyWorldsDoParametersExist}). Bayesians are more at ease with using parameters as a means to an end - taking them not as real immutable constants, but as tools from which to make inferences about a given situation.
 
-The Frequentist perspective is less flexible, and assumes that these parameters are constant; alternatively representing the average of a long run - typically infinite number - of identical experiments. There are occasions when we might think that this is a reasonable assumption. For example, if our parameter represented the proportion of the electorate that voted for the Democrat party in the last election, or the probability that an individual taken at random from the UK population will have dyslexia. In both these examples, it is reasonable to assume that there is a \textit{true}, or fixed \textit{population} value of the parameter of question. Whilst the Frequentist view might be reasonable here, the Bayesian view easily extends here to encompass these two situations by assuming that we are uncertain about the value of these fixed parameters before we measure them, and using a probability distribution to represent this lack of perfect knowledge. 
+The Frequentist perspective is less flexible, and assumes that these parameters are constant; alternatively representing the average of a long run - typically infinite number - of identical experiments. There are occasions when we might think that this is a reasonable assumption. For example, if our parameter represented the proportion of the electorate that voted for the Democrat party in the last election, or the probability that an individual taken at random from the UK population will have dyslexia. In both these examples, it is reasonable to assume that there is a \textit{true}, or fixed \textit{population} value of the parameter of question. Whilst the Frequentist view might be in some ways reasonable here, the Bayesian view easily extends here to encompass these two situations by assuming that we are uncertain about the value of these fixed parameters before we measure them, and using a probability distribution to represent this lack of perfect knowledge. 
 
 However, there are circumstances when the Frequentist view runs into trouble. When we are estimating parameters of an arbitrarily complicated distribution, we normally do not view them as actually existing. Unless you view the universe as being built from mathematical building blocks\footnote{See \cite{tegmark2014our} for an interesting argument for this hypothesis}, then it seems incorrect to assert that a given parameter has any deeper existence than that with which we endow it. The less restrictive Bayesian perspective here seems more reasonable.
 
-The Frequentist view of parameters as a limiting value of an average across an infinity of identically repeated experiments also runs into difficulty when we think about one-off events, such as the 2016 US Presidential Election result. Any parameter we wish to estimate about such an event cannot easily be existentially justified on these grounds, since elections cannot be rerun.
+The Frequentist view of parameters as a limiting value of an average across an infinity of identically repeated experiments (see the top panel of figure \ref{fig:Posterior_manyWorldsDoParametersExist}) also runs into difficulty when we think about one-off events, such as the 2016 US Presidential Election result. Any parameter we wish to estimate about such an event cannot easily be existentially justified on these grounds, since elections cannot be rerun.
+
+
+\begin{figure}
+\centering
+\scalebox{0.2} 
+{\includegraphics{Posterior_manyWorldsDoParametersExist.eps}}
+\caption{The Frequentist and Bayesian perspectives on parameters.}\label{fig:Posterior_manyWorldsDoParametersExist}
+\end{figure}
 
 \subsection{Failings of the Frequentist confidence interval}\label{sec:Posterior_classicalConfidenceInterval}
 A mainstay of the Frequentist estimation procedure is the \textit{confidence interval}. In empirical research we often see these intervals as stated for a given parameter (where for now we assume that the parameters are unknown and fixed). For example,
@@ -943,7 +951,7 @@ In the Frequentist paradigm we imagine that we are taking repeated samples from 
 \caption{The classical confidence interval. In each sample, we can calculate a 95\% confidence interval. Across repeated samples from a given population distribution, the classical confidence interval will contain the true parameter value 95\% of time.}\label{fig:Posterior_classicalConfidenceInterval}
 \end{figure}
 
-However, what is important to note here is that in reality, we only draw one sample from the population, and we have no way of knowing whether the confidence interval we calculate contains the true parameter value. This means that although 95\% of the time the confidence intervals we calculate will contain the true value of the parameter, 5\% of confidence intervals will be nonsense! 
+However, what is important to note here is that in reality, we only draw one sample from the population, and we have no way of knowing whether the confidence interval we calculate contains the true parameter value. This means that although 95\% of the time the confidence intervals we calculate will contain the true value of the parameter, and 5\% of confidence intervals will be nonsense! 
 
 In general, a confidence interval represents the uncertainty about the interval we obtained, rather than a statement of probability about the parameter of interest. The uncertainty is quantified in terms of all the samples we \textit{could}
 have taken, not only the one we have in our hands.
@@ -973,7 +981,7 @@ There are usually an infinite number of regions which satisfy this condition, as
 In order to reduce the number of credible intervals down to one, there are 'industry standards' that are followed in most applied research. We introduce two of the most frequently used metrics now.
 
 \subsubsection{Treasure hunting: The central posterior and highest density intervals}\label{sec:Posterior_CPI}\label{sec:Posterior_HDI}
-Imagine you (as a pirate) were told by a fortune-teller that treasure of \$1000 is buried somewhere along the seashore of an imagined island. Further, imagine that the mystic has gone to the trouble of using his past experience, and intuition, to arrive at a posterior density for the location of the treasure, along the x-axis seashore, that is shown in figure \ref{fig:Posterior_CPIvsHDI}, which is supposed to be divine. The cost to hire a digger to dig up 1km of coastline is \$100.
+Imagine you (as a pirate) were told by a fortune-teller that treasure of \$1000 is buried somewhere along the seashore of an imagined island. Further, imagine that the mystic has gone to the trouble of using their past experience, and intuition, to arrive at a posterior density for the location of the treasure, along the x-axis seashore, that is shown in figure \ref{fig:Posterior_CPIvsHDI}. The cost to hire a digger to dig up 1km of coastline is \$100.
 
 Suppose you want to find the gold with 95\% certainty, and maximise your profit in doing so\footnote{This is really a Bayesian Decision Theory question, where you are choosing an \textit{action}, which corresponds to an interval; specifying a constant cost function across the domain.}. In order to reach this level of confidence in plundering the gold, you have the choice of the two 95\% credible intervals shown in figure \ref{fig:Posterior_CPIvsHDI}: the left-hand \textit{central posterior interval}, and the right-hand \textit{highest density interval}.
 
@@ -1176,7 +1184,63 @@ The resultant prior and posterior distributions are shown in figure \ref{fig:Pos
 \end{figure}
 
 \section{Model comparison using the posterior}
+Suppose we have two competing models ($M1$ and $M2$) which we could use to explain a given dataset, and would like a way of evaluating their respective worth. The Bayesian framework can be used to incorporate the choice between two (or more) models, in a straightforward way. Suppose we denote a discrete parameter, $M\in[M1,M2]$, which indexes the choice of model. A way of gauging a model's performance is to calculate the probability of the model \textit{given} the data obtained, $p(M|data)$. Since we have introduced this new parameter $M$, we can use Bayes' rule to calculate this quantity:
+
+\begin{equation}\label{eq:Posterior_modelGivenDataProbability}
+p(M|data) = \frac{p(data|M) p(M)}{p(data)}
+\end{equation}
+
+Looking at (\ref{eq:Posterior_modelGivenDataProbability}) in detail, we examine the following quantities: $p(data|M)$, which represents what we, in the single model set-up, simply call $p(data)$; the $p(M)$ which represents our \textit{a priori} probability of each model being correct; and $p(data)$, which in this case represents the marginal probability of the model when we have summed out our dependence on the model choice:
+
+\begin{equation}
+\begin{align}
+p(data) &= \sum\limits_{M=M1}^{M2} p(data,M)\\
+&= \sum\limits_{M=M1}^{M2} p(data|M) p(M)\\
+&= p(data|M1) p(M1) + p(data|M2) p(M2)
+\end{align}
+\end{equation}
+
+We can then calculate the ratio of the probabilities of each model, given the data obtained:
+
+\begin{equation}\label{eq:Posterior_modelComparisonFull}
+\begin{align}
+\frac{p(M1|data)}{p(M2|data)} &= \frac{p(data|M1) p(M1)}{p(data|M2) p(M2)}\\
+&= \frac{p(data|M1)}{p(data|M1)} \times \frac{p(M1)}{p(M2)}\\
+&= BF \times \frac{p(M1)}{p(M2)}
+\end{align}
+\end{equation}
+
+If this ratio is greater than 1, then this test suggests that we should favour model 1, and vice versa if the ratio is less than 1. We have also defined a quantity, $BF$, called the \textit{Bayes Factor}:
+
+\begin{equation}\label{eq:Posterior_bayesFactorDefinition}
+BF = \frac{p(data|M1)}{p(data|M1)}
+\end{equation}
+
+This factor represents in a narrow sense, the strength of support of model 1, over model 2, provided by the data. Note that if our prior probabilities of each model are identical, $p(M1) = p(M2) = \frac{1}{2}$, then:
+
+\begin{equation}
+\frac{p(M1|data)}{p(M2|data)} = BF
+\end{equation}
+
+And the choice of model is determined solely through the Bayes Factor. 
+
+However, there is uncertainty over when is the BF enough to prefer one model over another. Whereas a BF of 100 may be enough to prefer a given model, how about 1.01? Jeffrey's scale (introduced in chapter \ref{chap:ModelFit}), is an arbitrary, albeit industry-standard, meter to determine when a given model should be preferred over another.
+
+I do importantly want to state here, that this is \textit{not} the correct way to choose between competing models. We will learn a much more nuanced, and reasonable way of choosing between models when we introduce the concept of \textit{Posterior Predictive Checks} in chapter \ref{chap:ModelFit}. That is not to say that these methods introduced above can't be used as additional evidence for or against a given model, it is just that they should not be used as \textit{sole}, or even \textit{primary}, method.
+
+\subsection{Example: epidemiologist comparison}
+Suppose you find yourself in the (bizarre) situation, where you would like to compare two epidemiologists in terms of their ability to predict the underlying proportion of individuals having colds. The first epidemiologist, named \textit{optimist}, gives his estimation of the proportion of individuals with colds via the (prior) distribution shown in figure . The second, named \textit{pessimist}, gives a slightly more conservative estimate of the underlying proportion of individuals with colds (also shown in figure ).
+
+
 \section{Model testing through the posterior}
+\subsection{Example: customer footfall}
+Suppose that your job at a consultancy is to try to develop a statistical model which describes the footfall of customers, into a particular store location, measured over hourly time intervals.
+
+Include Bayes factor calculation.
+
+
+
+
 \section{Appendix}
 \subsection{The interval ENIGMA - explained in full}\label{sec:Posterior_appendixConfidenceInterval}
 
@@ -2275,7 +2339,7 @@ This results in a joint prior for $(\mu,\sigma^2)$ shown in figure \ref{fig:Deno
 \begin{figure}
 \centering
 \scalebox{0.25} 
-{\includegraphics{Denominator_continuousTwoParameter3D.pdf}}\caption{The prior, likelihood, and posterior distributions for the mean and variance of IQ example described in section \ref{sec:Denominator_continuousTwoParameterIQ}.}}\label{fig:Denominator_continuousTwoParameter3D}
+{\includegraphics{Denominator_continuousTwoParameter3D.pdf}}\caption{The prior, likelihood, and posterior distributions for the mean and variance of IQ example described in section \ref{sec:Denominator_continuousTwoParameterIQ}.}\label{fig:Denominator_continuousTwoParameter3D}
 \end{figure}
 
 We imagine we only observe a sample of one individual, from which we would like to find the posterior distribution of the joint distribution of $(\mu,\sigma^2)=\boldsymbol{\theta}$. This is found by application of Bayes' rule:
@@ -2338,13 +2402,16 @@ This provides a little insight into the methodology of modern Bayesian methods, 
 
 \part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
 
-\chapter{Hierarchical models}\label{chap:hierarchicalModels}
 
 \part{Regression analysis and hierarchical models}
+\chapter{Hierarchical models}\label{chap:hierarchicalModels}
 \chapter{Hypothesis testing I: Classical Frequentist vs Bayesian approaches}
 
 \chapter{Evaluation of model fit}\label{chap:ModelFit}
 Formerly hypothesis testing II. Definitely use something similar to Kruscke's P67 example for choosing between models.
+
+
+
 
 \bibliographystyle{plain}
 \bibliography{Bayes}
