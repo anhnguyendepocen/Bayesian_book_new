@@ -1229,17 +1229,79 @@ However, there is uncertainty over when is the BF enough to prefer one model ove
 I do importantly want to state here, that this is \textit{not} the correct way to choose between competing models. We will learn a much more nuanced, and reasonable way of choosing between models when we introduce the concept of \textit{Posterior Predictive Checks} in chapter \ref{chap:ModelFit}. That is not to say that these methods introduced above can't be used as additional evidence for or against a given model, it is just that they should not be used as \textit{sole}, or even \textit{primary}, method.
 
 \subsection{Example: epidemiologist comparison}
-Suppose you find yourself in the (bizarre) situation, where you would like to compare two epidemiologists in terms of their ability to predict the underlying proportion of individuals having colds. The first epidemiologist, named \textit{optimist}, gives his estimation of the proportion of individuals with colds via the (prior) distribution shown in figure . The second, named \textit{pessimist}, gives a slightly more conservative estimate of the underlying proportion of individuals with colds (also shown in figure ).
+Suppose you find yourself in the (bizarre) situation, where you would like to compare two epidemiologists in terms of their ability to predict the underlying proportion of individuals having colds. The first epidemiologist, named \textit{optimist}, gives his estimation of the proportion of individuals with colds, $\theta$, via the (prior) distribution shown in figure \ref{fig:Posterior_bayesFactorFluEpidemiologist}. The second, named \textit{pessimist}, gives a slightly more conservative estimate of the underlying proportion of individuals with colds (also shown in figure \ref{fig:Posterior_bayesFactorFluEpidemiologist})\footnote{Here I have actually generated these priors by assuming, for the optimist, $\theta\sim Beta[3,40]$ and $\theta\sim Beta[4,15]$ for the optimist and pessimist respectively.}.
 
+The data we have is 10 samples of 100 people, where survey respondents have indicated whether or not they are currently suffering from a cold, $\boldsymbol{x} = \{22, 18, 18, 12, 16, 15, 21, 19, 14, 15\}$. 
 
-\section{Model testing through the posterior}
+We can then go through and calculate the $p(data|M)$ for each of the two different priors (see figure \ref{fig:Posterior_bayesFactorFluEpidemiologist} for a graphical depiction of this), by simply integrating the joint density with respect to $\theta$:
+
+\begin{equation}
+\begin{align}
+p(data) &= \int\limits_{0}^{1} p(data,\theta) \mathrm{d}\theta\\
+&= \int\limits_{0}^{1} p(data|\theta) p(\theta) \mathrm{d}\theta
+\end{align}
+\end{equation}
+
+where $p(data|\theta)$ is the likelihood function\footnote{Which here is taken to be a binomial density.}. Carrying out this integrand for each of the different priors results in the probabilities of data given in the bottom panel of figure \ref{fig:Posterior_bayesFactorFluEpidemiologist}. From this, we note two things: firstly both of the probabilities are very small. This is typical, and is unsurprising when you consider the vast array of possible outcomes that could have occurred. Secondly, we see that the probability of the data for the pessimist is higher than for the optimist. Indeed, we can calculate the Bayes factor via (\ref{eq:Posterior_bayesFactorDefinition}), and find here $BF \approx 6$ for the pessimist vs the optimist model; which, if we assign equal priors to each model, results in us favouring the pessimistic perspective.
+
+I should add that this use of Bayes factors is atypical; it is not usually used as a means of testing between differing priors. However, since this forms part of a model, we can test its support with the data like any other part.
+
+\begin{figure}
+\centering
+\scalebox{0.45} 
+{\includegraphics{Posterior_bayesFactorFluEpidemiologist.pdf}}
+\caption{Calculating the probability of the data for the two epidemiologists' opinions on colds.}\label{fig:Posterior_bayesFactorFluEpidemiologist}
+\end{figure}
+
 \subsection{Example: customer footfall}
-Suppose that your job at a consultancy is to try to develop a statistical model which describes the footfall of customers, into a particular store location, measured over hourly time intervals.
+Suppose that your job at a consultancy is to try to develop a statistical model which describes the footfall of customers into a particular store location at 1pm-2pm, over a span of 2 months. We have collected the data shown in the histogram in the left hand panel of figure \ref{fig:Posterior_modelComparisonFootfall}. 
 
-Include Bayes factor calculation.
+Firstly, we fit a poisson likelihood to the data, since we know that the data were collected over a fixed period of time, and we might initially posit that the entry of an individual into the store is independent of others' entry\footnote{See chapter \ref{chap:distributions} for a more complete examination of this distribution.}. However, we notice the point to the far right of the histogram. A poisson distribution is not reasonably able to cope with this degree of extremity, since it has a variance which is given by its mean - in this case this is estimated to be 10.5. For a small dataset, it seems hard to believe that a data point at 26, could have been generated from such a model\footnote{This would be more easily seen by posterior predictive checks.}.
+
+An alternative model, which allows for a variance which exceeds its mean is the negative binomial. This choice of distribution would make most sense if we believed that one consumers' entry into a store was not independent of another's. This would make sense if people tend to shop in groups, and if the shop is outside, with people tending to enter \textit{en masse} when it rains. The expense of this extra freedom, compared to the poisson, is that it is a two-parameter distribution, opposed to a single one.
+
+Again, we can go through and calculate the probability of the data in each case (see figure \ref{fig:Posterior_modelComparisonFootfall}), and then take the ratio to find $BF\approx 3$ for the negative binomial vs the poisson, which is unsurprising given the extreme observation. Here though, we might be tempted to \textit{a priori} favour the poisson, due to its relative parsimony; setting a prior for this model that more than accounted for its loss in explanatory power. This might mean that overall we end up using the poisson model, acknowledging its shortcomings in predicting extreme footfall. However this depends on the nature of these extreme events. If they account for a disproportionate part of sales, then it may be worth the extra flexibility of the negative binomial. If by contrast, the extreme footfall is often due to rain, where consumers simply enter to avoid getting wet, and fail to buy, we would perhaps not be so worried about the modelling of these events.
+
+\begin{figure}
+\centering
+\scalebox{0.45} 
+{\includegraphics{Posterior_modelComparisonFootfall.pdf}}
+\caption{Left: the footfall data. Right: the area under the curves represents the probability of the data from each of the two models.}\label{fig:Posterior_modelComparisonFootfall}
+\end{figure}
 
 
 
+\section{Model comparison through posterior predictive checks}
+The posterior is also the predominant means for testing the worth of a model, and comparing different models. The idea behind this method is that a reasonable model should be able to \textit{simulate} data which is in some correspondence with the \textit{real} data. 
+
+The idea behind this methodology is to simulate data, of the same dimension, and in the case of regression, with the same covariates, then compare this to the actual data. To go about simulating the data, we typically go through the following two steps:
+
+\begin{enumerate}
+\item Sample parameter values from the posterior: $\theta\sim p(\theta|x)$
+\item Use these parameters in the likelihood function, then use this distribution to sample new data: $x'\sim p(x'|\theta)$
+\end{enumerate}
+
+We shall see a full description of this methodology in chapter \ref{chap:ModelFit}, so I only mention it briefly as a sign of things to come, and illustrate its basic mechanism through the following example.
+
+\subsection{Example: stock returns}
+Suppose we are tasked with modelling the daily-stock returns for a particular company over a one year period (see the leftmost panel of figure \ref{fig:Posterior_PPCstockReturns}). 
+
+We firstly notice the symmetry of the returns, and reason that a normal likelihood may be a reasonable fit. We then use Bayes' rule, with appropriate priors (see chapter \ref{chap:conjugate} for a good guide as to appropriate priors for the parameters of a normal distribution), to calculate posteriors for the mean and variance of this distribution. We then use these posterior distributions, which are fairly narrow, to firstly sample the mean, and variance, then use a normal likelihood to simulate a number of samples of the same size as the original data. For each of the simulated series, we compare the histogram of returns to that of the actual dataset. A typical plot of this form is shown in the middle panel of figure \ref{fig:Posterior_PPCstockReturns}. We notice that the simulated data is a poor fit to the actual in a number of ways: it under-predicts the number of days with little stock movement; there are an over-abundance of days with moderate returns; and an under-weighting given to those days with more extreme stock movements. Overall, the dataset is not well represented by our model.
+
+Instead of throwing in the towel, we decide to go for a distribution with fatter tails, which allows a greater degree of flexibility than that of a normal - a student's t distribution. We then go through the rigmarole of setting priors on its three parameters, and finally use Bayes' rule to find the posteriors of these. We then use the posterior distributions to sample these parameters, and then a t-likelihood to simulate the data a number of times. What we now typically see is a better fit (see the rightmost panel of figure \ref{fig:Posterior_PPCstockReturns}), with a similar abundance of observations near zero, and a similar distribution of extreme daily movements.
+
+Whilst these visual checks may become cumbersome with more complex data series, it is always a good idea to at least start with them, since the eyes can often be less misleading that, for example, p-values. However, we postpone a more complete discussion of posterior predictive checks until chapter \ref{chap:ModelFit}.
+
+\begin{figure}
+\centering
+\scalebox{0.35} 
+{\includegraphics{Posterior_PPCstockReturns.pdf}}
+\caption{Left: the actual data. Middle: actual returns vs normal-simulated returns. Right: actual returns vs t-distribution-simulated returns.}\label{fig:Posterior_PPCstockReturns}
+\end{figure}
+
+
+\section{Chapter summary}
+In this chapter we have seen how the posterior distribution can be used to produce summaries of parameters. In particular, we have used these distributions to produce Bayesian credible intervals. We then compared and contrasted these with the classically-equivalent confidence interval, and have reasoned that in many cases the Bayesian formulation is more straightforward and intuitive than the former. We then move from the realm of the parameter, to that of the data, in order to produce prior and posterior data probabilities; which can be used to sense-check the implications of statistical models. We finally discussed methods of model comparison, introducing firstly the Bayes Factor method, followed by a short introduction to posterior predictive checks. Although the former method is common in the literature, we advocated the more nuanced approach of posterior predictive checks, albeit postponing more in-depth discussion until chapter \ref{chap:ModelFit}. Now that we have seen the utility of posterior probability distributions, we need to know how we can obtain them via Bayes' rule. In order to use the latter, we need to understand its constituent parts: the likelihood, prior and denominator. It is these three parts to which I devote the rest of the first part of this book.
 
 \section{Appendix}
 \subsection{The interval ENIGMA - explained in full}\label{sec:Posterior_appendixConfidenceInterval}
@@ -2389,7 +2451,7 @@ In (\ref{eq:Denominator_proportional}) we have arrived at the second line due to
 This provides a little insight into the methodology of modern Bayesian methods, although we will cover this in more depth in Part \ref{part:computationalBayes}. 
 
 \section{Chapter summary}
-
+This chapter should have introduced you to the different interpretations of the denominator of Bayes' rule; firstly as a nuisance normalising factor; secondly as a probability of the data. We then discussed the difficulty that the denominator poses for Bayesians. Fortunately, this problem can be side-stepped via use of conjugate priors (see chapter \ref{chap:conjugate}), although this is often extremely limiting for all but the most simple of data processes. We then reasoned that since the curvature of the posterior is solely determined by the numerator of Bayes' rule - the prior multiplied by the likelihood - we can learn much of the posterior from this quantity. In particular modern computational methods use the numerator of Bayes' rule, to generate samples from the posterior distribution. These can then be used to summarise the posterior distribution, as well as for any of the uses of posterior distributions described in chapter \ref{chap:posterior}. Before we introduce computational methods in full in part \ref{part:computationalBayes}, we firstly must understand the multitude of distributions which we have in our arsenal. We then discuss how conjugate priors can be used to analytically derive posteriors, which can be useful before moving to approximate computational methods.
 
 \section{Appendix}\label{sec:Denominator_appendix}
 
