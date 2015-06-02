@@ -1111,7 +1111,7 @@ p(x) &= \int\limits_{0}^{1} p(x,\theta) \mathrm{d}\theta\\
 \end{figure}
 
 
-where to get to the second line from the first, we have used the conditional law of probability (\ref{eq:Intro_conditionalProbability}), to decompose the joint distribution into a conditional and prior. Notice that the prior predictive distribution is essentially a sum of the probability of $x$ conditional on $\theta$, weighted by our prior probability that we assign to that particular proportion of the sample voting Republican, $\theta$. In this case, this results in the intuitive result, where the prior density and the prior predictive distribution\label{This is predictably called a Beta-binomial distribution, since it is made from combining a Beta prior, with a Binomial likelihood. Don't worry though, we will discuss this in detail in chapter \ref{chap:conjugate}.} exactly line up (albeit on different scales).
+where to get to the second line from the first, we have used the conditional law of probability (\ref{eq:Intro_conditionalProbability}), to decompose the joint distribution into a conditional and prior. Notice that the prior predictive distribution is essentially a sum of the probability of $x$ conditional on $\theta$, weighted by our prior probability that we assign to that particular proportion of the sample voting Republican, $\theta$. In this case, this results in the intuitive result, where the prior density and the prior predictive distribution\footnote{This is predictably called a Beta-binomial distribution, since it is made from combining a Beta prior, with a Binomial likelihood. Don't worry though, we will discuss this in detail in chapter \ref{chap:conjugate}.} exactly line up (albeit on different scales).
 
 After our first sample of 100 people from that particular location, we find that 32 of them would vote Republican. We use this data to calculate our likelihood, then combine this with our prior via Bayes' rule; obtaining the posterior density shown in the top-right of figure \ref{fig:Posterior_priorPosteriorPredictiveVoting}. Our job is now to estimate the number of people who will vote republican in a new sample, of the same size. Ideally, we would like to have a probability distribution to describe all the possible outcomes. This distribution is known as the \textit{posterior predictive distribution}, because it is that which we would predict \textit{after} obtaining our data sample. It is written as $p(x'|x)$ where $x'$ represents the number of people voting Republican in the new sample, and $x$ is the number voting Republicans in the previous sample ($x=32$). We can use a method exactly analogous to that which we used previously, by integrating out $\theta$ dependence of the joint distribution of $x'$ and $\theta$, although now we have to condition on $x$:
 
@@ -1668,6 +1668,9 @@ P(X_1=\alpha_1,X_2 =\alpha_2,...,X_N=\alpha_N|\mu,\sigma^2) = \prod\limits_{i=1}
 
 
 We could then use (\ref{eq:Likelihood_normalN}) to calculate the probability of obtaining a given sample of observations as extreme as the values obtained, again by integrating. However, here it would be slightly more complicated than that of (\ref{eq:Likelihood_normalSampleOne}) since we would have to integrate across all individuals' variables.
+
+\section{Exchangeability vs random sampling}
+
 
 \section{The subjectivity of model choice}
 It is hoped that the analysis in the preceding sections has given us a taste of how we can go about specifying a likelihood for a hitherto unknown circumstance. We start by writing down the behaviours that we want to emulate, then make simplifying assumptions, which we then use to look for an appropriate model in the literature. This model is then used to test the validity of the assumptions with the sample data. If the model struggles to explain the data, then we should go back and iteratively modify, then test our model, until it adequately explains the range of behaviours.
@@ -2457,6 +2460,140 @@ This chapter should have introduced you to the different interpretations of the 
 
 \part{Analytic Bayesian methods}\label{part:analyticalBayes}
 \chapter{An introduction to distributions for the mathematically-un-inclined}\label{chap:distributions}
+\section{Chapter mission statement}
+\section{Chapter goals}
+
+\section{Sampling distributions for likelihoods}
+\subsubsection{Bernoulli}\label{sec:Distributions_bernoulli}
+
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate}
+\item A single trial.
+\item \textit{Only} two trial outcomes: \textit{success} and failure\footnote{These do not need to literally represent successes and failures, but this shorthand is typically used, and we adopt it here.}
+\end{enumerate}
+
+Example uses: outcome of flipping a coin, a single clinical trial, or a presidential election!
+
+Imagine you are interested in the outcome of a single horse race. For added simplicity, we suppose that we only care whether the horse wins, or loses; forgetting about its position if it doesn't win. In this framework, we formalise the outcomes of the race by creating a mathematical object - a \textit{random variable} - which associates a numerical value with each of the outcomes, $X$:
+
+\begin{equation}
+X =
+\begin{cases}
+O & , horse\; wins \\
+1 & , horse\; loses
+\end{cases}
+\end{equation}
+
+In this set-up it makes sense to model the outcome of a single race as being influenced by a background probability of success, $0\leq\theta\leq 1$. We don't actually witness this probability, and after the discussion in chapter \ref{chap:subjectiveFrequentistBayes}, we aren't sure it \textit{really} exists. In the Frequentist paradigm t$\theta$ represents the proportion of races\footnote{Really identical races, but who's counting?} that the horse has won historically\footnote{And will win in total if we were to continue re-racing forever.}. Whereas to Bayesians, $\theta$ merely gauges our subjective confidence in the event of the horse winning\footnote{If any of this is news to you, then have a re-read of section \ref{sec:Intro_FrequentistsWorld}.}.
+
+Now that we have a model, we can work out the probability of the two distinct possible outcomes. The probability that the horse wins is straightforwardly $p(win)=\theta$; meaning the probability of a loss \textit{must}\footnote{It \textit{must} be given by $1-\theta$, so that the Bernoulli distribution sums to 1, and hence is a valid probability density.} be given by $p(loss)=1-\theta$.
+
+We now are in a position to work out the likelihood of a given outcome. Remember that a likelihood is \textit{not} a valid probability density, and is found by holding the \textit{outcome}, or in other words \textit{data}, constant, whilst varying the parameters. Suppose that the horse has had a good meal of carrots this morning, and goes on to win by a country mile. We know that the likelihood of this event is given by $l(\theta|X=1)=p(X=1|\theta)=\theta$ (see the red line in figure \ref{fig:Distributions_bernoulliHorseRace}).
+
+Alternatively, if our horse spent the night in the midst of night-mares\footnote{Get it? Sorry, that is terrible.}, and went on to lose, then the likelihood is given by $l(\theta|X=1)=1-\theta$ (see the red line in figure \ref{fig:Distributions_bernoulliHorseRace}).
+
+As you can see, in this situation, the maximum likelihood estimates in each case are given by $\hat{\theta}=1$, and $\hat{\theta}=0$, if the horse wins or loses respectively.
+
+We can actually write down a single expression that yields the likelihood/probabilities\footnote{Dependent on whether we vary the parameter or data respectively.} for both potentialities:
+
+\begin{equation}\label{eq:Distributions_binomialDefinition}
+p(X|\theta) = \theta^X (1-\theta)^{1-X}
+\end{equation}
+
+This distribution is known as the \textit{Bernoulli}, after the Swiss mathematician Jacob Bernoulli who first probed this much-discussed distribution.
+
+It is rare in life to come up against one-off events, and we typically have data for a number of races historically.  However, this discussion has given us the necessary grounding to make the step to the next distribution in up the rung, the \textit{binomial}, which is perfect for this more realistic setting.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_bernoulliHorseRace.pdf}}
+\caption{Bernoulli likelihoods for the event that the horse wins (red), and loses (blue). The maximum likelihood estimates are shown as dotted lines for each of the cases.}\label{fig:Distributions_bernoulliHorseRace}
+\end{figure}
+
+\subsubsection{Binomial}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate}
+\item Multiple trials.
+\item Each trial has only two outcomes (see the Bernoulli): we for lack of better words, deem these \textit{successes} and \textit{failures}.
+\item Individual outcome probabilities are not determined by any other factor that varies across individuals for which we have data.
+\item Probability of success is same in each trial.
+\item Overall data we measure is the aggregate number of successes. 
+\item Trials are independent\footnote{Knowing the outcome of a single trial would not influence our opinion as to the likelihood of another trial's result, apart from any information it provides on $\theta$. To be absolutely correct we should really say that the data are \textit{conditionally}-independent.}.
+\end{enumerate}
+
+Example uses: clinical drug trials, Democrat voters exiting a poll station, or the number of mosquito bites over the course of a day.
+
+Now we jump immediately to a much more practically-relevant case where we have data on the outcome of a number of horse races, Republican votes, or in this case, we shall imagine we are examining the outcome of a clinical trial of a new flu drug. We have a sample of 10 willing students, who have chosen to take the pain of a sweaty week in pyjamas, for the betterment of humanity. At the week's start, the students are infected with the virus via an injection. At the end of the week, the consulting physician records the number of volunteers that still show flu symptoms, and those that do not. In order to build a model, we need some assumptions. Firstly, we assume that the students' data are exchangeable\footnote{In this example, this really means that the students constitute a \textit{random sample}; meaning the data are independent and identically-distributed.}. This might be violated if we knew that some of the volunteers have asthma, and are likely not to be so rapidly cured by the wonder drug. We also create a random variable $X$ which represents the outcome of the trial for a single volunteer, which takes the value 1 if the trial is successful, in other words the volunteer is no longer symptomatic, and 0 if not.
+
+However, we have data on the success of the trials for all 10 of our volunteers. Here, it makes sense to create another helper random variable, $0\leq Z\leq 10$, which measures the aggregate outcome of the trial:
+
+\begin{equation}
+Z = \sum\limits_{i=1}^{10} X_i
+\end{equation}
+
+Carrying out the trial we find that 5 volunteers successfully recovered from the virus of the week. We reason that the following outcomes \textit{could} have lead to this aggregate result: $\boldsymbol{X} = \{1,1,1,1,1,0,0,0,0,0\}$; meaning the arbitrarily-chosen first 5 volunteers happened to react well to the treatment. Feeling satisfied we present our results to the pharma company executives who developed the drug in the first place. They look slightly perturbed, and say that $\boldsymbol{X} = \{1,0,1,0,1,0,1,0,1,0\}$ would also have been possible. Realising our mistake, we counter with the argument that it is also possible that the latter 5 volunteers were the ones who recovered. This back-and-forth continues, until you realise that there is a unifying mathematical formula that can cover any situation - the binomial nCr formula\footnote{See section \ref{sec:Likelihood_diseaseGroup} for a more complete discussion.}. You reason that there are possibly ${10 \choose 5}=252$  possible overall combinations of results with the same aggregate outcome!
+
+With this realisation you make the next step; writing down the likelihood. Since we have supposed that the observations are \textit{independent}, we are able to calculate the overall probability by multiplying together the individual probabilities, taking into account the 252 possible combinations:
+
+\begin{equation}
+\begin{align}
+p(Z=5|\theta) &= 252\times p(X_1=1|\theta) ... p(X_5=1|\theta) p(X_6=0|\theta) ... p(X_10=0|\theta)\\
+&= 252\times \theta^5 (1-\theta)^5
+\end{align}
+\end{equation}
+
+We can graph this likelihood as a function of $\theta$ (see the blue line of figure \ref{fig:Distributions_binomialClinicalTrial}), and note that the maximum likelihood estimator of the parameter occurs at the intuitive result of $\theta=\frac{1}{2}$.
+
+If we were less lucky and only found 2 patients recovered, then we see that the likelihood is shifted leftwards; peaking now at $\theta=\frac{1}{5}$ (see the red line of figure \ref{fig:Distributions_binomialClinicalTrial}). By contrast if our patients respond well, and 9 out of 10 recover in the week period, then the likelihood shifts right (see the grey line of figure \ref{fig:Distributions_binomialClinicalTrial}).
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_binomialClinicalTrial.pdf}}
+\caption{Binomial likelihoods for the event that 5 (blue), 2 (red), and 9 (grey) volunteers recovered in the week period. The maximum likelihood estimates are shown as dotted lines for each of the cases.}\label{fig:Distributions_binomialClinicalTrial}
+\end{figure}
+
+As for the Bernoulli case, we would like a compact way of writing down the likelihood to cover any eventuality. We now suppose that the number of volunteers is mysteriously given by $n$, the probability of individual treatment success is $\theta$, and $k$ cases turn out to be successes:
+
+\begin{equation}\label{eq:Distributions_binomialDef}
+p(Z=k|n,\theta) = {n \choose k} \theta^{k} (1-\theta)^{n-k}
+\end{equation}
+
+This distribution is known as the Binomial distribution.
+
+
+\subsubsection{Normal}
+\subsubsection{Poisson}
+\subsubsection{Negative binomial}
+\subsubsection{Logistic}
+
+\section{Prior distributions}
+\subsubsection{Distributions for probabilities, proportions and percentages}
+\subsubsection{Uniform}
+\subsubsection{Beta}
+\subsubsection{Dirichlet}
+
+\section{Table of distributions, their uses, and reasonable priors}
+
+\subsection{Distributions for means and medians}
+\subsubsection{Normal}
+\subsubsection{Student t}
+
+\subsection{Distributions for variances, and shape parameters}
+\subsubsection{Gamma}
+\subsubsection{Half-Cauchy}
+\subsubsection{Inverse Gamma}
+\subsubsection{Inverse \chi^2}
+\subsection{Multinomial - or other regression}
+\subsection{Wishart}
+
+\subsection{Distributions for categories}
+\subsubsection{Categorical}
+\section{Chapter summary}
+
 
 \chapter{Conjugate priors and their place in Bayesian analysis}\label{chap:conjugate}
 
