@@ -1069,10 +1069,10 @@ We next turn the dial to 'Bayesian credible intervals', and obtain the results s
           & \multicolumn{4}{c}{\textbf{Attack destination}} &  \\
     \midrule
     \textbf{Communication method} & Dam & Port & Town & Airfield   & \textbf{Credibility} \\
-    Submarine & \color{red}{$\left[$73\%}  & \color{red}{50\%}  & \color{red}{50\%$]$}  & 13\%  & \textbf{93}\% \\
-    Boat  & \color{red}{$[$9\%   & \color{red}{25\%}  & \color{red}{25\%$]$}  & 16\%  & \textbf{79}\% \\
-    Tank  & 0\%   & 25\%  & 25\%  & \color{red}{$\left[$\color{red}{66\%$]$}  & \textbf{78}\% \\
-    Aircraft & \color{red}{$[$18\%$]$}}   & 0\%  & 0\%   & 5\%   &\textbf{78\%} \\
+    Submarine & \color{red}{$[$73\%}  & \color{red}{50\%}  & \color{red}{50\%$]$}  & 13\%  & \textbf{93}\% \\
+    Boat  & \color{red}{$[$9\%}   & \color{red}{25\%}  & \color{red}{25\%$]$}  & 16\%  & \textbf{79}\% \\
+    Tank  & 0\%   & 25\%  & 25\%  & \color{red}{$[$66\%$]$}  & \textbf{78}\% \\
+    Aircraft & \color{red}{$[$18\%$]$}   & 0\%  & 0\%   & 5\%   &\textbf{78\%} \\
     \bottomrule
     \textbf{Coverage} & \textbf{100\%}  & \textbf{75\%} &\textbf{ 100\%}  & \textbf{66\%}  &  \\
     \end{tabular}%
@@ -1318,7 +1318,7 @@ At the end of this chapter a reader will know how to go about selecting a likeli
 Insert a graphic with the likelihood part of Bayes' formula circled, as in the equation shown below for the part highlighted in blue.
 
 \begin{equation}
-P(\theta|data) = \frac{{\color{blue}P(data|\theta)}\times P(\theta)}{P(data)}
+p(\theta|data) = \frac{{\color{blue}p(data|\theta)}\times p(\theta)}{p(data)}
 \end{equation}\label{eq:Likelihood_BayesHighlighted}
 
 \section{Chapter goals}
@@ -1328,16 +1328,16 @@ The starting point of the right hand side of the Bayesian formula is the likelih
 In all statistical inference, we use an idealised, simplified, model to try to mimic relationships between real variables of interest. This model is then used to test hypotheses about the nature of the relationships between these variables. In Bayesian statistics the evidence for a particular hypothesis is summarised in posterior probability distributions. Bayes' magic rule tells us how we can compute this posterior probability distribution for a given parameter within a model, $\theta$:
 
 \begin{equation}
-P(\theta|data) = \frac{P(data|\theta)\times P(\theta)}{P(data)}
+p(\theta|data) = \frac{p(data|\theta)\times p(\theta)}{p(data)}
 \end{equation}\label{eq:Likelihood_Bayes}
 
-The first step to understanding this formula (so that we can ultimately use it!) is to understand what is meant by the numerator term, $P(data|\theta)$, which Bayesians call a Likelihood! Firstly, it's important to say that what we really mean by the numerator is:
+The first step to understanding this formula (so that we can ultimately use it!) is to understand what is meant by the numerator term, $p(data|\theta)$, which Bayesians call a \textit{Likelihood}. Firstly, it's important to say that what we really mean by the numerator is:
 
 \begin{equation}
-P(data|\theta) = Probability(data|\theta,Model \; Choice)
+p(data|\theta) = Probability(data|\theta,Model \; Choice)
 \end{equation}\label{eq:Likelihood_simple}
 
-What (\ref{eq:Likelihood_simple}) means is, what is the probability that we would have obtained the 'data', given (this is represented by the $|$ symbol) a particular value of $\theta$ and a particular choice of model. In other words, if our statistical model were true, and the value of the model's parameter were $\theta$, (\ref{eq:Likelihood_simple}) tells us the probability that we would have obtained our data. 
+(\ref{eq:Likelihood_simple}) represents the probability that we would have obtained the 'data', given (this is represented by the $|$ symbol) a particular value of $\theta$ and a particular choice of model. In other words, if our statistical model were true, and the value of the model's parameter were $\theta$, (\ref{eq:Likelihood_simple}) tells us the probability that we would have obtained our data. 
 
 But what does this mean in simple, everyday language? Imagine that we flip a \textit{fair} coin. The most simple statistical model for coin flipping we can pick is to disregard the angle it was thrown at, as well as its height above the surface, along with any other details, and just pick the probability of the coin coming heads to be $\theta=\frac{1}{2}$. Furthermore, if a coin is thrown twice, we might choose to model the situation by assuming that the throwing technique is sufficiently similar between the two throws such that we can model each throw as independently having a probability of $\frac{1}{2}$. It's important to note that it is an assumption to forget about the throwing angle, as well as height of throw for each throw, and this forms part of our model of the situation. 
 
@@ -1345,20 +1345,20 @@ We can use our simple model\footnote{Albeit in practicality, this is a pretty re
 
 \begin{equation}
 \begin{align}
-P(HH|\theta,Model) &= P(H|\theta,Model)\times P(H|\theta,Model)\\
+Pr(HH|\theta,Model) &= Pr(H|\theta,Model)\times Pr(H|\theta,Model)\\
 &= \theta \times \theta = \theta^2\\ 
 &= \frac{1}{2}\times \frac{1}{2} = \frac{1}{4}
 \end{align}
 \end{equation}\label{eq:Likelihood_fairCoin}
 
-The last row of (\ref{eq:Likelihood_fairCoin}) is obtained by assuming the probability of a head, $theta=\frac{1}{2}$. If we continue to use this \textit{same} value of $theta$, we can calculate the corresponding probabilities for all outcomes of throwing the coin twice. The most heads that can show up is 2, and the least being zero (if both flips come up tails). Figure \ref{fig:Likelihood_fairCoin} displays the probabilities for this model of the situation. The most likely number of heads to occur is 1, since this can occur in two different ways - either the first coin comes up heads, and the second is tails, or vice versa - whereas the other possibilities (all heads, or no heads) can each only occur in one way. However, the important thing to note about figure \ref{fig:Likelihood_fairCoin} isn't the individual probabilities, it is that it is a \textit{valid} probability distribution, because:
+The last row of (\ref{eq:Likelihood_fairCoin}) is obtained by assuming the probability of a head, $\theta=\frac{1}{2}$. If we continue to use this \textit{same} value of $\theta$, we can calculate the corresponding probabilities for all outcomes of throwing the coin twice. The most heads that can show up is 2, and the least being zero (if both flips come up tails). Figure \ref{fig:Likelihood_fairCoin} displays the probabilities for this model of the situation. The most likely number of heads to occur is 1, since this can occur in two different ways - either the first coin comes up heads, and the second is tails, or vice versa - whereas the other possibilities (all heads, or no heads) can each only occur in one way. However, the important thing to note about figure \ref{fig:Likelihood_fairCoin} isn't the individual probabilities, it is that it is a \textit{valid} probability distribution\footnote{See section \ref{sec:Intro_validProbabilityDistribution} for a refresher if you are unsure what is meant by a valid probability distribution.}, because:
 
 \begin{itemize}
 \item The individual event probabilities are all non-negative.
 \item The sum of the individual probabilities is 1.
 \end{itemize}
 
-So it appears when we assume a particular value of $theta$, and vary the data (in this case the number of heads obtained), the collection of resultant probabilities form a probability distribution. So, why do Bayesians call $P(data|\theta)$ a 'likelihood', and eschew the name 'probability'?
+So it appears when we assume a particular value of $\theta$, and vary the data (in this case the number of heads obtained), the collection of resultant probabilities form a probability distribution. So, why do Bayesians call $p(data|\theta)$ a 'likelihood', and eschew the name 'probability'?
 
 \begin{figure}
 \centering
@@ -1368,9 +1368,20 @@ So it appears when we assume a particular value of $theta$, and vary the data (i
 \end{figure}
 
 \section{Why use 'likelihood' rather than 'probability'?}
-When we hold the parameters of our model fixed, as when we held the probability of an individual throw turning up heads, $\theta=\frac{1}{2}$, we've reasoned that the first term of the numerator of Bayes' rule in (\ref{eq:Likelihood_Bayes}) is a probability. So why don't we just keep calling it that, instead of renaming it a 'likelihood'? 
+When we hold the parameters of our model fixed, as when we held the probability of an individual throw turning up heads, $\theta=\frac{1}{2}$, we've reasoned that the first term of the numerator of Bayes' rule in (\ref{eq:Likelihood_Bayes}) is a probability. So why don't we just keep calling it that, instead of renaming it a \textit{likelihood}? 
 
-The reason is that in Bayesian inference, we \textit{don't} keep the parameters of our model fixed! In Bayesian analysis, it is the \textit{data} that is fixed, the parameters that vary. This is because a posterior distribution shows the probability a parameter in a model lies in a particular range, assuming that we have obtained our particular data sample. For the case of a coin, where we don't know the probability of a head beforehand, what we hope to get out is a probability distribution of the kind shown in figure \ref{fig:Likelihood_posteriorExample}, where the x-axis is the value of $\theta$. In order to get $P(\theta|data)$ however, we must calculate $P(data|\theta)$ from the numerator of Bayes' rule in (\ref{eq:Likelihood_Bayes}) for each \textit{possible} value of $theta$. If we assume we obtained two heads, and vary $\theta$ between 0 and 1, we can obtain the likelihood shown in figure \ref{fig:Likelihood_coinLikelihood}. On first glances it appears that \ref{fig:Likelihood_coinLikelihood} could be a probability distribution, but first looks can be deceiving. 
+The reason is that in Bayesian inference, we \textit{don't} keep the parameters of our model fixed! In Bayesian analysis, it is the \textit{data} that is fixed, and the parameters that vary. This is because a posterior distribution shows the probability a parameter in a model lies in a particular range, assuming that we have obtained our particular data sample. For the case of a coin, where we don't know the probability of a head beforehand, what we hope to get out is a probability distribution of the kind shown in figure \ref{fig:Likelihood_posteriorExample}, where the x-axis is the value of $\theta$. In order to get $p(\theta|data)$ however, we must calculate $p(data|\theta)$ from the numerator of Bayes' rule in (\ref{eq:Likelihood_Bayes}) for each \textit{possible} value of $\theta$. If we assume we obtained one head and one tail, then we can calculate the probability of this occurring for a fixed $\theta$:
+
+\begin{equation}
+\begin{align}
+Pr(HT|\theta) + Pr(TH|\theta) &= \theta(1-\theta) + \theta(1-\theta)
+&= 2\theta(1-\theta)
+\end{align}
+\end{equation}
+
+Since we are unsure as to the 'correct' value of $\theta$, we can graph this expression as a function of this parameter, to try to understand which values of the parameter are more or less likely, given our data (see figure \ref{fig:Likelihood_coinLikelihood}).
+
+On first glances it appears that \ref{fig:Likelihood_coinLikelihood} could be a probability distribution, but first looks can be deceiving. 
 
 \begin{figure}
 \centering
@@ -1386,10 +1397,16 @@ The reason is that in Bayesian inference, we \textit{don't} keep the parameters 
 \caption{The likelihood function for obtaining a single head from two throws. The area under the curve is $\frac{1}{3}$.}\label{fig:Likelihood_coinLikelihood}
 \end{figure}
 
-Checking off our necessary components of a probability distribution, we first note that all the values of the distribution in figure \ref{fig:Likelihood_coinLikelihood} are non-negative; which is what we require. However, if we look at the area underneath the curve in figure \ref{fig:Likelihood_coinLikelihood}, we find that it does not integrate to 1. Thus we have a violation of the second condition for a valid probability distribution. Hence, when we vary $\theta$ we find that, $P(data|\theta)$ is not a valid probability distribution! We thus introduce the term 'likelihood' to represent $P(data|\theta)$ when we vary the parameter, $\theta$. Often the following notation is used to emphasise that likelihood is a function of the parameter $\theta$ with the data held fixed:
+Checking off our necessary components of a probability distribution, we first note that all the values of the distribution in figure \ref{fig:Likelihood_coinLikelihood} are non-negative; which is what we require. However, if we calculate the area underneath the curve in figure \ref{fig:Likelihood_coinLikelihood}:
+
+\begin{equation}
+\mathrm{I} = \int\limits_{0}^{1} 2\theta(1-\theta)\mathrm{d}\theta = \frac{1}{3} \neq 1
+\end{equation}
+
+we find that it does not integrate to 1. Thus we have a violation of the second condition for a valid probability distribution. Hence, when we vary $\theta$ we find that, $p(data|\theta)$ is not a valid probability distribution! We thus introduce the term 'likelihood' to represent $p(data|\theta)$ when we vary the parameter, $\theta$. Often the following notation is used to emphasise that likelihood is a function of the parameter $\theta$ with the data held fixed:
 
 \begin{equation}\label{eq:Likelihood_notation}
-\mathcal{L}(\theta|data) = P(data|\theta)
+\mathcal{L}(\theta|data) = p(data|\theta)
 \end{equation}
 
 However, in this book, we will persist with the original notation as this is most typical in the literature, under the implicit assumption that when we vary the parameters in question, the term is not strictly a probability.
@@ -1397,9 +1414,9 @@ However, in this book, we will persist with the original notation as this is mos
 To provide further justification for this argument, consider the following (albeit contrived) example. Suppose that, we throw a coin twice, and we are told beforehand that the probability of obtaining a head on a particular throw is one of six discrete values: $\theta\in\{0.0,0.2,0.4,0.6,0.8,1.0\}$. We can then use our model to calculate the probability of obtaining a number of heads, $X$:
 
 \begin{align}\label{eq:Likelihood_OneHead}
-P(X = 0|\theta)& = P(TT|\theta) = P(T|\theta)\times P(T|\theta) = (1-\theta)^2\\
-P(X = 1|\theta)& = P(HT|\theta) + P(TH|\theta) = 2\times P(T|\theta)\times P(H|\theta) = 2\theta(1-\theta)\\\label{eq:Likelihood_TwoHead}
-P(X = 2|\theta)& = P(HH|\theta) = P(H|\theta)\times P(H|\theta) = \theta^2
+Pr(X = 0|\theta)& = Pr(TT|\theta) = Pr(T|\theta)\times Pr(T|\theta) = (1-\theta)^2\\
+Pr(X = 1|\theta)& = Pr(HT|\theta) + Pr(TH|\theta) = 2\times Pr(T|\theta)\times Pr(H|\theta) = 2\theta(1-\theta)\\\label{eq:Likelihood_TwoHead}
+Pr(X = 2|\theta)& = Pr(HH|\theta) = Pr(H|\theta)\times Pr(H|\theta) = \theta^2
 \end{align}
 
 In (\ref{eq:Likelihood_OneHead}), the probability is simply given by the product of the probabilities of not obtaining a head on the first throw, $(1-\theta)$, by the probability of not obtaining a head in the second\footnote{Since we have assumed a model whereby the results of the first and second throws are independent, conditional on $\theta$. In other words, all the similarity between the two throws is captured in the parameter $\theta$.}, which is also $(1-\theta)$. The factor of two arises in (\ref{eq:Likelihood_TwoHead}) since there are two ways of getting one head: \{HT,TH\}.
@@ -1432,9 +1449,9 @@ In Bayesian inference, we always vary the parameter, and implicitly hold the dat
 \end{table}
 
 \section{What are models and why do we need them?}
-All models are wrong. They are idealised representations of reality resultant from making assumptions, which if reasonable, may emulate some of the behaviour of a system of interest. Joshua Epstein in an article titled, 'Why model?' emphasises that we perennially build \textit{implicit} mental models for various phenomena \cite{epstein2008model}. Before we go to bed at night we set our alarms for the next morning on the basis of a model. We imagine an idealised - model - morning when it takes us 15 minutes to wake up as a result of an alarm. We use this model to predict how long it will take us to rise from bed, shower, and get changed into clothes in sufficient time to get to work. Whenever we go to the Doctor, they use an internalised biological model of the human body to advise on the best course of treatment for a particular ailment. Whenever we hear expert opinions on TV about the outcome of an upcoming election, the pundits are using mental models of society to explain the results of current polls, as well as make forecasts. As is the case with all models, some of these models are better than others. Hopefully, the models a Doctor uses to prescribe medicine are subject to less error than the opinions of pundits seen on TV! 
+All models are wrong. They are idealised representations of reality resultant from making assumptions, which if reasonable, may emulate some of the behaviour of a system of interest. Joshua Epstein in an article titled, 'Why model?' emphasises that we perennially build \textit{implicit} mental models for various phenomena \cite{epstein2008model}. Before we go to bed at night we set our alarms for the next morning on the basis of a model. We imagine an idealised - model - morning when it takes us 15 minutes to wake up as a result of an alarm. We use this model to predict how long it will take us to rise from bed, shower, and get changed into clothes in sufficient time to get to work. Whenever we go to the Doctor, they use an internalised biological model of the human body to advise on the best course of treatment for a particular ailment. Whenever we hear expert opinions on TV about the outcome of an upcoming election, the pundits are using mental models of society to explain the results of current polls, as well as make forecasts. As is the case with all models, some are better than others. Hopefully, the models a Doctor uses to prescribe medicine are subject to less error than the opinions of pundits seen on TV\footnote{For a great discussion of the performance of TV pundits, read Thinking Fast. Insert reference}! 
 
-Epstein goes on to emphasise that the question, 'Why model?' really means why should we build an \textit{explicit} - written down - model of phenomena? The point being that \textit{implicit} models are by their very nature, opaque, and not subject to the sort of interrogation and calibration that can be obtained by writing the model on paper. 
+Epstein goes on to emphasise that the question, 'Why model?' really means why should we build an \textit{explicit} - written down - model of phenomena? The point being that \textit{implicit} models are by their very nature, opaque, and not subject to the sort of interrogation that can be obtained by writing the model on paper. 
 
 We can also ask more narrowly, what are we hoping to gain by building an \textit{explicit} model of a situation? Epstein suggests the following motivations:
 
@@ -1464,7 +1481,7 @@ Bayesians are acutely aware that their models are wrong. At best the abstraction
 Whilst this methodology is useful for building a statistical model in general, it is more applicable for use with a full Bayesian model, resulting in a posterior distribution. In which case how do we go about specifying a likelihood for a given situation? To answer this we will start with going through a simple example.
 
 \subsection{A likelihood model for an individual's disease status}\label{sec:Likelihood_individualDisease}
-Suppose we work for the NHS and we want to build a statistical model to explain the prevalence of a certain disease within a sample, which can then be used to make inferences about the population incidence. Also, (unrealistically) let's imagine that we start off with a sample of only one person, for whom we have no prior information. Let the disease status of that individual be denoted by the variable $X$ which takes on the following binary outcome values dependent on the disease status the individual:
+Suppose we work for the State as a healthcare analyst, and we want to build a statistical model to explain the prevalence of a certain disease within a sample, which can then be used to make inferences about the population incidence. Also, (unrealistically) let's imagine that we start off with a sample of only one person, for whom we have no prior information. Let the disease status of that individual be denoted by the variable $X$ which takes on the following binary outcome values dependent on the disease status the individual:
 
 \begin{equation}
 X =
@@ -1477,14 +1494,16 @@ O & , No\; disease \\
 The goal of our model is to output a probability that this individual has the disease. We might assume that a fraction $\theta$ of the population has the disease, and that this individual has come from that population. For each possible outcome, we can use this simple model to calculate the probability of each outcome:
 
 \begin{align}\label{eq:Likelihood_SimpleModel1}
-P(X = 0|\theta)& = (1-\theta)\\
-P(X = 1|\theta)& = \theta\label{eq:Likelihood_SimpleModel2}
+Pr(X = 0|\theta)& = (1-\theta)\\
+Pr(X = 1|\theta)& = \theta\label{eq:Likelihood_SimpleModel2}
 \end{align}
+
+Note the similarity between these probabilities and those of the coin flipping example in the previous section. Often, a given model can be reused in a multitude of different settings.
 
 However, we would like to write down a single rule which yields (\ref{eq:Likelihood_SimpleModel1}) or (\ref{eq:Likelihood_SimpleModel2}) respectively, dependent on whether $X=0$ or $X=1$. This can be achieved with the following:
 
 \begin{equation}\label{eq:Likelihood_bernoulli}
-P(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
+Pr(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
 \end{equation}
 
 Note that in (\ref{eq:Likelihood_bernoulli}) that $\alpha\in\{0,1\}$ refers to the numeric value taken by the variable $X$. The function (\ref{eq:Likelihood_bernoulli}) is known as a \textit{Bernoulli} probability density.
@@ -1492,11 +1511,11 @@ Note that in (\ref{eq:Likelihood_bernoulli}) that $\alpha\in\{0,1\}$ refers to t
 Although this rule for calculating a probability of a particular disease status, $\alpha$, looks complex, we see that it reduces to (\ref{eq:Likelihood_SimpleModel1}) and (\ref{eq:Likelihood_SimpleModel2}) if the individual is disease -negative/-positive respectively:
 
 \begin{align}\label{eq:Likelihood_SimpleModel3}
-P(X = 0|\theta)& = \theta^0(1-\theta)^1 = (1-\theta)\\
-P(X = 1|\theta)& = \theta^1(1-\theta)^0 = \theta\label{eq:Likelihood_SimpleModel4}
+Pr(X = 0|\theta)& = \theta^0(1-\theta)^1 = (1-\theta)\\
+Pr(X = 1|\theta)& = \theta^1(1-\theta)^0 = \theta\label{eq:Likelihood_SimpleModel4}
 \end{align}
 
-When we hold the datum $X$ fixed, and vary $\theta$ (\ref{eq:Likelihood_bernoulli}) represents a likelihood. However, figure \ref{fig:Likelihood_bernoulli} shows that for a fixed value of $theta$ the sum (here we mean the vertical sum) of the two probability densities is always equal to 1; demonstrating that in this case (\ref{eq:Likelihood_bernoulli}) is a valid probability density. Notice also in figure \ref{fig:Likelihood_bernoulli} that the sum of probability density is defined continuously on $\{0,1\}$, whereas the sum of likelihoods is discrete.
+When we hold the datum $X$ fixed and vary $\theta$, (\ref{eq:Likelihood_bernoulli}) represents a likelihood. However, figure \ref{fig:Likelihood_bernoulli} shows that for a fixed value of $theta$ the sum (here we mean the vertical sum) of the two probability densities is always equal to 1; demonstrating that in this case (\ref{eq:Likelihood_bernoulli}) is a valid probability density. Notice also in figure \ref{fig:Likelihood_bernoulli} that the sum of probability density is defined continuously on $\{0,1\}$, whereas the sum of likelihoods is discrete.
 
 \begin{figure}
 \centering
@@ -1508,19 +1527,19 @@ When we hold the datum $X$ fixed, and vary $\theta$ (\ref{eq:Likelihood_bernoull
 \subsection{A likelihood model for disease prevalence of a group}\label{sec:Likelihood_diseaseGroup}
 Now we imagine that instead of this solitary individual, we have a group of $N$ individuals. What we would like to do is to calculate the develop a model which will tell us the probability of obtaining $Z$ disease cases within our sample. We would also like to be able to use our model to predict the most likely number of individuals who have the disease in a sample, for a given value of the parameters\footnote{We are starting off by assuming that we know the parameters. Later in this chapter we will obtain a point estimate of the parameters using \textit{Maximum likelihood} estimation.}. 
 
-In order to write down a model we first need to make some simplifying assumptions. We might assume that one individual's disease status tells us nothing about the probability of another individual in the sample having the disease\footnote{Other than, if the disease prevalence were unknown, through our ability to estimate overall disease prevalence from their individual statuses}. This would not be a reasonable assumption if the disease were contagious, and if the individuals in the sample came from the same neighbourhood or household. It also would not be a good assumption if (as is often the case with volunteer-dependent studies) the individuals who volunteered for the experiment, self-selected on the basis of some common pre-existing ailment/underlying-factor. If an advert for participants reads, 'Psychological experiment on sleep disorders: participants wanted', we might suspect that there would be an over-presence of insomniacs than is found in the population as a whole. This first assumption is that which in statistical language we call 'independence'. We also suppose that all individuals in our sample come from the same population - the one we are trying to draw conclusions about. If we knew beforehand that some individuals came from different populations, with significantly different prevalence rates, then we might abandon this assumption. Combining these two assumptions we say in statistical language that our data sample is \textit{independent} and \textit{identically-distributed}.
+In order to write down a model we first need to make some simplifying assumptions. We might assume that one individual's disease status tells us nothing about the probability of another individual in the sample having the disease\footnote{Other than, if the disease prevalence were unknown, through our ability to estimate overall disease prevalence from their individual statuses.}. This would not be a reasonable assumption if the disease were contagious, and if the individuals in the sample came from the same neighbourhood or household. It also would not be a good assumption if (as is often the case with volunteer-dependent studies) the individuals who volunteered for the experiment, self-selected on the basis of some common pre-existing ailment/underlying-factor. If an advert for participants reads, 'Psychological experiment on sleep disorders: participants wanted', we might suspect that there would be an over-presence of insomniacs than is found in the population as a whole. This first assumption is that which in statistical language we call 'independence'. We also suppose that all individuals in our sample come from the same population - the one we are trying to draw conclusions about. If we knew beforehand that some individuals came from different populations, with significantly different prevalence rates, then we might abandon this assumption. Combining these two assumptions we say in statistical language that our data sample is \textit{independent} and \textit{identically-distributed}.
 
 With our two assumptions in hand, we can begin to formulate a model for the probability of obtaining $Z$ disease-positive individuals out of a total of $N$ individuals. We start by considering each person's disease status individually, meaning we can reuse (\ref{eq:Likelihood_bernoulli}):
 
 \begin{equation}\label{eq:Likelihood_bernoulli1}
-P(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
+Pr(X=\alpha|\theta) = \theta^\alpha(1-\theta)^{1-\alpha}
 \end{equation}
 
-Note that in (\ref{eq:Likelihood_bernoulli1}) the $\alpha\in\{0,1\}$ refers to a particular numeric value taken by the variable $X$. The assumption of \textit{independence} means that we can get the overall probability by multiplying together the individual probabilities (include reference back to discussion of probabilities). In words, we obtain the probability that the first person has disease status $X_1$ \textit{and} the second person has status $X_2$:
+Note that in (\ref{eq:Likelihood_bernoulli1}) the $\alpha\in\{0,1\}$ refers to a particular numeric value taken by the variable $X$. The assumption of \textit{independence} means that we can get the overall probability by multiplying together the individual probabilities\footnote{See section \ref{sec:Intro_independence} for an explanation of this.}. In words, we obtain the probability that the first person has disease status $X_1$ \textit{and} the second person has status $X_2$:
 
 \begin{equation}\label{eq:Likelihood_bernoulli2}
 \begin{align}
-P(X_1=\alpha_1,X_2=\alpha_2|\theta_1,\theta_2) &= P(X_1=\alpha_1|\theta_1)\;\times \;P(X_2=\alpha_2|\theta_2)\\
+Pr(X_1=\alpha_1,X_2=\alpha_2|\theta_1,\theta_2) &= Pr(X_1=\alpha_1|\theta_1)\;\times \;Pr(X_2=\alpha_2|\theta_2)\\
  &= \theta_1^{\alpha_1}(1-\theta_1)^{1-\alpha_1}\times \theta_2^{\alpha_2}(1-\theta_2)^{1-\alpha_2}
 \end{align}
 \end{equation}
@@ -1531,7 +1550,7 @@ The second assumption of \textit{identically-distributed} individuals means that
 
 \begin{equation}\label{eq:Likelihood_bernoulli3}
 \begin{align}
- P(X_1=\alpha_1,X_2=\alpha_2|\theta) &= \theta^{\alpha_1}(1-\theta)^{1-\alpha_1}\times \theta^{\alpha_2}(1-\theta)^{1-\alpha_2}\\
+ Pr(X_1=\alpha_1,X_2=\alpha_2|\theta) &= \theta^{\alpha_1}(1-\theta)^{1-\alpha_1}\times \theta^{\alpha_2}(1-\theta)^{1-\alpha_2}\\
 &= \theta^{\alpha_1+\alpha_2}(1-\theta)^{2-\alpha_1-\alpha_2}
 \end{align}
 \end{equation}
@@ -1548,9 +1567,9 @@ We can then use (\ref{eq:Likelihood_bernoulli3}) to generate the respective prob
 
 \begin{equation}\label{eq:Likelihood_binomialTwoProbs}
 \begin{align}
-P(Z = 0|\theta)& = P(X_1=0,X_2=0|\theta) = \theta^{0+0}(1-\theta)^{2-0-0} = (1-\theta)^2\\
-P(Z = 1|\theta)& = P(X_1=1,X_2=0|\theta) + P(X_1=0,X_2=1|\theta)= 2\theta(1-\theta)\\
-P(Z = 2|\theta)& = P(X_1=1,X_2=1|\theta) = \theta^{1+1}(1-\theta)^{2-1-1} = \theta^2
+Pr(Z = 0|\theta)& = Pr(X_1=0,X_2=0|\theta) = \theta^{0+0}(1-\theta)^{2-0-0} = (1-\theta)^2\\
+Pr(Z = 1|\theta)& = Pr(X_1=1,X_2=0|\theta) + Pr(X_1=0,X_2=1|\theta)= 2\theta(1-\theta)\\
+Pr(Z = 2|\theta)& = Pr(X_1=1,X_2=1|\theta) = \theta^{1+1}(1-\theta)^{2-1-1} = \theta^2
 \end{align}
 \end{equation}
 
@@ -1558,16 +1577,16 @@ To complete our probability model we want to write out a single rule for calcula
 
 \begin{equation}\label{eq:Likelihood_binomialTwoProbsSimple}
 \begin{align}
-P(Z = 0|\theta)& = \;\theta^0(1-\theta)^2\\
-P(Z = 1|\theta)& = 2\theta^1(1-\theta)^1\\
-P(Z = 2|\theta)& = \;\theta^2(1-\theta)^0
+Pr(Z = 0|\theta)& = \;\theta^0(1-\theta)^2\\
+Pr(Z = 1|\theta)& = 2\theta^1(1-\theta)^1\\
+Pr(Z = 2|\theta)& = \;\theta^2(1-\theta)^0
 \end{align}
 \end{equation}
 
 In (\ref{eq:Likelihood_binomialTwoProbsSimple}) we notice the common term $\theta^\beta (1-\theta)^{2-\beta}$ in each of the expressions, where $\beta\in\{0,1,2\}$ represents the number of disease cases found. Therefore this suggests that we may be able to write down a single rule as something similar to:
 
 \begin{equation}\label{eq:Likelihood_binomialNearly}
-P(Z = \beta|\theta) \sim \theta^\beta(1-\theta)^{2-\beta}
+Pr(Z = \beta|\theta) \sim \theta^\beta(1-\theta)^{2-\beta}
 \end{equation}
 
 The only problem with matching (\ref{eq:Likelihood_binomialNearly}) with the previously obtained result is the factor of 2 on the middle line of (\ref{eq:Likelihood_binomialTwoProbsSimple}). However, as a complete aside we note that when we expand a quadratic factor we get the following:
@@ -1585,7 +1604,7 @@ The numbers $\{1,2,1\}$ correspond here to the non-b-dependent coefficients of $
 In (\ref{eq:Likelihood_nCr}) the $!$ has its usual meaning of factorial, and $\beta\in\{0,1,2\}$. We can therefore use this notation to help us to write down a single model for the probability of obtaining $Z$ disease cases out of a total of 2 individuals using our model:
 
 \begin{equation}\label{eq:Likelihood_binomialTwoFull}
-P(Z=\beta|\theta) = {2 \choose \beta} \theta^\beta (1-\theta)^{2-\beta}
+Pr(Z=\beta|\theta) = {2 \choose \beta} \theta^\beta (1-\theta)^{2-\beta}
 \end{equation}
 
 This likelihood function is illustrated for the three possible numbers of disease cases in figure \ref{fig:Likelihood_binomial}.
@@ -1601,23 +1620,23 @@ We will now extend the analysis to cover the case when we have groups of $N$ ind
 
 \begin{equation}\label{eq:Likelihood_binomialThreeProbsSimpler}
 \begin{align}
-P(Z = 0|\theta)& = \;P(X_1=0|\theta) P(X_2=0|\theta)  P(X_3=0|\theta)\\
-P(Z = 1|\theta)& = 3P(X_1=1|\theta) P(X_2=0|\theta)  P(X_3=0|\theta)\\
-P(Z = 2|\theta)& = 3P(X_1=1|\theta) P(X_2=1|\theta)  P(X_3=0|\theta)\\
-P(Z = 3|\theta)& = \;P(X_1=1|\theta)P(X_2=1|\theta) P(X_3=1|\theta)
+Pr(Z = 0|\theta)& = \;Pr(X_1=0|\theta) Pr(X_2=0|\theta)  Pr(X_3=0|\theta)\\
+Pr(Z = 1|\theta)& = 3Pr(X_1=1|\theta) Pr(X_2=0|\theta)  Pr(X_3=0|\theta)\\
+Pr(Z = 2|\theta)& = 3Pr(X_1=1|\theta) Pr(X_2=1|\theta)  Pr(X_3=0|\theta)\\
+Pr(Z = 3|\theta)& = \;Pr(X_1=1|\theta)Pr(X_2=1|\theta) Pr(X_3=1|\theta)
 \end{align}
 \end{equation}
 
 Again, we notice a numeric pattern in terms of the first part of each expression $\{1,3,3,1\}$, which happens to correspond exactly to the coefficients on terms for the expansion of $(x+1)^3$. Hence, we can again rewrite the likelihood using the binomial expansion notation:
 
 \begin{equation}\label{eq:Likelihood_binomialThreeFull}
-P(Z=\beta|\theta) = {3 \choose \beta} \theta^\beta (1-\theta)^{3-\beta}
+Pr(Z=\beta|\theta) = {3 \choose \beta} \theta^\beta (1-\theta)^{3-\beta}
 \end{equation}
 
 We recognise a pattern in the likelihoods of (\ref{eq:Likelihood_binomialTwoFull}) and (\ref{eq:Likelihood_binomialThreeFull}) which allows us to deduce that, for a sample size of N, the likelihood is given by:
 
 \begin{equation}\label{eq:Likelihood_binomialNFull}
-P(Z=\beta|\theta) = {N \choose \beta} \theta^\beta (1-\theta)^{N-\beta}
+Pr(Z=\beta|\theta) = {N \choose \beta} \theta^\beta (1-\theta)^{N-\beta}
 \end{equation}
 
 (\ref{eq:Likelihood_binomialNFull}) is known as the \textit{binomial} probability distribution.
@@ -1625,21 +1644,23 @@ P(Z=\beta|\theta) = {N \choose \beta} \theta^\beta (1-\theta)^{N-\beta}
 If we had data, then we could test whether the assumptions made were appropriate by calculating the model-implied-probability of this outcome. For example, if we had a sample of 100 people of which 10 were disease-positive, and we assumed beforehand that the proportion of the population who have the disease is $\theta=1\%$, then we could calculate the probability that we would have achieved a number of cases as bad, or worse than this using (\ref{eq:Likelihood_binomialNFull}):
 
 \begin{equation}
-P(Z\geq 10|\theta=0.01) = \sum\limits_{Z=10}^{100}{100 \choose Z} 0.01^Z (1-0.01)^{100-Z} = 7.63 \times 10^{-8}
+Pr(Z\geq 10|\theta=0.01) = \sum\limits_{Z=10}^{100}{100 \choose Z} 0.01^Z (1-0.01)^{100-Z} = 7.63 \times 10^{-8}
 \end{equation}\label{eq:Likelihood_binomialTest}
 
 We have summed over all the disease cases from 10 to 100 here, because we wanted the probability that we would have obtained a result as bad, or worse, than the one which we actually achieved. This is a particular way of carrying out classical hypothesis tests, which we will dispense with later on, but for now it seems a reasonable way of testing our model. 
 
-The probability found in this case is extremely small. What does this tell us? Well, it basically says that there is something wrong with our model which we have chosen here. It could be that the actual disease incidence in the population is much higher than the 1\% which we have assumed beforehand. It could also be that our assumption \textit{independence} is violated in this case, for example if we sampled whole households rather than individuals. This could mean that in a particular household, the chance of having the disease, if another member of your family has the disease, is substantially higher than for the population as a whole. 
+The probability found in this case is extremely small. What does this tell us? Well, it basically says that there is something wrong with our model which we have chosen here. It could be that the actual disease incidence in the population is much higher than the 1\% which we have assumed beforehand. It could also be that our assumption of  \textit{independence} is violated in this case, for example if we sampled whole households rather than individuals. This could mean that in a particular household, the chance of having the disease, if another member of your family has the disease, is substantially higher than for the population as a whole. 
 
-It is difficult to gauge what in particular is wrong with our model without knowing further details of data collection as well as how the estimate of 1\% incidence was estimated for the population. However, it does suggest that we need to do adjust one or more of our assumptions, and reformulate the model to take these into account. We should never simply accept that our model is \textit{correct}. A model is only as good as its capability to reproduce the data which we see in real life. In this case we find it is not a good representation, and we should readjust appropriately.
+It is difficult to gauge what in particular is wrong with our model without knowing further details of data collection, as well as how the estimate of 1\% incidence was estimated for the population. However, it does suggest that we need to do adjust one or more of our assumptions, and reformulate the model to take these into account. We should never simply accept that our model is \textit{correct}. A model is only as good as its capability to reproduce the data which we see in real life. In this case we find it is not a good representation, and we should readjust appropriately.
 
 \subsection{The intelligence of a group of people}\label{sec:Likelihood_normal}
-We are now tasked with formulating a model of intelligence test scores for a group of individuals for whom we have data. We are told that the test score is on a continuous scale from 0-200. We do not have any information on individual characteristics which might help us to predict scores, although we are going to, for this simplified example, assume that we do know the mean test score $\mu=70$, and its variance $\sigma^2=81$ in the population (although we will relax this assumption in section \ref{sec:Likelihood_MLE}). We might assume that there are a range of factors which overall result in an individual's performance on this test. For example, these might include their schooling, parental education, 'innate' ability, as well as how tired they were feeling on the day of the test. If we assume that there are a large range of such factors and the score which results is an average of all these, then we might assume that the Central Limit Theorem might be appropriate for determining the distribution of test scores. Don't worry if you are not aware of this theorem, we will cover it in due course, but basically it says, if there are a large number of factors whose average results in an intelligence score, then the normal distribution provides a reasonable approximation to the distribution of test scores. In which case, we assume that a normal distribution for our likelihood function for an individual's test score, $X$:
+We are now tasked with formulating a model of intelligence test scores for a group of individuals for whom we have data. We are told that the test score is on a continuous scale from 0-200. We do not have any information on individual characteristics which might help us to predict scores, although we are going to, for this simplified example, assume that we do know the mean test score $\mu=70$, and its variance $\sigma^2=81$ in the population (although we will relax this assumption in section \ref{sec:Likelihood_MLE}). We might assume that there are a range of factors which overall result in an individual's performance on this test. For example, these might include their schooling, parental education, 'innate' ability, as well as how tired they were feeling on the day of the test. If we assume that there are a large range of such factors and the score which results is an average of all these, then we might assume that the Central Limit Theorem might be appropriate for determining the distribution of test scores\footnote{See section \ref{sec:Intro_CLT} for an introduction to the Central Limit Theorem.}. In which case, we assume that a normal distribution for our likelihood function for an individual's test score, $X$:
 
 \begin{equation}
-P(X=\alpha|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(\alpha-\mu)^2}{2\sigma^2}}
+p(X=\alpha|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(\alpha-\mu)^2}{2\sigma^2}}
 \end{equation}\label{eq:Likelihood_normal}
+
+Note that since this distribution is continuous, we have written $p$ rather than $Pr$. The first $p$ represents a density, whereas $Pr$ represents a probability, which is only found in the continuous case by integrating over some bounds.
 
 \begin{figure}
 \centering
@@ -1652,14 +1673,14 @@ If we obtain an individual within our sample who achieved a test score of 90, we
 
 \begin{equation}
 \begin{align}
-P(X\geq 90|\mu=70,\sigma^2=81) &= \int\limits_{90}^{\infty}\frac{1}{\sqrt{2\pi\times 10}}e^{-\frac{(\alpha-70)^2}{2\times 10}} \mathrm{d}\alpha\\
+Pr(X\geq 90|\mu=70,\sigma^2=81) &= \int\limits_{90}^{\infty}\frac{1}{\sqrt{2\pi\times 10}}e^{-\frac{(\alpha-70)^2}{2\times 10}} \mathrm{d}\alpha\\
  & = 1-\Phi\left(\frac{90-70}{9}\right) \approx 0.0131
 \end{align}\label{eq:Likelihood_normalSampleOne}
 \end{equation}
 
-In (\ref{eq:Likelihood_normalSampleOne}), $\Phi$ stands for the value of the \textit{standard} normal cumulative distribution function\footnote{A standard normal has mean 0, and a variance of 1. By taking away the mean of 70, and dividing through by the standard deviation, we transform from an arbitrary mean- and variance-normal, to a \textit{standard} one.} at the value of 90 (see figure \ref{fig:Likelihood_normal} for an explanation). Since we find that the probability of obtaining this data point under our current model is extremely small, we conclude that there is something wrong with our model, and go back to examine the various assumptions that were made in deriving it.
+In (\ref{eq:Likelihood_normalSampleOne}), $\Phi$ stands for the value of the \textit{standard} normal cumulative distribution function\footnote{A standard normal has mean 0, and a variance of 1. By taking away the mean of 70, and dividing through by the standard deviation, we transform from an arbitrary mean- and variance-normal, to a \textit{standard} one.} at the value of 90 (see figure \ref{fig:Likelihood_normal} for an explanation). Since we find that the probability of obtaining this data point under our current model is extremely small, we conclude that it is likely that there is something wrong with our model, and go back to examine the various assumptions that were made in deriving it.
 
-If we also assume that information regarding one individual's test score tells us nothing about another's\footnote{Apart from their joint reliance on $\mu$ and $\sigma^2$.}, then we might assume \textit{independence} for our data. We might also assume that all individuals come from the same population; resulting in a random sample. We calculate the joint probability density for a sample of N individuals by multiplying together the individual densities:
+If we also assume that information regarding one individual's test score tells us nothing about another's\footnote{Apart from their joint reliance on $\mu$ and $\sigma^2$.}, then we might assume \textit{independence} for our data. We might also assume that all individuals come from the same population; resulting in a \textit{random sample}\footnote{See section \ref{sec:Likelihood_randomSampleExchangeable} for further discussion of random samples.}. We calculate the joint probability density for a sample of N individuals by multiplying together the individual densities:
 
 
 \begin{equation}
@@ -1669,37 +1690,60 @@ P(X_1=\alpha_1,X_2 =\alpha_2,...,X_N=\alpha_N|\mu,\sigma^2) = \prod\limits_{i=1}
 
 We could then use (\ref{eq:Likelihood_normalN}) to calculate the probability of obtaining a given sample of observations as extreme as the values obtained, again by integrating. However, here it would be slightly more complicated than that of (\ref{eq:Likelihood_normalSampleOne}) since we would have to integrate across all individuals' variables.
 
-\section{Exchangeability vs random sampling}
+\section{Exchangeability vs random sampling}\label{sec:Likelihood_randomSampleExchangeable}
+We have already been introduced to the concept of a \textit{random sample}, in developing a probability model for the disease status of patients (section \ref{sec:Likelihood_diseaseGroup}), and the intelligence of a group of people (see section \ref{sec:Likelihood_normal}). The use of this term is really just a shorthand for an \textit{independent}, and \textit{identically-distributed} sample of data. Often however, Bayesians eschew this term in want of a (slightly) weaker condition that still allows us to write down an overall likelihood as a product of individual likelihoods in many situations. 
 
+Suppose we have a sequence of random variables representing the height of individuals in a sample of size 3: $\{H_1,H_2,H_3\}$. If this sequence is as likely as the reordered sequence: $\{H_2,H_1,H_3\}$, or any other re-ordering, then the sequence is said to be \textit{exchangeable}\footnote{Formally, a sequence which is exchangeable requires that the joint probability distribution is invariant under any permutation of the order.}.
+
+Since the assumption of random sampling is stronger than that of exchangeability, it turns out that any random sample is automatically exchangeable. However, the converse is not necessarily true. A particular example of this is for the case of an urn containing 3 red and 3 blue balls, which are drawn at random without replacement. The probability of obtaining the sequence $RBR$ is given by:
+
+\begin{equation}
+Pr(RBR) = \frac{3}{6} \times \frac{3}{5} \times \frac{2}{4} = \frac{3}{20}
+\end{equation}
+
+The sequence of random variables representing the outcome of this sampling \textit{is} exchangeable, since we have that any permutation of this sequence is equally likely:
+
+\begin{equation}
+\begin{align}
+Pr(BRR) &= \frac{3}{6} \times \frac{3}{5} \times \frac{2}{4} &= \frac{3}{20}\\
+Pr(RRB) &= \frac{3}{6} \times \frac{2}{5} \times \frac{3}{4} &= \frac{3}{20}
+\end{align}
+\end{equation}
+
+However, this sequence of random variables is \textit{not} a random sample. The probability distribution for the first ball drawn is different to that when the second is drawn. In the first case there are 6 balls in total, with equal numbers of each. However, for the second case there are only 5 balls, and \textit{dependent} on the first draw, there may be either more red balls or blue balls remaining.
+
+In general we may not be able to assume we have a conditional\footnote{Conditional on a distribution of a vector of parameters $\theta$ which sits above all the observations.} random sample of observations for reasons similar to that of the urn example. However, a brilliant theory originally by Bruno de Finetti allows us to assume that a sequence behaves as if it is a random sample, \textit{so long as it is exchangeable.} Technically this requires that we need an infinite sample of observations, but for a reasonably large sample making this approximation is reasonable.
+
+Much of the time we will have a random sample, and so do not need to worry about any of this. However, due to this theorem, we are often free to write down an overall likelihood as the product of individual likelihoods, so long as the observations are exchangeable.
 
 \section{The subjectivity of model choice}
 It is hoped that the analysis in the preceding sections has given us a taste of how we can go about specifying a likelihood for a hitherto unknown circumstance. We start by writing down the behaviours that we want to emulate, then make simplifying assumptions, which we then use to look for an appropriate model in the literature. This model is then used to test the validity of the assumptions with the sample data. If the model struggles to explain the data, then we should go back and iteratively modify, then test our model, until it adequately explains the range of behaviours.
 
-However, it should be re-emphasised that by its nature, a model is always a simplification of reality. As such, no one model is \textit{correct}. There are often many models that could be used to explain the data which we have to hand. We should always take care to test each of these against its ability to explain the aspect of the data with which we are interested, and only proceed with it if it is adequate in this regard. Real life is complicated, and thus with each of the assumptions that were used to justify a particular model, there will inevitably be a degree of \textit{subjectivity}. As such, no analysis - whether Frequentist or Bayesian - can be thought to be purely \textit{objective}. Hence, the human analyst cannot, and should not, be replaced by automata for statistical analysis. A degree of subjective judgement is always necessary in statistics, as in all other walks of life.
+However, it should be re-emphasised that by its nature, a model is always a simplification of reality. As such, no one model is \textit{correct}. There are often many models that could be used to explain the data which we have to hand. We should always take care to test each of these against its ability to explain the aspect of the data in which we are interested, and only proceed with it if it is adequate in this regard. Real life is complicated, and thus with each of the assumptions that were used to justify a particular model, there will inevitably be a degree of \textit{subjectivity}. As such, no analysis - whether Frequentist or Bayesian - can be thought to be purely \textit{objective}. Hence, the human analyst cannot, and should not, be replaced by automata for statistical analysis. A degree of subjective judgement is always necessary in statistics, as in all other walks of life.
 
 \section{Maximum likelihood - a short introduction}\label{sec:Likelihood_MLE}
-The analysis in section \ref{sec:chooseLikelihood} assumes that we know beforehand the fraction, $\theta$, of the populous that are predisposed to having the disease. In reality we rarely know such a thing. Often the main focus of building a statistical model is to try to estimate such parameters from our sample of data to which we have access. A popular Frequentist method for achieving this goal is the estimation strategy known as \textit{Maximum Likelihood}. In this section we will examine how this estimation strategy yields estimates of parameters, as well as how these estimates can be used to make inferences about the population.
+The analysis in section \ref{sec:chooseLikelihood} assumes that we know beforehand the fraction, $\theta$, of the populous that are predisposed to having the disease. In reality we rarely know such a thing. Often the main focus of building a statistical model is to try to estimate such parameters from our sample of data to which we have access. A popular Frequentist method for achieving this goal is the estimation strategy known as \textit{Maximum Likelihood}. In this section we will examine how this estimation strategy yields estimates of parameters.
 
 The principle of Maximum Likelihood estimation is simple. Firstly, we assume a model which we use to approximate the data generating process which resulted in our sample, based on the various assumptions about the real life process which we make. We then calculate what is known as the joint probability of obtaining the sample of observations, assuming that we do not know the parameters which specify completely those distributions. We then choose the parameters which \textit{maximise} the likelihood of obtaining that particular sample of observations. We will go through some simple examples to illustrate this process. 
 
 \subsection{Estimating disease prevalence}\label{sec:Likelihood_diseaseMLE}
-In section \ref{sec:Likelihood_diseaseGroup} we assumed that we knew beforehand the fraction of individuals who are disease-positive within the population. As mentioned previously, it is uncommon that such a thing be known before carrying out an analysis. If in a sample of 100 individuals, 10 test positively\footnote{Assuming for simplicity that there are no false-positives}, and we make the same assumptions as in section \ref{sec:Likelihood_diseaseGroup} - that of a random sample - then we can write down the overall likelihood function using (\ref{eq:Likelihood_binomialNFull}) as:
+In section \ref{sec:Likelihood_diseaseGroup} we assumed that we knew beforehand the fraction of individuals who are disease-positive within the population. As mentioned previously, it is uncommon that such a thing be known before carrying out an analysis. If in a sample of 100 individuals, 10 test positively\footnote{Assuming for simplicity that there are no false-positives.}, and we make the same assumptions as in section \ref{sec:Likelihood_diseaseGroup} - that of a random sample - then we can write down the overall likelihood function using (\ref{eq:Likelihood_binomialNFull}) as:
 
 \begin{equation}\label{eq:Likelihood_binomialNew}
-L(\theta|data) = {100 \choose 10} \theta^{10} (1-\theta)^{100-10}
+L(\theta|data) = {100 \choose 10} \theta^{10} (1-\theta)^{90}
 \end{equation}
 
 \begin{figure}
 \centering
-\scalebox{0.75} 
-{\includegraphics{likelihood_logMonotonicity.png}}
-\caption{A figure with four panes. The top-left is log-likelihood as a function of likelihood. The bottom-left is likelihood as a function of theta, and log-likelihood plotted on the same axis. Top-right is a weird function of likelihood as a function of likelihood. Below it a graph of likelihood as a function of theta, with a different maximum reached for the weird function.}\label{fig:Likelihood_logMonotonicity}
+\scalebox{0.4} 
+{\includegraphics{Likelihood_logMonotonicity.pdf}}
+\caption{The monotonicity of log-likelihood (top-left), means that the peaks of likelihood and log-likelihood coincide (bottom-left). However, this is not the case for an arbitrary function (top-right and bottom-right).\textbf{Add legends to the bottom two graphs.}} }\label{fig:Likelihood_logMonotonicity}
 \end{figure}
 
 Remember, that since we are varying $\theta$ and holding the data constant here, that (\ref{eq:Likelihood_binomialNew}) is a \textit{likelihood}, not a probability. We then need to simply choose $\theta$ so that we can maximise the likelihood. We could simply differentiate (\ref{eq:Likelihood_binomialNew}) as it stands, and set the derivative equal to 0; rearranging the resultant equation for $\theta$. However, to make life a little easier for us, we are first going to take the \textit{log} of this expression, then differentiate it, setting the derivative to 0; resulting in the same value of $\theta$. We are able to do this because of the simple properties of the log transformation (see figure \ref{fig:Likelihood_logMonotonicity}):
 
 \begin{equation}\label{eq:Likelihood_logLikelihoodBinomial}
-l(\theta|data) = Log L(\theta|data) = log{100 \choose 10}+ 10log(\theta)+ 90 log(1-\theta)
+l(\theta|data) = Log \left(L(\theta|data)\right) = log{100 \choose 10}+ 10log(\theta)+ 90 log(1-\theta)
 \end{equation}
 
 Where to get the result (\ref{eq:Likelihood_logLikelihoodBinomial}), we have used the log rules:
@@ -1723,7 +1767,7 @@ If we set the derivative to 0 we then obtain the maximum likelihood \textit{esti
 \centering
 \scalebox{0.75} 
 {\includegraphics{Likelihood_ML.pdf}}
-\caption{Log-likelihood of disease prevalence from section \ref{sec:Likelihood_diseaseMLE} as a function of theta, maximised at 1/10.}\label{fig:Likelihood_MLE}
+\caption{Log-likelihood of disease prevalence from section \ref{sec:Likelihood_diseaseMLE} as a function of the proportion of individuals which have the disease in a population, $\theta$. The dotted line shows the maximum likelihood estimate $\hat{\theta}=1/10$.}\label{fig:Likelihood_MLE}
 \end{figure}
 
 
@@ -1823,12 +1867,29 @@ Gelman et al. (2013) suggests that there are two different interpretations of pr
 
 If we adopt the \textit{subjective} viewpoint above, then we can think of the prior as representing our pre-experimental/data certainty in the parameter in question. For example, imagine that a Doctor is asked to evaluate the probability before the results of a blood test become available, that a given individual has a particular disease. Using their knowledge of the patient's history and their expertise on the particular condition, they assign a prior disease probability of 75\% (see figure \ref{fig:Prior_introduction}). 
 
-Alternatively, imagine we are tasked with estimating the proportion of the UK population that has a particular disorder. We may have some idea of its prevalence, as well as the variance in the mean prevalence of a disease across a range of previous samples of individuals which have been tested. In this case, the prior is continuous and represents our uncertainty in our estimate of the prevalence (see figure \ref{fig:Prior_introduction}). In all cases a prior is a proper probability distribution, and hence can be used to elicit our prior expectations as to the value of a parameter. For example, we could use the prior probability distribution for the proportion of individuals having a particular disorder in figure \ref{fig:Prior_introduction} to estimate a pre-experimental mean of approximately 15\% prevalence.
+Alternatively, imagine we are tasked with estimating the proportion of the UK population that has this disease. We may have some idea of its prevalence, as well as the variance in the mean prevalence of a disease across a range of previous samples of individuals which have been tested. In this case, the prior is continuous and represents our uncertainty in our estimate of the prevalence (see figure \ref{fig:Prior_introduction}). In all cases a prior is a proper probability distribution, and hence can be used to elicit our prior expectations as to the value of a parameter. For example, we could use the prior probability distribution for the proportion of individuals having a particular disorder in figure \ref{fig:Prior_introduction} to estimate a pre-experimental mean of approximately 15\% prevalence.
 
-Adopting the \textit{population} perspective described by Gelman, we imagine the value of a parameter of current interest to be drawn from a population distribution. If we imagine the process of flipping a coin, we could if we knew the angle at which it is tossed, as well as the height from which it is thrown above the surface\footnote{Also assuming that we knew the physical properties of the coin and surface.} predict deterministically the side on which the coin would fall face up. We could then hypothetically enumerate the (infinitely) many angles and heights of the coin, and for each set determine whether the coin would fall face up or down. Each time we throw the coin we are implicitly choosing an angle and height from the set of all possible combinations, which determines whether a heads or tails falls face up. Some ranges of the angle and the height will be more frequently chosen than others, albeit relatively agnostic with regards to final state of the coin.  Hence we could think of this choice as the realisation from a distribution of all possible sets. Thus we could think about the choice of angle and height as being a realisation from this \textit{population} distribution, and hence determines the fate of the coin toss.
+Adopting the \textit{population} perspective, we imagine the value of a parameter of current interest to be drawn from a population distribution. If we imagine the process of flipping a coin, we could if we knew the angle at which it is tossed, as well as the height from which it is thrown above the surface\footnote{Also assuming that we knew the physical properties of the coin and surface.} predict deterministically the side on which the coin would fall face up. We could then hypothetically enumerate the (infinitely) many angles and heights of the coin, and for each set determine whether the coin would fall face up or down. Each time we throw the coin we are implicitly choosing an angle and height from the set of all possible combinations, which determines whether a heads or tails falls face up. Some ranges of the angle and the height will be more frequently chosen than others, albeit relatively agnostic with regards to final state of the coin.  Hence we could think of this choice as the realisation from a distribution of all possible sets. Thus we could think about the choice of angle and height as being a realisation from this \textit{population} distribution, and hence determines the fate of the coin toss.
+
+Alternatively, going back to the disease prevalence example, we could imagine that each time we pick a sample, the data we obtain is partly determined by the exact characteristics of the sub-populations from which these individuals were drawn. The other part of variability is sampling variation within those sub-populations. Here we can view the particular sub-population characteristics can be viewed as draws from an overall population distribution of parameters, representing the entirety of the UK. 
+
+\section{Why do we need priors at all?}
+A question we might ask is, why do we need priors at all? Can't we simply let the data speak for itself, without the need of these subjective beasts? 
+
+Frequentists without knowing it actually do use something equivalent to priors, by setting the size of statistical tests\footnote{See section \ref{sec:Intro_implicitExplicitSubjectivity} for a further discussion.}. However, can't we as Bayesians side-step this subjective jump completely?
+
+The answer to this question is provided by Bayes' rule. Its inclusion in Bayes' rule, which is the only correct way to update beliefs, means that if we are to be consistent with the laws of probability, we are required to provide this part for any Bayesian inferential procedure. 
+
+If you find this description somewhat unsatisfying, then another way of phrasing this same argument, is that Byaes' rule is really only a way to \textit{update} our initial beliefs, to yield new beliefs which reflect the weight of the data obtained:
+
+\begin{equation}
+initial\; belief \xrightarrow{Bayes' rule} new\;beliefs
+\end{equation}
+
+Viewed in this light, it is clear that we need to specify an initial belief, otherwise we have nothing to update! Bayes unfortunately doesn't tell us how to formulate this initial belief, but fear not, we will in this chapter delve into how we can go about setting priors in practice.
 
 \section{Why don't we just normalise likelihood by choosing a unity prior?}\label{sec:Prior_unityPrior}
-Why can't we simply let the prior be unity for all values of $\theta$, in other words set $P(\theta) = 1$ in the numerator of Bayes' rule; resulting in a posterior that takes the form of a normalised likelihood:
+Another question that can be asked is, 'Why can't we simply let the prior be unity for all values of $\theta$?'; in other words set $P(\theta) = 1$ in the numerator of Bayes' rule; resulting in a posterior that takes the form of a normalised likelihood:
 
 \begin{equation}
 P(\theta|data) = \frac{P(data|\theta)} {P(data)}
@@ -2593,8 +2654,10 @@ If we hold $n$ constant, and increase the probability of success $p$, we see tha
 \subsubsection{Gamma}
 \subsubsection{Half-Cauchy}
 \subsubsection{Inverse Gamma}
-\subsubsection{Inverse \chi^2}
+\subsubsection{Inverse chi}
 \subsection{Multinomial - or other regression}
+\subsection{LBG prior - see Michael Betancourt video and Stan doc}
+Better alternative to Wishart.
 \subsection{Wishart}
 
 \subsection{Distributions for categories}
