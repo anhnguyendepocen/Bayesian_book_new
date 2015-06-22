@@ -1,0 +1,1034 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     40472,       1025]
+NotebookOptionsPosition[     39405,        986]
+NotebookOutlinePosition[     39752,       1001]
+CellTagsIndexPosition[     39709,        998]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"vPrior", "[", 
+     RowBox[{"\[Theta]_", ",", "\[Alpha]_", ",", "\[Beta]_"}], "]"}], ":=", 
+    " ", 
+    RowBox[{"PDF", "[", 
+     RowBox[{
+      RowBox[{"BetaDistribution", "[", 
+       RowBox[{"\[Alpha]", ",", "\[Beta]"}], "]"}], ",", "\[Theta]"}], 
+     "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"vLikelihood", "[", 
+     RowBox[{
+     "\[Theta]_", ",", "nSampleSize_Integer", ",", "nDiseased_Integer"}], 
+     "]"}], ":=", 
+    RowBox[{"Likelihood", "[", 
+     RowBox[{
+      RowBox[{"BinomialDistribution", "[", 
+       RowBox[{"nSampleSize", ",", "\[Theta]"}], "]"}], ",", 
+      RowBox[{"{", "nDiseased", "}"}]}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"vPosterior", "[", 
+     RowBox[{
+     "\[Theta]_", ",", "nSampleSize_Integer", ",", "nDiseased_Integer", ",", 
+      "\[Alpha]_", ",", "\[Beta]_"}], "]"}], ":=", " ", 
+    RowBox[{"PDF", "[", 
+     RowBox[{
+      RowBox[{"BetaDistribution", "[", 
+       RowBox[{
+        RowBox[{"\[Alpha]", "+", "nDiseased"}], ",", 
+        RowBox[{"\[Beta]", " ", "+", " ", "nSampleSize", "-", "nDiseased"}]}],
+        "]"}], ",", "\[Theta]"}], "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"fShowPriorLikelihoodPosterior", "[", 
+     RowBox[{
+     "\[Alpha]_", ",", "\[Beta]_", ",", "nSampleSize_Integer", ",", 
+      "nDiseased_Integer"}], "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", "}"}], ",", 
+      RowBox[{"Show", "[", 
+       RowBox[{
+        RowBox[{"GraphicsColumn", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Plot", "[", 
+            RowBox[{
+             RowBox[{"vPrior", "[", 
+              RowBox[{"\[Theta]", ",", "\[Alpha]", ",", "\[Beta]"}], "]"}], 
+             ",", 
+             RowBox[{"{", 
+              RowBox[{"\[Theta]", ",", "0", ",", "1"}], "}"}], ",", 
+             RowBox[{"Frame", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "True", ",", "False", ",", "False"}], 
+               "}"}]}], ",", 
+             RowBox[{"FrameTicks", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "False"}], "}"}]}], ",", 
+             RowBox[{"FrameLabel", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"\"\<\[Theta]\>\"", ",", "\"\<pdf\>\""}], "}"}]}], ",", 
+             RowBox[{"PlotLabel", "\[Rule]", "\"\<prior\>\""}], ",", 
+             RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+             RowBox[{"PlotRange", "\[Rule]", "Full"}]}], "]"}], ",", 
+           RowBox[{"Plot", "[", 
+            RowBox[{
+             RowBox[{"vLikelihood", "[", 
+              RowBox[{"\[Theta]", ",", "nSampleSize", ",", "nDiseased"}], 
+              "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"\[Theta]", ",", "0", ",", "1"}], "}"}], ",", 
+             RowBox[{"Frame", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "True", ",", "False", ",", "False"}], 
+               "}"}]}], ",", 
+             RowBox[{"FrameTicks", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "False"}], "}"}]}], ",", 
+             RowBox[{"PlotRange", "\[Rule]", "Full"}], ",", 
+             RowBox[{"FrameLabel", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"\"\<\[Theta]\>\"", ",", "\"\<likelihood\>\""}], 
+               "}"}]}], ",", 
+             RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+             RowBox[{"PlotLabel", "\[Rule]", "\"\<likelihood\>\""}]}], "]"}], 
+           ",", 
+           RowBox[{"Plot", "[", 
+            RowBox[{
+             RowBox[{"vPosterior", "[", 
+              RowBox[{
+              "\[Theta]", ",", "nSampleSize", ",", "nDiseased", ",", 
+               "\[Alpha]", ",", "\[Beta]"}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"\[Theta]", ",", "0", ",", "1"}], "}"}], ",", 
+             RowBox[{"Frame", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "True", ",", "False", ",", "False"}], 
+               "}"}]}], ",", 
+             RowBox[{"FrameTicks", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "False"}], "}"}]}], ",", 
+             RowBox[{"PlotRange", "\[Rule]", "Full"}], ",", 
+             RowBox[{"FrameLabel", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"\"\<\[Theta]\>\"", ",", "\"\<pdf\>\""}], "}"}]}], ",", 
+             RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+             RowBox[{"PlotLabel", "\[Rule]", "\"\<posterior\>\""}]}], "]"}]}],
+           "}"}], "]"}], ",", 
+        RowBox[{"ImageSize", "\[Rule]", "400"}]}], "]"}]}], 
+     "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.643361524245005*^9, 3.6433616897794733`*^9}, {
+  3.643361769591038*^9, 3.6433617699130564`*^9}, {3.6433618689307203`*^9, 
+  3.643361947409209*^9}, {3.643362367181218*^9, 3.643362367418232*^9}, {
+  3.6433624812787447`*^9, 3.6433624823158035`*^9}, {3.6433625357968626`*^9, 
+  3.6433625824385304`*^9}, {3.6433632305546007`*^9, 3.643363275408166*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"fShowPriorLikelihoodPosterior", "[", 
+    RowBox[{
+    "\[Alpha]", ",", "\[Beta]", ",", "nSampleSize", ",", "nDiseased"}], "]"}],
+    ",", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<Prior parameters\>\"", ",", "Bold", ",", "Medium"}], "]"}], 
+   ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Alpha]", ",", "1", ",", "\"\<Beta 1\>\""}], "}"}], ",", "1", 
+     ",", "10", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Beta]", ",", "1", ",", "\"\<Beta 2\>\""}], "}"}], ",", "1", 
+     ",", "10", ",", "1"}], "}"}], ",", "Delimiter", ",", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<Data\>\"", ",", "Bold", ",", "Medium"}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"nSampleSize", ",", "10", ",", "\"\<Sample size\>\""}], "}"}], 
+     ",", "10", ",", "100", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"nDiseased", ",", "1", ",", "\"\<number with disease\>\""}], 
+      "}"}], ",", "1", ",", "nSampleSize", ",", "1"}], "}"}], ",", 
+   RowBox[{"ControlPlacement", "\[Rule]", "Left"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6433629111263304`*^9, 3.6433629111273303`*^9}, {
+  3.6433629533157434`*^9, 3.643363087931443*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`nDiseased$$ = 
+    1, $CellContext`nSampleSize$$ = 10, $CellContext`\[Alpha]$$ = 
+    4, $CellContext`\[Beta]$$ = 4, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[
+       Style["Prior parameters", Bold, Medium]], 
+      Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`\[Alpha]$$], 1, "Beta 1"}, 1, 10, 1}, {{
+       Hold[$CellContext`\[Beta]$$], 1, "Beta 2"}, 1, 10, 1}, {
+      Hold[
+       Style["Data", Bold, Medium]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`nSampleSize$$], 10, "Sample size"}, 10, 100, 1}, {{
+       Hold[$CellContext`nDiseased$$], 1, "number with disease"}, 1, 
+      Dynamic[$CellContext`nSampleSize$$], 1}}, Typeset`size$$ = {
+    400., {357., 361.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`\[Alpha]$98164$$ = 
+    0, $CellContext`\[Beta]$98165$$ = 0, $CellContext`nSampleSize$98166$$ = 
+    0, $CellContext`nDiseased$98167$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`nDiseased$$ = 
+        1, $CellContext`nSampleSize$$ = 10, $CellContext`\[Alpha]$$ = 
+        1, $CellContext`\[Beta]$$ = 1}, "ControllerVariables" :> {
+        Hold[$CellContext`\[Alpha]$$, $CellContext`\[Alpha]$98164$$, 0], 
+        Hold[$CellContext`\[Beta]$$, $CellContext`\[Beta]$98165$$, 0], 
+        Hold[$CellContext`nSampleSize$$, $CellContext`nSampleSize$98166$$, 0], 
+        Hold[$CellContext`nDiseased$$, $CellContext`nDiseased$98167$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> $CellContext`fShowPriorLikelihoodPosterior[$CellContext`\
+\[Alpha]$$, $CellContext`\[Beta]$$, $CellContext`nSampleSize$$, \
+$CellContext`nDiseased$$], "Specifications" :> {
+        Style[
+        "Prior parameters", Bold, 
+         Medium], {{$CellContext`\[Alpha]$$, 1, "Beta 1"}, 1, 10, 
+         1}, {{$CellContext`\[Beta]$$, 1, "Beta 2"}, 1, 10, 1}, Delimiter, 
+        Style[
+        "Data", Bold, 
+         Medium], {{$CellContext`nSampleSize$$, 10, "Sample size"}, 10, 100, 
+         1}, {{$CellContext`nDiseased$$, 1, "number with disease"}, 1, 
+         Dynamic[$CellContext`nSampleSize$$], 1}}, 
+      "Options" :> {ControlPlacement -> Left}, "DefaultOptions" :> {}],
+     ImageSizeCache->{780., {387., 394.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.643366053749078*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"CloudDeploy", "[", 
+  RowBox[{
+   RowBox[{"Manipulate", "[", 
+    RowBox[{
+     RowBox[{"fShowPriorLikelihoodPosterior", "[", 
+      RowBox[{
+      "\[Alpha]", ",", "\[Beta]", ",", "nSampleSize", ",", "nDiseased"}], 
+      "]"}], ",", 
+     RowBox[{"Style", "[", 
+      RowBox[{"\"\<Prior parameters\>\"", ",", "Bold", ",", "Medium"}], "]"}],
+      ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"\[Alpha]", ",", "1", ",", "\"\<Beta 1\>\""}], "}"}], ",", 
+       "1", ",", "10", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"\[Beta]", ",", "1", ",", "\"\<Beta 2\>\""}], "}"}], ",", "1",
+        ",", "10", ",", "1"}], "}"}], ",", "Delimiter", ",", 
+     RowBox[{"Style", "[", 
+      RowBox[{"\"\<Data\>\"", ",", "Bold", ",", "Medium"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"nSampleSize", ",", "10", ",", "\"\<Sample size\>\""}], "}"}],
+        ",", "10", ",", "100", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"nDiseased", ",", "1", ",", "\"\<number with disease\>\""}], 
+        "}"}], ",", "1", ",", "nSampleSize", ",", "1"}], "}"}], ",", 
+     RowBox[{"ControlPlacement", "\[Rule]", "Left"}]}], "]"}], ",", 
+   RowBox[{"Permissions", "\[Rule]", "\"\<Public\>\""}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.6433639259443746`*^9, 3.643363937962062*^9}, {
+  3.6433639712829676`*^9, 3.643363975823228*^9}, {3.643364656639168*^9, 
+  3.643364658093251*^9}}],
+
+Cell[BoxData[
+ RowBox[{"g1", "=", 
+  RowBox[{"Manipulate", "[", 
+   RowBox[{
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", "}"}], ",", 
+      RowBox[{"Show", "[", 
+       RowBox[{
+        RowBox[{"GraphicsColumn", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Plot", "[", 
+            RowBox[{
+             RowBox[{"PDF", "[", 
+              RowBox[{
+               RowBox[{"BetaDistribution", "[", 
+                RowBox[{"\[Alpha]", ",", "\[Beta]"}], "]"}], ",", 
+               "\[Theta]"}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"\[Theta]", ",", "0", ",", "1"}], "}"}], ",", 
+             RowBox[{"Frame", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "True", ",", "False", ",", "False"}], 
+               "}"}]}], ",", 
+             RowBox[{"FrameTicks", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "False"}], "}"}]}], ",", 
+             RowBox[{"FrameLabel", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"\"\<\[Theta]\>\"", ",", "\"\<pdf\>\""}], "}"}]}], ",", 
+             RowBox[{"PlotLabel", "\[Rule]", "\"\<prior\>\""}], ",", 
+             RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+             RowBox[{"PlotRange", "\[Rule]", "Full"}]}], "]"}], ",", 
+           RowBox[{"Plot", "[", 
+            RowBox[{
+             RowBox[{"Likelihood", "[", 
+              RowBox[{
+               RowBox[{"BinomialDistribution", "[", 
+                RowBox[{"nSampleSize", ",", "\[Theta]"}], "]"}], ",", 
+               RowBox[{"{", "nDiseased", "}"}]}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"\[Theta]", ",", "0", ",", "1"}], "}"}], ",", 
+             RowBox[{"Frame", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "True", ",", "False", ",", "False"}], 
+               "}"}]}], ",", 
+             RowBox[{"FrameTicks", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "False"}], "}"}]}], ",", 
+             RowBox[{"PlotRange", "\[Rule]", "Full"}], ",", 
+             RowBox[{"FrameLabel", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"\"\<\[Theta]\>\"", ",", "\"\<likelihood\>\""}], 
+               "}"}]}], ",", 
+             RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+             RowBox[{"PlotLabel", "\[Rule]", "\"\<likelihood\>\""}]}], "]"}], 
+           ",", 
+           RowBox[{"Plot", "[", 
+            RowBox[{
+             RowBox[{"PDF", "[", 
+              RowBox[{
+               RowBox[{"BetaDistribution", "[", 
+                RowBox[{
+                 RowBox[{"\[Alpha]", "+", "nDiseased"}], ",", 
+                 RowBox[{
+                 "\[Beta]", " ", "+", " ", "nSampleSize", "-", 
+                  "nDiseased"}]}], "]"}], ",", "\[Theta]"}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"\[Theta]", ",", "0", ",", "1"}], "}"}], ",", 
+             RowBox[{"Frame", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "True", ",", "False", ",", "False"}], 
+               "}"}]}], ",", 
+             RowBox[{"FrameTicks", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"True", ",", "False"}], "}"}]}], ",", 
+             RowBox[{"PlotRange", "\[Rule]", "Full"}], ",", 
+             RowBox[{"FrameLabel", "\[Rule]", 
+              RowBox[{"{", 
+               RowBox[{"\"\<\[Theta]\>\"", ",", "\"\<pdf\>\""}], "}"}]}], ",", 
+             RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+             RowBox[{"PlotLabel", "\[Rule]", "\"\<posterior\>\""}]}], "]"}]}],
+           "}"}], "]"}], ",", 
+        RowBox[{"ImageSize", "\[Rule]", "400"}]}], "]"}]}], "]"}], ",", 
+    RowBox[{"Style", "[", 
+     RowBox[{"\"\<Prior parameters\>\"", ",", "Bold", ",", "Medium"}], "]"}], 
+    ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\[Alpha]", ",", "1", ",", "\"\<Beta 1\>\""}], "}"}], ",", "1",
+       ",", "10", ",", "1"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\[Beta]", ",", "1", ",", "\"\<Beta 2\>\""}], "}"}], ",", "1", 
+      ",", "10", ",", "1"}], "}"}], ",", "Delimiter", ",", 
+    RowBox[{"Style", "[", 
+     RowBox[{"\"\<Data\>\"", ",", "Bold", ",", "Medium"}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"nSampleSize", ",", "10", ",", "\"\<Sample size\>\""}], "}"}], 
+      ",", "10", ",", "100", ",", "1"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"nDiseased", ",", "1", ",", "\"\<number with disease\>\""}], 
+       "}"}], ",", "1", ",", "nSampleSize", ",", "1"}], "}"}], ",", 
+    RowBox[{"ControlPlacement", "\[Rule]", "Left"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6433652139370437`*^9, 3.643365214294064*^9}}],
+
+Cell[BoxData[
+ RowBox[{"g1", "=", 
+  RowBox[{"Manipulate", "[", 
+   RowBox[{
+    RowBox[{"Plot", "[", 
+     RowBox[{
+      RowBox[{"PDF", "[", 
+       RowBox[{
+        RowBox[{"BetaDistribution", "[", 
+         RowBox[{"a", ",", "b"}], "]"}], ",", "x"}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"x", ",", "0", ",", "1"}], "}"}]}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"a", ",", "1", ",", "10", ",", "1"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"b", ",", "1", ",", "10", ",", "1"}], "}"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6433931924113207`*^9, 3.6433932534838133`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CloudDeploy", "[", "g1", "]"}]], "Input",
+ CellChangeTimes->{{3.6433932577010546`*^9, 3.64339326355439*^9}}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"CloudObject", "[", 
+   TagBox[
+    ButtonBox[
+     PaneSelectorBox[{
+      False->"\<\"https://www.wolframcloud.com/objects/2b959684-1d35-48cf-\
+a238-72730fc238a4\"\>", True->
+      StyleBox["\<\"https://www.wolframcloud.com/objects/2b959684-1d35-48cf-\
+a238-72730fc238a4\"\>", "HyperlinkActive"]}, Dynamic[
+       CurrentValue["MouseOver"]],
+      BaseStyle->{"Hyperlink"},
+      FrameMargins->0,
+      ImageSize->Automatic],
+     BaseStyle->"Hyperlink",
+     ButtonData->{
+       URL[
+       "https://www.wolframcloud.com/objects/2b959684-1d35-48cf-a238-\
+72730fc238a4"], None},
+     ButtonNote->
+      "https://www.wolframcloud.com/objects/2b959684-1d35-48cf-a238-\
+72730fc238a4"],
+    Annotation[#, 
+     "https://www.wolframcloud.com/objects/2b959684-1d35-48cf-a238-\
+72730fc238a4", "Hyperlink"]& ], "]"}],
+  CloudObject[
+  "https://www.wolframcloud.com/objects/2b959684-1d35-48cf-a238-72730fc238a4"],
+  SelectWithContents->True]], "Output",
+ CellChangeTimes->{{3.6433932686426806`*^9, 3.6433932946371675`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"aList", "=", 
+  RowBox[{"Outer", "[", 
+   RowBox[{"List", ",", 
+    RowBox[{"Range", "[", "10", "]"}], ",", 
+    RowBox[{"Range", "[", "10", "]"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.643393397644059*^9, 3.6433934620427427`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "10"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "10"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"3", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "10"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"4", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "10"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"5", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "10"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"6", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "10"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"7", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7", ",", "10"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"8", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"8", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"8", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"8", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"8", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"8", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"8", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"8", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"8", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"8", ",", "10"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"9", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"9", ",", "10"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"10", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "8"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "9"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "10"}], "}"}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.6433934285288258`*^9, 3.643393455129347*^9}, 
+   3.643393559084293*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{"ArrayReshape", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"PDF", "[", 
+        RowBox[{
+         RowBox[{"BetaDistribution", "[", 
+          RowBox[{"#1", ",", "#2"}], "]"}], ",", "i"}], "]"}], "&"}], "@@@", 
+      RowBox[{"(", 
+       RowBox[{"Flatten", "[", 
+        RowBox[{"aList", ",", "1"}], "]"}], ")"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "10"}], "}"}]}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"i", ",", "0", ",", "1", ",", "0.1"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.643393486115119*^9, 3.6433935989845753`*^9}, {
+  3.6433936337645645`*^9, 3.643393761597876*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"aResults", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"a", ",", "b"}], "}"}], ",", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"\[Theta]", ",", 
+           RowBox[{"PDF", "[", 
+            RowBox[{
+             RowBox[{"BetaDistribution", "[", 
+              RowBox[{"a", ",", "b"}], "]"}], ",", "\[Theta]"}], "]"}]}], 
+          "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"\[Theta]", ",", "0.01", ",", "0.99", ",", "0.01"}], 
+          "}"}]}], "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"a", ",", "1", ",", "10", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"b", ",", "1", ",", "10", ",", "1"}], "}"}]}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.6433938587624335`*^9, 3.6433939473665013`*^9}, {
+  3.6433939777462387`*^9, 3.643394144624784*^9}, {3.6433941829709773`*^9, 
+  3.6433941832909956`*^9}, {3.6433942587493114`*^9, 3.643394261469467*^9}, {
+  3.6433943441931987`*^9, 3.643394346127309*^9}}],
+
+Cell[BoxData[
+ RowBox[{"g1", "=", 
+  RowBox[{"Manipulate", "[", 
+   RowBox[{
+    RowBox[{"ListLinePlot", "@", 
+     RowBox[{"aResults", "[", 
+      RowBox[{"[", 
+       RowBox[{"a", ",", "b", ",", "2"}], "]"}], "]"}]}], ",", 
+    RowBox[{"{", 
+     RowBox[{"a", ",", "1", ",", "10", ",", "1"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"b", ",", "1", ",", "10", ",", "1"}], "}"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6433942919742117`*^9, 3.643394339427926*^9}, {
+  3.6433945075975447`*^9, 3.6433945080915728`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"CloudDeploy", "[", 
+  RowBox[{"g1", ",", 
+   RowBox[{"Permissions", "\[Rule]", "\"\<Public\>\""}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.643394430471133*^9, 3.643394431878214*^9}, {
+   3.64339451310786*^9, 3.6433945154069915`*^9}, 3.6433946491396403`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"CloudObject", "[", 
+   TagBox[
+    ButtonBox[
+     PaneSelectorBox[{
+      False->"\<\"https://www.wolframcloud.com/objects/895b0570-bd13-4526-\
+bbcc-635cc9285204\"\>", True->
+      StyleBox["\<\"https://www.wolframcloud.com/objects/895b0570-bd13-4526-\
+bbcc-635cc9285204\"\>", "HyperlinkActive"]}, Dynamic[
+       CurrentValue["MouseOver"]],
+      BaseStyle->{"Hyperlink"},
+      FrameMargins->0,
+      ImageSize->Automatic],
+     BaseStyle->"Hyperlink",
+     ButtonData->{
+       URL[
+       "https://www.wolframcloud.com/objects/895b0570-bd13-4526-bbcc-\
+635cc9285204"], None},
+     ButtonNote->
+      "https://www.wolframcloud.com/objects/895b0570-bd13-4526-bbcc-\
+635cc9285204"],
+    Annotation[#, 
+     "https://www.wolframcloud.com/objects/895b0570-bd13-4526-bbcc-\
+635cc9285204", "Hyperlink"]& ], "]"}],
+  CloudObject[
+  "https://www.wolframcloud.com/objects/895b0570-bd13-4526-bbcc-635cc9285204"],
+  SelectWithContents->True]], "Output",
+ CellChangeTimes->{3.643394547800844*^9, 3.643394700390572*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Plot", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"PDF", "[", 
+      RowBox[{
+       RowBox[{"GammaDistribution", "[", 
+        RowBox[{"0.001", ",", 
+         RowBox[{"1", "/", "0.001"}]}], "]"}], ",", "x"}], "]"}], ",", 
+     RowBox[{"2", "*", 
+      RowBox[{"PDF", "[", 
+       RowBox[{
+        RowBox[{"CauchyDistribution", "[", 
+         RowBox[{"0", ",", "2.5"}], "]"}], ",", "x"}], "]"}]}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "0", ",", "1"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.64340327147081*^9, 3.6434032890078125`*^9}, {
+  3.6434033251248784`*^9, 3.64340332533189*^9}, {3.6434033611049366`*^9, 
+  3.6434034317209754`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {}, 
+   {RGBColor[0.368417, 0.506779, 0.709798], AbsoluteThickness[1.6], Opacity[
+    1.], LineBox[CompressedData["
+1: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
+s6xsbtJwukTnSb4iAf8Dza6MFw==
+     "]]}, 
+   {RGBColor[0.880722, 0.611041, 0.142051], AbsoluteThickness[1.6], Opacity[
+    1.], LineBox[CompressedData["
+1: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
+GlpCd1KFiO/LCc0tLZF8xkxzFwkK/weAWsPX
+     "]]}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  DisplayFunction->Identity,
+  Frame->{{False, False}, {False, False}},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  Method->{"DefaultBoundaryStyle" -> Automatic, "ScalingFunctions" -> None},
+  PlotRange->{{0, 1}, {0., 0.6216641419146441}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.05], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.643403289418836*^9, 3.64340332567791*^9, {3.6434033664532423`*^9, 
+   3.6434034320879965`*^9}}]
+}, Open  ]]
+},
+WindowSize->{1366, 686},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (September 9, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 5082, 117, 252, "Input"],
+Cell[CellGroupData[{
+Cell[5665, 141, 1335, 34, 72, "Input"],
+Cell[7003, 177, 3179, 61, 798, "Output"]
+}, Open  ]],
+Cell[10197, 241, 1560, 38, 72, "Input"],
+Cell[11760, 281, 4803, 111, 232, "Input"],
+Cell[16566, 394, 600, 16, 31, "Input"],
+Cell[CellGroupData[{
+Cell[17191, 414, 132, 2, 31, "Input"],
+Cell[17326, 418, 1061, 28, 33, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[18424, 451, 260, 6, 31, "Input"],
+Cell[18687, 459, 6857, 224, 132, "Output"]
+}, Open  ]],
+Cell[25559, 686, 687, 19, 31, "Input"],
+Cell[26249, 707, 1097, 29, 31, "Input"],
+Cell[27349, 738, 525, 13, 31, "Input"],
+Cell[CellGroupData[{
+Cell[27899, 755, 282, 5, 31, "Input"],
+Cell[28184, 762, 1055, 28, 33, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[29276, 795, 705, 19, 31, "Input"],
+Cell[29984, 816, 9405, 167, 269, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
