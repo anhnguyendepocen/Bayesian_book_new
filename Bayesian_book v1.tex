@@ -915,6 +915,17 @@ which we see is true. We could similarly also validate this by checking the othe
   \caption{The probability distribution for horses C and D. The marginal distribution of horses C and D are achieved by summing the values in each column or row respectively.}\label{tab:Probability_horsesIndependent}%
 \end{table}%
 
+\subsection{Conditional independence}
+In statistics we often come across situations where we suppose that observations are \textit{conditionally} independent. This is often swept under the carpet, and in discussion authors (falsely) state that the observations are \textit{independent}. Suppose that we work for the WHO, as an epidemiologist, and are interested in estimating the proportion of obese individuals within a distinct urban area. Within this are, we can suppose that there exists a true proportion of this condition, $\theta$. Suppose we select an individual uniformly at random from this population, and record their status, $X_1$, for this disorder. We then pick another individual, and record their status, calling it $X_2$. If we knew $\theta$, then we might suppose that the outcomes of these two picks are independent \textit{conditional} on this overall parameter. In other words, the outcome of the first sampling provides us \textit{no} further information on the disorder status of the second.
+
+This conditional independence property has frequently be represented in diagrammatic form of the type shown in figure \ref{fig:Probability_conditionalIndependence}.
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Probability_conditionalIndependence.pdf}}
+\caption{A diagrammatic depiction of conditional independence.}\label{fig:Probability_conditionalIndependence}
+\end{figure}
 
 \section{Central Limit Theorems}\label{sec:Probability_CLT}
 Life is rarely simple, and in stating statistical models of phenomena we are attempting to at best, \textit{approximate} what is actually happening. In this environment, anything that brings a degree of certainty and coherence to our models is most welcome. 
@@ -1019,11 +1030,79 @@ p(\theta|data) = \frac{p(data|\theta)\times p(\theta)}{p(data)}
 Although we have straightforwardly made two substitutions to arrive at (\ref{eq:Probability_BayesianInferenceFormula}) from (\ref{eq:Probability_BayesianFormula1}), what have we gained by doing so? Also, what exactly do the terms on the right hand side actually mean? Although we introduced these in chapter \ref{chap:subjectiveFrequentistBayes}, we will spend the next part of this book examining each of these components in detail.
 
 \section{Chapter summary}
-
-\section{Problem set}
 The reader should now have developed a working understanding of probability distributions. Of particular importance in Bayesian statistics are the concepts of marginal and conditional distributions introduced in sections \ref{sec:Probability_marginal} and \ref{sec:Probability_conditionalDistributionIntro} respectively. If you do not feel fully confident with probability distributions, do not fret, since we will have ample opportunity to work with these mathematical objects in the next part of the book, where we provide an in-depth discussion of the various elements of the central formula of Bayesian inference: Bayes' rule.
 
 \section{Chapter outcomes}
+The reader should now be familiar with the following concepts:
+\begin{enumerate}
+\item The conditions under which a probability distribution is valid.
+\item The difference between probability and probability density.
+\item Summary distribution measures, and how to calculate them.
+\item Two-or-more dimensional probability distributions.
+\item Marginal distributions and how to calculate them.
+\item Conditional distributions and how to calculate them.
+\item Independence,
+\item Central Limit Theorems.
+\item The Bayesian formula.
+\end{enumerate}
+
+\section{Problem set}
+\subsection{The expected returns of a derivative}
+The returns of a particular stock are thought to be well described by a log-normal distribution:
+
+\begin{equation}
+log(S_t) \sim N(\mu,\sigma)
+\end{equation}
+
+\subsubsection{What are the expected returns of the stock?}
+\subsubsection{What are the variance in returns?}
+
+The performance of a particular type of derivative is given by the following formula:
+\begin{equation}
+D_t = S_t^2
+\end{equation}
+
+\subsubsection{Would you expect the return to be equal to the mean of the original stock squared? If not, why not?}
+Note to myself: the convexity of the squared function means that it is greater.
+\subsubsection{What would be a fair price to pay for this derivative?}
+
+An alternative stock is probabilistically related to the performance of $S_t$:
+
+\begin{equation}
+R_t \sim N(S^2,1)
+\end{equation}
+
+\subsubsection{What is a fair price to pay for this stock?}
+\subsubsection{Which asset is more risky, $D_t$ or $R_t$?}
+
+The data file XXX contains Stock return data for the stock $S_t$. A way to estimate the parameter is via a method known as \textit{method of moments}. Here, we might estimate the parameters $\mu$ and $\sigma$ by equating the sample mean and variance, to the \textit{population} quantities we believe our process abides by.
+
+\subsubsection{Use \textit{method of moments} to estimate $\mu$ and $\sigma$. Note: this requires use of a computer with mathematical software, as analytic solutions aren't possible.}
+
+\subsubsection{Compare the estimated model with the data.}
+\subsubsection{Is the model a reasonable approximation to the data generating process?}
+\subsubsection{If not, suggest a better alternative.}
+
+\subsection{The boy or girl paradox\footnote{First introduced by Martin Gardner in 1959.}}
+Suppose we are told the following information:
+
+Mr Bayes has two children. The older child is a girl. What is the probability that both children are girls?
+Mr Laplace has two children. At least one of the children is a girl. What is the probability that both children are girls?
+
+\subsection{The Bayesian game show}
+A game show presents contestants with four doors: behind one of the doors is a car worth \$1000; behind another is a forfeit whereby the contestant must pay \$500 out of their winnings thus far on the show. Behind the other two doors there is nothing.
+
+The order of the game is thus:
+\begin{enumerate}
+\item The contestant chooses one of four doors.
+\item The game show host opens one of the empty doors.
+\item The contestant is given the option of changing their choice to one of the two remaining doors.
+\item The contestant's final choice door is opened, either to their delight (a car!), dismay (a penalty), or indifference (nothing).
+\end{enumerate}
+
+What should the contestant do?
+
+\subsection{A high dimensional probability example.}
 
 \part{Understanding the Bayesian formula}\label{part:bayesianFormula}
 \section{Part mission statement}
@@ -1508,8 +1587,16 @@ Whilst these visual checks may become cumbersome with more complex data series, 
 In this chapter we have seen how the posterior distribution can be used to produce summaries of parameters. In particular, we have used these distributions to produce Bayesian credible intervals. We then compared and contrasted these with the classically-equivalent confidence interval, and have reasoned that in many cases the Bayesian formulation is more straightforward and intuitive than the former. We then move from the realm of the parameter, to that of the data, in order to produce prior and posterior data probabilities; which can be used to sense-check the implications of statistical models. We finally discussed methods of model comparison, introducing firstly the Bayes Factor method, followed by a short introduction to posterior predictive checks. Although the former method is common in the literature, we advocated the more nuanced approach of posterior predictive checks, albeit postponing more in-depth discussion until chapter \ref{chap:ModelFit}. Now that we have seen the utility of posterior probability distributions, we need to know how we can obtain them via Bayes' rule. In order to use the latter, we need to understand its constituent parts: the likelihood, prior and denominator. It is these three parts to which I devote the rest of the first part of this book.
 
 \section{Chapter outcomes}
+The reader should now be familiar with the following concepts:
+\begin{enumerate}
+\item Expressing uncertainty in a parameter's value through probability distributions.
+\item The difference between the classical confidence interval and the Bayesian credible interval.
+\item How to obtain the prior and posterior predictive distributions from the prior and posterior distributions respectively.
+\item Model evaluation through the posterior predictive distribution.
+\end{enumerate}
 
 \section{Problem set}
+
 
 \section{Appendix}
 \subsection{The interval ENIGMA - explained in full}\label{sec:Posterior_appendixConfidenceInterval}
@@ -2066,7 +2153,33 @@ before your next visit?
 \end{enumerate}
 before your next visit?
 
-\subsubsection{Hints:}
+\subsubsection{Hints: the exponential is to the poisson model, what the ? is to the negative binomial.}
+
+\subsection{Violent crime counts in New York counties}
+In data file XXX we have compiled a data set of the population, violent crime count and unemployment across New York counties in 2014. 
+
+\subsection{Graph the violent crime account against population. What type of relationship does this suggest?}
+\subsection{A simple model}
+A simple model here might be to assume that the crime count in a particular county is related to the population size by a poisson model:
+\begin{equation}
+crime_i \sim poisson(n_i\theta)
+\end{equation}
+\subsubsection{What are the assumptions of this model?}
+\subsubsection{Estimate the parameter $\theta$ from the data. What does this parameter represent?}
+\subsubsection{Do these assumptions seem realistic?}
+\subsubsection{Evaluate the performance of your model.}
+
+\subsection{A better model}
+An alternative model allows each county to be heterogeneous with respect to its susceptibility to crime, and has a specification of the form:
+\begin{equation}
+crime_i \sim poisson(n_i\theta_i)
+\end{equation}
+\subsubsection{Why is this model better?}
+\subsubsection{What factors might affect $\theta_i$?}
+\subsubsection{Write down a new model specification taking into account the previous point.}
+\subsubsection{Estimate the parameters of this new specification.}
+\subsubsection{How does this new model compare to the previous iteration?}
+\subsubsection{What alternative specifications might be worth attempting?}
 
 \chapter{Priors}\label{chap:Prior}
 \section{Chapter Mission statement}
