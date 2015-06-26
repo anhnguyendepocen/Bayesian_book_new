@@ -22,7 +22,6 @@
 \usepackage{pst-math}
 
 
-
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.1in}
 \maketitle
@@ -93,6 +92,8 @@ Each chapter has two introductory summaries: the \textit{chapter mission stateme
 The \textit{chapter summary} sections at the end of each chapter provide the reader with a description of the skills acquired within, as well as some perspective on the material's position within the book's overall goals. The \textit{chapter outcomes} section provides a check-list of the skills acquired within the chapter. 
 
 \section{Route planner - suggested journeys through Bayesland}
+\textbf{Change this to make of the same tick and cross table format as that of the Bayesian machine learning book!}
+
 In the style of most good guide books, we provide itineraries through the area in question. These itineraries are meant to be shortish paths towards gaining a better understanding of Bayesian statistics, although as most trips are, they are not as all-encompassing, as a more prolonged stay. We provide the following trips through Bayesland, based on time, goals, and pre-requisite knowledge:
 
 \begin{itemize}
@@ -509,7 +510,7 @@ In (\ref{eq:Probability_continuousProbabilityIntervalExample}), we have used $Pr
 
 \boxed{Interactive:} see the interactive tool to allow you to dynamically manipulate figure \ref{fig:Probability_continuousLotteryInterval}.
 
-\subsection{Mean and variance of distributions}
+\subsection{Mean and variance of distributions}\label{sec:Probability_meanVariance}
 A popular way of summarising a distribution is via its \textit{mean}, which is one measure of central tendency of a distribution. More intuitively, a mean, or \textit{expected value}, of a distribution represents the long-run average value that would be obtained if we sampled from that particular distribution in question, an infinite number of times. 
 
 The way in which we calculate the \textit{mean} of a distribution depends on whether it is \textit{discrete} or \textit{continuous} in nature. However, the concept is essentially the same in both cases. The mean is calculated as a weighted sum of the values taken on by the random variable in question, where the weights are provided by the probability distribution. This results in the following forms for the mean of a discrete and continuous variable respectively:
@@ -915,10 +916,10 @@ which we see is true. We could similarly also validate this by checking the othe
   \caption{The probability distribution for horses C and D. The marginal distribution of horses C and D are achieved by summing the values in each column or row respectively.}\label{tab:Probability_horsesIndependent}%
 \end{table}%
 
-\subsection{Conditional independence}
+\subsection{Conditional independence}\label{sec:Probability_conditionalIndependence}
 In statistics we often come across situations where we suppose that observations are \textit{conditionally} independent. This is often swept under the carpet, and in discussion authors (falsely) state that the observations are \textit{independent}. Suppose that we work for the WHO, as an epidemiologist, and are interested in estimating the proportion of obese individuals within a distinct urban area. Within this are, we can suppose that there exists a true proportion of this condition, $\theta$. Suppose we select an individual uniformly at random from this population, and record their status, $X_1$, for this disorder. We then pick another individual, and record their status, calling it $X_2$. If we knew $\theta$, then we might suppose that the outcomes of these two picks are independent \textit{conditional} on this overall parameter. In other words, the outcome of the first sampling provides us \textit{no} further information on the disorder status of the second.
 
-This conditional independence property has frequently be represented in diagrammatic form of the type shown in figure \ref{fig:Probability_conditionalIndependence}.
+This conditional independence property has frequently be represented in diagrammatic form of the type shown in figure \ref{fig:Probability_conditionalIndependence}. The arrows represent a dependency. When viewed in this light we see that it is incorrect to view the disease statuses of individuals 1 and 2 as \textit{fully} independent, since they are linked through a joint dependence on $\theta$. However, note that there is no direct arrow joining $X_1$ and $X_2$; this means that the random variables are \textit{conditionally} independent, when we allow for a joint dependence on $\theta$. 
 
 \begin{figure}
 \centering
@@ -1100,9 +1101,43 @@ The order of the game is thus:
 \item The contestant's final choice door is opened, either to their delight (a car!), dismay (a penalty), or indifference (nothing).
 \end{enumerate}
 
-What should the contestant do?
+Assuming that the contestant prefers less risk, what should they do?
 
-\subsection{A high dimensional probability example.}
+If you are unsure as to how to proceed, why not simulate the game using a computer. The program should only be a few lines, and might provide you with some intuition as to what is happening.
+
+\subsection{Blood doping}
+Suppose as a benign omniscient observer, we tally up the historical cases where professional cyclists used/didn't-use blood doping, and either won or lost a particular race. This results in the probability distribution shown in table \ref{tab:Probability_PS_bloodDoping}.
+
+\subsubsection{What is the probability that a professional cyclist wins a race?}
+\subsection{What is the probability that a cyclist wins a race given that they have cheated?}
+\subsubsection{What is the probability that a cyclist is cheating given that he wins?}
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{ccc}
+    \toprule
+          & \textbf{Lost} & \textbf{Won} \\
+    \midrule
+    \textbf{Clean} & 0.7   & 0.05 \\
+    \textbf{Doping} & 0.15  & 0.15 \\
+    \bottomrule
+    \end{tabular}%
+    \caption{The historical probabilities of behaviour and outcome for professional cyclists.}
+  \label{tab:Probability_PS_bloodDoping}%
+\end{table}%
+
+Now suppose that drug testing officials have a test which is relatively accurate in finding cheats. It accurately indicates a blood-doper 90\% of the time. However, it incorrectly indicates a positive for clean athletes 5\% of the time. 
+
+Should the officials test all the athletes or only the winners, for the cases when:
+
+\begin{enumerate}
+\item They care only about the proportion of people correctly identified as dopers.
+\item They want only to minimise the proportion of falsely accused athletes.
+\item They care only about the \textit{number} of people correctly identified as dopers.
+\item They care five times about the \textit{number} of people who are falsely identified as they do about the \textit{number} of people who are correctly identified as dopers.
+\item What factor would make the officials choose the other group? (By factor, we mean the number 5 in the previous question.)
+\end{enumerate}
+
 
 \part{Understanding the Bayesian formula}\label{part:bayesianFormula}
 \section{Part mission statement}
@@ -1367,6 +1402,40 @@ The difference between these two measures is subtle. In fact, as is often the ca
 A Bayesian would also criticise a classical confidence interval, since for a given communication mode, what is the use in worrying about all the other communication modes? We aren't uncertain about the communication mode!
 
 A Frequentist would argue that for attacks on airfields, the Bayesian confidence intervals only correctly predict this as the attack destination 66\% of the time. Again, if these types of attack are particularly costly, then this interval might not be ideal\footnote{If we were to assign costs to each of these attack events, then we could work out optimal intervals, although this is the realm of Bayesian Decision Theory; not covered in this text.}. A Bayesian would argue that, assuming a uniform prior, this type of attack only happens 25\% of the time, and so is not something to worry about. Further, for every mode of communication, our credible intervals are guaranteed to never be nonsense, in contrast to the classical confidence interval.
+
+\section{Point parameter estimates}
+Whilst it is beneficial to estimate the entire posterior distribution for a particular parameter, we are often required to give point estimates. This is sometimes for direct comparison with Frequentist approaches, but more often it is to allow people not versed in Bayesian statistics to make decisions\footnote{The correct process in order to make decisions using posterior distributions is through decision theory, not covered in this text. A good review of this field is provided in \cite{robert2007bayesian}.}. We want to reiterate, that we are \textit{not} advocating these estimators\footnote{Rules that take an input, and produce estimates.} as a replacement to providing the entire posterior distribution; only that they are useful summaries which supplement an analysis.
+
+There are three main approaches here, although we argue that only two out of the three should be used. These estimators can be summarised as:
+
+\begin{itemize}
+\item The posterior mean.
+\item The posterior median.
+\item The maximum a posteriori estimator (MAP).
+\end{itemize}
+
+The posterior mean is simply defined for a univariate-continuous example as:
+
+\begin{equation}
+\mathrm{E}[\theta|data] = \int\limits_{\Theta} \theta p(\theta|data)\mathrm{d}\theta
+\end{equation}
+
+For the discrete case, we replace the integrals above with summations (see section \ref{sec:Probability_meanVariance}). 
+
+The posterior median is the point of a posterior distribution to which 50\% of its area (the probability), lies to its left. The MAP estimator is simply the highest point in the posterior (see figure \ref{fig:Posterior_meanMedianMAP}).
+
+Whilst each of these three estimators can be optimal for a given loss functions\footnote{A decision theoretic concept, again.}, we believe that there is a clear hierarchy of these estimators. At the top of the hierarchy - denoting our preferred estimator - we have the posterior mean. This is our favourite for two reasons: firstly, it normally yields \textit{sensible} estimates, which are fairly representative of the central position of the posterior distribution; secondly, and more mathematically, this estimator makes sense from a measure-theoretic perspective, since the quantity of interest is a probability not a density. The density depends on the particular parameterisation that we choose, the probability should not. Don't worry about this last point too much, we just wanted to mention it for completeness. Next down the hierarchy we have the posterior median. This is usually pretty close to the mean (see figure \ref{fig:Posterior_meanMedianMAP}), and is often indicative of our posterior distribution. It is sometimes preferable to use a median if the mean is heavily-skewed by a slowly-changing density, although the choice between the two estimators depends on circumstance.
+
+At the bottom of the hierarchy, we have the MAP estimator. Proponents argue that the simplicity of this estimator is a benefit. Since it maximises the posterior, across values of the parameter, we do not actually need to calculate the tricky denominator (see chapter \ref{chap:denominator}), as this is independent of the parameter. This means that it is often feasible to find the MAP estimator exactly, even if this is not possible for the other two measures. However, its simplicity is misleading. Importantly, the mode of a distribution often lies away from the majority of the probability distribution's area, and is hence not a particularly indicative central measure of the posterior. Secondly, and mathematically, this estimator does not make sense because it relies on the density, which depends on the particular parameterisation in question.
+
+The bottom line is that one should not use the MAP estimator unless you have a \textit{very} good reason for doing so. 
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Posterior_meanMedianMAP.pdf}}
+\caption{The mean, median and mode for a skewed, multi-modal distribution.}\label{fig:Posterior_meanMedianMAP}
+\end{figure}
 
 
 \section{Prediction using predictive distributions}
@@ -2513,7 +2582,7 @@ P(Y) = \frac{1}{2\sqrt{Y}}
 
 \chapter{The devil's in the denominator}\label{chap:denominator}
 \section{Chapter mission}
-At the end of this chapter, the reader will understand what is represented by the denominator term, $P(data)$, in Bayes' rule. Furthermore, they will also have an appreciation of the inherent complexity of this term, as well as an idea of how modern computational methods can be used to bi-pass this.
+At the end of this chapter, the reader will understand what is represented by the denominator term, $P(data)$, in Bayes' rule. Furthermore, they will also have an appreciation of the inherent complexity of this term, and similar expressions encountered in applied analysis, as well as an idea of how modern computational methods can be used to bi-pass this.
 
 Insert a graphic with the likelihood part of Bayes' formula circled, as in the equation shown below for the part highlighted in blue.
 
@@ -2721,10 +2790,6 @@ We shall come to discuss the usefulness of the Bayes factor in chapter \ref{chap
 
 In both the examples discussed in sections \ref{sec:Denominator_discreteExample} and \ref{sec:Denominator_continuousExample}, we found the denominator as a means to obtaining the posterior distribution through Bayes' rule. However, as an ends in itself it is less useful, unless it is calculated across a number of models/hypotheses and then used to choose amongst them.
 
-\subsection{The denominator for improper priors}
-The difficulty calculating P(data) with an improper prior.
-Go through and correct P to p for probability.
-
 \section{The difficulty with the denominator}\label{sec:Denominator_difficulty}
 We have come to realise that the denominator of Bayes' rule is obtained by summing/integrating the joint density $p(data,\theta)$, where the latter is obtained by the product of the prior and the likelihood. The examples in section \ref{sec:Denominator_asAProbability} indicate how this procedure works when there is a single parameter in the model. However, in most real-life applications of statistics, the likelihood is a function of a number of parameters. For the case of a two parameter discrete model, the denominator is given by a double sum:
 
@@ -2787,7 +2852,7 @@ We assume that the patient takes a personality diagnostic test which provides so
           &       & \multicolumn{1}{c}{\textbf{$p(A|X=1)$}} & \textbf{0.33} & \textbf{0.67} &  \\
     \bottomrule
     \end{tabular}%
-    \caption{}
+    \caption{Calculation of posterior for the anxiety and depression example described.}
   \label{tab:Denominator_comorbidityTwoParameterDiscrete}%
 \end{table}%
 
@@ -2875,7 +2940,16 @@ p(\theta|data) &= \frac{p(data|\theta)\times p(\theta)}{p(data)}\\
 
 In (\ref{eq:Denominator_proportional}) we have arrived at the second line due to $p(data)$ being independent of $\theta$; it is essentially a constant that we use to normalise the posterior. The numerator of Bayes' rule tells us everything that we need to know about the \textit{shape}\footnote{It's dependence on $\theta$.} of the posterior distribution, whereas the denominator merely tells us about its \textit{height}. Computational methods use the shape of the posterior distribution to generate samples from it based on local comparison of relative probabilities. 
 
-This provides a little insight into the methodology of modern Bayesian methods, although we will cover this in more depth in Part \ref{part:computationalBayes}. 
+Furthermore, the use of sampling allows one to bypass the difficulty with calculating some of the most important summary measures of parameter estimates. Even if we were able to calculate the denominator, we usually want to use the joint posterior to calculate marginal quantities of interest. For example, we are often interested in the expected value of a parameter:
+
+\begin{equation}
+\begin{align}
+\mathrm{E}[\theta_1] &= \int\limits_{\Theta_1} \theta_1\int\limits_{\Theta_2} p(\theta_1,\boldsymbol{\theta_2}|data)\mathrm{d}\boldsymbol{\theta_2} \mathrm{d}\theta_1\\
+&= \int\limits_{\Theta_1} \theta_1 p(\theta_1|data) \mathrm{d}\theta_1
+\end{align}
+\end{equation}
+
+In the above, we have got to the second line by marginalising out the parameter vector $\boldsymbol{\theta_2}$ (see section \ref{sec:Probability_marginal} for further explanation). As the difficulty with calculating the denominator proves, these highly-dimensional integrals can be practically intractable. In Part \ref{part:computationalBayes} we will see how sampling again comes to our rescue.
 
 \section{Chapter summary}
 This chapter should have introduced you to the different interpretations of the denominator of Bayes' rule; firstly as a nuisance normalising factor; secondly as a probability of the data. We then discussed the difficulty that the denominator poses for Bayesians. Fortunately, this problem can be side-stepped via use of conjugate priors (see chapter \ref{chap:conjugate}), although this is often extremely limiting for all but the most simple of data processes. We then reasoned that since the curvature of the posterior is solely determined by the numerator of Bayes' rule - the prior multiplied by the likelihood - we can learn much of the posterior from this quantity. In particular modern computational methods use the numerator of Bayes' rule, to generate samples from the posterior distribution. These can then be used to summarise the posterior distribution, as well as for any of the uses of posterior distributions described in chapter \ref{chap:posterior}. Before we introduce computational methods in full in part \ref{part:computationalBayes}, we firstly must understand the multitude of distributions which we have in our arsenal. We then discuss how conjugate priors can be used to analytically derive posteriors, which can be useful before moving to approximate computational methods.
@@ -2952,7 +3026,7 @@ Distribution checklist (\textbf{want this in a different colour/shading. Not sur
 \item Individual outcome probabilities are not determined by any other factor that varies across individuals for which we have data.
 \item Probability of success is same in each trial.
 \item Overall data we measure is the aggregate number of successes. 
-\item Trials are independent\footnote{Knowing the outcome of a single trial would not influence our opinion as to the likelihood of another trial's result, apart from any information it provides on $\theta$. To be absolutely correct we should really say that the data are \textit{conditionally}-independent.}.
+\item Trials are independent\footnote{Knowing the outcome of a single trial would not influence our opinion as to the likelihood of another trial's result, apart from any information it provides on $\theta$. To be absolutely correct we should really say that the data are \textit{conditionally}-independent. See section \ref{sec:Probability_conditionalIndependence}}.
 \end{enumerate}
 
 Example uses: clinical drug trials, Democrat voters exiting a poll station, or the number of mosquito bites over the course of a day.
@@ -3035,8 +3109,9 @@ Better alternative to Wishart.
 
 \chapter{Objective Bayesian analysis}\label{chap:ObjectiveBayes}
 
-\part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
+Why we prefer expected parameter value to maximum posterior estimates. c.f. Michael Betancourt video lecture.
 
+\part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
 
 \part{Regression analysis and hierarchical models}\label{part:regressionHierarchical}
 \section{Part mission statement}

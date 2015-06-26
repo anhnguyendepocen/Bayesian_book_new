@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     16619,        476]
-NotebookOptionsPosition[     15739,        441]
-NotebookOutlinePosition[     16086,        456]
-CellTagsIndexPosition[     16043,        453]
+NotebookDataLength[      9947,        267]
+NotebookOptionsPosition[      9512,        248]
+NotebookOutlinePosition[      9859,        263]
+CellTagsIndexPosition[      9816,        260]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -24,61 +24,12 @@ Cell[BoxData[
    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}]], "Input",
  CellChangeTimes->{{3.64409563331991*^9, 3.644095640810338*^9}}],
 
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"nContestants", " ", "=", " ", "1000"}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"lCar", "=", 
-   RowBox[{"RandomVariate", "[", 
-    RowBox[{
-     RowBox[{"DiscreteUniformDistribution", "[", 
-      RowBox[{"{", 
-       RowBox[{"1", ",", "4"}], "}"}], "]"}], ",", 
-     RowBox[{"{", "nContestants", "}"}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"lAvailable", "=", 
-   RowBox[{
-    RowBox[{
-     RowBox[{"Drop", "[", 
-      RowBox[{
-       RowBox[{"Range", "@", "4"}], ",", 
-       RowBox[{"{", "#", "}"}]}], "]"}], "&"}], "/@", "lCar"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"lPenaltyIndex", " ", "=", " ", 
-   RowBox[{"RandomVariate", "[", 
-    RowBox[{
-     RowBox[{"DiscreteUniformDistribution", "[", 
-      RowBox[{"{", 
-       RowBox[{"1", ",", "3"}], "}"}], "]"}], ",", 
-     RowBox[{"{", "nContestants", "}"}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"lPenalty", " ", "=", " ", 
-   RowBox[{"Table", "[", 
-    RowBox[{
-     RowBox[{"Extract", "[", 
-      RowBox[{
-       RowBox[{"lAvailable", "[", 
-        RowBox[{"[", "i", "]"}], "]"}], ",", 
-       RowBox[{"lPenaltyIndex", "[", 
-        RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"i", ",", "1", ",", "nContestants", " ", ",", "1"}], "}"}]}], 
-    "]"}]}], ";"}]}], "Input",
- CellChangeTimes->{{3.6440956472287054`*^9, 3.644095701816828*^9}, {
-  3.644095732731596*^9, 3.6440957385489283`*^9}, {3.6440958687683764`*^9, 
-  3.6440959722612963`*^9}, {3.644096008814387*^9, 3.644096009307415*^9}, {
-  3.6440960418322754`*^9, 3.6440961092521315`*^9}, {3.6440962324231763`*^9, 
-  3.64409623423528*^9}}],
-
 Cell[BoxData[
  RowBox[{
   RowBox[{"fCompete", "[", 
-   RowBox[{"doChange_Integer", ",", "aReward_", ",", "aCost_"}], "]"}], ":=", 
-  " ", 
+   RowBox[{
+   "doChange_Integer", ",", "aReward_", ",", "aCost_", ",", "aNullValue_"}], 
+   "]"}], ":=", " ", 
   RowBox[{"Module", "[", 
    RowBox[{
     RowBox[{"{", 
@@ -185,7 +136,7 @@ Cell[BoxData[
          RowBox[{"aFinal", "\[Equal]", "aPenalty"}], ",", 
          RowBox[{"aOutcome", "=", 
           RowBox[{"-", "aCost"}]}], ",", 
-         RowBox[{"aOutcome", "=", "0"}]}], "]"}]}], "]"}], ";", 
+         RowBox[{"aOutcome", "=", "aNullValue"}]}], "]"}]}], "]"}], ";", 
      "aOutcome"}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
  CellChangeTimes->{{3.644096137225732*^9, 3.6440962956257915`*^9}, {
    3.644096331055818*^9, 3.6440963326409087`*^9}, {3.644096370546077*^9, 
@@ -199,244 +150,100 @@ Cell[BoxData[
    3.6440977817957954`*^9}, {3.644097830159562*^9, 3.64409783187066*^9}, {
    3.6440978669746675`*^9, 3.64409790216368*^9}, {3.6440979383477497`*^9, 
    3.644097946860237*^9}, {3.6440980133980427`*^9, 3.644098088309327*^9}, {
-   3.64409812840462*^9, 3.6440982395619783`*^9}}],
+   3.64409812840462*^9, 3.6440982395619783`*^9}, {3.6442485803819942`*^9, 
+   3.644248590822592*^9}}],
 
 Cell[CellGroupData[{
 
-Cell[BoxData[
- RowBox[{"N", "@", 
-  RowBox[{"StandardDeviation", "@", 
-   RowBox[{"Table", "[", 
-    RowBox[{
-     RowBox[{"fCompete", "[", 
-      RowBox[{"0", ",", "1000", ",", "1000"}], "]"}], ",", 
-     RowBox[{"{", "10000", "}"}]}], "]"}]}]}]], "Input",
- CellChangeTimes->{{3.644098179114521*^9, 3.644098184643837*^9}, {
-  3.6440982425401487`*^9, 3.644098392974753*^9}, {3.64409851250159*^9, 
-  3.644098512888612*^9}}],
-
-Cell[BoxData["708.1296383844386`"], "Output",
- CellChangeTimes->{
-  3.64409839519888*^9, {3.6440985214801035`*^9, 3.644098539837153*^9}}]
-}, Open  ]],
-
-Cell[CellGroupData[{
+Cell["\<\
+Compare the returns distribution for n game plays, and vary the rewards, \
+penalty and null value\
+\>", "Section",
+ CellChangeTimes->{{3.6442656354164867`*^9, 3.6442656505513525`*^9}, {
+  3.6442657513161154`*^9, 3.644265764628877*^9}}],
 
 Cell[BoxData[
- RowBox[{"N", "@", 
-  RowBox[{"StandardDeviation", "@", 
-   RowBox[{"Table", "[", 
-    RowBox[{
-     RowBox[{"fCompete", "[", 
-      RowBox[{"1", ",", "1000", ",", "1000"}], "]"}], ",", 
-     RowBox[{"{", "10000", "}"}]}], "]"}]}]}]], "Input",
- CellChangeTimes->{{3.6440983850633*^9, 3.644098385159306*^9}, {
-  3.644098516721831*^9, 3.6440985169648447`*^9}}],
-
-Cell[BoxData["869.4993921327904`"], "Output",
- CellChangeTimes->{{3.6440983872844276`*^9, 3.644098397577016*^9}, {
-  3.6440985195209913`*^9, 3.644098541615255*^9}}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"N", "@", 
-  RowBox[{"Mean", "@", 
-   RowBox[{"Table", "[", 
-    RowBox[{
-     RowBox[{"fCompete", "[", 
-      RowBox[{"0", ",", "1000", ",", "1000"}], "]"}], ",", 
-     RowBox[{"{", "10000", "}"}]}], "]"}]}]}]], "Input",
- CellChangeTimes->{{3.6440984130599017`*^9, 3.6440984135599303`*^9}, {
-  3.644098484043962*^9, 3.6440984847970047`*^9}}],
-
-Cell[BoxData["7.6`"], "Output",
- CellChangeTimes->{{3.644098415856062*^9, 3.6440984326030197`*^9}, {
-   3.6440984870191317`*^9, 3.644098507472302*^9}, 3.6440985433553543`*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"N", "@", 
-  RowBox[{"Mean", "@", 
-   RowBox[{"Table", "[", 
-    RowBox[{
-     RowBox[{"fCompete", "[", 
-      RowBox[{"1", ",", "1000", ",", "1000"}], "]"}], ",", 
-     RowBox[{"{", "10000", "}"}]}], "]"}]}]}]], "Input",
- CellChangeTimes->{{3.644098420263314*^9, 3.6440984203143167`*^9}, {
-  3.644098488114195*^9, 3.6440984884332128`*^9}}],
-
-Cell[BoxData[
- RowBox[{"-", "6.8`"}]], "Output",
- CellChangeTimes->{{3.644098422455439*^9, 3.6440984364862413`*^9}, {
-   3.6440984907713466`*^9, 3.6440985092174015`*^9}, 3.644098545102454*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Histogram", "[", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"fCompete", "[", 
-        RowBox[{"0", ",", "1000", ",", "1000"}], "]"}], ",", 
-       RowBox[{"{", "10000", "}"}]}], "]"}], ",", 
-     RowBox[{"Table", "[", 
-      RowBox[{
-       RowBox[{"fCompete", "[", 
-        RowBox[{"1", ",", "1000", ",", "1000"}], "]"}], ",", 
-       RowBox[{"{", "10000", "}"}]}], "]"}]}], "}"}], ",", 
-   RowBox[{"ChartStyle", "\[Rule]", 
+ RowBox[{
+  RowBox[{"fShowReturns", "[", 
+   RowBox[{
+   "aNumPlays_Integer", ",", "aReward_", ",", "aCost_", ",", "aNullValue_"}], 
+   "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
     RowBox[{"{", 
-     RowBox[{"Blue", ",", "Orange"}], "}"}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.644098576313239*^9, 3.644098670660636*^9}}],
+     RowBox[{
+      RowBox[{"aStayData", "=", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"fCompete", "[", 
+          RowBox[{"0", ",", "aReward", ",", "aCost", ",", "aNullValue"}], 
+          "]"}], ",", 
+         RowBox[{"{", "aNumPlays", "}"}]}], "]"}]}], ",", 
+      RowBox[{"aChangeData", "=", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"fCompete", "[", 
+          RowBox[{"1", ",", "aReward", ",", "aCost", ",", "aNullValue"}], 
+          "]"}], ",", 
+         RowBox[{"{", "aNumPlays", "}"}]}], "]"}]}]}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Show", "[", 
+     RowBox[{
+      RowBox[{"GraphicsRow", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Histogram", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{"aStayData", ",", "aChangeData"}], "}"}], ",", 
+           RowBox[{"ChartStyle", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"Blue", ",", "Orange"}], "}"}]}]}], "]"}], ",", 
+         RowBox[{"ListLinePlot", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Thread", "[", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"Range", "@", "aNumPlays"}], ",", 
+                RowBox[{"Accumulate", "@", "aStayData"}]}], "}"}], "]"}], ",", 
+             RowBox[{"Thread", "[", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"Range", "@", "aNumPlays"}], ",", 
+                RowBox[{"Accumulate", "@", "aChangeData"}]}], "}"}], "]"}]}], 
+            "}"}], ",", 
+           RowBox[{"PlotStyle", "\[Rule]", 
+            RowBox[{"{", 
+             RowBox[{"Blue", ",", "Orange"}], "}"}]}], ",", 
+           RowBox[{"PlotLegends", "\[Rule]", 
+            RowBox[{"Placed", "[", 
+             RowBox[{
+              RowBox[{"{", 
+               RowBox[{"\"\<stay\>\"", ",", "\"\<change\>\""}], "}"}], ",", 
+              "Center"}], "]"}]}]}], "]"}]}], "}"}], "]"}], ",", 
+      RowBox[{"ImageSize", "\[Rule]", "800"}]}], "]"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.644098576313239*^9, 3.644098670660636*^9}, {
+  3.644265358082624*^9, 3.644265365938073*^9}, {3.6442656535625243`*^9, 
+  3.6442658156447954`*^9}, {3.644265970878674*^9, 3.6442661576333556`*^9}}],
 
 Cell[BoxData[
- GraphicsBox[{
-   {RGBColor[0.987148, 0.8073604000000001, 0.49470040000000004`], EdgeForm[{
-    Opacity[0.6719999999999999], Thickness[Small]}], {{}, 
-     {RGBColor[0, 0, 1], Opacity[0.5], EdgeForm[{Opacity[0.6719999999999999], 
-      Thickness[Small]}], 
-      TagBox[
-       TooltipBox[
-        TagBox[
-         DynamicBox[{
-           FEPrivate`If[
-            CurrentValue["MouseOver"], 
-            EdgeForm[{
-              GrayLevel[0.5], 
-              AbsoluteThickness[1.5], 
-              Opacity[0.66]}], {}, {}], 
-           RectangleBox[{-1000., 0.}, {0., 2501}, "RoundingRadius" -> 0]},
-          
-          ImageSizeCache->{{98.12499999999997, 
-           181.49999999999997`}, {-6.802876222780895, 93.89656450539408}}],
-         StatusArea[#, 2501]& ,
-         TagBoxNote->"2501"],
-        StyleBox["2501", {}, StripOnInput -> False]],
-       Annotation[#, 
-        Style[2501, {}], "Tooltip"]& ], 
-      TagBox[
-       TooltipBox[
-        TagBox[
-         DynamicBox[{
-           FEPrivate`If[
-            CurrentValue["MouseOver"], 
-            EdgeForm[{
-              GrayLevel[0.5], 
-              AbsoluteThickness[1.5], 
-              Opacity[0.66]}], {}, {}], 
-           RectangleBox[{0., 0.}, {1000., 4954}, "RoundingRadius" -> 0]},
-          
-          ImageSizeCache->{{180.99999999999997`, 
-           264.375}, {-105.0792569129901, 93.89656450539408}}],
-         StatusArea[#, 4954]& ,
-         TagBoxNote->"4954"],
-        StyleBox["4954", {}, StripOnInput -> False]],
-       Annotation[#, 
-        Style[4954, {}], "Tooltip"]& ], 
-      TagBox[
-       TooltipBox[
-        TagBox[
-         DynamicBox[{
-           FEPrivate`If[
-            CurrentValue["MouseOver"], 
-            EdgeForm[{
-              GrayLevel[0.5], 
-              AbsoluteThickness[1.5], 
-              Opacity[0.66]}], {}, {}], 
-           RectangleBox[{1000., 0.}, {2000., 2545}, "RoundingRadius" -> 0]},
-          ImageSizeCache->{{263.875, 347.25}, {-8.565681257582852, 
-           93.89656450539408}}],
-         StatusArea[#, 2545]& ,
-         TagBoxNote->"2545"],
-        StyleBox["2545", {}, StripOnInput -> False]],
-       Annotation[#, 
-        Style[2545, {}], "Tooltip"]& ]}, {}, {}}, {{}, 
-     {RGBColor[1, 0.5, 0], Opacity[0.5], EdgeForm[{Opacity[
-      0.6719999999999999], Thickness[Small]}], 
-      TagBox[
-       TooltipBox[
-        TagBox[
-         DynamicBox[{
-           FEPrivate`If[
-            CurrentValue["MouseOver"], 
-            EdgeForm[{
-              GrayLevel[0.5], 
-              AbsoluteThickness[1.5], 
-              Opacity[0.66]}], {}, {}], 
-           RectangleBox[{-1000., 0.}, {0., 3739}, "RoundingRadius" -> 0]},
-          
-          ImageSizeCache->{{98.12499999999997, 
-           181.49999999999997`}, {-56.401799701981474`, 93.89656450539408}}],
-         StatusArea[#, 3739]& ,
-         TagBoxNote->"3739"],
-        StyleBox["3739", {}, StripOnInput -> False]],
-       Annotation[#, 
-        Style[3739, {}], "Tooltip"]& ], 
-      TagBox[
-       TooltipBox[
-        TagBox[
-         DynamicBox[{
-           FEPrivate`If[
-            CurrentValue["MouseOver"], 
-            EdgeForm[{
-              GrayLevel[0.5], 
-              AbsoluteThickness[1.5], 
-              Opacity[0.66]}], {}, {}], 
-           RectangleBox[{0., 0.}, {1000., 2473}, "RoundingRadius" -> 0]},
-          
-          ImageSizeCache->{{180.99999999999997`, 
-           264.375}, {-5.681091200634199, 93.89656450539408}}],
-         StatusArea[#, 2473]& ,
-         TagBoxNote->"2473"],
-        StyleBox["2473", {}, StripOnInput -> False]],
-       Annotation[#, 
-        Style[2473, {}], "Tooltip"]& ], 
-      TagBox[
-       TooltipBox[
-        TagBox[
-         DynamicBox[{
-           FEPrivate`If[
-            CurrentValue["MouseOver"], 
-            EdgeForm[{
-              GrayLevel[0.5], 
-              AbsoluteThickness[1.5], 
-              Opacity[0.66]}], {}, {}], 
-           RectangleBox[{1000., 0.}, {2000., 3788}, "RoundingRadius" -> 0]},
-          
-          ImageSizeCache->{{263.875, 347.25}, {-58.36492349073819, 
-           93.89656450539408}}],
-         StatusArea[#, 3788]& ,
-         TagBoxNote->"3788"],
-        StyleBox["3788", {}, StripOnInput -> False]],
-       Annotation[#, 
-        Style[3788, {}], 
-        "Tooltip"]& ]}, {}, {}}}, {{{{}, {}, {}}, {}}, {{{}, {}, {}}, {}}}},
-  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
-  Axes->{True, True},
-  AxesLabel->{None, None},
-  AxesOrigin->{-1060., 0.},
-  FrameLabel->{{None, None}, {None, None}},
-  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
-  GridLines->{None, None},
-  GridLinesStyle->Directive[
-    GrayLevel[0.5, 0.4]],
-  PlotRange->{{-2000., 2000.}, {All, All}},
-  PlotRangePadding->{{
-     Scaled[0.02], 
-     Scaled[0.02]}, {
-     Scaled[0.02], 
-     Scaled[0.05]}},
-  Ticks->{Automatic, Automatic}]], "Output",
- CellChangeTimes->{{3.6440985811595163`*^9, 3.6440986098421574`*^9}, {
-  3.6440986621841507`*^9, 3.644098674513856*^9}}]
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"fShowReturns", "[", 
+    RowBox[{"aNumPlays", ",", "aReward", ",", "aCost", ",", "aNullValue"}], 
+    "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"aNumPlays", ",", "100", ",", "10000", ",", "100"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"aReward", ",", "1000", ",", "10000", ",", "100"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"aCost", ",", "1000", ",", "10000", ",", "100"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"aNullValue", ",", "0", ",", "1000", ",", "100"}], "}"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.644265818390952*^9, 3.644265910457218*^9}}]
 }, Open  ]]
 },
 WindowSize->{1366, 686},
@@ -456,27 +263,11 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[558, 20, 188, 4, 31, "Input"],
-Cell[749, 26, 1709, 48, 112, "Input"],
-Cell[2461, 76, 5248, 125, 272, "Input"],
+Cell[749, 26, 5334, 127, 272, "Input"],
 Cell[CellGroupData[{
-Cell[7734, 205, 422, 10, 31, "Input"],
-Cell[8159, 217, 137, 2, 31, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[8333, 224, 372, 9, 31, "Input"],
-Cell[8708, 235, 164, 2, 31, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[8909, 242, 365, 9, 31, "Input"],
-Cell[9277, 253, 175, 2, 31, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[9489, 260, 363, 9, 31, "Input"],
-Cell[9855, 271, 192, 3, 31, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[10084, 279, 656, 18, 31, "Input"],
-Cell[10743, 299, 4980, 139, 242, "Output"]
+Cell[6108, 157, 245, 5, 70, "Section"],
+Cell[6356, 164, 2501, 64, 112, "Input"],
+Cell[8860, 230, 636, 15, 52, "Input"]
 }, Open  ]]
 }
 ]
