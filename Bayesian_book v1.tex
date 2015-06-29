@@ -402,9 +402,83 @@ Finally, comparing the classical and Bayesian approach to pursuit of knowledge, 
 This chapter has focused on the philosophy of inference processes in general, and in particular on the philosophical differences between Bayesian and Frequentist inference. We then introduced the Bayesian formula, and provided a short introduction to its constituent parts. The Bayesian formula is the central dogma of Bayesian inference. However, in order to use this rule for statistical analyses, it is necessary to understand and more importantly, be able to manipulate, probability distributions. The next chapter is devoted to this cause.
 
 \section{Chapter outcomes}
+The reader should now be familiar with the following concepts:
+
+\begin{enumerate}
+\item The goals of statistical inference.
+\item The difference in interpretation of probabilities for Frequentists vs Bayesians.
+\item The differences in inferential approaches for Frequentists vs Bayesians.
+\end{enumerate}
 
 \section{Problem set}
+\subsection{The deterministic nature of random coin throwing.}
+Suppose that in an idealised world, the ultimate fate of a thrown coin - heads or tails - is determined by: the angle at which you throw the coin, and the height above a table. Also, in this ideal world, the heights and angles are discrete. However, the system is chaotic\footnote{Highly sensitive to initial conditions.}, and the results of throwing a coin at a given angle and height are shown in table \ref{tab:Intro_PS_coinThrowsDeterministic}. 
 
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{rccccc}
+    \toprule
+          & \multicolumn{5}{c}{\textbf{Height above table (m)}} \\
+    \midrule
+    \multicolumn{1}{c}{\textbf{Angle}} & \textbf{0.2} & \textbf{0.4} & \textbf{0.6} & \textbf{0.8} & \textbf{1} \\
+    \multicolumn{1}{c}{\textbf{0}} & T     & H     & T     & T     & H \\
+    \multicolumn{1}{c}{\textbf{45}} & H     & T     & T     & T     & T \\
+    \multicolumn{1}{c}{\textbf{90}} & H     & H     & T     & T     & H \\
+    \multicolumn{1}{c}{\textbf{135}} & H     & H     & T     & H     & T \\
+    \multicolumn{1}{c}{\textbf{180}} & H     & H     & T     & H     & H \\
+    \multicolumn{1}{c}{\textbf{225}} & H     & T     & H     & T     & T \\
+    \multicolumn{1}{c}{\textbf{270}} & H     & T     & T     & T     & H \\
+    \multicolumn{1}{c}{\textbf{315}} & T     & H     & H     & T     & T \\
+    \bottomrule
+    \end{tabular}%
+  \caption{The results of a coin throw from a given angle and height above a table.}\label{tab:Intro_PS_coinThrowsDeterministic}%
+\end{table}%
+
+\subsubsection{Suppose that all combinations of angles and heights are equally likely to be chosen. What is the probability that the coin lands on heads?}
+
+Now suppose that the some combinations of angles and heights are more likely to be chosen than others, with the probabilities seen in table \ref{tab:Intro_PS_coinThrowsFrequency}. 
+
+\subsubsection{What are the new probabilities that the coin lands heads-up?}
+\subsubsection{Suppose we force the coin-thrower to throw the coin at an angle of 45 degrees. What is the probability that the coin lands heads-up?}
+\subsubsection{Suppose we force the coin-thrower to throw the coin at a height of 0.2m. What is the probability that the coin lands heads-up?}
+\subsubsection{If we constrained the angle and height to be fixed, what would happen in repetitions of the same experiment?}
+\subsubsection{In light of the previous question, comment on the Frequentist assumption of \textit{exact repetitions} of a given experiment.}
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{rccccc}
+    \toprule
+          & \multicolumn{5}{c}{\textbf{Height above table (m)}} \\
+    \midrule
+    \multicolumn{1}{c}{\textbf{Angle}} & \textbf{0.2} & \textbf{0.4} & \textbf{0.6} & \textbf{0.8} & \textbf{1} \\
+    \multicolumn{1}{c}{\textbf{0}} & 100   & 53    & 51    & 92    & 74 \\
+    \multicolumn{1}{c}{\textbf{45}} & 56    & 38    & 28    & 95    & 51 \\
+    \multicolumn{1}{c}{\textbf{90}} & 97    & 70    & 10    & 72    & 42 \\
+    \multicolumn{1}{c}{\textbf{135}} & 35    & 62    & 79    & 1     & 76 \\
+    \multicolumn{1}{c}{\textbf{180}} & 55    & 38    & 47    & 0     & 67 \\
+    \multicolumn{1}{c}{\textbf{225}} & 7     & 15    & 92    & 65    & 36 \\
+    \multicolumn{1}{c}{\textbf{270}} & 68    & 3     & 55    & 15    & 93 \\
+    \multicolumn{1}{c}{\textbf{315}} & 47    & 72    & 56    & 35    & 21 \\
+    \bottomrule
+    \end{tabular}%
+  \caption{The probability that a given person throws a coin at a particular angle, and at a certain height above a table.}\label{tab:Intro_PS_coinThrowsFrequency}%
+\end{table}%
+
+\subsection{Model choice}
+Suppose that you have been given the data contained in "Intro\_PS\_overfitShort.csv", and are asked to find a 'good' statistical model to fit the $(x,y)$ data.
+
+\subsubsection{Fit a linear regression model using classical least squares. How reasonable is the fit?}
+\subsubsection{Fit a quintic (powers up to the 5th) model to the data. How does its fit compare to that of the linear model?}
+
+You are now given new data contained within "Intro\_PS\_overfitLong.csv". This contains data on 1000 replications of the same experiment, where the $x$ values are held fixed.
+
+\subsubsection{Fit a linear regression to each of the data sets, and similarly for the quintic model. Which of these performs best?}
+
+\subsubsection{Using the fits from the first part of this question, compare the performance of the linear regression model, with that of the quintic model.}
+Hint: do not re-estimate the model with new datasets.
+
+\subsubsection{Which of the two models do you prefer, and why?}
+\subsubsection{If you then found out that the data were years of education (x), and salary in \$000s (y). Which model would you favour?}
 
 \section{Appendix}
 \subsection{The Frequentist and Bayesian murder trial}\label{sec:Intro_appendixMurder}
@@ -1660,12 +1734,87 @@ The reader should now be familiar with the following concepts:
 \begin{enumerate}
 \item Expressing uncertainty in a parameter's value through probability distributions.
 \item The difference between the classical confidence interval and the Bayesian credible interval.
+\item Summary measures of central tendency: posterior mean and median, and MAP. The issues with the latter.
 \item How to obtain the prior and posterior predictive distributions from the prior and posterior distributions respectively.
 \item Model evaluation through the posterior predictive distribution.
 \end{enumerate}
 
 \section{Problem set}
+\subsection{The lesser evil}
+Suppose that you area neurosurgeon and have been given the unenviable task of finding the position of a tumour within a patient's brain, and cutting it out. Along two dimensions - height and left-right axis - the tumour's position is known to a high degree of confidence. However, along the remaining axis - front-back - the position is uncertain, and cannot be ascertained without surgery. However, a team of brilliant statisticians has already done most of the job for you, and has generated samples from the posterior for the tumour's location along this axis, and is given by the data contained within the data file "data\_Posterior\_PS\_tumour.csv" .
 
+Suppose that the more brain that is cut, the more the patient is at risk of losing cognitive functions. Additionally, suppose that the damage inflicted varies:
+
+\begin{enumerate}
+\item Linearly with the distance the surgery starts away from the tumour.
+\item Quadratically with the distance the surgery starts away from the tumour.
+\item There is no damage if tissue cut is within 1mm of the tumour.
+\end{enumerate}
+
+Under each of the three regimes above, find the best position along this axis from which to belong the surgery?
+
+\subsubsection{Which of the above loss functions do you think is most appropriate, and why?}
+\subsubsection{Which loss function might you choose to be most robust to \textit{any} situation?}
+\subsubsection{Following from the previous point, which measure of posterior centrality might you choose?}
+
+\subsection{Google word search prediction}
+Suppose you are chosen, for your knowledge of Bayesian statistics, to work at Google as a search traffic analyst. Based on historical data you have the data shown in table \ref{tab:Posterior_PS_googleInterval} for the actual word searched, and the starting string (the first three letters typed in a search). It is your job to help make the search engines faster, by reducing the search-space for the machines to lookup each time a person types.
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{cccc}
+    \toprule
+          & \textbf{Barack Obama} & \textbf{Baby clothes} & \textbf{Bayes} \\
+    \midrule
+    \textbf{Bar} & 50\%  & 30\%  & 30\% \\
+    \textbf{Bab} & 30\%  & 60\%  & 30\% \\
+    \textbf{Bay} & 20\%  & 10\%  & 40\% \\
+    \bottomrule
+    \end{tabular}%
+  \caption{The columns give the historic breakdown of the search traffic for three topics: Barack Obama, Baby clothes, and Bayes; by the first three letters of the user's search.}\label{tab:Posterior_PS_googleInterval}%
+\end{table}%
+
+
+\subsubsection{Find the minimum-coverage confidence intervals of topics that exceed 75\%.}
+\subsubsection{Find most narrow credible intervals for topics that exceed 75\%.}
+
+\subsubsection{Topic search volumes}
+Now we suppose that your boss tells gives you the historic search information shown in table \ref{tab:Posterior_PS_googleIntervalHistoricTopic}. Further, you are told that what is most important is correctly suggesting the actual topic as one of the first auto-complete options irrespective of the topic searched.
+
+Do you prefer confidence intervals or credible intervals in this circumstance?
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{rccc}
+    \toprule
+          & \textbf{Barack Obama} & \textbf{Baby clothes} & \textbf{Bayes} \\
+    \midrule
+    \textbf{Search volume} & 60\%  & 30\%  & 10\% \\
+    \bottomrule
+    \end{tabular}%
+  \caption{The historic search traffic broken down by topic.}\label{tab:Posterior_PS_googleIntervalHistoricTopic}%
+\end{table}%
+
+\subsubsection{Three-letter search volumes}
+Alternatively, suppose that you have the historic search volume by the starting characters of the search, shown in table \ref{tab:Posterior_PS_googleIntervalHistoricKeyword}. You are now told, that the most important thing is directing the user to the correct topic given the keyword they have started to type.
+
+Do you prefer confidence intervals or credible intervals in this circumstance?
+
+
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{cccc}
+    \toprule
+          & \textbf{Bar} & \textbf{Bab} & \textbf{Bay} \\
+    \midrule
+    \textbf{Search volume} & 50\%  & 40\%  & 10\% \\
+    \bottomrule
+    \end{tabular}%
+  \caption{The historic search traffic broken down by keyword.}\label{tab:Posterior_PS_googleIntervalHistoricKeyword}%
+\end{table}%
+
+
+\subsection{Prior and posterior predictive example (with PPCs maybe)}
 
 \section{Appendix}
 \subsection{The interval ENIGMA - explained in full}\label{sec:Posterior_appendixConfidenceInterval}
@@ -2340,9 +2489,6 @@ Of course, in this example we would hope that by collecting more data, in this c
 \section{The explicit subjectivity of priors}
 Opponents of Bayesian approaches to inference criticise the subjectivity inherent with choice of prior. However, all analysis involves a degree of subjectivity, particularly in regard to choice of statistical model. This choice is often formulated implicitly as being \textit{objectively} correct, with little justification or discourse given to the underlying assumptions necessary to arrive there. The statement of a prior, necessary for any full description of a Bayesian analysis, is at least \textit{explicit}; leaving this aspect of the modelling subject to the same interrogation and academic examination to which any analysis should be subjected. A word that is often used by protagonists of Bayesian methods, is that it is \textit{honest} due to the \textit{explicit} statement of assumptions. The statement of pre-experimental biases actually forces the analyst to self-examine, and perhaps also leads to a decline in the temptation to manipulate the analysis to one's own ends.
 
-\section{Interpreting priors through prior predictive distributions}\label{sec:Priors_priorPredictiveDistribution}
-
-
 \section{Combining a prior and likelihood to form a posterior} 
 This chapter thus far has given more attention to the philosophical and theoretical underpinnings of Bayesian analysis. Now we change tack to illustrate to the reader the mechanics behind Bayes' formula; specifically how the prior is combined with the likelihood to yield a posterior probability distribution. The following examples introduce an illustrative method, known as \textit{Bayes' box} described in detail in \cite{stewart2014teaching} and \cite{bolstad2007introduction}, which illustrates the functioning of Bayes' rule, in which the parameter, prior, likelihood, and posterior are all displayed in a logical manner.
 
@@ -2551,6 +2697,16 @@ We now know that a \textit{prior} is a probability distribution that represents 
 We are now nearly in a position to start doing Bayesian analysis, all that we have left to cover is the denominator of Bayes' rule. This aspect appears relatively benign on first glances, but is actually where the difficulty lies in Bayesian approaches to inference. Appropriately then we devote the next chapter to studying this final part of Bayes' rule.
 
 \section{Chapter outcomes}
+The reader should now be familiar with the following concepts:
+\begin{enumerate}
+\item Why do we need priors for Bayesian analysis?
+\item The need to use proper priors in order to produce posterior probability distributions.
+\item Bayes' box for discrete parameters.
+\item How Bayes' rule can be used to combine a prior and a likelihood to yield a posterior.
+\item The difference between vague and informative priors.
+\item How expert knowledge can be encoded in priors.
+\item A strong model is non overly-sensitive to priors.
+\end{enumerate}
 
 \section{Problem set}
 

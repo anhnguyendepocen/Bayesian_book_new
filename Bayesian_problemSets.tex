@@ -317,4 +317,65 @@ We can remove the factor of $n(total)$ since it appears on both sides. Rearrangi
 
 Which, when you substitute in the numbers yields $\alpha > 5.97$. 
 
+\chapter{Posterior}
+\section{The lesser evil}
+Suppose that you area neurosurgeon and have been given the unenviable task of finding the position of a tumour within a patient's brain, and cutting it out. Along two dimensions - height and left-right axis - the tumour's position is known to a high degree of confidence. However, along the remaining axis - front-back - the position is uncertain, and cannot be ascertained without surgery. However, a team of brilliant statisticians has already done most of the job for you, and has generated samples from the posterior for the tumour's location along this axis, and is given by the data contained within the data file "data\_Posterior\_PS\_tumour.csv". 
+
+Suppose that the more brain that is cut, the more the patient is at risk of losing cognitive functions. Additionally, suppose that the damage inflicted varies:
+
+\begin{enumerate}
+\item Linearly with the distance the surgery starts away from the tumour.
+\item Quadratically with the distance the surgery starts away from the tumour.
+\item There is no damage if tissue cut is within 1mm of the tumour.
+\end{enumerate}
+
+Under each of the three regimes above, find the best position along this axis from which to belong the surgery?
+
+Note to teachers: this question borrows from Bayesian decision theory. However, it is hoped that the students can work through this without a formal introduction, since they have been lead some of the way.
+
+\subsection{Linearly with the amount of tissue cut.}
+Here we assume that there is a loss function of the form:
+
+\begin{equation}
+L(\hat{\theta},\theta) = k_1|\hat{\theta}-\theta|
+\end{equation}
+
+Minimising the expected loss yields the median. From the data file "data\_Posterior\_PS\_tumour.csv" we find that this is given by approximately 9.5.
+
+\subsection{Quadratically with the amount of tissue cut,}
+Here the loss function takes the form:\\
+
+\begin{equation}
+L(\hat{\theta},\theta) = k_2(\hat{\theta}-\theta)^2
+\end{equation}
+
+Minimising the expected loss yields the mean. From the data file "data\_Posterior\_PS\_tumour.csv" we find that this is given by approximately 10.4.
+
+\subsection{There is no damage if tissue cut is within 2cm of the tumour.}
+This loss function, is of the form:
+
+\begin{equation}
+    L(\hat{\theta},\theta)= 
+\begin{cases}
+    0,& \text{if } |\hat{\theta}-\theta| < 1mm\\
+    k_3,              & \text{otherwise}
+\end{cases}
+\end{equation}
+
+Since the distance, 1mm, is small relative to the length scales of the posterior, the expression is approximately maximised by the mode. The mode is approximately 11.5 from the sample.
+
+\subsubsection{Which of the above loss functions do you think is most appropriate, and why?}
+Since the brain is inherently non-linear, you might expect that if the surgery starts a long way away from the tumour's location, and moves nearer, then it will cause disproportionately more damage than a cut that starts nearer. This might suggest that a quadratic loss might be most appropriate. Alternatively, since the cut will occur along two axes, then the area is really a more appropriate measure of the damage done; again suggesting the mean over the median. The latter suggestion might also suggest that a cubic loss be appropriate.
+
+The step function loss, which results in the mode, is not really appropriate, since the damage surely increases the more tissue is cut.
+
+\subsubsection{Which loss function might you choose to be most robust to \textit{any} situation?}
+In the majority of cases, then we probably care disproportionately more about estimates that are a long way away from the true value, than we do about those that are nearer. This might suggest that we use a quadratic loss function. A case could be made for the linear loss, although not for the win-loss case for the mode.
+
+\subsubsection{Following from the previous point, which measure of posterior centrality might you choose?}
+The posterior mean.
+
+
+
+
 \end{document}
