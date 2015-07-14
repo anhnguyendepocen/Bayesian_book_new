@@ -20,7 +20,9 @@
 \usepackage{pstricks}
 \usepackage{pst-func}
 \usepackage{pst-math}
+\usepackage{empheq}
 \newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
+\newcommand*\widefbox[1]{\fbox{\hspace{2em}#1\hspace{2em}}}
 
 
 \setlength{\parindent}{0.0in}
@@ -3346,7 +3348,7 @@ Distribution checklist (\textbf{want this in a different colour/shading. Not sur
 \begin{enumerate}
 \item Discrete data.
 \item A single trial.
-\item \textit{Only} two trial outcomes: \textit{success} and failure\footnote{These do not need to literally represent successes and failures, but this shorthand is typically used, and we adopt it here.}
+\item \textit{Only} two trial outcomes: \textit{success} and \textit{failure}\footnote{These do not need to literally represent successes and failures, but this shorthand is typically used, and we adopt it here.}
 \end{enumerate}
 
 Example uses: outcome of flipping a coin, a single clinical trial, or a presidential election!
@@ -3361,13 +3363,13 @@ O & , horse\; wins \\
 \end{cases}
 \end{equation}
 
-In this set-up it makes sense to model the outcome of a single race as being influenced by a background probability of success, $0\leq\theta\leq 1$. We don't actually witness this probability, and after the discussion in chapter \ref{chap:subjectiveFrequentistBayes}, we aren't sure it \textit{really} exists. In the Frequentist paradigm t$\theta$ represents the proportion of races\footnote{Really identical races, but who's counting?} that the horse has won historically\footnote{And will win in total if we were to continue re-racing forever.}. Whereas to Bayesians, $\theta$ merely gauges our subjective confidence in the event of the horse winning\footnote{If any of this is news to you, then have a re-read of section \ref{sec:Intro_FrequentistsWorld}.}.
+In this set-up it makes sense to model the outcome of a single race as being influenced by a background probability of success, $0\leq\theta\leq 1$. We don't actually witness this probability, and after the discussion in chapter \ref{chap:subjectiveFrequentistBayes}, we aren't sure it \textit{really} exists. In the Frequentist paradigm $\theta$ represents the proportion of races\footnote{Really identical races, but who's counting?} that the horse has won historically\footnote{And will win in total if we were to continue re-racing forever.}. Whereas to Bayesians, $\theta$ merely gauges our subjective confidence in the event of the horse winning\footnote{If any of this is news to you, then have a re-read of section \ref{sec:Intro_FrequentistsWorld}.}.
 
 Now that we have a model, we can work out the probability of the two distinct possible outcomes. The probability that the horse wins is straightforwardly $p(win)=\theta$; meaning the probability of a loss \textit{must}\footnote{It \textit{must} be given by $1-\theta$, so that the Bernoulli distribution sums to 1, and hence is a valid probability density.} be given by $p(loss)=1-\theta$.
 
 We now are in a position to work out the likelihood of a given outcome. Remember that a likelihood is \textit{not} a valid probability density, and is found by holding the \textit{outcome}, or in other words \textit{data}, constant, whilst varying the parameters. Suppose that the horse has had a good meal of carrots this morning, and goes on to win by a country mile. We know that the likelihood of this event is given by $l(\theta|X=1)=p(X=1|\theta)=\theta$ (see the red line in figure \ref{fig:Distributions_bernoulliHorseRace}).
 
-Alternatively, if our horse spent the night in the midst of night-mares\footnote{Get it? Sorry, that is terrible.}, and went on to lose, then the likelihood is given by $l(\theta|X=1)=1-\theta$ (see the red line in figure \ref{fig:Distributions_bernoulliHorseRace}).
+Alternatively, if our horse spent the night in the midst of night-mares\footnote{Get it? Sorry, that is terrible.}, and went on to lose, then the likelihood is given by $l(\theta|X=1)=1-\theta$ (see the blue line in figure \ref{fig:Distributions_bernoulliHorseRace}).
 
 As you can see, in this situation, the maximum likelihood estimates in each case are given by $\hat{\theta}=1$, and $\hat{\theta}=0$, if the horse wins or loses respectively.
 
@@ -3379,7 +3381,18 @@ p(X|\theta) = \theta^X (1-\theta)^{1-X}
 
 This distribution is known as the \textit{Bernoulli}, after the Swiss mathematician Jacob Bernoulli who first probed this much-discussed distribution.
 
-It is rare in life to come up against one-off events, and we typically have data for a number of races historically.  However, this discussion has given us the necessary grounding to make the step to the next distribution in up the rung, the \textit{binomial}, which is perfect for this more realistic setting.
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: X\sim Ber(\theta)\\
+pdf&: p(X|\theta) = \theta^X (1-\theta)^{1-X} \\
+mean&: \mathrm{E}[X] = \theta\\
+variance&: var[X] = \theta (1-\theta)
+\end{empheq}
+\end{subequations}
+
+
+It is rare in life to come up against one-off events, and we typically have data for a number of races historically.  However, this discussion has given us the necessary grounding to make the step to the next distribution up the rung, the \textit{binomial}, which is perfect for this more realistic setting.
 
 \begin{figure}
 \centering
@@ -3435,21 +3448,152 @@ If we were less lucky and only found 2 patients recovered, then we see that the 
 \caption{\textbf{Left}: Binomial likelihoods for the event that 5 (blue), 2 (red), and 9 (grey) volunteers recovered in the week period. The maximum likelihood estimates are shown as dotted lines for each of the cases. \textbf{Right:} the probability distribution of successful trials if $\theta=0.3$ (blue) and $\theta=0.7$ (orange).}\label{fig:Distributions_binomialClinicalTrial}
 \end{figure}
 
-As for the Bernoulli case, we would like a compact way of writing down the likelihood to cover any eventuality. We now suppose that the number of volunteers is mysteriously given by $n$, the probability of individual treatment success is $\theta$, and $k$ cases turn out to be successes:
+As for the Bernoulli case, we would like a compact way of writing down the likelihood to cover any eventuality. We now suppose that the number of volunteers is given by $n$, the probability of individual treatment success is $\theta$, and $k$ cases turn out to be successes:
 
 \begin{equation}\label{eq:Distributions_binomialDef}
 p(Z=k|n,\theta) = {n \choose k} \theta^{k} (1-\theta)^{n-k}
 \end{equation}
 
-This distribution is known as the Binomial distribution.
+This distribution is known as the \textit{Binomial} distribution.
 
-If we hold $n$ constant, and increase the probability of success $p$, we see that the probability distribution of data shifts to the right (see the right-hand panel of figure \ref{fig:Distributions_binomialClinicalTrial}).
+If we hold $n$ constant, and increase the probability of success $\theta$, we see that the probability distribution of data shifts to the right (see the right-hand panel of figure \ref{fig:Distributions_binomialClinicalTrial}).
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: X \sim B(n,\theta)\\
+pdf&: p(X|\theta) = {n \choose k} \theta^{k} (1-\theta)^{n-k} \\
+mean&: \mathrm{E}[X] = n\theta\\
+variance&: var[X] = n\theta (1-\theta)
+\end{empheq}
+\end{subequations}
+
 
 \boxed{Video:} Need to make an intuitive video here. One exists but is overly mathematical.
 
 \subsubsection{Normal}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous data.
+\item Outcome can be considered to be the outcome of a large number of additive factors.
+\end{enumerate}
+
 \subsubsection{Poisson}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Count of discrete events.
+\item Individual events occur at a given rate, and independently of other events.
+\item Fixed amount of time or space, in which the events can occur.
+\end{enumerate}
+
+Example uses: estimating the failure rate of artificial heart valves, the first appearance of crop disease in a large farming area, approximating the binomial for the percentage of the UK population who suffer from autism.
+
+Relationships with other distributions: approximates $binomial(n,\theta)$ if n is large, and $\theta$ is small. \textbf{It would be good to add a graph showing interrelations of the various distributions.}
+
+Suppose that you are interested in estimating the rate at which new outbreaks of Legionella disease\footnote{A nasty disease carried by bacteria that thrive in warm water, named for its first reported occurrence among conference attendees at a Philadelphia convention of the American Legion.} occur worldwide. Public health officials have collected data of the count of independent disease outbreaks that occur each year, $X$. In this case, a reasonable model would be to assume that the outbreaks appear spontaneously, and at a mean rate $\lambda$ which is independent of any systematic macro factors for which we might have data. In this case, a sampling distribution of the form:
+
+\begin{equation}
+p(X=k|\lambda) = \frac{\lambda^k}{k!} e^{-\lambda}
+\end{equation}
+
+The distribution is called a \textit{poisson} model, after a prominent French mathematician born in the 18th century.
+
+The likelihood is found by varying the mean rate of occurrence, $\lambda$, holding the data sample constant. The likelihood is shown for three data samples with $\bar{X}=0.5,3,8$ respectively on the left hand side of figure \ref{fig:Distributions_poissonLegionella}. 
+
+This distribution is only defined for non-negative integer $X$ data, which makes it perfect for modelling the count of occurrences. However, the mean rate $\lambda$ is not constrained to the integers; being able to take on any non-negative real value. It is important to stress that this distribution is only valid if the individual events being counted occur \textit{independently} of each other. In our Legionella example, this would be violated if there was an issue with the data collection, meaning that some of the outbreaks were not in fact new, and were actually caused by contagion from existing outbreaks. 
+
+The distribution is shown for different values of $\lambda$ on the right hand side of figure \ref{fig:Distributions_poissonLegionella}
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_poissonLegionella.pdf}}
+\caption{\textbf{Left}: The poisson likelihood for three different samples. \textbf{Right}: the poisson distribution for different values of the mean rate. \textbf{Add legends: left xbar=0.5,3,8. Right: lambda=0.5,3,8.}}\label{fig:Distributions_poissonLegionella}
+\end{figure}
+
+Notice in the below listed properties, that the mean and variance of this distribution are the same, and equal to $\lambda$. This restriction hence limits the use of this distribution to cases where the data sample satisfies these properties, at least approximately. However, we will see next that the addition of an extra parameter, which governs the degree of over-dispersion in the data, can allow for sufficient flexibility to handle data with a variance greater than the mean.
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: X \sim poisson(\lambda)\\
+pdf&: p(X=k|\lambda) = \frac{\lambda^k}{k!} e^{-\lambda} \\
+mean&: \mathrm{E}[X] = \lambda\\
+variance&: var[X] = \lambda
+\end{empheq}
+\end{subequations}
+
+
+\boxed{Video:} Need to make an intuitive video here.
+\boxed{Interactive:} Need to make an interactive element here.
+
 \subsubsection{Negative binomial}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Count of discrete events.
+\item Non-independent events. It is sometimes said that the events can exhibit contagion; meaning that if one event occurs, it is more likely that another will do.
+\item Fixed amount of time or space, in which the events can occur.
+\end{enumerate}
+
+Example uses: everything the poisson can do and more, numbers of measles cases on an island, collapses of banks in a financial crisis.
+
+In real life it is not uncommon for us to want to model the count of events which occur in clumps; either in time or space. This 'clumping' behaviour indicates that the occurrence of one event makes it more likely that another will occur afterwards. 
+
+Again we imagine we are in the role of epidemiologists, this time modelling the occurrence of influenza over a winter season in three small villages Socialville, Commuterville, and Hermitville, all of the same size. To keep things simple, we imagine that in each village, the magnitude of the outbreak is determined by a parameter $\theta$. If this number were known, we assume that the numbers of flu cases, $X$ is given by a poisson distribution:
+
+\begin{equation}
+X|\theta \sim Pois(\lambda\theta)
+\end{equation}
+
+$\theta$ can be thought of as measuring the type and degree of social interactions of the villagers. In Socialville, $\theta=1.5$ meaning that each person has a lot of interaction with fellow villagers, and the outsider world. In Commuterville, $\theta=1$ meaning that each person has no contact with their fellow villagers, but have a large number of contact with the outside world. In Hermitville, $\theta<0.5$ meaning only a few villagers have contact with the outside world, and again none within the village. Across all villages, it is straightforward (see below) to show that the mean number of cases is $\lambda$.
+
+Clearly, in this case we will on average get the most cases of the flu in Socialville, where people are likely to contract the disease, then pass it on to others. In Commuterville, where all the people have no contact with one another, then the number of flu cases is governed by how many people \textit{independently} get sick. Finally in Hermitville, only some of the people will likely get sick since some people are complete hermits! And, those that do get sick, will again not pass on the disease to their fellow villagers.
+
+The above example illustrates how contagion can result in a higher number of cases than would be expected if the flu cases were independent. We also see that $\theta$ captures this degree of contagion. If we suppose that we are now interested in predicting the number of flu cases across a large number of equally sized villages. We assume that we have no data on the connectivity of the various villages, and that it is reasonable to assume that $\theta\sim\Gamma(\kappa,\frac{1}{\kappa})$\footnote{Wait until section \ref{sec:Distributions_gamma} for a full explanation of this distribution.}, meaning that $\mathrm{E}[\theta] = 1$ across all villages, meaning that unconditionally, the above distribution has the property that the mean number of flu cases is given by:
+
+\begin{equation}
+\begin{align}
+\mathrm{E}[X] &= \mathrm{E}\left[\mathrm{E}[X|theta]\right]\\
+&= \mathrm{E}[\theta]\mathrm{E}[\lambda]\\
+&= \lambda
+\end{align}
+\end{equation}
+
+where to obtain the right-hand-side of the first line, we have used the law of iterated expectations\footnote{Do not worry if you don't know what this is. It is not important, but I have a video here \url{https://www.youtube.com/watch?v=Ki2HpTCPwhM} which explains it in full.}. 
+
+Here because of the inherent variance in the connectivity across villages, we will get a greater variability of results than would be predicted, if all villages were equally connected. In this latter case we can suppose that $\theta=1$, which means that all villages would have a $Pois(\lambda)$ number of cases. In the former, we can calculate the variance in flu cases:
+
+\begin{equation}
+\begin{align}
+var\left[X\right|\lambda,\kappa] &= \lambda + \lambda^2\kappa\\
+&\geq var(X_{Poisson})\\
+&= \lambda
+\end{align}
+\end{equation}
+
+Do not worry about the provenance of this expression, that is not what is important. The only thing that matters here, is that because we have allowed variance in the parameter $\theta$, which governs the connectivity in each village, we see that we have a wider variance than we would have got if all the villages were the same as Commuterville.
+
+More generally, we see that this distribution allows for a variance that is greater than that of the Poisson distribution. However this extra flexibility comes at a cost of extra complexity, because it is characterised by two parameters rather than one. The parameter $\kappa$ measures the degree of dispersion of the data; the larger its value, the greater the variability. This greater variance of this distribution has lead some to categorise it as an \textit{over-dispersed} Poisson. However, its more common name is the \textit{negative binomial}.
+
+This distribution has a number of commonly used parameterisations, each of which we illustrate below.
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: X \sim NB(\lambda,\kappa)\\
+pdf&: p(X=y|\lambda,\kappa) = \frac{\Gamma(y+\frac{1}{\kappa})}{y!\Gamma(\frac{1}{\kappa}+1)}\left(\frac{\lambda}{\lambda + \frac{1}{\kappa}}\right)^y \left(\frac{\frac{1}{\kappa}}{\lambda + \frac{1}{\kappa}}\right)^\frac{1}{\kappa} \\
+mean&: \mathrm{E}[X] = \lambda\\
+variance&: var[X] = \lambda + \lambda^2\kappa
+\end{empheq}
+\end{subequations}
+
+
+\boxed{Video:} Need to make an intuitive video here.
+\boxed{Interactive:} Need to make an interactive element here.
+
 \subsubsection{Logistic}
 
 \section{Prior distributions}
@@ -3465,7 +3609,7 @@ If we hold $n$ constant, and increase the probability of success $p$, we see tha
 \subsubsection{Student t}
 
 \subsection{Distributions for variances, and shape parameters}
-\subsubsection{Gamma}
+\subsubsection{Gamma}\label{sec:Distributions_gamma}
 \subsubsection{Half-Cauchy}
 \subsubsection{Inverse Gamma}
 \subsubsection{Inverse chi}
