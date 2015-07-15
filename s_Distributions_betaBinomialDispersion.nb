@@ -1,0 +1,641 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     25713,        632]
+NotebookOptionsPosition[     25013,        603]
+NotebookOutlinePosition[     25360,        618]
+CellTagsIndexPosition[     25317,        615]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}]], "Input",
+ CellChangeTimes->{{3.6459054146650004`*^9, 3.6459054215803957`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"g1", "=", 
+  RowBox[{"DiscretePlot", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"PDF", "[", 
+       RowBox[{
+        RowBox[{"BinomialDistribution", "[", 
+         RowBox[{"10", ",", "0.35"}], "]"}], ",", "x"}], "]"}], ",", 
+      RowBox[{"PDF", "[", 
+       RowBox[{
+        RowBox[{"BinomialDistribution", "[", 
+         RowBox[{"10", ",", "0.65"}], "]"}], ",", "x"}], "]"}], ",", 
+      RowBox[{"PDF", "[", 
+       RowBox[{
+        RowBox[{"MixtureDistribution", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"1", ",", "1"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"BinomialDistribution", "[", 
+             RowBox[{"10", ",", "0.35"}], "]"}], ",", 
+            RowBox[{"BinomialDistribution", "[", 
+             RowBox[{"10", ",", "0.65"}], "]"}]}], "}"}]}], "]"}], ",", "x"}],
+        "]"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "0", ",", "10"}], "}"}], ",", 
+    RowBox[{"PlotStyle", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"Green", ",", "Orange", ",", 
+       RowBox[{"{", 
+        RowBox[{"Dashed", ",", "Blue", ",", 
+         RowBox[{"Thickness", "[", "0.01", "]"}]}], "}"}]}], "}"}]}], ",", 
+    RowBox[{"Joined", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"False", ",", "False", ",", "True"}], "}"}]}], ",", 
+    RowBox[{"Filling", "\[Rule]", "None"}], ",", 
+    RowBox[{"Frame", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"True", ",", "True", ",", "False", ",", "False"}], "}"}]}], ",", 
+    RowBox[{"FrameTicks", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"True", ",", "False"}], "}"}]}], ",", 
+    RowBox[{"FrameLabel", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<number of recoveries\>\"", ",", "\"\<probability\>\""}], 
+      "}"}]}], ",", 
+    RowBox[{"BaseStyle", "\[Rule]", "Medium"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6459056316094093`*^9, 3.6459057055176363`*^9}, {
+  3.6459057439208326`*^9, 3.645905756678562*^9}, {3.645905824049416*^9, 
+  3.645905824413437*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{
+    {RGBColor[0, 1, 0], PointSize[0.019444444444444445`], AbsoluteThickness[
+     1.6]}, 
+    {RGBColor[1, 0.5, 0], PointSize[0.019444444444444445`], AbsoluteThickness[
+     1.6]}, 
+    {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], Thickness[0.01], 
+     Dashing[{Small, Small}]}}, {
+    {RGBColor[0, 1, 0], PointSize[0.019444444444444445`], AbsoluteThickness[
+     1.6], {}, 
+     PointBox[{{0., 0.013462743344628913`}, {1., 0.07249169493261712}, {2., 
+      0.17565295310595638`}, {3., 0.2522196249726566}, {4., 
+      0.23766849276269553`}, {5., 0.15357041070820293`}, {6., 
+      0.0689097996767579}, {7., 0.02120301528515629}, {8., 
+      0.004281378086425769}, {9., 0.0005123016513671869}, {10., 
+      0.000027585473535156207`}}], {}}, 
+    {RGBColor[1, 0.5, 0], PointSize[0.019444444444444445`], AbsoluteThickness[
+     1.6], {}, 
+     PointBox[{{0., 0.000027585473535156207`}, {1., 0.0005123016513671869}, {
+      2., 0.004281378086425769}, {3., 0.02120301528515629}, {4., 
+      0.0689097996767579}, {5., 0.15357041070820293`}, {6., 
+      0.23766849276269553`}, {7., 0.2522196249726566}, {8., 
+      0.17565295310595638`}, {9., 0.07249169493261712}, {10., 
+      0.013462743344628913`}}], {}}, 
+    {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], Thickness[0.01], 
+     Dashing[{Small, Small}], 
+     LineBox[{{{0., 0.006745164409082034}, {1., 0.03650199829199215}, {2., 
+      0.08996716559619107}, {3., 0.13671132012890644`}, {4., 
+      0.15328914621972672`}, {5., 0.15357041070820293`}, {6., 
+      0.15328914621972672`}, {7., 0.13671132012890644`}, {8., 
+      0.08996716559619107}, {9., 0.03650199829199215}, {10., 
+      0.006745164409082034}}}], {}, {}}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesOrigin->{0, 0},
+  BaseStyle->Medium,
+  Frame->{True, True, False, False},
+  FrameLabel->{
+    FormBox["\"number of recoveries\"", TraditionalForm], 
+    FormBox["\"probability\"", TraditionalForm]},
+  FrameTicks->{{False, False}, {True, True}},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  Method->{
+   "MessagesHead" -> DiscretePlot, "AxisPadding" -> Scaled[0.02], 
+    "DefaultBoundaryStyle" -> Automatic, "DefaultPlotStyle" -> {
+      Directive[
+       RGBColor[0.368417, 0.506779, 0.709798], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.880722, 0.611041, 0.142051], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.560181, 0.691569, 0.194885], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.922526, 0.385626, 0.209179], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.528488, 0.470624, 0.701351], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.772079, 0.431554, 0.102387], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.363898, 0.618501, 0.782349], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[1, 0.75, 0], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.647624, 0.37816, 0.614037], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.571589, 0.586483, 0.], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.915, 0.3325, 0.2125], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.40082222609352647`, 0.5220066643438841, 0.85], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.9728288904374106, 0.621644452187053, 0.07336199581899142], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.736782672705901, 0.358, 0.5030266573755369], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.28026441037696703`, 0.715, 0.4292089322474965], 
+       AbsoluteThickness[1.6]]}, "DomainPadding" -> Scaled[0.02], 
+    "RangePadding" -> Scaled[0.05]},
+  PlotRange->{{0, 10}, {0, 0.2522196249726566}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.6459056436140957`*^9, {3.6459056787021027`*^9, 3.645905705881657*^9}, {
+   3.645905745161904*^9, 3.645905757557613*^9}, 3.645905824795459*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"g2", "=", 
+  RowBox[{"DiscretePlot", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"PDF", "[", 
+       RowBox[{
+        RowBox[{"BinomialDistribution", "[", 
+         RowBox[{"10", ",", "0.5"}], "]"}], ",", "x"}], "]"}], ",", 
+      RowBox[{"PDF", "[", 
+       RowBox[{
+        RowBox[{"MixtureDistribution", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"1", ",", "1"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"BinomialDistribution", "[", 
+             RowBox[{"10", ",", "0.35"}], "]"}], ",", 
+            RowBox[{"BinomialDistribution", "[", 
+             RowBox[{"10", ",", "0.65"}], "]"}]}], "}"}]}], "]"}], ",", "x"}],
+        "]"}]}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"x", ",", "0", ",", "10"}], "}"}], ",", 
+    RowBox[{"Frame", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"True", ",", "True", ",", "False", ",", "False"}], "}"}]}], ",", 
+    RowBox[{"FrameTicks", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"True", ",", "False"}], "}"}]}], ",", 
+    RowBox[{"FrameLabel", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<number of disease cases\>\"", ",", "\"\<probability\>\""}],
+       "}"}]}], ",", 
+    RowBox[{"BaseStyle", "\[Rule]", "Medium"}], ",", 
+    RowBox[{"PlotStyle", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"Red", ",", 
+       RowBox[{"{", 
+        RowBox[{"Blue", ",", "Dashed"}], "}"}]}], "}"}]}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6459054539712486`*^9, 3.6459056139103966`*^9}, {
+  3.645905775593644*^9, 3.645905827419609*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{
+    {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], AbsoluteThickness[
+     1.6], {
+      {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], AbsoluteThickness[
+       1.6], Opacity[0.2], LineBox[{},
+        VertexColors->None]}, 
+      {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], AbsoluteThickness[
+       1.6], Opacity[0.2], 
+       LineBox[{{{0., 0.0009765625}, {0., 0}}, {{1., 0.009765624999999993}, {
+          1., 0}}, {{2., 0.0439453124999998}, {2., 0}}, {{3., 
+          0.1171875000000002}, {3., 0}}, {{4., 0.20507812500000014`}, {
+          4., 0}}, {{5., 0.2460937499999997}, {5., 0}}, {{6., 
+          0.20507812500000014`}, {6., 0}}, {{7., 0.1171875000000002}, {
+          7., 0}}, {{8., 0.0439453124999998}, {8., 0}}, {{9., 
+          0.009765624999999993}, {9., 0}}, {{10., 0.0009765625}, {10., 0}}},
+        VertexColors->None]}}}, 
+    {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], AbsoluteThickness[
+     1.6], Dashing[{Small, Small}], {
+      {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], AbsoluteThickness[
+       1.6], Opacity[0.2], Dashing[{Small, Small}], LineBox[{},
+        VertexColors->None]}, 
+      {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], AbsoluteThickness[
+       1.6], Opacity[0.2], Dashing[{Small, Small}], 
+       LineBox[{{{0., 0.006745164409082034}, {0., 0}}, {{1., 
+          0.03650199829199215}, {1., 0}}, {{2., 0.08996716559619107}, {
+          2., 0}}, {{3., 0.13671132012890644`}, {3., 0}}, {{4., 
+          0.15328914621972672`}, {4., 0}}, {{5., 0.15357041070820293`}, {
+          5., 0}}, {{6., 0.15328914621972672`}, {6., 0}}, {{7., 
+          0.13671132012890644`}, {7., 0}}, {{8., 0.08996716559619107}, {
+          8., 0}}, {{9., 0.03650199829199215}, {9., 0}}, {{10., 
+          0.006745164409082034}, {10., 0}}},
+        VertexColors->None]}}}}, {
+    {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], AbsoluteThickness[
+     1.6], {}, 
+     PointBox[{{0., 0.0009765625}, {1., 0.009765624999999993}, {2., 
+      0.0439453124999998}, {3., 0.1171875000000002}, {4., 
+      0.20507812500000014`}, {5., 0.2460937499999997}, {6., 
+      0.20507812500000014`}, {7., 0.1171875000000002}, {8., 
+      0.0439453124999998}, {9., 0.009765624999999993}, {10., 
+      0.0009765625}}], {}}, 
+    {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], AbsoluteThickness[
+     1.6], Dashing[{Small, Small}], {}, 
+     PointBox[{{0., 0.006745164409082034}, {1., 0.03650199829199215}, {2., 
+      0.08996716559619107}, {3., 0.13671132012890644`}, {4., 
+      0.15328914621972672`}, {5., 0.15357041070820293`}, {6., 
+      0.15328914621972672`}, {7., 0.13671132012890644`}, {8., 
+      0.08996716559619107}, {9., 0.03650199829199215}, {10., 
+      0.006745164409082034}}], {}}}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesOrigin->{0, 0},
+  BaseStyle->Medium,
+  Frame->{True, True, False, False},
+  FrameLabel->{
+    FormBox["\"number of disease cases\"", TraditionalForm], 
+    FormBox["\"probability\"", TraditionalForm]},
+  FrameTicks->{{False, False}, {True, True}},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  Method->{
+   "MessagesHead" -> DiscretePlot, "AxisPadding" -> Scaled[0.02], 
+    "DefaultBoundaryStyle" -> Automatic, "DefaultPlotStyle" -> {
+      Directive[
+       RGBColor[0.368417, 0.506779, 0.709798], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.880722, 0.611041, 0.142051], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.560181, 0.691569, 0.194885], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.922526, 0.385626, 0.209179], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.528488, 0.470624, 0.701351], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.772079, 0.431554, 0.102387], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.363898, 0.618501, 0.782349], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[1, 0.75, 0], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.647624, 0.37816, 0.614037], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.571589, 0.586483, 0.], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.915, 0.3325, 0.2125], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.40082222609352647`, 0.5220066643438841, 0.85], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.9728288904374106, 0.621644452187053, 0.07336199581899142], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.736782672705901, 0.358, 0.5030266573755369], 
+       AbsoluteThickness[1.6]], 
+      Directive[
+       RGBColor[0.28026441037696703`, 0.715, 0.4292089322474965], 
+       AbsoluteThickness[1.6]]}, "DomainPadding" -> Scaled[0.02], 
+    "RangePadding" -> Scaled[0.05]},
+  PlotRange->{{0, 10}, {0, 0.2460937499999997}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{{3.6459055326367483`*^9, 3.6459056143624225`*^9}, {
+  3.64590577621268*^9, 3.6459058277696285`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"gFinal", "=", 
+  RowBox[{"Show", "[", 
+   RowBox[{
+    RowBox[{"GraphicsRow", "[", 
+     RowBox[{"{", 
+      RowBox[{"g1", ",", "g2"}], "}"}], "]"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "800"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.64590605998291*^9, 3.645906078783986*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {InsetBox[
+     GraphicsBox[{{
+        {RGBColor[0, 1, 0], PointSize[0.019444444444444445`], 
+         AbsoluteThickness[1.6]}, 
+        {RGBColor[1, 0.5, 0], PointSize[0.019444444444444445`], 
+         AbsoluteThickness[1.6]}, 
+        {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], Thickness[0.01],
+          Dashing[{Small, Small}]}}, {
+        {RGBColor[0, 1, 0], PointSize[0.019444444444444445`], 
+         AbsoluteThickness[1.6], {}, 
+         PointBox[{{0., 0.013462743344628913`}, {1., 0.07249169493261712}, {
+          2., 0.17565295310595638`}, {3., 0.2522196249726566}, {4., 
+          0.23766849276269553`}, {5., 0.15357041070820293`}, {6., 
+          0.0689097996767579}, {7., 0.02120301528515629}, {8., 
+          0.004281378086425769}, {9., 0.0005123016513671869}, {10., 
+          0.000027585473535156207`}}], {}}, 
+        {RGBColor[1, 0.5, 0], PointSize[0.019444444444444445`], 
+         AbsoluteThickness[1.6], {}, 
+         PointBox[{{0., 0.000027585473535156207`}, {1., 
+          0.0005123016513671869}, {2., 0.004281378086425769}, {3., 
+          0.02120301528515629}, {4., 0.0689097996767579}, {5., 
+          0.15357041070820293`}, {6., 0.23766849276269553`}, {7., 
+          0.2522196249726566}, {8., 0.17565295310595638`}, {9., 
+          0.07249169493261712}, {10., 0.013462743344628913`}}], {}}, 
+        {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], Thickness[0.01],
+          Dashing[{Small, Small}], 
+         LineBox[{{{0., 0.006745164409082034}, {1., 0.03650199829199215}, {2.,
+           0.08996716559619107}, {3., 0.13671132012890644`}, {4., 
+          0.15328914621972672`}, {5., 0.15357041070820293`}, {6., 
+          0.15328914621972672`}, {7., 0.13671132012890644`}, {8., 
+          0.08996716559619107}, {9., 0.03650199829199215}, {10., 
+          0.006745164409082034}}}], {}, {}}}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->True,
+      AxesOrigin->{0, 0},
+      BaseStyle->Medium,
+      Frame->{True, True, False, False},
+      FrameLabel->{
+        FormBox["\"number of recoveries\"", TraditionalForm], 
+        FormBox["\"probability\"", TraditionalForm]},
+      FrameTicks->{{False, False}, {True, True}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "MessagesHead" -> DiscretePlot, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, "DefaultPlotStyle" -> {
+          Directive[
+           RGBColor[0.368417, 0.506779, 0.709798], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.880722, 0.611041, 0.142051], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.560181, 0.691569, 0.194885], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.922526, 0.385626, 0.209179], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.528488, 0.470624, 0.701351], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.772079, 0.431554, 0.102387], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.363898, 0.618501, 0.782349], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[1, 0.75, 0], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.647624, 0.37816, 0.614037], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.571589, 0.586483, 0.], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.915, 0.3325, 0.2125], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.40082222609352647`, 0.5220066643438841, 0.85], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[
+           0.9728288904374106, 0.621644452187053, 0.07336199581899142], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.736782672705901, 0.358, 0.5030266573755369], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.28026441037696703`, 0.715, 0.4292089322474965], 
+           AbsoluteThickness[1.6]]}, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]},
+      PlotRange->{{0, 10}, {0, 0.2522196249726566}},
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.02]}},
+      Ticks->{Automatic, Automatic}], {192., -116.80842387373012`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}], InsetBox[
+     GraphicsBox[{{
+        {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+         AbsoluteThickness[1.6], {
+          {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+           AbsoluteThickness[1.6], Opacity[0.2], LineBox[{},
+            VertexColors->None]}, 
+          {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+           AbsoluteThickness[1.6], Opacity[0.2], 
+           LineBox[{{{0., 0.0009765625}, {0., 0}}, {{1., 
+              0.009765624999999993}, {1., 0}}, {{2., 0.0439453124999998}, {
+              2., 0}}, {{3., 0.1171875000000002}, {3., 0}}, {{4., 
+              0.20507812500000014`}, {4., 0}}, {{5., 0.2460937499999997}, {
+              5., 0}}, {{6., 0.20507812500000014`}, {6., 0}}, {{7., 
+              0.1171875000000002}, {7., 0}}, {{8., 0.0439453124999998}, {
+              8., 0}}, {{9., 0.009765624999999993}, {9., 0}}, {{10., 
+              0.0009765625}, {10., 0}}},
+            VertexColors->None]}}}, 
+        {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], 
+         AbsoluteThickness[1.6], Dashing[{Small, Small}], {
+          {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], 
+           AbsoluteThickness[1.6], Opacity[0.2], Dashing[{Small, Small}], 
+           LineBox[{},
+            VertexColors->None]}, 
+          {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], 
+           AbsoluteThickness[1.6], Opacity[0.2], Dashing[{Small, Small}], 
+           LineBox[{{{0., 0.006745164409082034}, {0., 0}}, {{1., 
+              0.03650199829199215}, {1., 0}}, {{2., 0.08996716559619107}, {
+              2., 0}}, {{3., 0.13671132012890644`}, {3., 0}}, {{4., 
+              0.15328914621972672`}, {4., 0}}, {{5., 0.15357041070820293`}, {
+              5., 0}}, {{6., 0.15328914621972672`}, {6., 0}}, {{7., 
+              0.13671132012890644`}, {7., 0}}, {{8., 0.08996716559619107}, {
+              8., 0}}, {{9., 0.03650199829199215}, {9., 0}}, {{10., 
+              0.006745164409082034}, {10., 0}}},
+            VertexColors->None]}}}}, {
+        {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+         AbsoluteThickness[1.6], {}, 
+         PointBox[{{0., 0.0009765625}, {1., 0.009765624999999993}, {2., 
+          0.0439453124999998}, {3., 0.1171875000000002}, {4., 
+          0.20507812500000014`}, {5., 0.2460937499999997}, {6., 
+          0.20507812500000014`}, {7., 0.1171875000000002}, {8., 
+          0.0439453124999998}, {9., 0.009765624999999993}, {10., 
+          0.0009765625}}], {}}, 
+        {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], 
+         AbsoluteThickness[1.6], Dashing[{Small, Small}], {}, 
+         PointBox[{{0., 0.006745164409082034}, {1., 0.03650199829199215}, {2.,
+           0.08996716559619107}, {3., 0.13671132012890644`}, {4., 
+          0.15328914621972672`}, {5., 0.15357041070820293`}, {6., 
+          0.15328914621972672`}, {7., 0.13671132012890644`}, {8., 
+          0.08996716559619107}, {9., 0.03650199829199215}, {10., 
+          0.006745164409082034}}], {}}}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->True,
+      AxesOrigin->{0, 0},
+      BaseStyle->Medium,
+      Frame->{True, True, False, False},
+      FrameLabel->{
+        FormBox["\"number of disease cases\"", TraditionalForm], 
+        FormBox["\"probability\"", TraditionalForm]},
+      FrameTicks->{{False, False}, {True, True}},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{
+       "MessagesHead" -> DiscretePlot, "AxisPadding" -> Scaled[0.02], 
+        "DefaultBoundaryStyle" -> Automatic, "DefaultPlotStyle" -> {
+          Directive[
+           RGBColor[0.368417, 0.506779, 0.709798], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.880722, 0.611041, 0.142051], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.560181, 0.691569, 0.194885], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.922526, 0.385626, 0.209179], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.528488, 0.470624, 0.701351], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.772079, 0.431554, 0.102387], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.363898, 0.618501, 0.782349], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[1, 0.75, 0], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.647624, 0.37816, 0.614037], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.571589, 0.586483, 0.], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.915, 0.3325, 0.2125], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.40082222609352647`, 0.5220066643438841, 0.85], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[
+           0.9728288904374106, 0.621644452187053, 0.07336199581899142], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.736782672705901, 0.358, 0.5030266573755369], 
+           AbsoluteThickness[1.6]], 
+          Directive[
+           RGBColor[0.28026441037696703`, 0.715, 0.4292089322474965], 
+           AbsoluteThickness[1.6]]}, "DomainPadding" -> Scaled[0.02], 
+        "RangePadding" -> Scaled[0.05]},
+      PlotRange->{{0, 10}, {0, 0.2460937499999997}},
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.02]}},
+      Ticks->{Automatic, Automatic}], {576., -116.80842387373012`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}]}, {}},
+  ContentSelectable->True,
+  ImageSize->800,
+  PlotRangePadding->{6, 5}]], "Output",
+ CellChangeTimes->{{3.645906073699695*^9, 3.645906103926424*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<Distributions_betaBinomialDispersion.pdf\>\"", ",", "gFinal"}],
+   "]"}]], "Input",
+ CellChangeTimes->{{3.645906083321245*^9, 3.6459060985981193`*^9}}],
+
+Cell[BoxData["\<\"Distributions_betaBinomialDispersion.pdf\"\>"], "Output",
+ CellChangeTimes->{{3.645906100248214*^9, 3.645906105097491*^9}}]
+}, Open  ]]
+},
+WindowSize->{1366, 686},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (September 9, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 193, 4, 31, "Input"],
+Cell[CellGroupData[{
+Cell[776, 28, 2035, 52, 92, "Input"],
+Cell[2814, 82, 4203, 101, 264, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7054, 188, 1584, 42, 92, "Input"],
+Cell[8641, 232, 5229, 117, 264, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13907, 354, 310, 8, 31, "Input"],
+Cell[14220, 364, 10391, 224, 278, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[24648, 593, 205, 4, 31, "Input"],
+Cell[24856, 599, 141, 1, 31, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

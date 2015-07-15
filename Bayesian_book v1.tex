@@ -1219,7 +1219,14 @@ The order of the game is thus:
 \item The contestant's final choice door is opened, either to their delight (a car!), dismay (a penalty), or indifference (nothing).
 \end{enumerate}
 
-Assuming that the contestant prefers less risk, what should they do?
+Assuming that:
+
+\begin{enumerate}
+\item The contestant wants to maximise the probability that they win the car.
+\item The contestant is risk averse.
+\end{enumerate}
+
+Find the optimal strategy for the contestant.
 
 If you are unsure as to how to proceed, why not simulate the game using a computer. The program should only be a few lines, and might provide you with some intuition as to what is happening.
 
@@ -3339,6 +3346,11 @@ Using computational simulation, find the position of the mode.
 \chapter{An introduction to distributions for the mathematically-un-inclined}\label{chap:distributions}
 \section{Chapter mission statement}
 \section{Chapter goals}
+Often texts on Bayesian analysis assume a familiarity with probability distributions that evade all but the statistics fanatics. This presumed knowledge often makes it difficult to penetrate the literature, and makes Bayesian inference appear more difficult than it actually is. The idea behind this chapter is to redress the balance; by going through the commonly-used distributions, highlighting their interrelationships, and their use for a wide range of example situations. It is hoped that by addressing their practical applicability, that we can turn an oft-dry subject into something more palatable for bedtime reading.
+
+Generally, there are two classes of distributions: those that can be used for likelihoods, and those which are commonly used for priors. There is considerable overlap between these groupings (particularly for continuous distributions), meaning that we will often encounter the distributions twice. It is important to note that  
+
+Throughout the chapter there are considerable interactive elements. It is hoped that you will take the opportunity to use this material to gain hands-on experience. If the text becomes dense in places, there are videos which take you through some of the basic properties and uses of the distributions. 
 
 \section{Sampling distributions for likelihoods}
 \subsubsection{Bernoulli}\label{sec:Distributions_bernoulli}
@@ -3470,14 +3482,7 @@ variance&: var[X] = n\theta (1-\theta)
 
 
 \boxed{Video:} Need to make an intuitive video here. One exists but is overly mathematical.
-
-\subsubsection{Normal}
-Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
-
-\begin{enumerate} 
-\item Continuous data.
-\item Outcome can be considered to be the outcome of a large number of additive factors.
-\end{enumerate}
+\boxed{Interactive:} again make.
 
 \subsubsection{Poisson}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
@@ -3535,6 +3540,7 @@ Distribution checklist (\textbf{want this in a different colour/shading. Not sur
 \begin{enumerate} 
 \item Count of discrete events.
 \item Non-independent events. It is sometimes said that the events can exhibit contagion; meaning that if one event occurs, it is more likely that another will do.
+\item A variance that exceeds the mean.
 \item Fixed amount of time or space, in which the events can occur.
 \end{enumerate}
 
@@ -3542,15 +3548,25 @@ Example uses: everything the poisson can do and more, numbers of measles cases o
 
 In real life it is not uncommon for us to want to model the count of events which occur in clumps; either in time or space. This 'clumping' behaviour indicates that the occurrence of one event makes it more likely that another will occur afterwards. 
 
-Again we imagine we are in the role of epidemiologists, this time modelling the occurrence of influenza over a winter season in three small villages Socialville, Commuterville, and Hermitville, all of the same size. To keep things simple, we imagine that in each village, the magnitude of the outbreak is determined by a parameter $\theta$. If this number were known, we assume that the numbers of flu cases, $X$ is given by a poisson distribution:
+Again we imagine we are in the role of epidemiologists, this time modelling the occurrence of influenza over a winter season in three small villages: Socialville, Commuterville, and Hermitville, all of the same size. To keep things simple, we imagine that in each village, the magnitude of the outbreak is determined by a parameter $\theta$. If this number were known, we assume that the numbers of flu cases, $X$ is given by a poisson distribution:
 
 \begin{equation}
 X|\theta \sim Pois(\lambda\theta)
 \end{equation}
 
-$\theta$ can be thought of as measuring the type and degree of social interactions of the villagers. In Socialville, $\theta=1.5$ meaning that each person has a lot of interaction with fellow villagers, and the outsider world. In Commuterville, $\theta=1$ meaning that each person has no contact with their fellow villagers, but have a large number of contact with the outside world. In Hermitville, $\theta<0.5$ meaning only a few villagers have contact with the outside world, and again none within the village. Across all villages, it is straightforward (see below) to show that the mean number of cases is $\lambda$.
+$\theta$ can be thought of as measuring the type and degree of social interactions of the villagers. In Studentville, $\theta=1.35$ meaning that each person has a lot of interaction with fellow villagers, and the outsider world. In Commuterville, $\theta=1$ meaning that each person has no contact with their fellow villagers, but have a large number of contact with the outside world. In Academicville, $\theta=0.65$ meaning only a few villagers have contact with the outside world, and again none within the village. Across all villages, it is straightforward (see below) to show that the mean number of cases is $\lambda$. Here we take $\lambda=10$.
 
-Clearly, in this case we will on average get the most cases of the flu in Socialville, where people are likely to contract the disease, then pass it on to others. In Commuterville, where all the people have no contact with one another, then the number of flu cases is governed by how many people \textit{independently} get sick. Finally in Hermitville, only some of the people will likely get sick since some people are complete hermits! And, those that do get sick, will again not pass on the disease to their fellow villagers.
+Clearly, in this case we will on average get the most cases of the flu in Studentville, where people are likely to contract the disease, then pass it on to others. In Commuterville, where all the people have no contact with one another, then the number of flu cases is governed by how many people \textit{independently} get sick. Finally in Academicville, only some of the people will likely get sick since some people are complete hermits! And, those that do get sick, will again not pass on the disease to their fellow villagers. We can think about building a distribution which allows for disease case numbers across all three villages, by essentially averaging out across all the distributions (see the left hand side of figure \ref{fig:Distributions_negativeBinomialDispersion})
+
+If we want to build a model for the disease cases across all three villages, we should expect that even though the overall mean is 10, that the distribution will be wider than that of a simple poisson distribution with the same mean (see the right hand side of figure \ref{fig:Distributions_negativeBinomialDispersion}).
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_negativeBinomialDispersion.pdf}}
+\caption{\textbf{Left}: the overall distribution (blue, dashed) is essentially an average across those for each of the towns: Studentville (red), Commuterville (orange), and Academicville (green). \textbf{Right}: a comparison of the overall distribution (blue, dashed), with a poisson distribution (orange) of the same mean. }\label{fig:Distributions_negativeBinomialDispersion}
+\end{figure}
+
 
 The above example illustrates how contagion can result in a higher number of cases than would be expected if the flu cases were independent. We also see that $\theta$ captures this degree of contagion. If we suppose that we are now interested in predicting the number of flu cases across a large number of equally sized villages. We assume that we have no data on the connectivity of the various villages, and that it is reasonable to assume that $\theta\sim\Gamma(\kappa,\frac{1}{\kappa})$\footnote{Wait until section \ref{sec:Distributions_gamma} for a full explanation of this distribution.}, meaning that $\mathrm{E}[\theta] = 1$ across all villages, meaning that unconditionally, the above distribution has the property that the mean number of flu cases is given by:
 
@@ -3576,11 +3592,20 @@ var\left[X\right|\lambda,\kappa] &= \lambda + \lambda^2\kappa\\
 
 Do not worry about the provenance of this expression, that is not what is important. The only thing that matters here, is that because we have allowed variance in the parameter $\theta$, which governs the connectivity in each village, we see that we have a wider variance than we would have got if all the villages were the same as Commuterville.
 
-More generally, we see that this distribution allows for a variance that is greater than that of the Poisson distribution. However this extra flexibility comes at a cost of extra complexity, because it is characterised by two parameters rather than one. The parameter $\kappa$ measures the degree of dispersion of the data; the larger its value, the greater the variability. This greater variance of this distribution has lead some to categorise it as an \textit{over-dispersed} Poisson. However, its more common name is the \textit{negative binomial}.
+More generally, we see that this distribution allows for a variance that is greater than that of the Poisson distribution. However this extra flexibility comes at a cost of extra complexity, because it is characterised by two parameters rather than one. The parameter $\kappa$ measures the degree of dispersion of the data; the larger its value, the greater the variability (see figure \ref{fig:Distributions_negativeBinomial}). This greater variance of this distribution has lead some to categorise it as an \textit{over-dispersed} Poisson. However, its more common name is the \textit{negative binomial}.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_negativeBinomial.pdf}}
+\caption{\textbf{Left}: The negative binomial distribution for low dispersion (blue), medium dispersion (orange) and high dispersion (green). All three cases have a mean of 8. \textbf{Right}: a contour plot of the likelihood surface for the data sample: {0, 5, 0, 5, 8, 10, 15}. The parameter $\kappa$ here represents the dispersion, with smaller values indicating less dispersion. \textbf{Add legends}}\label{fig:Distributions_negativeBinomial}
+\end{figure}
 
 This distribution has a number of commonly used parameterisations, each of which we illustrate below.
 
 \boxed{Properties:}
+
+Here $\kappa$ represents the dispersion.
 \begin{subequations}
 \begin{empheq}[box=\widefbox]{align}
 notation&: X \sim NB(\lambda,\kappa)\\
@@ -3590,37 +3615,240 @@ variance&: var[X] = \lambda + \lambda^2\kappa
 \end{empheq}
 \end{subequations}
 
+Here $\kappa$ represents the inverse of the dispersion.
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: X \sim NB(\lambda,\kappa)\\
+pdf&: p(X=y|\lambda,\kappa) = \frac{\Gamma(y+\kappa)}{y!\Gamma({\kappa}+1)}\left(\frac{\lambda}{\lambda + {\kappa}}\right)^y \left(\frac{{\kappa}}{\lambda + {\kappa}}\right)^{\kappa} \\
+mean&: \mathrm{E}[X] = \lambda\\
+variance&: var[X] = \lambda + \frac{\lambda^2}{\kappa}
+\end{empheq}
+\end{subequations}
+
+This final parameterisation is probably the most common. Here we suppose we have a number of Bernoulli trials; each of which can be a failure or success. In this case, $r$ represents the number of failures before we stop the experiment, and $\theta$ is the probability of success in each experiment.
+
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: X \sim NB(r,\theta)\\
+pdf&: p(X=y|r,\theta) = \frac{\Gamma(y+r)}{y!\Gamma(r)}(1-\theta)^r \theta^y\\
+mean&: \mathrm{E}[X] = \frac{r\theta}{1-\theta}\\
+variance&: var[X] = \frac{r\theta}{(1-\theta)^2}
+\end{empheq}
+\end{subequations}
+
+Be careful, $\Gamma$ in the above distributions is the gamma function, \textit{not} the gamma distribution.
+
+\textbf{It would be good to combine each of these into a single table.}
 
 \boxed{Video:} Need to make an intuitive video here.
 \boxed{Interactive:} Need to make an interactive element here.
 
-\subsubsection{Logistic}
+\subsubsection{Beta-binomial distribution}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Discrete data.
+\item Multiple trials.
+\item Each trial has only two outcomes (see the Bernoulli): we for lack of better words, deem these \textit{successes} and \textit{failures}.
+\item Individual outcome probabilities are not determined by any other factor that varies across individuals for which we have data.
+\item Overall data we measure is the aggregate number of successes. 
+\item Probability of success varies across studies/groups/time.
+\end{enumerate}
+
+Example uses: everything the binomial can do and more, breast cancer prevalence across heterogeneous patient groups, number of voters for the Republican party across counties.
+
+This distribution is to the binomial what the negative binomial is the poisson. By assuming that there is heterogeneity in the probability of success, this leads to a variance that exceeds that of the basic binomial. This has lead some to say this is another example of a \textit{over-dispersed} distribution. As the following example illustrates, this effect is common when there is heterogeneity across different groups. 
+
+Imagine that you are interested in quantifying the efficacy of a particular drug, which aims to cure depression We conduct a number of separate trials, in each case measuring the number of recoveries out of the total number of participants. Here we only consider formulating a model for the group who are actually treated. For one group we might imagine that the number of successes, $X$, can be modelled by a binomial distribution: $X\sim B(n,\theta)$. Here $n$ represents the number of individuals within that sample, and $\theta$ is the success probability for an individual patient.
+
+We now imagine extending the analysis to cover two patient groups, each of size 10 people indexed by their depression levels: \textit{mild} and \textit{severe}. We suppose that the drug is most efficacious for the mild group, meaning that the corresponding success probability $\theta_{mild}> \theta_{severe}$. Here we expect the number of recoveries in the mild group to exceed that of the severe group. If we were to build a model to allow for results that encompass both groups, we could think about the distribution as representing a sort of average of the other two (see the left hand side of figure \ref{fig:Distributions_betaBinomialDispersion}). We also think that due to this extra variability, we expect that across both samples we would likely see a greater degree of variability than we would have if the groups had the same trial success probability (see the right hand side of figure \ref{fig:Distributions_betaBinomialDispersion})\footnote{See problem set at end of chapter}. 
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_betaBinomialDispersion.pdf}}
+\caption{\textbf{Left:} a distribution that encompasses outcomes from both groups can be thought of as an average of the \textit{mild} and \textit{severe} groups. \textbf{Right:} a comparison of the resultant distribution with a binomial distribution with the same mean. \textbf{Add legends}}\label{fig:Distributions_betaBinomialDispersion}
+\end{figure} 
+
+More generally, if we consider a large number of such groups, and suppose that the success probability in each group is drawn from an overarching distribution, $\theta\sim Beta(\alpha,\beta)$,.then the number of trial successes in a given study is given by a \textit{beta-binomial} distribution, with properties shown below. The variance of this distribution can be shown to exceed that of the binomial distribution (see problem set at end of chapter), meaning that this is a useful distribution for when the variance in your data appears to be large between studies.
+
+See figure \ref{fig:Distributions_betaBinomialDrug} for a graphical depiction of this distribution in response to changes in its parameters, as well as its likelihood surface for a sample of six different studies, with numbers of trial successes given by: {1, 10, 8, 3, 8, 9}. 
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_betaBinomialDrug.pdf}}
+\caption{\textbf{Left, uppermost panel:} the beta distribution for three different sets of parameter values. Blue (1,1), Orange (1,3), Green (10,10). \textbf{Left, lowermost panel:} the beta-binomial distribution for the same parameter values, out of a sample size of 10. \textbf{Right}: likelihood contour plot for a sample of size studies {1, 10, 8, 3, 8, 9}. Again the sample size is 10 in all cases. \textbf{Add legends}}\label{fig:Distributions_betaBinomialDrug}
+\end{figure} 
+
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+pdf&: p(X=y|n,\alpha,\beta) = {n \choose y} \frac{BetaFn(y+\alpha,n+y-\beta)}{BetaFn(\alpha,\beta)}\\
+mean&: \mathrm{E}[X] = \frac{n\alpha}{\alpha+\beta}\\
+variance&: var[X] = \frac{n\alpha\beta(\alpha+\beta+n)}{(\alpha+\beta)^2(\alpha+\beta+1)}
+\end{empheq}
+\end{subequations}
+
+Here $BetaFn$ means the beta function, rather than the beta distribution.
+
+\boxed{Video:} Need to make an intuitive video here. One exists but is overly mathematical.
+\boxed{Interactive:} again make.
+
+
+\subsubsection{Normal}\label{sec:Distributions_normal}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous data.
+\item Unbounded outcomes; at least \textit{practically} unbounded. For example weight of adults aged 30. This is bounded by zero, since weight cannot be negative, but this bound is never approached by data.
+\item Outcome can be considered to be the outcome of a large number of additive factors.
+\end{enumerate}
+
+Example uses: error in regression models, the intelligence of individuals, the prevalence of genes within a population, an approximation to the binomial distribution when the sample size is large and the probability of success is close to $\frac{1}{2}$, an approximation to the poisson distribution when its mean is large.
+
+The normal is the most commonly occurring distribution in nature. This is a result of the various central limit theorems (see section \ref{sec:Probability_CLT}) which predict its occurrence whenever there are a number of additive factors which result in an outcome. These factors needn't necessarily be independent, although this often helps.
+
+As an example, imagine that we are interested in explaining the distribution of body temperatures of people. In this example, we might imagine that measurements of body temperature depends on a number of factors: the amount of exercise taken before the appointment, the outside temperature, how much water the person has drunk, as well as genetic and other physiological characteristics. When we have no information on these multitude of factors, we might invoke the use of a central limit theorem, and suppose that the normal distribution might be a reasonable choice.
+
+This distribution is specified by two parameters: $\mu$, its mean; and $\sigma$ its standard deviation. Changing these has the expected outcome of translating, and widening/narrowing of the probability density (remember that since the distribution is continuous, we are dealing with a density - see section \ref{sec:Probability_densityVsMassFunctions}). Figure \ref{fig:Distributions_normalBodyTemp} shows a plot of these densities for different sets of its mean and standard deviation.
+
+Suppose we obtain the following readings for the body temperature across 10 different participants: {36.4, 37.2, 35.8, 36.4, 37.1, 35.6, 36.4, 37.6, 37.5, 37.1}. Now that we have a distribution specified by two unknown parameters, the likelihood function is actually a surface, and it is easiest to understand by looking at contour plots (see figure \ref{fig:Distributions_normalBodyTemp}). 
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_normalBodyTemp.pdf}}
+\caption{\textbf{Left}: the normal probability density functions for three different sets of $(\mu,\sigma)$: (36, 0.5), (36, 0.8), (37, 0.5). \textbf{Right:} a contour plot of the normal likelihood for a sample of body temperatures: {36.4, 37.2, 35.8, 36.4, 37.1, 35.6, 36.4, 37.6, 37.5, 37.1}.}\label{fig:Distributions_normalBodyTemp}
+\end{figure}
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: X \sim N(\mu,\sigma)\\
+pdf&: f(x|\mu,\sigma) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}\\
+mean&: \mathrm{E}[X] = \mu\\
+variance&: var[X] = \sigma^2
+\end{empheq}
+\end{subequations}
+
+\boxed{Video:} Need to make an intuitive video here. One exists but is overly mathematical.
+\boxed{Interactive:} again make.
+
+\subsubsection{Student t}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous data.
+\item Unbounded outcomes; at least \textit{practically} unbounded. For example weight of adults aged 30. This is bounded by zero, since weight cannot be negative, but this bound is never approached by data.
+\item Outcome can be considered to be the outcome of a large number of additive factors.
+\item Data come from heterogeneous groups, with the same mean, but different variances.
+\end{enumerate}
+
+
+Example uses: same uses as normal (it is a robust/over-dispersed model), literacy scores amongst adults of different ages, stock returns.
+
+Like the binomial and poisson, the normal distribution has an over-dispersed cousin - the t distribution - which can be used to handle datasets with greater variability. Fortunately, like the other cases, this distribution can be derived in a similar manner; by imagining a process resulting in a mixture of normal distributions with different variances. The following example endeavours to make this a bit clearer.
+
+Suppose that we were measuring the mean level of a standardised arithmetic test for two neighbouring schools: Privilege High, where the times are easy, and the fees extortionate; and Normal (forgive its other connotations) Comprehensive, where there is no fees, and they take kids of all abilities. We suppose that controversially, a local newspaper has done some research and worked out that the mean test scores are the same across both schools. However, Privilege High has a lower variance of test scores Normal Comp. Since, a student's test score is likely the result of another of factors: tiredness, work ethic, as well as their brilliance in math; we think that a normal distribution may be a reasonable distribution for the test scores of a number of individuals (see section \ref{sec:Distributions_normal}). 
+
+Suppose that we are employed by the county, and are hence interested in developing a single model to explain the test scores across both schools. We can think of the resultant distribution as an average of the other two distributions; its head will rise, its shoulders fall, and its tails grow (see the left hand side of figure \ref{fig:Distributions_tArithmeticDispersion}). This distribution will, in some senses, have a wider variability of results than a normal distribution of the same characteristics would allow (see the right hand side of figure \ref{fig:Distributions_negativeBinomialDispersion}). This variability isn't borne out in the variance of the distribution, but will be borne out in higher order moments (the fourth moment, called the kurtosis, here). 
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_tArithmeticDispersion.pdf}}
+\caption{\textbf{Left}: the distribution covering test scores across both schools can be made from an average of the two individual distributions. \textbf{Right:} a comparison of the resultant distribution with a normal distribution of the same mean and variance.}\label{fig:Distributions_tArithmeticDispersion}
+\end{figure}
+
+We now imagine we are combining a large number of schools, each with the same the mean arithmetic score, but different variances, which we do not know. If we suppose that it is feasible that the variances varies according to: $\frac{1}{\sigma^2}\sim Inv-\Gamma(\frac{\nu}{2},\frac{\nu}{2})$, then it turns out that an overall distribution across all schools can be proved to be a \textit{Student t}\footnote{Named after the pseudonym used by William Sealy Gosset; a Guiness Brewery worker. Remarkable as this is perhaps the first time that statistics and alcohol were found to mix well.} distribution with $\nu$ degrees of freedom (see the problem set at the end of the chapter). This distribution would have a larger variability than an equivalent normal with a variance equal to that of the mean of the variance distribution. The extra uncertainty has caused a widening of the distribution!
+
+The higher the number of schools over which we are summing, the more the overall distribution starts to look normal (this is a consequence of the central limit theorem discussed in section \ref{sec:Probability_CLT}), and we see a reduction in the tails. Figure \ref{fig:Distributions_tArithmeticExposition} illustrates how manipulations of the parameters $\sigma$ and $\nu$ which characterise the distribution affect its shape.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_tArithmeticExposition.pdf}}
+\caption{Student t distributions drawn for three parameter sets of $(\mu,\sigma,\nu)$: (100,10,1), (100,10,5), and (120,15,1).}\label{fig:Distributions_tArithmeticExposition}
+\end{figure}
+
+Now suppose that we have a sample of 5 test scores from across the schools, and are found to be: {74, 96, 108, 98, 101}. Since we have three unknown parameter in our distribution the likelihood functions is actually a 3-dimensional surface, which is not possible to plot in our paltry 3 spacial dimensions (we need an extra dimension to show the height of the surface, meaning that the plot would be 4-D). However, we can proceed as before through pairwise contour plots of the variables (see figure \ref{fig:Distributions_tArithmeticLikelihood}). These are interesting in that they show that there is little correlation between the estimates of the mean of the distribution with the parameters $\sigma$ and $\nu$ which dictate its shape. However, since both of these latter parameters dictate the overall variability of the distribution, the likelihood surface shows ridges of correlation between these two.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_tArithmeticLikelihood.pdf}}
+\caption{Pairwise contour plots of the likelihood surface. In each of the plots, the remaining variable is set at its maximum likelihood estimated value.}\label{fig:Distributions_tArithmeticLikelihood}
+\end{figure}
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+pdf&: f(x|\mu,\sigma,\nu) = \frac{\left(\frac{\nu }{\nu +\frac{(x-\mu)^2}{\sigma ^2}}\right)^{\frac{\nu +1}{2}}}{\sqrt{\nu } \sigma  BetaFn\left(\frac{\nu }{2},\frac{1}{2}\right)}\\
+mean&: \mathrm{E}[X] = \mu\\
+variance&: var[X] = \frac{\nu  \sigma ^2}{\nu -2}, if \nu > 2; Otherwise\; undefined.
+\end{empheq}
+\end{subequations}
+
+\boxed{Video:} Need to make an intuitive video here.
+\boxed{Interactive:} again make. These could be of two types: firstly showing how the sum of a user-selected number of normal distributions with variances given by an inverse-gamma distribution, results in a t. Another could be to allow the student to manipulate the parameters of the t distribution.
+
+\subsubsection{Exponential}
+\subsubsection{Gamma distribution}
+
+\section{Table of common likelihoods, their uses, and reasonable priors}
+Show over-dispersed, or robust distributions for each of the cases.
 
 \section{Prior distributions}
-\subsubsection{Distributions for probabilities, proportions and percentages}
+\subsection{Distributions for probabilities, proportions and percentages}
 \subsubsection{Uniform}
 \subsubsection{Beta}
+\subsubsection{Logit-normal}
 \subsubsection{Dirichlet}
-
-\section{Table of distributions, their uses, and reasonable priors}
 
 \subsection{Distributions for means and medians}
 \subsubsection{Normal}
 \subsubsection{Student t}
 
 \subsection{Distributions for variances, and shape parameters}
+\subsubsection{Exponential}
 \subsubsection{Gamma}\label{sec:Distributions_gamma}
 \subsubsection{Half-Cauchy}
 \subsubsection{Inverse Gamma}
 \subsubsection{Inverse chi}
-\subsection{Multinomial - or other regression}
-\subsection{LBG prior - see Michael Betancourt video and Stan doc}
+\subsubsection{Lognormal}
+
+\subsubsection{Multinomial - or other regression}
+\subsubsection{LBG prior - see Michael Betancourt video and Stan doc}
 Better alternative to Wishart.
-\subsection{Wishart}
+\subsubsection{Wishart}
+\subsubsection{Inverse Wishart}
 
 \subsection{Distributions for categories}
 \subsubsection{Categorical}
 \section{Chapter summary}
+\section{Problem set}
+\subsection{Drug trials}
+We suppose that we are testing the efficacy of a certain drug which aims to cure depression, across two groups, each of size 10, with varying levels of the underlying condition: \textit{mild} and \textit{severe}. We suppose that the success rate of the drug varies across each of the groups, with $\theta_{mild}>\theta_{severe}$. We are comparing this with another group of 10 individuals, which has a success rate equal to the mean of the other two groups $\theta = \frac{\theta_{mild}+\theta_{severe}}{2}$.
+
+\begin{enumerate}
+\item Calculate the mean number of successful trials in each of the three groups.
+\item Compare the mean across the two heterogeneous groups, with that of the single group of 10 homogeneous people.
+\item Calculate the variance of outcomes across each of the three groups.
+\item How does the variance across the combination of both heterogeneous studies compare with that of an equivalent 10-person homogeneous group?
+\end{enumerate}
+
+No consider the extension to a large number of trials, with the depressive status of each group unknown to the experimenter, but follows $\theta\sim Beta(\alpha,\beta)$.
+
+\begin{enumerate}
+\item Calculate the mean value of the Beta distribution.
+\item What combinations of $\alpha$ and $\beta$ would make the mean the same as that of a single study with success probability $\theta$?
+How does the variance change, as the parameters of the beta distribution are changed, so as to keep the same mean of $\theta$?
+\item How does the variance of the number of disease cases compare to that of the a single study with success probability $\theta$?
+\end{enumerate}
+
+\subsection{100m results across countries}
+We suppose that we would like to build a model for the 100m times for the fastest 10 runners across a number of different countries. We suppose that, neglecting Usain Bolt, the times for the runners in each country can be assumed to be approximately normal around a mean of 10 seconds. \url{http://www.johndcook.com/t_normal_mixture.pdf}
+
 
 
 \chapter{Conjugate priors and their place in Bayesian analysis}\label{chap:conjugate}
