@@ -404,6 +404,8 @@
 \newlabel{fig:Likelihood_MLE}{{5.8}{185}}
 \newlabel{eq:Likelihood_diseaseLogLikelihood}{{5.42}{186}}
 \newlabel{eq:Likelihood_diseaseDerivativeOne}{{5.43}{186}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.9.3}Sufficient statistics}{187}}
+\newlabel{sec:Likelihood_sufficientStats}{{5.9.3}{187}}
 \@writefile{toc}{\contentsline {section}{\numberline {5.10}Frequentist inference in Maximum Likelihood}{187}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5.9}{\ignorespaces Two likelihoods which result in the same maximum likelihood estimates of parameters, at 0.1. The gray likelihood is less strongly-peaked, meaning we can be less confident about the estimates.\relax }}{189}}
 \newlabel{fig:Likelihood_likelihoodCurvature}{{5.9}{189}}
@@ -630,6 +632,7 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {8.2}{\ignorespaces \textbf  {Left}: Binomial likelihoods for the event that 5 (blue), 2 (red), and 9 (grey) volunteers recovered in the week period. The maximum likelihood estimates are shown as dotted lines for each of the cases. \textbf  {Right:} the probability distribution of successful trials if $\theta =0.3$ (blue) and $\theta =0.7$ (orange).\relax }}{269}}
 \newlabel{fig:Distributions_binomialClinicalTrial}{{8.2}{269}}
 \@writefile{toc}{\contentsline {subsubsection}{Poisson}{269}}
+\newlabel{sec:Distributions_poisson}{{8.3}{269}}
 \@writefile{lof}{\contentsline {figure}{\numberline {8.3}{\ignorespaces \textbf  {Left}: The poisson likelihood for three different samples. \textbf  {Right}: the poisson distribution for different values of the mean rate. \textbf  {Add legends: left xbar=0.5,3,8. Right: lambda=0.5,3,8.}\relax }}{271}}
 \newlabel{fig:Distributions_poissonLegionella}{{8.3}{271}}
 \@writefile{toc}{\contentsline {subsubsection}{Negative binomial}{272}}
@@ -654,62 +657,70 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {8.11}{\ignorespaces Pairwise contour plots of the likelihood surface. In each of the plots, the remaining variable is set at its maximum likelihood estimated value.\relax }}{286}}
 \newlabel{fig:Distributions_tArithmeticLikelihood}{{8.11}{286}}
 \@writefile{toc}{\contentsline {subsubsection}{Exponential}{287}}
-\@writefile{toc}{\contentsline {subsubsection}{Gamma distribution}{287}}
-\@writefile{toc}{\contentsline {section}{\numberline {8.4}Table of common likelihoods, their uses, and reasonable priors}{287}}
-\@writefile{toc}{\contentsline {section}{\numberline {8.5}Prior distributions}{288}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.5.1}Distributions for probabilities, proportions and percentages}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Uniform}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Beta}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Logit-normal}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Dirichlet}{288}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.5.2}Distributions for means and medians}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Normal}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Student t}{288}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.5.3}Distributions for variances, and shape parameters}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Exponential}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Gamma}{288}}
-\newlabel{sec:Distributions_gamma}{{8.5.3}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Half-Cauchy}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Inverse Gamma}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Inverse chi}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Lognormal}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Multinomial - or other regression}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{LBG prior - see Michael Betancourt video and Stan doc}{288}}
-\@writefile{toc}{\contentsline {subsubsection}{Wishart}{289}}
-\@writefile{toc}{\contentsline {subsubsection}{Inverse Wishart}{289}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.5.4}Distributions for categories}{289}}
-\@writefile{toc}{\contentsline {subsubsection}{Categorical}{289}}
-\@writefile{toc}{\contentsline {section}{\numberline {8.6}Chapter summary}{289}}
-\@writefile{toc}{\contentsline {section}{\numberline {8.7}Problem set}{289}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.7.1}Drug trials}{289}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.7.2}100m results across countries}{290}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {9}Conjugate priors and their place in Bayesian analysis}{291}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8.12}{\ignorespaces \textbf  {Left:} the exponential probability distribution for three values of $\lambda $: 1 (blue), 2.5 (orange) and 5 (green). \textbf  {Right:} the likelihood surface for three different datasets with mean times between outbreaks given by 3.1 (blue), 0.7 (orange) and 0.4 (green) years. The dashed vertical lines indicate the maximum likelihood estimates of the parameters in each case.\textbf  {Add legends rather than state in text.}\relax }}{288}}
+\newlabel{fig:Distributions_exponentialEbola}{{8.12}{288}}
+\@writefile{toc}{\contentsline {subsubsection}{Gamma distribution}{288}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8.13}{\ignorespaces \textbf  {Left:} the distribution of lottery claim times for 1 (blue) and 3 (orange) people, with $\lambda =1$. \textbf  {Middle:} the distribution of lottery claim times for 1 (blue) and 3 (orange) people, with $\lambda =\frac  {1}{2}$. \textbf  {Right:} the distribution of lottery claim times for 1 (blue) and 5 (orange) people, with $\lambda =1$. \textbf  {Add legends/titles.}\relax }}{290}}
+\newlabel{fig:Distributions_gammaLottery}{{8.13}{290}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8.14}{\ignorespaces A contour plot of the likelihood surface across the parameters of a $\Gamma (\alpha ,\beta )$ distribution modelling the time taken for 3 people to claim their prizes, with sample data: {5.1, 7.8, 3.4, 3.2, 4.3, 5.2, 8.1, 3.7, 2.3, 6.3}. \textbf  {Add legends/titles.}\relax }}{291}}
+\newlabel{fig:Distributions_gammaLotteryLikelihood}{{8.14}{291}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3.1}Multinomial}{292}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.4}Table of common likelihoods, their uses, and reasonable priors}{294}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.5}Prior distributions}{294}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.5.1}Distributions for probabilities, proportions and percentages}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Uniform}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Beta}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Logit-normal}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Dirichlet}{295}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.5.2}Distributions for means, medians and other location parameters}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Normal}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Student t}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Cauchy}{295}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.5.3}Distributions for variances, and shape parameters}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Exponential}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Gamma}{295}}
+\newlabel{sec:Distributions_gamma}{{8.5.3}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Half-Cauchy}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Gamma}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Inverse chi}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Lognormal}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Multivariate normal - or other regression}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{LBG prior - see Michael Betancourt video and Stan doc}{295}}
+\@writefile{toc}{\contentsline {subsubsection}{Wishart}{296}}
+\@writefile{toc}{\contentsline {subsubsection}{Inverse Wishart}{296}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.5.4}Distributions for discrete random variables}{296}}
+\@writefile{toc}{\contentsline {subsubsection}{Discrete uniform}{296}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.6}Chapter summary}{296}}
+\@writefile{toc}{\contentsline {section}{\numberline {8.7}Problem set}{296}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.7.1}Drug trials}{296}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.7.2}100m results across countries}{297}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {9}Conjugate priors and their place in Bayesian analysis}{299}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:conjugate}{{9}{291}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {10}Objective Bayesian analysis}{293}}
+\newlabel{chap:conjugate}{{9}{299}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {10}Objective Bayesian analysis}{301}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:ObjectiveBayes}{{10}{293}}
-\@writefile{toc}{\contentsline {part}{IV\hspace  {1em}A practical guide to doing real life Bayesian analysis: Computational Bayes}{295}}
-\newlabel{part:computationalBayes}{{IV}{297}}
-\@writefile{toc}{\contentsline {part}{V\hspace  {1em}Regression analysis and hierarchical models}{299}}
-\newlabel{part:regressionHierarchical}{{V}{301}}
-\@writefile{toc}{\contentsline {section}{\numberline {10.1}Part mission statement}{301}}
-\@writefile{toc}{\contentsline {section}{\numberline {10.2}Part goals}{301}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {11}Hierarchical models}{303}}
+\newlabel{chap:ObjectiveBayes}{{10}{301}}
+\@writefile{toc}{\contentsline {part}{IV\hspace  {1em}A practical guide to doing real life Bayesian analysis: Computational Bayes}{303}}
+\newlabel{part:computationalBayes}{{IV}{305}}
+\@writefile{toc}{\contentsline {part}{V\hspace  {1em}Regression analysis and hierarchical models}{307}}
+\newlabel{part:regressionHierarchical}{{V}{309}}
+\@writefile{toc}{\contentsline {section}{\numberline {10.1}Part mission statement}{309}}
+\@writefile{toc}{\contentsline {section}{\numberline {10.2}Part goals}{309}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {11}Hierarchical models}{311}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:hierarchicalModels}{{11}{303}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {12}Hypothesis testing I: Classical Frequentist vs Bayesian approaches}{305}}
+\newlabel{chap:hierarchicalModels}{{11}{311}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {12}Hypothesis testing I: Classical Frequentist vs Bayesian approaches}{313}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibstyle{plain}
 \bibdata{Bayes}
-\@writefile{toc}{\contentsline {chapter}{\numberline {13}Evaluation of model fit}{307}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {13}Evaluation of model fit}{315}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:ModelFit}{{13}{307}}
+\newlabel{chap:ModelFit}{{13}{315}}
 \bibcite{angrist1990lifetime}{{1}{}{{}}{{}}}
 \bibcite{bolstad2007introduction}{{2}{}{{}}{{}}}
 \bibcite{epstein2008model}{{3}{}{{}}{{}}}
