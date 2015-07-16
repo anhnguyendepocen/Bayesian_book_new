@@ -2382,9 +2382,6 @@ Notice that the maximum likelihood estimators for the population mean and varian
 \hat{\sigma^2} = \frac{1}{N}\sum\limits_{i=1}^{N}(X_i-\bar{X})^2 = s^2
 \end{equation}
 
-\subsection{Sufficient statistics}\label{sec:Likelihood_sufficientStats}
-
-
 \section{Frequentist inference in Maximum Likelihood}
 We have now detailed how to derive point estimates of parameters using the method of maximum likelihood. However, at the moment we are unable to make any conclusions about the population. This is because we do not have any idea as to whether we obtained a particular estimate of a parameter due to picking a weird sample, or because it \textit{actually} has a value in the population which is at this value. Frequentists get round this by examining a graph of log-likelihood near the maximum likelihood point estimate (see figure \ref{fig:Likelihood_likelihoodCurvature}). If the log-likelihood is strongly peaked near the maximum likelihood estimate, then this suggests that only a small range of parameters would yield a similar valued likelihood. By contrast, if the log-likelihood is gently peaked near the ML estimate, then it is feasible that a large range of parameters would yield estimates close to this value. In the latter case, it seems logical that we should be less confident in the particular value of the parameter which is given by maximum likelihood. We can measure the 'peakedness' in the log-likelihood by looking at the magnitude of the second derivative\footnote{The first derivative gives the gradient, the second derivative gives the rate of change of the gradient - a measure of curvature.} of the function at the ML point estimate value. The more curved the log-likelihood, the more confident we can be of our estimated parameter value, and any conclusions drawn from this. Note however, that the Frequentist inference is not based on proper probability distributions (since we infer based on a likelihood). This contrasts with the Bayesian method which, by its nature, allows for a more adequate description of parameters, using probability distributions.
 
@@ -3358,7 +3355,7 @@ Throughout the chapter there are considerable interactive elements. It is hoped 
 \section{Sampling distributions for likelihoods}
 The first class of distributions which we came across in Part \ref{part:bayesianFormula} were those that were used to write down a probability model to describe the situation under inspection. As well as expressing our assumptions used to simplify the system, these \textit{likelihood} models also define the parameters over which we are interested in conducting inference. Specifying a likelihood that is adequate to the specifics of the system under consideration is the most important part of conducting Bayesian inference. As such, it is essential to have a reasonable grasp of some of the most common likelihood distributions on which many analyses are built. Whilst there are an infinity of potential sampling distributions out there, we believe that the collection here are the most frequently used, and are often a starting point for the construction of more complex models.
 
-\subsubsection{Bernoulli}\label{sec:Distributions_bernoulli}
+\subsection{Bernoulli}\label{sec:Distributions_bernoulli}
 
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
@@ -3420,7 +3417,7 @@ It is rare in life to come up against one-off events, and we typically have data
 
 \boxed{Video:} Need to make an intuitive video here. One exists but is overly mathematical.
 
-\subsubsection{Binomial}
+\subsection{Binomial}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3489,7 +3486,7 @@ variance&: var[X] = n\theta (1-\theta)
 \boxed{Video:} Need to make an intuitive video here. One exists but is overly mathematical.
 \boxed{Interactive:} again make.
 
-\subsubsection{Poisson}\label{sec:Distributions_poisson}
+\subsection{Poisson}\label{sec:Distributions_poisson}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3539,7 +3536,7 @@ variance&: var[X] = \lambda
 \boxed{Video:} Need to make an intuitive video here.
 \boxed{Interactive:} Need to make an interactive element here.
 
-\subsubsection{Negative binomial}
+\subsection{Negative binomial}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3648,7 +3645,7 @@ Be careful, $\Gamma$ in the above distributions is the gamma function, \textit{n
 \boxed{Video:} Need to make an intuitive video here.
 \boxed{Interactive:} Need to make an interactive element here.
 
-\subsubsection{Beta-binomial distribution}
+\subsection{Beta-binomial distribution}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3700,7 +3697,7 @@ Here $BetaFn$ means the beta function, rather than the beta distribution.
 \boxed{Interactive:} again make.
 
 
-\subsubsection{Normal}\label{sec:Distributions_normal}
+\subsection{Normal}\label{sec:Distributions_normal}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3739,7 +3736,7 @@ variance&: var[X] = \sigma^2
 \boxed{Video:} Need to make an intuitive video here. One exists but is overly mathematical.
 \boxed{Interactive:} again make.
 
-\subsubsection{Student t}
+\subsection{Student t}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3797,7 +3794,7 @@ variance&: var[X] = \frac{\nu  \sigma ^2}{\nu -2}, if \nu > 2; Otherwise\; undef
 \boxed{Video:} Need to make an intuitive video here.
 \boxed{Interactive:} again make. These could be of two types: firstly showing how the sum of a user-selected number of normal distributions with variances given by an inverse-gamma distribution, results in a t. Another could be to allow the student to manipulate the parameters of the t distribution.
 
-\subsubsection{Exponential}
+\subsection{Exponential}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3834,7 +3831,7 @@ variance&: var[X] = \frac{1}{\lambda^2}
 \end{empheq}
 \end{subequations}
 
-\subsubsection{Gamma distribution}
+\subsection{Gamma distribution}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -4010,13 +4007,130 @@ We suppose that we would like to build a model for the 100m times for the fastes
 
 
 \chapter{Conjugate priors and their place in Bayesian analysis}\label{chap:conjugate}
+\section{What is a conjugate prior and why are they useful?}
+\section{Beta-binomial example}
+\section{Gamma-poisson example}
+\section{Normal example}
+\section{Dirichlet-multinomial example}
+\section{The lessons from conjugate analysis}
+No need to do any calculation. Just look up the value in a table!
+Include table with all of the conjugate prior-likelihood combinations.
+\section{The limits of a conjugate analysis}
+
+\chapter{Evaluation of model fit}\label{chap:ModelFit}
+\section{The classical methodology}
+\section{Posterior predictive checks}
+\subsection{Graphical examples}
+\subsection{Bayesian p values}
+\subsection{A number of examples}
+\section{Sensitivity analysis}
+
 
 \chapter{Objective Bayesian analysis}\label{chap:ObjectiveBayes}
+\section{The illusion of uniformed uniform prior}
+\section{Jeffrey's priors}
+\section{Reference priors}
+\section{Zellner's g-priors}
+\section{Empirical Bayes}
+\section{A move towards weakly informative priors}
+
 
 
 \part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
 
-MCMC: difficult to obtain independent samples from the posterior, so we make do with dependent samples.
+\chapter{Discrete approximation of continuous posteriors}
+Unsure whether as it stands to keep this chapter, or lose it.
+
+\chapter{Leaving the conjugates behind: Markov Chain Monte Carlo}
+
+\section{The difficulty with real life Bayesian inference}
+\section{Integrating using independent Monte Carlo samples}
+\section{Moving from independent to dependent samples}
+Include subsection on effective sample size.
+
+\subsection{The burn-in/warm-up phase}
+
+\section{Practical computational inference}
+\subsection{The importance of pre-simulation MLE}
+\subsection{Fake data simulation}
+
+\chapter{Gibbs sampling}
+\section{The intuition behind the Gibbs algorithm}
+Imagine wanting to sample the heights of all the points on earth as a posterior distribution. One could do a random walk a la MH, but if the proposal distribution is too narrow, then the sampler could get stuck on a mountain range or desert; alternatively large swathes of landscape may be ignored if the step size is too large. This means it can take require a long burn-in, and may or may not be representative of the underlying landscape. The Gibbs algorithm works by cutting through the earth along lines of latitude or longitude, and allowing all steps along this conditional distribution. Since arbitrary step lengths are allowed, the algorithm is quicker, and there is no need to fine tune it to the degree of MH.
+
+\section{Simple examples}
+\section{DAG models}
+\section{The benefits and difficulties with Gibbs}
+
+\chapter{Metropolis-Hastings}
+\section{Intuition behind Metropolis}
+The analogy of walking around a landscape. Moving to a new spot probabilistically if it is lower, and moving to a higher spot definitely. The idea is that you will visit positions at a rate proportional to their height. Rain analogy: absolute height is unimportant, only the relative difference between parts of the landscape.
+\section{The importance of the proposal distribution}
+The annoyance of having to pick a step length.
+
+\section{As a subset of Gibbs and vice versa}
+
+\chapter{Hamiltonian Monte Carlo}
+\section{Introduction to Hamiltonian Monte Carlo}
+\section{Avoiding manual labour: the No-U-turn sampler}
+Reference Hoffman and Gelman 2014 paper.
+\section{Riemannian MCMC}
+Reference downloaded Girolami article.
+
+\chapter{Stan and JAGS}
+\section{Motivation for Stan and JAGS}
+\subsection{Their similarities and differences}
+\subsection{The future}
+
+\subsection{The nuts and bolts of Stan and JAGS: access through R}
+\subsubsection{How to get packages}
+\subsubsection{How to package data}
+
+\section{Stan}
+\subsection{How to download, and install}
+\subsection{A first program in Stan}
+Sample from a simple prior. Sample from a hierarchical prior system.
+\subsection{The building blocks of a Stan program}
+Include table showing when, and how often each block of the program is called.
+\subsubsection{Parameters}
+\subsubsection{Model}
+\subsubsection{Transformed parameters}
+\subsubsection{Transformed data}
+\subsubsection{Generated quantities}
+Sample from posteriors. Very useful to build in PPCs directly, rather than doing it post-hoc.
+
+\subsection{A simple model with data}
+
+\subsection{Diagnostics}
+\subsubsection{$\hat{R}$ and effective sample size}
+\subsubsection{Divergent iterations}
+\subsubsection{Tree depth exceeding maximum}
+\subsubsection{Leapfrog steps}
+
+\subsection{More complex models with array indexing}
+
+\subsection{Essential Stan reading}
+The idea behind this section is to introduce the reader to a wide, and somewhat unconnected, range of tricks that I have found very useful in writing Stan programs. It also will contain some common error messages which I have come across; illustrating their meaning, and ways to alleviate the problem (if it \textit{really} is a problem).
+
+\subsubsection{The importance of log probability incrementing}
+\subsubsection{Marginalising of discrete parameters}
+If model has many discrete parameters consider moving to JAGS.
+
+\section{JAGS}
+\subsection{How to download, and install}
+\subsection{A first program in JAGS}
+Sample from a simple prior. Sample from a hierarchical prior system.
+\subsection{The literal meaning of a for loop}
+\subsection{A simple model}
+\subsection{Diagnosis}
+\subsubsection{In-built using vanilla R}
+\subsubsection{coda}
+\subsubsection{More complex model}
+
+\subsection{Essential JAGS reading}
+\subsubsection{Controlling the flow without if conditions}
+How to control flow without explicit if using Step.
+\subsubsection{Storing values in matrices}
 
 
 \part{Regression analysis and hierarchical models}\label{part:regressionHierarchical}
@@ -4024,12 +4138,19 @@ MCMC: difficult to obtain independent samples from the posterior, so we make do 
 \section{Part goals}
 
 \chapter{Hierarchical models}\label{chap:hierarchicalModels}
-\chapter{Hypothesis testing I: Classical Frequentist vs Bayesian approaches}
+\section{The spectrum from pooled to heterogeneous}
+\subsection{The logic and benefits of partial pooling}
+\subsection{Shrinkage towards the mean}
+Increases robustness naturally, and prevents overfitting.
 
-\chapter{Evaluation of model fit}\label{chap:ModelFit}
-Formerly hypothesis testing II. Definitely use something similar to Kruscke's P67 example for choosing between models.
+\section{Meta analysis example: simple}
 
+\section{The importance of fake data simulation for complex models}
+\subsection{The importance of making 'good' fake data}
 
+\chapter{Linear regression models}
+\chapter{Generalised linear models}
+\section{Malarial example of complex meta-analysis}
 
 
 \bibliographystyle{plain}
