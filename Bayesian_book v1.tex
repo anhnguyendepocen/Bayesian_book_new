@@ -3916,29 +3916,51 @@ Distribution checklist (\textbf{want this in a different colour/shading. Not sur
 
 Example uses: modelling the political party affiliation across a group of people (for example, Republican, Democrat, or Independent), the choice of treatment sought for back pain (for example osteopath, acupuncture, physiotherapy, surgery, or none), or the type of inferential framework used (for example, Frequentist, Bayesian, or rule-of-thumb).
 
-Suppose we work for the Department of Health, and want to build a model that can explain the prevalence of blood types within a sample of people. For simplicity's sake, we suppose that the only categories of blood for which we want to build a model are: A, B, AB or O. We suppose further that our test group of $n$ people is randomly sampled from the larger US population. This latter assumption means that we can view the blood-type of one individual as being conditionally independent from another's. 
+Suppose we work for the Department of Health, and want to build a model that can explain the prevalence of blood types within a sample of people. For simplicity's sake, we suppose that the only categories of blood for which we want to build a model are: A, B or O. We suppose further that our test group of $n$ people is randomly sampled from the larger US population. This latter assumption means that we can view the blood-type of one individual as being conditionally independent from another's. 
 
-Let's first of all consider how we might design a distribution to cope with the four categories of blood types. The probabilities of obtaining each of the four categories are equal to the proportions of each type in the population, which we call $\boldsymbol{p}=\{p_A,p_B,p_{AB},p_O\}$. We now create a set of binary random variables: $\{X_A,X_B,X_{AB},X_O\}$; each of which if equal to 1, means that the person has that bloody type. Note that here it is not possible for more than one of these set to be 1 for a given person (since they only have one blood type). We would like our distribution to return the relevant probabilities for each of the cases, in other words: $Pr(X_i=x_i,X_{-i}=0|\boldsymbol{p}) = p_i$. Here $i\in\{A,B,AB,O\}$ and $X_{-i}$ represents the other three random variables. It turns out that we can get this behaviour from the following \textit{multi-bernoulli} distribution:
+Let's first of all consider how we might design a distribution to cope with the four categories of blood types. The probabilities of obtaining each of the four categories are equal to the proportions of each type in the population, which we call $\boldsymbol{p}=\{p_A,p_B,p_O\}$. We now create a set of binary random variables: $\{X_A,X_B,X_O\}$; each of which if equal to 1, means that the person has that bloody type. Note that here it is not possible for more than one of these set to be 1 for a given person (since they only have one blood type). We would like our distribution to return the relevant probabilities for each of the cases, in other words: $Pr(X_i=x_i,X_{-i}=0|\boldsymbol{p}) = p_i$. Here $i\in\{A,B,O\}$ and $X_{-i}$ represents the other three random variables. It turns out that we can get this behaviour from the following \textit{multi-bernoulli} distribution:
 
 \begin{equation}
-Pr(X_A=x_A,X_B=x_B,X_{AB}=x_{AB},X_O=x_O|\boldsymbol{p}) = p_A^{x_A} p_B^{x_B} p_{AB}^{x_{AB}} p_O^{x_O}
+Pr(X_A=x_A,X_B=x_B,X_O=x_O|\boldsymbol{p}) = p_A^{x_A} p_B^{x_B} p_O^{x_O}
 \end{equation}
 
-Now that we have formulated a distribution for 1 person, we can fairly straightforwardly extend this to allow for a sample of $n$ persons. Since we assumed that the group is randomly-sampled, then the overall distribution will be proportional to the product of the individual \textit{multi-bernoulli} distributions, of the form above. We now define new random variables which hold the aggregate numbers of people in each of our categories: $Z_i=\sum\limits_{j=1}^{n}X_j^i$, where $i\in\{A,B,AB,O\}$. From then we can reason (see the problem set at the end of the chapter) that the overall distribution has the form below:
+Now that we have formulated a distribution for 1 person, we can fairly straightforwardly extend this to allow for a sample of $n$ persons. Since we assumed that the group is randomly-sampled, then the overall distribution will be proportional to the product of the individual \textit{multi-bernoulli} distributions, of the form above. We now define new random variables which hold the aggregate numbers of people in each of our categories: $Z_i=\sum\limits_{j=1}^{n}X_j^i$, where $i\in\{A,B,O\}$. From then we can reason (see the problem set at the end of the chapter) that the overall distribution has the form below:
 
 
 
 \begin{equation}
-Pr(Z_A=z_A,Z_B=z_B,Z_{AB}=z_{AB},Z_{O}=z_O|\boldsymbol{p}) = \frac{n!}{z_A!z_B!z_{AB}!z_O!} p_A^{z_A} p_B^{z_B} p_{AB}^{z_{AB}} p_O^{z_O}
+Pr(Z_A=z_A,Z_B=z_B,Z_{AB}=z_{AB},Z_{O}=z_O|\boldsymbol{p}) = \frac{n!}{z_A!z_B!z_O!} p_A^{z_A} p_B^{z_B}  p_O^{z_O}
 \end{equation}
 
 The factor at the front is the multiple-category version of the $nCr$ term that we had for the binomial case, and allows for the fact that there are a large number of ways of obtaining the same aggregate numbers of people in each blood type (for example person 1 could be A, and person 2 B or vice versa).
 
-It is not possible to fully graph this distribution (over four categories, although we will see that via a trick, this is possible over three in section \ref{sec:Distributions_dirichlet}), nor its likelihood, unfortunately. However, we do show some two dimensional cross-sections through this distribution in figure 
+We will see in section \ref{sec:Distributions_dirichlet} that there is a trick that allows us to graph this distribution (see figure ), and its likelihood for all three types. However, here we note that since there are only three categories, only two of them are free to vary, since the last category is given by $Z_i = n - Z_{-i}$, and for probabilities $p_i = 1 - p_{-i}$. This simplification means that we can draw the distribution as a 2D surface, since the other variable is fully determined by the first two.
 
-Maybe make this example three types, then we can plot the distribution fully! It seems like Mathematica doesn't allow this easily for the distribution, so try using Matlab \url{http://uk.mathworks.com/help/stats/work-with-the-multinomial-probability-distribution.html}.
+Figure \ref{fig:Distributions_multinomialLikelihoodl} shows the likelihood across $(p_A,p_B)$ for the following sample: {{4, 2, 4}, {5, 2, 3}, {2, 2, 6}}. The plot is only the lowermost triangle, as to the right of the main diagonal the probabilities sum exceeds 1.
 
-Draw the likelihood contour plot across four different values of the third probability.
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Distributions_multinomial.pdf}}
+\caption{The multinomial probability distribution for probabilities $(p_A=\frac{1}{2},p_B=\frac{1}{3},p_O = \frac{1}{6})$.)\textbf{Add legends/titles, and combine with other - although one in Matlab, the other in Mathematica.}}\label{fig:Distributions_multinomial}
+\end{figure}
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Distributions_multinomialLikelihood.pdf}}
+\caption{A contour plot of the multinomial likelihood across $(p_A,p_B,p_O=1-p_A-p_B)$.\textbf{Add legends/titles, and combine with other - although one in Matlab, the other in Mathematica.}}\label{fig:Distributions_multinomialLikelihoodl}
+\end{figure}
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+pmf&: Pr(X_1=x_1,X_2=x_2,...,X_k=x_k|p_1,p_2,...,p_k) = \frac{n!}{x_1!x_2!...x_k!} p_1^{x_1} p_2^{x_2} ... p_k^{x_k}\\
+mean&: \mathrm{E}[X_i] = n p_i\\
+variance&: var[X] = n p_i (1-p_i)
+\end{empheq}
+\end{subequations}
+
 
 \section{Table of common likelihoods, their uses, and reasonable priors}
 Show over-dispersed, or robust distributions for each of the cases.
