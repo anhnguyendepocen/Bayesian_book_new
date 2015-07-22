@@ -3900,7 +3900,7 @@ variance&: var[X] = \sigma
 \end{empheq}
 \end{subequations}
 
-\subsection{Multinomial}
+\subsection{Multinomial}\label{sec:Distributions_multinomial}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3934,9 +3934,11 @@ Pr(Z_A=z_A,Z_B=z_B,Z_{AB}=z_{AB},Z_{O}=z_O|\boldsymbol{p}) = \frac{n!}{z_A!z_B!z
 
 The factor at the front is the multiple-category version of the $nCr$ term that we had for the binomial case, and allows for the fact that there are a large number of ways of obtaining the same aggregate numbers of people in each blood type (for example person 1 could be A, and person 2 B or vice versa).
 
-We will see in section \ref{sec:Distributions_dirichlet} that there is a trick that allows us to graph this distribution (see figure ), and its likelihood for all three types. However, here we note that since there are only three categories, only two of them are free to vary, since the last category is given by $Z_i = n - Z_{-i}$, and for probabilities $p_i = 1 - p_{-i}$. This simplification means that we can draw the distribution as a 2D surface, since the other variable is fully determined by the first two.
+We will see in section \ref{sec:Distributions_dirichlet} that there is a trick that allows us to graph this distribution (see figure \ref{fig:Distributions_multinomial}), and its likelihood for all three types. However, here we note that since there are only three categories, only two of them are free to vary, since the last category is given by $Z_i = n - Z_{-i}$, and for probabilities $p_i = 1 - p_{-i}$. This simplification means that we can draw the distribution in 2D, since the other variable is fully determined by the first two.
 
-Figure \ref{fig:Distributions_multinomialLikelihoodl} shows the likelihood across $(p_A,p_B)$ for the following sample: {{4, 2, 4}, {5, 2, 3}, {2, 2, 6}}. The plot is only the lowermost triangle, as to the right of the main diagonal the probabilities sum exceeds 1.
+Figure \ref{fig:Distributions_multinomial} shows the probability distribution across $Z_A$ and $Z_B$, with $Z_O$ implicit for a sample $n=5$, with $p_A=\frac{1}{2},p_B=\frac{1}{3},p_O=\frac{1}{6}$. Note that the distribution does not exceed the line $Z_A+Z_B=5$, since it is not possible to have more people of either category than the sample size.
+
+Figure \ref{fig:Distributions_multinomialLikelihoodl} shows the likelihood across $(p_A,p_B)$ for the following samples, each of size 10: {{4, 2, 4}, {5, 2, 3}, {2, 2, 6}}. The plot is only the lowermost triangle, as to the right of the main diagonal the probabilities sum exceeds 1.
 
 \begin{figure}
 \centering
@@ -3972,13 +3974,152 @@ There are a number of different categories of parameters in probability models: 
 
 
 \subsection{Distributions for probabilities, proportions and percentages}
-\subsubsection{Uniform}
-\subsubsection{Beta}
-\subsubsection{Logit-normal}
-\subsubsection{Dirichlet}\label{sec:Distributions_dirichlet}
-Draw a line (for two parameters) and a triangle diagram for the allowed parameter values. Introduces the idea of manifold over with the parameter values are constrained to lie on.
+It is common to deal with variables that are naturally constrained to lie between 0 and 1. Examples include: probabilities, proportions, and percentages. In these cases, it is important to use priors that are fit for the purpose, since a poor choice here can lead to nonsensical values outside of this range.
 
-I have already got the code to do this for a simple case.
+\subsubsection{Uniform}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous variable.
+\item Variable constrained to lie between $a$ and $b$; where for the case of probabilities, proportions, and percentages $a=1$ and $b=1$.
+\item Weakly informative prior.
+\end{enumerate}
+
+A common choice of non-informative (although in section \ref{sec:Prior_vague} we reasoned it was better to call these weakly informative) prior for variables constrained to lie between 0 and 1 is the continuous uniform prior (see figure ). This choice of prior might be warranted if the analysis puts a premium on objectivity. This might be the case for clinical trials of drugs for example. It is easy to extend this distribution to handle situations where a variable is continuous and constrained to lie between two bounds $a<b$.
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Distributions_uniform.pdf}}
+\caption{The continuous uniform distribution on $[0,1]$.}\label{fig:Distributions_uniform}
+\end{figure}
+
+We argue that this distribution is actually superseded by the Beta distribution (see section \ref{sec:Distributions_beta}), since the uniform is a special case of this more flexible and general distribution. However, since many analyses still use this distribution, it is worth knowing about it.
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: \theta \sim unif(a,b)\\
+pdf&: f(\theta|a,b) = \frac{1}{b-a}\\
+mean&: \mathrm{E}[X_i] = \frac{1}{2}(a+b)\\
+variance&: var[X] = \frac{1}{12}(b-a)^2
+\end{empheq}
+\end{subequations}
+
+\subsubsection{Beta}\label{sec:Distributions_beta}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous variable.
+\item Variable constrained to lie between 0 and 1 (inclusive).
+\item Encompasses a wide range of priors, ranging from weakly informative to strongly informative.
+\item $Beta(1,1)$ equivalent to a $unif(0,1)$ distribution. 
+\end{enumerate}
+
+A more flexible distribution, compared to the uniform, for variables constrained to lie between 0 and 1, is the \textit{Beta} distribution. There are a number of reasons why this distribution is preferable over the former. Firstly, this distribution encompasses a large range of potential priors, ranging from weakly informative (blue line of left-hand-panel of figure \ref{fig:Distributions_betaDistribution}), to more strongly informative (green line). This easy ability to manipulate the distribution, allows for the analyst to quickly see the effects of changing priors on posterior conclusions. Secondly, the distribution allows a pre-experimental prejudice towards \textit{any} value between 0 and 1 (see the right-hand-panel of figure \ref{fig:Distributions_betaDistribution}), by changing its inputs. This is useful where there are pre-experimental reasons to suggest that some parameter values are more likely than others. As an example, consider obesity rates in the UK. We know that the percentage of people who are obese is less than 50\%, so it doesn't make sense to use a vague prior here that gives equal weight to all values between 0 and 1. In this case we might be better going with a prior that gives more weight to some values less than 50\% (orange line in right-hand-panel of figure \ref{fig:Distributions_betaDistribution} for example). Lastly, this distribution has the property that it is \textit{conjugate} to a number of practically-useful distributions, and so allows for analytic calculation of the posteriors in these cases. Do not worry if this talk of conjugacy has gone over your head, as we devote the entirety of chapter \ref{chap:conjugate} to this purpose.
+
+One potential issue for Beta distributions is their use in hierarchical models. In these circumstances it can be difficult to formulate appropriate priors over the parameters of this distribution (see \cite{gelman2013bayesian} for a way round this).
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Distributions_betaDistribution.pdf}}
+\caption{\textbf{Left:} three symmetric Beta distributions about $\frac{1}{2}$; $Beta(1,1)$ (blue), $Beta(2.5,2.5)$ (orange), and $Beta(10,10)$ (green). \textbf{Right:} two non-symmetric Beta distributions; $Beta(10,2)$ (blue), and $Beta(2,10)$ (orange). \textbf{Add legends.}}\label{fig:Distributions_betaDistribution}
+\end{figure}
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: \theta \sim Beta(\alpha,\beta)\\
+pdf&: f(\theta|\alpha,\beta) = \frac{x^{\alpha-1}(1-x)^{\beta-1}}{BetaFn(\alpha,\beta)}\\
+mean&: \mathrm{E}[X] = \frac{\alpha}{\alpha+\beta}\\
+variance&: var[X] = \frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}
+\end{empheq}
+\end{subequations}
+
+
+\subsubsection{Logit-normal}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous variable.
+\item Variable constrained to lie between 0 and 1 (inclusive).
+\item Encompasses a wide range of priors, ranging from weakly informative to strongly informative.
+\item Perhaps more straightforward to parameterise in hierarchical models than a Beta distribution, although the jury is out on this one!
+\end{enumerate}
+
+In life there are often multiple options that result in a similar outcome. In statistical inference, this is no different. An example of this is the relatively common use of the \textit{logit-normal} distribution to model probabilities. The idea behind this choice is to allow an unconstrained variable to vary according to a normal distribution, then transform it to lie between 0 and 1, using a \textit{logit} transform. Concretely:
+
+\begin{equation}
+log\left(\frac{\theta}{1-\theta}\right) \sim N(\mu,\sigma)
+\end{equation}
+
+where the left hand side represents $logit(\theta)$. We can then use the \textit{logistic} transformation to invert the expression, and get a distribution for $\theta$. A large set or prior distributions are possible with this parameterisation (see figure \ref{fig:Distributions_logitNormal}). However, care must be taken to ensure that the prior does not place too much weight near 0 or 1, which can happen if we choose $\sigma$ to be high (green lines).
+
+This distribution is useful for two reasons: firstly, it perhaps extends slightly more naturally to hierarchical models than the Beta distribution; secondly, its multivariate analogue is a generalisation of the Dirichlet distribution to allow for correlation between probabilities. Do not worry about these two points too much, as we will cover hierarchical models fully in Part \ref{part:regressionHierarchical}, and the Dirichlet distribution next.  
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Distributions_logitNormal.pdf}}
+\caption{\textbf{Left:} $logit-normal(0,\sigma)$ distributions for $\sigma=\frac{1}{3}$ (blue),$\sigma=1$ (orange), and $\sigma=3$ (green). \textbf{Right:} $logit-normal(1,\sigma)$ distributions for the same values of $\sigma$.\textbf{Add legends.}}\label{fig:Distributions_logitNormal}
+\end{figure}
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: \theta \sim logit-normal(\mu,\sigma)\\
+pdf&: f(\theta|\mu,\sigma) = \frac{1}{\sqrt{2 \pi } (1-\theta ) \theta  \sigma } exp\left(-\frac{\left(\log \left(\frac{p}{1-p}\right)-\mu \right)^2}{2 \sigma ^2}\right)\\
+mean&: \mathrm{E}[X] = no\; analytic\; expression\\
+variance&: var[X] = no\; analytic\; expression
+\end{empheq}
+\end{subequations}
+
+\subsubsection{Dirichlet}\label{sec:Distributions_dirichlet}
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous variables.
+\item Sum of variables constrained to 1.
+\item Encompasses a wide range of priors, ranging from weakly informative to strongly informative.
+\end{enumerate}
+
+We are frequently required to conduct inference over a range of discrete categories (see section \ref{sec:Distributions_multinomial}). In particular, we may be interested in inferring the probabilities of obtaining each of the categories. For example, consider the example where there are \textit{only} three political parties for which people can vote: Republican, Democrat and Liberals. In this circumstance, we know that the proportions of voting individuals choosing each party must sum to 1. Hence, inferences that we make about the three parameter values must be constrained to satisfy this condition. 
+
+We start by considering the case where there are only two political parties: Republican and Democrat. We can represent a particular parameter set as a point along a line (see the left-hand-panel of figure \ref{fig:Distributions_dirichlet}) of length 1. If we consider the leftmost point on the line, this represents the case where nobody votes for Republican, and everyone for Democrat, with the rightmost point being the exact opposite. At the mid-point, 50\% vote Republican, and 50\% Democrat. 
+
+When we generalise to the case of three categories, we can actually represent all feasible points as those lying within an equilateral triangle (see right-hand-panel of figure \ref{fig:Distributions_dirichlet}), where the axes corresponding to the three category probabilities are drawn from each vertex to the opposite midpoint. This triangular representation can be justified by imagining a 3D space defined by axes indicating $(p_R,p_D,p_L)$. The set of allowable points corresponds to the plane defined by $p_R+p_D+p_L=1$, with all probabilities being greater or equal to 0. It turns out (see the problem set), that this set of points that corresponds to an equilateral triangle-shaped plane in this 3D space (see figure \ref{fig:Distributions_dirichletTriangle3D}).
+
+More generally, this distribution is parameterised by $k$ parameters: $\alpha_1,\alpha_2,...,\alpha_k$, which can be thought of as weights towards that category; the higher the weight of one category relative to others, the greater the distribution will be skewed towards giving a high probability to that segment (compare the rightmost panel to the leftmost of figure \ref{fig:Distributions_dirichletTriangle3D}).
+
+This distribution is quite flexible, and allows for a large range of prior distributions - from fairly vague across the individual probabilities, to an informative orientation towards one of the categories. However, it should be said that this distribution isn't fully flexible, as we do not allow for correlation between the categories. An example might be analysing a survey which asked participants' percentage of travel by train, bike, car or other. We might expect there to be a correlation in preferences between train and bike, since they are both more carbon-friendly relative to a car. In this circumstance, the dirichlet distribution is not adequate, since it is unable to handle correlations between category probabilities. However, it transpires that the multivariate equivalent of the logit-normal is capable of allowing such relationships between category probabilities\footnote{See \url{https://en.wikipedia.org/wiki/Logit-normal\_distribution}.}.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_dirichlet.pdf}}
+\caption{\textbf{Left:} feasible region for probabilities for two categories. \textbf{Right:} feasible region for probabilities for three categories.\textbf{Add legends.}}\label{fig:Distributions_dirichlet}
+\end{figure}
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_dirichletTriangle3D.pdf}}
+\caption{The dirichlet distribution for $(\alpha_1,\alpha_2,\alpha_3)$ equal to (2,2,2), (5,5,5) and (4,2,2), for the left, middle and right plots respectively.\textbf{Add legends.}}\label{fig:Distributions_dirichletTriangle3D}
+\end{figure}
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: (p_1,p_2,...,p_k) \sim Dir(\alpha_1,\alpha_2,...,\alpha_k)\\
+where&: \sum\limits_{i=1}^{k}p_i = 1\\
+pdf&: f(\theta|\alpha_1,\alpha_2,...,\alpha_k) = \frac{1}{B(\boldsymbol{\alpha})} \prod\limits_{i=1}^{k} p_i^{\alpha_i-1}\\
+where&: B(\boldsymbol{\alpha}) = \frac{\prod\limits_{i=1}^{k} \Gamma(\alpha_i)}{\Gamma(\sum\limits_{i=1}^{k}\alpha_i)}\\
+and&: \boldsymbol{\alpha} = (\alpha_1,\alpha_2,...,\alpha_k)\\
+mean&: \mathrm{E}[p_i] = \frac{\alpha_i}{\sum\limits_{i=1}^{k}\alpha_i}\\
+variance&: var[p_i] = \frac{\alpha_i(\sum\limits_{j=1}^{k}\alpha_j - \alpha_i)}{(\sum\limits_{j=1}^{k}\alpha_j)^2 (\sum\limits_{j=1}^{k}\alpha_j+1)}
+\end{empheq}
+\end{subequations}
 
 \subsection{Distributions for means, medians and other location parameters}
 \subsubsection{Normal}
@@ -4026,7 +4167,9 @@ How does the variance change, as the parameters of the beta distribution are cha
 \subsection{100m results across countries}
 We suppose that we would like to build a model for the 100m times for the fastest 10 runners across a number of different countries. We suppose that, neglecting Usain Bolt, the times for the runners in each country can be assumed to be approximately normal around a mean of 10 seconds. \url{http://www.johndcook.com/t_normal_mixture.pdf}
 
-
+\subsection{Triangular representation of simplexes}
+\subsubsection{Show that the triangular representation of a 3 parameter Dirichlet is correct.}
+Hint: consider the points at particular values of the remaining probability for $p_1+p_2+p3=1$.
 
 \chapter{Conjugate priors and their place in Bayesian analysis}\label{chap:conjugate}
 \section{What is a conjugate prior and why are they useful?}
