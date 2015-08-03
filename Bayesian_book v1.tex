@@ -1170,7 +1170,7 @@ The reader should now be familiar with the following concepts:
 The returns of a particular stock are thought to be well described by a log-normal distribution:
 
 \begin{equation}
-log(S_t) \sim N(\mu,\sigma)
+log(S_t) \sim N(\mu,\sigma^2)
 \end{equation}
 
 \subsubsection{What are the expected returns of the stock?}
@@ -1517,7 +1517,7 @@ We next turn the dial to 'Bayesian credible intervals', and obtain the results s
     \textbf{Communication method} & Dam & Port & Town & Airfield   & \textbf{Credibility} \\
     Submarine & \color{red}{$[$73\%}  & \color{red}{50\%}  & \color{red}{50\%$]$}  & 13\%  & \textbf{93}\% \\
     Boat  & \color{red}{$[$9\%}   & \color{red}{25\%}  & \color{red}{25\%$]$}  & 16\%  & \textbf{79}\% \\
-    Tank  & 0\%   & 25\%  & 25\%  & \color{red}{$[$66\%$]$}  & \textbf{78}\% \\
+    Tank  & 0\%   & 25\%  & \color{red}{$[$25\%}  & \color{red}{66\%$]$}  & \textbf{78}\% \\
     Aircraft & \color{red}{$[$18\%$]$}   & 0\%  & 0\%   & 5\%   &\textbf{78\%} \\
     \bottomrule
     \textbf{Coverage} & \textbf{100\%}  & \textbf{75\%} &\textbf{ 100\%}  & \textbf{66\%}  &  \\
@@ -3352,7 +3352,7 @@ Generally, there are two classes of distributions: those that can be used for li
 
 Throughout the chapter there are considerable interactive elements. It is hoped that you will take the opportunity to use this material to gain hands-on experience. If the text becomes dense in places, there are videos which take you through some of the basic properties and uses of the distributions. 
 
-\section{Sampling distributions for likelihoods}
+\section{Sampling distributions for likelihoods}\label{sec:Distributions_samplingDist}
 The first class of distributions which we came across in Part \ref{part:bayesianFormula} were those that were used to write down a probability model to describe the situation under inspection. As well as expressing our assumptions used to simplify the system, these \textit{likelihood} models also define the parameters over which we are interested in conducting inference. Specifying a likelihood that is adequate to the specifics of the system under consideration is the most important part of conducting Bayesian inference. As such, it is essential to have a reasonable grasp of some of the most common likelihood distributions on which many analyses are built. Whilst there are an infinity of potential sampling distributions out there, we believe that the collection here are the most frequently used, and are often a starting point for the construction of more complex models.
 
 \subsection{Bernoulli}\label{sec:Distributions_bernoulli}
@@ -3726,7 +3726,7 @@ Suppose we obtain the following readings for the body temperature across 10 diff
 \boxed{Properties:}
 \begin{subequations}
 \begin{empheq}[box=\widefbox]{align}
-notation&: X \sim N(\mu,\sigma)\\
+notation&: X \sim N(\mu,\sigma^2)\\
 pdf&: f(x|\mu,\sigma) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}\\
 mean&: \mathrm{E}[X] = \mu\\
 variance&: var[X] = \sigma^2
@@ -3736,7 +3736,7 @@ variance&: var[X] = \sigma^2
 \boxed{Video:} Need to make an intuitive video here. One exists but is overly mathematical.
 \boxed{Interactive:} again make.
 
-\subsection{Student t}
+\subsection{Student t}\label{sec:Distributions_tDist}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3972,12 +3972,14 @@ After a likelihood model is specified Bayesian analyses require that all specifi
 
 There are a number of different categories of parameters in probability models: probabilities and proportions, which are constrained to lie between 0 and 1; location parameters, encompassing for example, the mean; shape parameters, for example variances, which are non-negative; and distributions for discrete variables. 
 
+We will already have encountered some of these distributions in section \ref{sec:Distributions_samplingDist}, however the difference in focus here is sufficient to merit another (albeit short) discussion of each of these.
+
 
 \subsection{Distributions for probabilities, proportions and percentages}
 It is common to deal with variables that are naturally constrained to lie between 0 and 1. Examples include: probabilities, proportions, and percentages. In these cases, it is important to use priors that are fit for the purpose, since a poor choice here can lead to nonsensical values outside of this range.
 
 \subsubsection{Uniform}
-Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
 \item Continuous variable.
@@ -4007,7 +4009,7 @@ variance&: var[X] = \frac{1}{12}(b-a)^2
 \end{subequations}
 
 \subsubsection{Beta}\label{sec:Distributions_beta}
-Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
 \item Continuous variable.
@@ -4039,7 +4041,7 @@ variance&: var[X] = \frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}
 
 
 \subsubsection{Logit-normal}
-Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
 \item Continuous variable.
@@ -4051,7 +4053,7 @@ Distribution checklist (\textbf{want this in a different colour/shading. Not sur
 In life there are often multiple options that result in a similar outcome. In statistical inference, this is no different. An example of this is the relatively common use of the \textit{logit-normal} distribution to model probabilities. The idea behind this choice is to allow an unconstrained variable to vary according to a normal distribution, then transform it to lie between 0 and 1, using a \textit{logit} transform. Concretely:
 
 \begin{equation}
-log\left(\frac{\theta}{1-\theta}\right) \sim N(\mu,\sigma)
+log\left(\frac{\theta}{1-\theta}\right) \sim N(\mu,\sigma^2)
 \end{equation}
 
 where the left hand side represents $logit(\theta)$. We can then use the \textit{logistic} transformation to invert the expression, and get a distribution for $\theta$. A large set or prior distributions are possible with this parameterisation (see figure \ref{fig:Distributions_logitNormal}). However, care must be taken to ensure that the prior does not place too much weight near 0 or 1, which can happen if we choose $\sigma$ to be high (green lines).
@@ -4076,7 +4078,7 @@ variance&: var[X] = no\; analytic\; expression
 \end{subequations}
 
 \subsubsection{Dirichlet}\label{sec:Distributions_dirichlet}
-Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
 \item Continuous variables.
@@ -4105,7 +4107,7 @@ This distribution is quite flexible, and allows for a large range of prior distr
 \centering
 \scalebox{0.5} 
 {\includegraphics{Distributions_dirichletTriangle3D.pdf}}
-\caption{The dirichlet distribution for $(\alpha_1,\alpha_2,\alpha_3)$ equal to (2,2,2), (5,5,5) and (4,2,2), for the left, middle and right plots respectively.\textbf{Add legends.}}\label{fig:Distributions_dirichletTriangle3D}
+\caption{The dirichlet distribution for $(\alpha_1,\alpha_2,\alpha_3)$ equal to (2,2,2), (5,5,5) and (4,2,2), for the left, middle and right plots respectively.\textbf{Add legends, also change labelling to be pr, pd etc.}}\label{fig:Distributions_dirichletTriangle3D}
 \end{figure}
 
 \boxed{Properties:}
@@ -4121,17 +4123,129 @@ variance&: var[p_i] = \frac{\alpha_i(\sum\limits_{j=1}^{k}\alpha_j - \alpha_i)}{
 \end{empheq}
 \end{subequations}
 
-\subsection{Distributions for means, medians and other location parameters}
-\subsubsection{Normal}
-\subsubsection{Student t}
-\subsubsection{Cauchy}
+\subsection{Distributions for means and regression coefficients}
+In some continuous sampling models, the normal being the most frequently-used, the distribution is characterised by a location parameter - the mean - and a scale parameter - the variance, or standard deviation. Interest usually focuses on the location parameter, for example, estimating the mean proportion of the electorate that vote Republican, the average success rate for a new drug, or the median stock returns. Alternatively, in linear regression models the interest usually centres on estimation of the regression coefficients, which are multiplied by the independent variables to yield the mean (usually of a normal). As such, this section is devoted to showcasing some of the more popular choices for priors for these type of parameters.
 
-\subsection{Distributions for variances, and shape parameters}
-\subsubsection{Exponential}
+\subsubsection{Normal}
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous unconstrained, or practically unconstrained, variables.
+\item Encompasses a wide range of priors, ranging from weakly informative to strongly informative.
+\end{enumerate}
+
+We already saw in section \ref{sec:Distributions_normal}, that the use normal distribution for likelihoods under a wide range of situations, however, here we seek to justify its use for an altogether different purpose, for specifying prior distributions. 
+
+For example consider the problem of trying to estimate the global mean sea temperature, via a sample of many readings worldwide. We might suppose that there are a range of factors contributing to the temperature that we measure $\theta_i$; time of year, geography, measurement error are some examples. These multitude of factors might justify the use of a normal distribution for the likelihood (see section \ref{sec:Distributions_normal}):
+
+\begin{equation}
+\theta_i\sim N(\mu,\sigma^2)
+\end{equation}
+
+This distribution is characterised by two parameters - its mean $\mu$, and its standard deviation $\sigma$. Suppose that $\sigma$ was known to a high degree of confidence for our sea temperature example. This might happen if we imagine we have compiled readings over a number of years, before our recent experiment, and found that the variance across locations does not change much over time. However, we suppose that there is an inherent variance in the mean temperatures measured across time. In this situation we might think that we are justified is treating $\sigma$ as fixed, and assigning a prior for $\mu$ (actually, we would argue it is almost always worth estimating these unknown parameters). From experience we know that the mean sea temperature is likely in the range 10-22 degrees Celsius, although it varies from year to year. In this circumstance we may assign a fairly weakly informative normal prior for $\mu$ that captures the essence of this knowledge. 
+
+It is possible to examine the impact of changing the prior on the distribution for $\theta_i$ (see figure \ref{fig:Distributions_normalPrior}). It is important to note that this is \textit{before} we carry out any Bayesian inference, and these distributions will often be very diffuse, and hard to describe. Whilst this does essentially represent a prior on the scale of $\theta_i$, it is not that important to ensure this is located \textit{only} around areas of the most likely parameter values, since the data will ensure that this is true for the posteriors. However, nonetheless it is worth bearing in mind the effect that changing priors can have on lower-down parameters.
+
+As the variance of the prior distribution increases, it is unsurprising that this results in a higher variance for $\theta_i$ (see figure \ref{fig:Distributions_normalPrior}), although we do not derive the analytic results for the mean of $\theta_i$ and its variance here, as this is not our focus (see the chapter problem set). Similarly, the mean of $\theta_i$ exactly tracks that of the prior mean.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_normalPrior.pdf}}
+\caption{\textbf{Left:} the effect of a $\mu\sim N(17,1)$ prior (blue) for $\theta_i\sim N(\mu,4)$ distribution (orange). \textbf{Right:} the effect of a $\mu\sim N(25,3)$ prior (blue) for $\theta_i\sim N(\mu,4)$ distribution (orange). The mean of each distribution is shown as a dotted line.\textbf{Add legends.}}\label{fig:Distributions_normalPrior}
+\end{figure}
+
+
+\boxed{Properties:}
+See section \ref{sec:Distributions_normal}.
+
+
+
+\subsubsection{Student t}
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous unconstrained, or practically unconstrained, variables.
+\item Robust version of the normal, allowing for a greater range of parameter values.
+\end{enumerate}
+
+We suggested using the t-distribution for a sampling model when there was too much variation to be accounted for with the normal. Similarly, we advocate using the t-distribution for a prior when we wish to allow a wider range of parameter values, \textit{a priori}, than would be possible with a normal.
+
+To be clear, it is possible to set the parameters of a normal distribution such that it has the same amount of variance as that of a t distribution. However, the nature of that variance will not be the same (see figure ). Whereas the normal is more evenly spread about its centre, the t distribution is sharply peaked, with less weight on its shoulders, and more on its tails. This difference between the two distributions is controlled by a parameter, $\nu$, called the degree of freedom of this distribution (see section \ref{sec:Distributions_tDist} for a better explanation of this parameter). The higher this parameter, the greater the correspondence between the normal and the t distributions, with in the limit that $\nu\rightarrow\infty$ they are the same.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_normalTPrior.pdf}}
+\caption{\textbf{Left:} normal (blue) and t (orange) distributions with the same variance and mean. Here $\nu=4$ for the latter. \textbf{Right:} $\nu=60$ for the t distribution.\textbf{Add legends.}}\label{fig:Distributions_normalTPrior}
+\end{figure}
+
+\boxed{Properties:}
+See section \ref{sec:Distributions_tDist}.
+
+\subsubsection{Cauchy distribution}
+See Gelman 2008 article.
+
+\subsection{Distributions for non-negative parameters}
+There are a wide class of parameters which are naturally constrained to be non-negative in value. Examples include variances, as well as a range of other parameters including the mean of a poisson distribution, the shape parameter of a gamma, and so on. Whilst with Stan it is feasible to use some of the aforementioned distributions by setting bounds on parameter values, it is still preferable in many circumstances to set priors for parameters that naturally have support (also called positive density) on the correct range of parameter values. This section not only introduces a wide range of these distributions, but also provides some discussion as to which are preferred under particular circumstances.
+
 \subsubsection{Gamma}\label{sec:Distributions_gamma}
-\subsubsection{Half-Cauchy}
-\subsubsection{Inverse Gamma}
-\subsubsection{Inverse chi}
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous variables constrained to be non-negative.
+\item Frequently used for parameters where there is lower uncertainty than those for the inverse-gamma, half cauchy or inverse-$\chi^2$.
+\end{enumerate}
+
+Suppose that we are tasked with building a statistical model for the count, $X_i$, of road accidents occurring on a given day, $i$, in a particular (small) geographic area to help to allocate emergency service resources. Supposing that the weather is sufficiently similar over all days for which data collection took place, then a reasonable model here might be the \textit{poisson}: $X_i\sim poiss(\lambda)$. Historically, we know that the number of incidents has a mean around 10, although there is some variance around this value. In this circumstance, we might choose to use a gamma prior for $\lambda$, not least because of its mathematical convenience (due to its conjugacy - see chapter \ref{chap:conjugate}), but also because we have a fair degree of confidence from previous studies as to its most likely values. Some example priors for this circumstance are shown in figure \ref{fig:Distributions_gammaPrior}, along with the resultant posteriors for a sample of 5 days. We can see that even though we only have a modest amount of data, the choice of prior distribution here (within reasonable bounds), only has a slight effect on the posterior.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_gammaPrior.pdf}}
+\caption{\textbf{Left:} three prior distributions for $\lambda\sim \Gamma(\alpha,\beta)$ where $\frac{\alpha}{\beta}=\mu$: $\Gamma(10,1)$ (blue), $\Gamma(4,2.5)$ (orange), and $\Gamma(1,10)$ (green). \textbf{Right:} the resultant posteriors for the sample data \{17, 6, 11, 13, 16\} for each of the prior cases. \textbf{Add legends}.}\label{fig:Distributions_gammaPrior}
+\end{figure}
+
+\boxed{Properties:}
+See section \ref{sec:Distributions_gamma}.
+
+
+\subsubsection{Half-Cauchy, inverse-gamma, inverse-$\chi^2$ and uniform}
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous variables constrained to be non-negative.
+\item Often used for variances, as well as shape parameters (parameters which govern the shape of a distribution rather than its centre or its spread.)
+\item Variants are typically used for specifying non-informative priors.
+\item For non-informative priors it is recommended that analyses use a half-cauchy over the alternatives.
+\end{enumerate}
+
+Imagine that we are tasked with finding a statistical model to represent the length, $L$, of fully-grown adult male crocodiles. We suppose that since size is determined by a whole range of factors (genetics, climate, local competitors), that a normal sampling model may be appropriate: $L\sim N(\mu,\sigma^2)$. Further imagine that the study that we are conducting is fairly novel, and is a first attempt at describing the lengths of these animals, so that previous data is scarce.
+
+Here our primary purpose of conducting the inference might be to focus on the parameter $\mu$ representing the mean length of the male members of the species, thought to be around 4.5 from previous observational evidence. The other parameter $\sigma^2$ gives the spread of the values about this mean, and might in this circumstance be regarded as a nuisance parameter, since it is not the primary purpose of estimation.
+
+Rather than set $\sigma^2$ manually, we would rather it be determined by the data. Hence, we want to set the parameter a prior. There are two distributions that are used here that have nice properties (in particular, conjugacy - see section \ref{sec:conjugate_normal}): the inverse-gamma and the inverse-$\chi^2$ distributions. The latter is a special case of the former here, although since both are sometimes used in the literature without recourse to the other, we consider them separately here.
+
+Both of these distributions are derived from the bit after the 'inverse' in their names. An inverse-gamma$(\alpha,\beta)$ is simply the distribution of $\zeta^{-1}$ where $\zeta\sim\Gamma(\alpha,\beta)$. In words, we can imagine sampling a value, $\zeta$ from the $\Gamma(\alpha,\beta)$, then taking $\frac{1}{\zeta}$. If we took enough samples we would obtain a histogram that has the shape of a inverse-gamma$(\alpha,\beta)$. The inverse-$\chi^2$ distribution, as the name suggests, is derived from the $\chi^2$ distribution (not discussed in this book, but it is a special case of the $\Gamma$ distribution) in the same way, although is simpler than the inverse-gamma; being parameterised by a single input only. Both of these distributions are often used to specify noninformative priors for parameters like our $\sigma^2$. For the inverse-gamma, this is obtained by letting each of its inputs tend to zero. For the inverse-$\chi^2$, this is obtained by letting its sole input tend to zero.
+
+Another distribution that has been popularised by Gelman amongst others, is the \textit{half-cauchy} distribution, which is a truncated version of a cauchy-distribution (DO WE DISCUSS THIS?), where it is forced to have non-zero density only on the non-negative values of the sampled parameter.
+
+A final alternative sometimes used is a continuous uniform distribution over some non-negative and finite set. The trouble with specifying this distribution is setting its upper-bound, as otherwise the distribution would be improper.
+
+In circumstances where there is considerable prior knowledge as to the parameter value under consideration, then it may be useful to use the two 'inverse' distributions due to their conjugacy in certain situations.  However, since we are very uncertain as to the value of the parameter $\sigma^2$ in our current example, we would like to specify the distribution which best represents our ignorance. We show in figure \ref{fig:Distributions_halfCauchyPrior} some typical non-informative priors for the parameter $\sigma$; one for each of our distributions. We have chosen to specify priors for $\sigma$ rather than $\sigma^2$ for easier interpretation below.
+
+Importantly, we also show posterior distributions that we have estimated using MCMC (do not worry if you do not understand what this means, as we devote the entirety of Part \ref{part:computationalBayes} to this purpose). We see that the two inverse distributions have distributions which are generally to the left of the half-cauchy and the uniform; particularly evident for values of $\sigma\leq 5$. We also see that whereas the uniform distribution allows values of $\sigma$ close to 6, the other three do not allow this. 
+
+Here the data sample of size 3 were simulated from a $N(4.5,3^2)$ distribution; meaning that the true value of $\sigma=3$. In this case the distribution that yields the most sensible estimates of this parameter is the half-cauchy. It is midway between the extremes of the two densities that are too peaked at zero (the inverse-gamma and -$\chi^2$ respectively), and the uniform that gives too much credence to unrealistic parameter values. These results are similar to those presented in Gelman \cite{gelman2006prior}, and although are partly due to judicious choice of prior parameters, are nevertheless highlight some weaknesses of three out of the four distributions. These weaknesses become even more important in hierarchical models, and hence we advocate strongly for the use of half-cauchy distributions for these types of parameters.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_halfCauchyPrior.pdf}}
+\caption{\textbf{Left:} the prior distributions for half-cauchy(0,2.5) (green), uniform(0,100) (orange), inverse-$\chi^2$(0.1) (red-dashed) and an inverse-gamma(0.0001,0.0001) (red). \textbf{Right:} estimated posteriors using the left priors for a data sample of size 3 from an MCMC sample of 100,000 observations using Stan (see web for program to exactly replicate samples).\textbf{Add legends}.}\label{fig:Distributions_halfCauchyPrior}
+\end{figure}
+
+
 \subsubsection{Lognormal}
 
 \subsubsection{Multivariate normal - or other regression}
@@ -4171,11 +4285,18 @@ We suppose that we would like to build a model for the 100m times for the fastes
 \subsubsection{Show that the triangular representation of a 3 parameter Dirichlet is correct.}
 Hint: consider the points at particular values of the remaining probability for $p_1+p_2+p3=1$.
 
+\subsection{Normal distribution with normal prior}
+\subsubsection{Prove that the mean of the lower distribution is the same as that of the prior}
+\subsubsection{Find the mean of the lower distribution}
+\subsubsection{Prove that the distribution of the lower distribution is unconditionally normal}
+
 \chapter{Conjugate priors and their place in Bayesian analysis}\label{chap:conjugate}
 \section{What is a conjugate prior and why are they useful?}
 \section{Beta-binomial example}
 \section{Gamma-poisson example}
-\section{Normal example}
+\section{Normal example}\label{sec:conjugate_normal}
+Discuss the conjugate vs semi-conjugate prior structure on pages 78-82 of Gelman.
+
 \section{Dirichlet-multinomial example}
 \section{The lessons from conjugate analysis}
 No need to do any calculation. Just look up the value in a table!
