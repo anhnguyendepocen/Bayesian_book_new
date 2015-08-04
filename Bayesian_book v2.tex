@@ -3777,6 +3777,8 @@ The higher the number of schools over which we are summing, the more the overall
 
 Now suppose that we have a sample of 5 test scores from across the schools, and are found to be: {74, 96, 108, 98, 101}. Since we have three unknown parameter in our distribution the likelihood functions is actually a 3-dimensional surface, which is not possible to plot in our paltry 3 spacial dimensions (we need an extra dimension to show the height of the surface, meaning that the plot would be 4-D). However, we can proceed as before through pairwise contour plots of the variables (see figure \ref{fig:Distributions_tArithmeticLikelihood}). These are interesting in that they show that there is little correlation between the estimates of the mean of the distribution with the parameters $\sigma$ and $\nu$ which dictate its shape. However, since both of these latter parameters dictate the overall variability of the distribution, the likelihood surface shows ridges of correlation between these two.
 
+In the case when $\nu=1$ this distribution has very fat tails, and it is sometimes called the \textit{cauchy} distribution (see section \ref{sec:Distributions_cauchy}). However, this choice of $\nu$ has a cost that the mean and variance are no longer calculable. Although, in circumstances where there are occasionally very extreme observations, this distribution provides a robust alternative. In fact, in his book 'The Black Swan' Nassim Taleb strongly advocates the use of this type of sampling distribution to account for rare (black swan) events \cite{taleb2010black}.
+
 \begin{figure}
 \centering
 \scalebox{0.5} 
@@ -3788,7 +3790,7 @@ Now suppose that we have a sample of 5 test scores from across the schools, and 
 \begin{subequations}
 \begin{empheq}[box=\widefbox]{align}
 pdf&: f(x|\mu,\sigma,\nu) = \frac{\left(\frac{\nu }{\nu +\frac{(x-\mu)^2}{\sigma ^2}}\right)^{\frac{\nu +1}{2}}}{\sqrt{\nu } \sigma  BetaFn\left(\frac{\nu }{2},\frac{1}{2}\right)}\\
-mean&: \mathrm{E}[X] = \mu\\
+mean&: \mathrm{E}[X] = \mu, if \nu > 1; Otherwise\; undefined\\
 variance&: var[X] = \frac{\nu  \sigma ^2}{\nu -2}, if \nu > 2; Otherwise\; undefined.
 \end{empheq}
 \end{subequations}
@@ -3975,6 +3977,9 @@ After a likelihood model is specified Bayesian analyses require that all specifi
 There are a number of different categories of parameters in probability models: probabilities and proportions, which are constrained to lie between 0 and 1; location parameters, encompassing for example, the mean; shape parameters, for example variances, which are non-negative; and distributions for discrete variables. 
 
 We will already have encountered some of these distributions in section \ref{sec:Distributions_samplingDist}, however the difference in focus here is sufficient to merit another (albeit short) discussion of each of these.
+
+\subsection{Distributions for discrete random variables}
+\subsubsection{Discrete uniform}
 
 
 \subsection{Distributions for probabilities, proportions and percentages}
@@ -4185,8 +4190,57 @@ To be clear, it is possible to set the parameters of a normal distribution such 
 \boxed{Properties:}
 See section \ref{sec:Distributions_tDist}.
 
-\subsubsection{Cauchy distribution}
-See Gelman 2008 article.
+\subsubsection{Cauchy}\label{sec:Distributions_cauchy}
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate} 
+\item Continuous unconstrained, or practically unconstrained, variables.
+\item Robust version of the t and normal distributions, allowing for a greater range of parameter values.
+\end{enumerate}
+
+Imagine that you are building a model to help understand the effect of a new micro finance policy on the wage that an individual obtains in a particular location in a unspecified developing country. There are a number of factors which will also help determine a person's wage: education, social status and health to name but a few. To a first approximation we suppose that the relationship of interest can be assumed to be linear:
+
+\begin{equation}
+wage_i = \alpha + \beta mfinance_i + \epsilon_i
+\end{equation}
+
+where $\epsilon\sim N(\mu,\sigma^2)$ represents the myriad of other factors influencing wage, $mfinance_i$ represents the amount borrowed through the scheme over the sampled period, and $wage_i$ is the amount of non-borrowed income obtained over the same period. We are assuming that both the variables - dependent and independent - are standardised (have mean 0 and s.d. 1); meaning that $\beta$ represents the number of s.d. increase for a 1 s.d increase in $mfinance_i$. In the case where we are quite uncertain about the impact of the scheme, we may wish to allow a wide range of possibilities - potentially both positive and negative - for $\beta$ before we carry out the investigation. Some proponents argue that the micro financing can exert disproportionately positive effects on wage, by allowing the person the freedom to devote their time to producing a specialist good or service. Those in opposition perhaps argue that the moral hazard it induces can lead people to make worse choices, and hence detrimentally effects income.
+
+In this case we may choose to specify a prior distribution that is wider than that which is given by a normal, or t distribution (with more than 1 degree of freedom); instead choosing to use a distribution that has fatter tails like the \textit{cauchy} (see figure \ref{fig:Distributions_cauchyPrior}). This distribution actually corresponds to a t distribution with 1 degree of freedom. 
+
+Whilst there are benefits to this distribution, it does have its costs. In particular, the tails are so fat, that the distribution has no defined mean nor variance. This may look confusing, especially since the distribution is symmetric about its median. However, drawing repeated samples from this distribution is illuminating, as the running mean does not converge! Whether these costs are more than compensated for depends on the circumstances. It is recommended that this distribution only be used for those situations where we want to allow for significant prior range in the parameter value. In other, less extreme cases, the t distribution (with degrees of freedom greater than 1), or the normal will most likely suffice.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_cauchyPrior.pdf}}
+\caption{A normal (orange), a t (green) with 3 degrees of freedom, and a cauchy with scale parameter 0.3. The normal and t distributions drawn have variances of 0.64.\textbf{Add legends.}}\label{fig:Distributions_cauchyPrior}
+\end{figure}
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+pdf&: f(\theta|\theta_0,\gamma) = \frac{1}{\pi  \gamma  \left(\frac{\left(\theta -\theta _0\right){}^2}{\gamma ^2}+1\right)}\\
+mean&: \mathrm{E}[\theta] = undefined\\
+variance&: var[\theta] = undefined\\
+median&: median[\theta] = \theta_0
+\end{empheq}
+\end{subequations}
+
+\subsubsection{Multivariate normal}
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate}
+\item Multivariate distribution: used to specify priors for a number of parameters simultaneously.
+\item Continuous unconstrained, or practically unconstrained, variables.
+\item Mostly useful in hierarchical models, although can be used in non-hierarchical settings.
+\end{enumerate}
+
+
+Read Gelman 2008 paper with Maria Grazia.
+
+See the part of the manual on multilevel modelling. In might be worth putting these sections in a separate section called 'hierarchical models', or something.
+
 
 \subsection{Distributions for non-negative parameters}
 There are a wide class of parameters which are naturally constrained to be non-negative in value. Examples include variances, as well as a range of other parameters including the mean of a poisson distribution, the shape parameter of a gamma, and so on. Whilst with Stan it is feasible to use some of the aforementioned distributions by setting bounds on parameter values, it is still preferable in many circumstances to set priors for parameters that naturally have support (also called positive density) on the correct range of parameter values. This section not only introduces a wide range of these distributions, but also provides some discussion as to which are preferred under particular circumstances.
@@ -4290,18 +4344,26 @@ variance&: var[\theta] = \left(e^{\sigma ^2}-1\right) e^{2 \mu +\sigma ^2}
 \end{empheq}
 \end{subequations}
 
-\subsubsection{Multivariate normal - or other regression}
-See the part of the manual on multilevel modelling. In might be worth putting these sections in a separate section called 'hierarchical models', or something.
-\subsubsection{LKJ prior - see Michael Betancourt video and Stan doc}
-Better alternative to Wishart. Note that in the manual on page 61 - it should say uniform, not \textit{identity}. Also note that it should never explicitly be used in practice, and factors used instead. \url{https://groups.google.com/forum/?fromgroups#!searchin/stan-users/lkj/stan-users/F23kBsgqGcY/Yu3eOMBEKgYJ}
 
+\subsection{Distributions for covariance and correlation matrices}
+\subsubsection{LKJ}
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate}
+\item Distribution for covariances, or correlation matrices.
+\item By their nature the parameters of these matrices are constrained.
+\item Mostly useful in hierarchical models, although can be used in non-hierarchical settings.
+\item A better alternative to the Inverse-Wishart, particularly when conjugacy is not required.
+\end{enumerate}
+
+Read paper on visualising covariance matrices and BDA p83 onwards.
+
+
+Better alternative to Wishart. Note that in the manual on page 61 - it should say uniform, not \textit{identity}. Also note that it should never explicitly be used in practice, and factors used instead. \url{https://groups.google.com/forum/?fromgroups#!searchin/stan-users/lkj/stan-users/F23kBsgqGcY/Yu3eOMBEKgYJ}
 
 \subsubsection{Wishart and inverse-Wishart}
 On p60 of the manual it is said that this distribution is conjugate to the multivariate normal - see Gelman and Hill.
 
-
-\subsection{Distributions for discrete random variables}
-\subsubsection{Discrete uniform}
 
 \section{Chapter summary}
 \section{Problem set}
@@ -4481,6 +4543,8 @@ Increases robustness naturally, and prevents overfitting.
 \subsection{The importance of making 'good' fake data}
 
 \chapter{Linear regression models}
+Include Gelman recommendations here about standardising your data beforehand: \url{https://groups.google.com/forum/?fromgroups=#!topic/stan-users/RMgEEFwCsQk}
+
 \chapter{Generalised linear models}
 \section{Malarial example of complex meta-analysis}
 
