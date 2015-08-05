@@ -3968,6 +3968,79 @@ variance&: var[X] = n p_i (1-p_i)
 \end{subequations}
 
 
+
+\subsection{Multivariate normal and multivariate t}
+The following is somewhat more (at least mathematically) advanced than the preceding distributions. Unless you are in need of multivariate models, and have a grasp of vectors, and matrices, then it can be left until you start Part \ref{part:regressionHierarchical}, after which we will start to use these concepts.
+
+Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate}
+\item Multivariate distribution: used to specify likelihoods for \textit{vectors}.
+\item Continuous, unconstrained data.
+\item Requires specification of a vector of means, and a matrix of parameters (either directly or by setting priors), which describes the covariance between elements of the vector.
+\item Use multivariate t distribution to allow for a wider spread of data.
+\end{enumerate}
+
+Example uses: gene expression data across multiple genes, test scores amongst members of family, temperature in neighbouring villages.
+
+Imagine you get a job at a prestigious hedge fund as an analyst. Your manager gives you your first job: to model the risk of a portfolio containing the derivatives (complex financial instruments that allow for disproportionate profit \textit{and} loss) on stocks of 2 different companies within a particular industry sector. You are told that if both stocks have a daily loss of 10\% or more, that the portfolio goes bust. Further, your boss tells you that a risk of $\frac{1}{1000}$ is acceptable, but no more. You are given the historical daily returns of the stocks shown in the left hand panel of figure , and told to get modelling!
+
+Excited about your first pay check, you get to work. Looking at the historical returns you notice that when one series tends to go up, the other does as well. So the model that you specify will need to take into account this covariance structure. Bearing this in mind, you go away and do some research, and decide that a reasonable model for the returns of the two stocks, $\boldsymbol{r}$, is a \textit{multivariate normal}:
+
+\begin{equation}
+\boldsymbol{r} \sim N(\boldsymbol{mu},\boldsymbol{\Sigma})
+\end{equation}
+
+Note that in the above, the bold typeface indicates that we are dealing with vectors, and matrices rather than scalars. Thus here, $\boldsymbol{mu}$ is a vector of length 2, where the individual elements correspond to the mean returns for each of the stocks (which are allowed to be different from one another). The matrix $\boldsymbol{\Sigma}$ is the \textit{covariance} matrix, which can for our case be explicitly represented by:
+
+\begin{equation}
+\boldsymbol{\Sigma} = 
+\begin{bmatrix}
+ \sigma_1^2 & \rho\sigma_1\sigma_2\\
+\rho\sigma_1\sigma_2 & \sigma_2^2\\
+\end{bmatrix}
+\end{equation}
+
+Here $\sigma_1^2$, $\sigma_2^2$ represents the variances of the first and second stock daily returns respectively; $rho$ is the correlation between the daily stock returns of the two companies. So overall in our model there are 5 parameters: the two elements of $\boldsymbol{mu}$ representing the mean return of each stock; and the three aforementioned parameters of the covariance matrix. The plots of the PDF for different values of $\rho$ are shown in the top row of figure \ref{fig:Distributions_multivariateNormalT}.
+
+You fit your multivariate normal to the data using maximum likelihood (you haven't read this book yet), and then use your model to simulate 20,000 replicate daily returns, resulting in the graph shown in the middle panel of figure . Feeling happy that none of your points are within the danger zone, you go to your boss, and tell him to "invest". Your boss being an analytical and sceptical person, asks you to show her your model basis and reasoning. Showing him the graph, and the model, she quickly realises that something is amiss, "Why does there appear to be more variability in the actual returns than we see in your fake data? I think you should think again!"
+
+Feeling ashamed, you retreat to your desk, and realise the error of your ways. How could you have fallen into the trap of show many before, and used a distribution without sufficient allowance for extreme points? You dive back onto the web, and quickly find that the \textit{multivariate t} distribution is a more robust alternative to the multivariate normal (see the bottom row of figure \ref{fig:Distributions_multivariateNormalT}). You fit the distribution's parameters to the data (which is slightly harder since there is one more than originally - the degrees of freedom $\nu$), then simulate the same number of replicates. To your shock, there are now a number of points in the danger area (see figure  [BEN - show this as a rectangular area with the points shaded]). What's more, because there are more than 2 points (the number to exactly equal the risk threshold), you no longer believe in the potential of the portfolio. You slink over to your boss, and tell her, "Sorry - here are the results. We shouldn't invest." She recognises that people make mistakes, and that your new work is of much better quality than before, and says, "That's better. Go to lunch. We need you in a meeting in half an hour."
+
+This cautionary tale should have conveyed the seriousness of ensuring that your modelling choices sufficiently take account of extreme data. In situations where there is evidence of this type of behaviour in the real data, and some would argue even if there isn't (see Mandelbrot's [REF]), there is an argument in the multivariate world, in similar fashion to the univariate, that you should replace normals with t distributions. The multivariate t gives much more weight to the tails of the distribution, and is much better equipped to handle extreme variation in the data.
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Distributions_multinomialLikelihood.pdf}}
+\caption{\textbf{Top:} contour plot of the 2D multivariate normal distribution function. \textbf{Bottom:} contour plot of the 2D multivariate t distribution, with $\nu=3$ and the same covariance matrix as the normal.\textbf{Add legends/titles.}}\label{fig:Distributions_multivariateNormalT}
+\end{figure}
+
+The multivariate normal has the properties shown below. Here $k$ is the number of elements of $X$ - in our example, the number of stocks under consideration.
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: \boldsymbol{X} \sim N\left(\boldsymbol{\mu},\boldsymbol{\Sigma}\right)\\
+pdf&: f(\boldsymbol{x}|\boldsymbol{\mu},\boldsymbol{\Sigma}) = (2\pi)^{-\frac{k}{2}}|\Sigma|^{-\frac{1}{2}} e^{-\frac{1}{2}(\boldsymbol{x}-\boldsymbol{\mu})' \Sigma^{-1} (\boldsymbol{x}-\boldsymbol{\mu})}\\
+mean&: \mathrm{E}[X] = \boldsymbol{\mu}\\
+variance&: var[X] = \boldsymbol{\Sigma}
+\end{empheq}
+\end{subequations}
+
+The multivariate t distribution's properties are also shown below. 
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+notation&: \boldsymbol{X} \sim t_\nu\left(\boldsymbol{\mu},\boldsymbol{\Sigma}\right)\\
+pdf&: f(\boldsymbol{x}|\boldsymbol{\mu},\boldsymbol{\Sigma},\nu) = \frac{\Gamma\left(\frac{\nu+k}{2}\right)}{\Gamma(\nu/2) \nu^{\frac{\nu}{2}}\pi^{\frac{\nu}{2}} |\Sigma|^{-\frac{1}{2}} \left[1 + -\frac{1}{\nu}(\boldsymbol{x}-\boldsymbol{\mu})' \Sigma^{-1} (\boldsymbol{x}-\boldsymbol{\mu})\right]^{(\nu+k)/2} }\\
+mean&: \mathrm{E}[X] = \boldsymbol{\mu}\\
+variance&: var[X] = \boldsymbol{\Sigma}
+\end{empheq}
+\end{subequations}
+
+
 \section{Table of common likelihoods, their uses, and reasonable priors}\label{sec:Distributions_table}
 Show over-dispersed, or robust distributions for each of the cases.
 
@@ -4227,7 +4300,9 @@ median&: median[\theta] = \theta_0
 \end{empheq}
 \end{subequations}
 
-\subsubsection{Multivariate normal}
+\subsubsection{Multivariate normal, multivariate t, and mixtures of multivariate normals}
+The following is somewhat more (at least mathematically) advanced than the preceding distributions. Unless you are in need of multivariate models, and have a grasp of vectors, and matrices, then it can be left until you start Part \ref{part:regressionHierarchical}, after which we will start to use these concepts.
+
 Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate}
@@ -4237,9 +4312,7 @@ Prior checklist (\textbf{want this in a different colour/shading. Not sure wheth
 \end{enumerate}
 
 
-Read Gelman 2008 paper with Maria Grazia.
 
-See the part of the manual on multilevel modelling. In might be worth putting these sections in a separate section called 'hierarchical models', or something.
 
 
 \subsection{Distributions for non-negative parameters}
@@ -4470,6 +4543,7 @@ The annoyance of having to pick a step length.
 Reference Hoffman and Gelman 2014 paper.
 \section{Riemannian MCMC}
 Reference downloaded Girolami article.
+Remember the comment from Ben Goodrich here: \url{https://groups.google.com/forum/?fromgroups=#!topic/stan-users/0F0O4hfHA8g} - in other words, using the second derivative is not free computationally! Ideal to design programs that don't need to use RMHMC.
 
 \chapter{Stan and JAGS}
 \section{Motivation for Stan and JAGS}
