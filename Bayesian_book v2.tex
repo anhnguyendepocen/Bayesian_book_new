@@ -4456,9 +4456,9 @@ variance&: var[\theta] = \left(e^{\sigma ^2}-1\right) e^{2 \mu +\sigma ^2}
 
 
 \subsection{Distributions for covariance and correlation matrices}
-There are circumstances, particularly for hierarchical models, where it is necessary to specify priors for covariance and correlation matrices. These entities are quite different to most of the priors that we have specified thus far, in that they describe objects that are highly constrained (see the discussion in section \ref{sec:Distributions_LKJ}). As such, the following section is a little more advanced than that which we have covered thus far, and can be left until after Part \ref{part:regressionHierarchical} if you are less comfortable with matrices. 
+There are circumstances, particularly for hierarchical models, where it is necessary to specify priors for covariance and correlation matrices. These entities are quite different to most of the priors that we have discussed thus far, in that they describe objects that are highly constrained (see the discussion in section below). As such, the following section is a little more advanced than that which we have covered thus far, and can be left until after Part \ref{part:regressionHierarchical} if you are less comfortable with matrices. 
 
-There are two basic choices for covariance and correlation matrices. The old choice was to use Wishart and, more frequently, inverse-Wishart distributions for these matrices due to their nice conjugacy properties (see chapter \ref{chap:conjugate}). However, Stan makes this choice unnecessary, and we are free to use better alternatives. A particularly important default prior that was created in 2009 by \cite{lewandowski2009generating} is the LKJ distribution, due to its flexibility, particularly when compared to the aforementioned. As such we cover this distribution first, with the implicit understanding that this distribution should act as a replacement for most circumstances where the Wishart-family were used before. However, there are still analyses that persist with the old guard, and to make these understandable, we spend the second half examining the two types of Wishart distributions.
+There are two basic choices for covariance and correlation matrices. The old choice was to use Wishart and, more frequently, inverse-Wishart distributions for these matrices due to their nice conjugacy properties (see chapter \ref{chap:conjugate}). However, Stan makes this choice unnecessary, and we are free to use better alternatives. A particularly important recently created default prior is the LKJ distribution, due to its flexibility, particularly when compared to the aforementioned \cite{lewandowski2009generating}. As such we cover this distribution first, with the implicit understanding that this distribution should act as a replacement for most circumstances where the Wishart-family were used before. However, there are still analyses that persist with the old guard, and to make these understandable, we spend the second half examining the two types of Wishart distributions.
 
 \subsubsection{LKJ}\label{sec:Distributions_LKJ}
 Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
@@ -4467,10 +4467,10 @@ Prior checklist (\textbf{want this in a different colour/shading. Not sure wheth
 \item Distribution for covariances, or correlation matrices.
 \item By their nature the parameters of these matrices are constrained (the matrices must be positive definite - see below).
 \item Mostly useful in hierarchical models, although can be used in non-hierarchical settings.
-\item A better alternative to the Inverse-Wishart for almost all practical circumstances.
+\item A better alternative to the Inverse-Wishart, and Wishart for almost all practical circumstances.
 \end{enumerate}
 
-Suppose that we are interested in modelling the comorbidity (the presence of the condition in a patient) between a number of distinct psychological conditions: major depression, schizophrenia, obsessive compulsive disorder, and anorexia. Before we carry out the investigation, we are unsure whether the presence of any one of these disorders in a patient makes it more likely that they are likely to suffer from another. We are also unsure as to the underlying rates of these conditions, and would also like to model these. In this circumstance, a reasonable starting point might be to assume a multivariate normal likelihood for our sample of 10,000 people (see section \ref{sec:Distributions_multinormalSampling}):
+Suppose that we are interested in modelling the comorbidity (the presence of the condition in a patient) between a number of distinct psychological conditions: major depression, schizophrenia, obsessive compulsive disorder, and anorexia. Before we carry out the investigation, we are unsure whether the presence of any one of these disorders in a patient makes it more likely that they suffer from another. We are also unsure as to the underlying rates of these conditions, and would also like to model these. In this circumstance, a reasonable starting point might be to assume a multivariate normal likelihood for our sample of 10,000 people (see section \ref{sec:Distributions_multinormalSampling}):
 
 \begin{equation}
 \boldsymbol{d} \sim N(\boldsymbol{\mu},\boldsymbol{\Sigma})
@@ -4478,7 +4478,7 @@ Suppose that we are interested in modelling the comorbidity (the presence of the
 
 Here $\boldsymbol{d}$ represents a vector of length 4, where the elements refer to the numbers of individuals within our sample who are diagnosed as having  major depression, schizophrenia, obsessive compulsive disorder, and anorexia respectively. The 4-vector $\boldsymbol{\mu}$ indicates their underlying prevalences within the population, and $\boldsymbol{\Sigma}$ is a 4x4 covariance matrix representing their variances (on the diagonals) and covariances (off diagonals). 
 
-If we choose to use priors for the means and covariance matrix independently, then we can consider the latter separately. For the covariance matrix, this means that we need to come up with a prior distribution of covariance matrices; meaning that we need to associate a probability density with each possible covariance matrix. It is important to emphasize the word \textit{possible} in the previous sentence. There are an infinity of 4x4 matrices, but not many of these will be admissible as covariance matrices. So what properties do we require of such a matrix?
+If we choose to use priors for the mean vector and covariance matrix independently, then we can consider the latter on its own. For the covariance matrix, this means that we need to come up with a prior distribution of covariance matrices; meaning that we need to associate a probability density with each possible covariance matrix. It is important to emphasize the word \textit{possible} in the previous sentence. There are an infinity of 4x4 matrices, but not many of these will be admissible as covariance matrices. So what properties do we require of such a matrix?
 
 \begin{itemize}
 \item The diagonal terms are variances, and so must be positive.
@@ -4487,7 +4487,7 @@ If we choose to use priors for the means and covariance matrix independently, th
 \item The square of the covariances must be less than the product of the variances, forcing some structure on the relationships between the off-diagonal elements and the diagonal.
 \end{itemize}
 
-These requirements can be represented by assuming that all allowable covariance matrices are \textit{positive definite} and symmetric. Do not worry about the first definition now, it does not serve our purpose to dive into its meaning in this book, just know that it is an algebraic condition meaning that all the above are satisfied. Requiring positive definite matrices for our covariance matrix reduces the number of possible covariance matrices considerably, and tells us that we need to be very careful in constructing them.
+These requirements can be represented by assuming that all allowable covariance matrices are \textit{positive definite} and symmetric. Do not worry about the first definition now, it does not serve our purpose to dive into its meaning in this book, just know that it is an algebraic condition meaning that all the above are satisfied when combined with symmetry. Requiring positive definiteness for our covariance matrix reduces the number of possible objects considerably, and tells us that we need to be very careful in constructing them.
 
 Fortunately, we do not need to go about constructing the covariance matrices, since this job has already been done very well for us by \cite{lewandowski2009generating}. However, to use their method we firstly follow \cite{stan-manual:2015}, in decomposing our covariance matrix:
 
@@ -4495,20 +4495,64 @@ Fortunately, we do not need to go about constructing the covariance matrices, si
 \boldsymbol{\Sigma} = \boldsymbol{\tau}\boldsymbol{\Omega}\boldsymbol{\tau}
 \end{equation}
 
-where $\boldsymbol{\tau}$ is a vector of scales representing the variance scales of each variable, and $\boldsymbol{\Omega}$ is a \textit{correlation} matrix. Correlation matrices are similar to covariance matrices, but with the additional requirement that the diagonal elements are all 1 (the correlation of anything with itself). We can use a weakly informative non-negative prior (see section \ref{sec:Distributions_halfCauchyInvGamma}) for each of the elements of $\boldsymbol{\tau}$, and to keep things simple we assume it is independent of the prior on $\boldsymbol{\Omega}$. We are now in a position to use the \textit{LKJ} distribution (named in honour of the names of the authors of \cite{lewandowski2009generating}):
+where $\boldsymbol{\tau}$ is a vector representing the variance scales of each variable, and $\boldsymbol{\Omega}$ is a \textit{correlation} matrix. Correlation matrices are similar to covariance matrices, but with the additional requirement that the diagonal elements are all 1 (the correlation of anything with itself). We can use a weakly informative non-negative prior (see section \ref{sec:Distributions_halfCauchyInvGamma}) for each of the elements of $\boldsymbol{\tau}$, and to keep things simple we assume it is independent of the prior on $\boldsymbol{\Omega}$. We are now in a position to use the \textit{LKJ} distribution (named in honour of the names of the authors of \cite{lewandowski2009generating}):
 
 \begin{equation}
 \boldsymbol{\Omega} \sim LKJ(\eta) \propto |\boldsymbol{\Omega}|^{\eta-1}
 \end{equation}
 
-where $|\boldsymbol{\Omega}|$ represents the determinant of the correlation matrix $\boldsymbol{\Omega}$.
+where $|\boldsymbol{\Omega}|$ represents the determinant of the correlation matrix $\boldsymbol{\Omega}$. Importantly this is a distribution only over \textit{possible} correlation matrices, and hence only applies if the matrices are symmetric, positive definite and have unit diagonals.
 
-But what does this distribution actually represent? And, how does the parameter $\eta$ determine its shape? Here we will introduce some of the ways to visualise these distributions, but refer the interested reader to \cite{tokuda2011visualizing} for a more thorough exposition of ways to visualise covariance/correlation matrices (from which we borrow here a few suggestions).
+But what does this distribution actually represent? And, how does the parameter $\eta$ determine its shape? Here we will introduce some of the ways to visualise these distributions, but refer the interested reader to \cite{tokuda2011visualizing} for a more thorough exposition of ways to visualise covariance/correlation matrices (from which we borrow here a few suggestions). 
 
-We can think about what the above distribution looks like for different values of $\eta$ \cite{stan-manual:2015}. If $\eta=1$ then all possible correlation matrices (of different determinants) are equally likely to be picked. Here we say that the distribution is \textit{uniform} over all possible correlation matrices. For a 2x2 correlation matrix, the only choice is for the off-diagonal element, $\rho_{12}$ which must be between -1 and 1. Since, all values of $\rho_{12}$ result in valid correlation matrices, then its distribution is uniform over these bounds (see figure ). For a 3x3 matrix, we are more constricted in our choice of $\rho_{12}$, since there are two other parameters we must also choose: $\rho_{13}$ and $\rho_{23}$, requiring that the resultant matrix must be symmetric positive definite. It transpires that there are more allowable correlation matrices if we choose $\rho_{12}$ to be close to 0, since this places fewer restrictions on the other two parameters; meaning that the distribution is peaked at 0 (see figure ). For higher dimensional matrices (like our 4 element example), the restrictions which we place on one element affect other elements more, meaning that there fewer allowable configurations if the value of $\rho_{12}$ is extreme.
+It can be helpful to ascribe some meaning to the determinant of a covariance matrix. This is sometimes referred to as the \textit{generalised variance}, which captures the overall freedom of the system to vary. If the off-diagonal elements are zero, then the system is very free to vary. If by contrast, the off-diagonal elements increase, the variance of the system in one direction is not free of another (since they covary), meaning there is less overall free variance (and a lower determinant). Similarly, we can think of the determinant of a correlation matrix as representing a kind of \textit{generalised correlation}, having a maximum of 1 (where all elements are independent), and a minimum of 0 (where everything is the same). So essentially, the LKJ distribution gives a density over all possible values of generalised correlation. 
 
-For all other values of $\eta\neq 1$, the determinants of the matrices matter. It is worth pausing a minute to think about what the distribution of determinants looks like for all possible correlation matrices. For the 2x2 case, we know that the determinant is given by 
+We can think about what the above distribution looks like for different values of $\eta$ \cite{stan-manual:2015}. Starting with $\eta=1$, this means that all possible correlation matrices (of different determinants) are equally likely to be picked. Here we say that the distribution is \textit{uniform} over all possible correlation matrices. For a 2x2 correlation matrix, the only choice is for the off-diagonal element, $\rho_{12}$ which must be between -1 and 1. Since, all values of $\rho_{12}$ result in valid correlation matrices, then its distribution is uniform over these bounds (see figure \ref{fig:Distributions_LKJ_correlations}). For a 3x3 matrix, we are more constricted in our choice of $\rho_{12}$, since there are two other parameters we must also choose: $\rho_{13}$ and $\rho_{23}$, requiring that the resultant matrix must be symmetric positive definite. It transpires that there are more allowable correlation matrices if we choose $\rho_{12}$ to be close to 0, since this places fewer restrictions on the other two parameters; meaning that the distribution is peaked at 0 (see figure \ref{fig:Distributions_LKJ_correlations}). For higher dimensional matrices (like our 4 element example), the restrictions which we place on one element affect other elements more, meaning that there are fewer allowable configurations if the value of $\rho_{12}$ is extreme. It transpires that the distribution of allowable $\rho$ is in general given by a $Beta\left(\frac{d}{2},\frac{d}{2}\right)$ distribution, where $d$ is the dimension of the matrix \cite{lewandowski2009generating}. This results in a joint distribution of the form shown in figure \ref{fig:Distributions_LKJ_correlations} for the parameters $\rho_{12}$ and $\rho_{13}$. 
 
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_LKJ_correlations.pdf}}
+\caption{\textbf{Left:} the distribution of $\rho_{12}$ for allowable correlation matrices, for a dimension of 2 (blue), 3 (orange), 4 (green) and 20 (red). \textbf{Right:} a contour plot of the joint distribution of $\rho_{12}$ and $\rho_{13}$ for a correlation matrix of dimension 4. \textbf{Add legends}.}\label{fig:Distributions_LKJ_correlations}
+\end{figure}
+
+
+For all other values of $\eta\neq 1$, the determinants of the matrices matter. However, before attacking the problem of what the distribution of matrices looks like now, it is worth pausing a minute to think about what the distribution of determinants looks like for all possible correlation matrices (i.e. for when $\eta=1$). For the 2x2 case, we know that the determinant is given by:
+
+\begin{equation}
+|\boldsymbol{\Omega}| = 1 - \rho_{12}^2
+\end{equation}
+
+Which has a maximum value of 1 (the identity matrix), and a minimum of 0 (matrix of 1s). We have already reasoned that for a 2x2 correlation matrix, the distribution of $\rho_{12}$ is uniform between -1 and 1, meaning that we expect the distribution of $\rho_{12}^2$ to be peaked at zero (see section \ref{sec:Prior_vague}). This means that the distribution of $|\boldsymbol{\Omega}|$ will be peaked at 1, and decay away to 0 (see figure ). This means that the majority of admissible correlation matrices will be towards the identity matrix, meaning that the correlations are quite small. 
+
+For a dxd correlation matrix, the distribution of determinants of allowable correlation matrices is more complex, but it can be derived analytically, and transpires to be given by \cite{hanea2013asymptotic}:
+
+\begin{equation}
+|\boldsymbol{\Omega}| \sim \prod\limits_{j=1}^{d-1} Beta\left(\frac{j+1}{2},\frac{d-j}{2}\right)
+\end{equation}
+
+where $Beta\left(\frac{j+1}{2},\frac{d-j}{2}\right)$ is shorthand for a Beta distributed random variable with those values of its inputs. The distribution for the determinants of all allowable correlation matrices is shown in figure \ref{fig:Distributions_LKJ_determinants}, and illustrates that for $d>2$ the number of these is increasing as $|\boldsymbol{\Omega}|$ decreases. This is because as the matrix gets closer to the identity, there is less latitude in the variability in the off-diagonal parameters.
+
+If we then allow for a preference of values of $|\boldsymbol{\Omega}|$ which are greater, by letting $\eta>1$, we find that the distribution shifts more mass towards higher values of the determinant (see figure \ref{fig:Distributions_LKJ_determinants}), in other words more towards the identity correlation matrix. By contrast, if we choose a value of $\eta<1$, then we prefer to sample those correlation matrices with determinants closer to 0. These matrices are a limit of the correlation matrix, when the off-diagonals approach the value of the diagonals (although do not  quite get there), and can be thought of  the case where there is almost a correlation of 1 between the variables.
+
+In summary, if we want to allow for a relatively unrestricted correlation structure between our variables, as we might in our current example, then using an LKJ prior with $\eta\sim 1$ seems reasonable. By contrast, if we thought before experiment that the variables were likely independent, then we might choose a higher value of $\eta$. However, if we choose a value $\eta>10$, then the prior distribution is very similar to an identity, and we might be better off computationally as specifying independent priors for each of the variances, and forgetting the covariances.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Distributions_LKJ_determinants.pdf}}
+\caption{The LKJ distributions over allowable correlation matrices for left: $d=2$, and right: $d=3$, when $\eta=1$, $\eta=10$ (orange), and $\eta=0.5$ (green). \textbf{Add legends}.}\label{fig:Distributions_LKJ_determinants}
+\end{figure}
+
+
+\boxed{Properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+decomposition&: \boldsymbol{\Sigma} = \boldsymbol{\tau}\boldsymbol{\Omega}\boldsymbol{\tau}\\
+pdf&: f(\boldsymbol{\Omega}|\eta) \propto |\boldsymbol{\Omega}|^{\eta-1}\; where\;  \boldsymbol{\Omega}\in\; corr\; matrices\\
+marginal&: \rho_{ij} \sim Beta(\eta-1+\frac{d}{2},\eta-1+\frac{d}{2})\; over \; (-1,1)
+\end{empheq}
+\end{subequations}
 
 \subsubsection{Wishart and inverse-Wishart}
 On p60 of the manual it is said that this distribution is conjugate to the multivariate normal - see Gelman and Hill.
