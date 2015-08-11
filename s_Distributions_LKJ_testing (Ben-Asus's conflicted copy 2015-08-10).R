@@ -1,0 +1,23 @@
+rm(list=ls())
+setwd("C:/Users/Ben/Dropbox/Bayesian book/Figures/")
+library('rstan')
+library('R.matlab')
+library('boot')
+library('pracma')
+library('pscl')
+library('actuar')
+library('VisCov')
+
+fit <- stan(file = 's_Distributions_LKJ_testing.stan', algorithm="Fixed_param",
+            iter = 2000000, chains = 1,seed=1,warmup=0)
+fit <- sampling(get_stanmodel(fit), algorithm="Fixed_param",
+            iter = 2000000, chains = 1,seed=1,warmup=0)
+
+fitData <- as.data.frame(fit)
+
+write.csv(file="s_Distributions_LKJ.csv",fitData)
+
+distribution = "Inverse Wishart"
+dim = 4
+param = list(prob = 0.5, dim = dim, nu = dim+1, scaleCov = diag(1,dim))
+CovPlotData = VisCov(distribution, param, title.logical = FALSE)
