@@ -3345,6 +3345,8 @@ Using computational simulation, find the position of the mode.
 
 \chapter{An introduction to distributions for the mathematically-un-inclined}\label{chap:distributions}
 \section{Chapter mission statement}
+At the end of this chapter the reader should be familiar with the commonplace likelihood and prior distributions used in a significant proportion of applied analyses.
+
 \section{Chapter goals}
 Often texts on Bayesian analysis assume a familiarity with probability distributions that evade all but the statistics fanatics. This presumed knowledge often makes it difficult to penetrate the literature, and makes Bayesian inference appear more difficult than it actually is. The idea behind this chapter is to redress the balance; by going through the commonly-used distributions, highlighting their interrelationships, and their use for a wide range of example situations. It is hoped that by addressing their practical applicability, that we can turn an oft-dry subject into something more palatable for bedtime reading.
 
@@ -3364,7 +3366,7 @@ Distribution checklist (\textbf{want this in a different colour/shading. Not sur
 \begin{enumerate}
 \item Discrete data.
 \item A single trial.
-\item \textit{Only} two trial outcomes: \textit{success} and \textit{failure}\footnote{These do not need to literally represent successes and failures, but this shorthand is typically used, and we adopt it here.}
+\item \textit{Only} two trial outcomes: \textit{success} and \textit{failure}. These do not need to literally represent successes and failures, but this shorthand is typically used, and we adopt it here.
 \end{enumerate}
 
 Example uses: outcome of flipping a coin, a single clinical trial, or a presidential election!
@@ -3379,13 +3381,13 @@ O & , horse\; wins \\
 \end{cases}
 \end{equation}
 
-In this set-up it makes sense to model the outcome of a single race as being influenced by a background probability of success, $0\leq\theta\leq 1$. We don't actually witness this probability, and after the discussion in chapter \ref{chap:subjectiveFrequentistBayes}, we aren't sure it \textit{really} exists. In the Frequentist paradigm $\theta$ represents the proportion of races\footnote{Really identical races, but who's counting?} that the horse has won historically\footnote{And will win in total if we were to continue re-racing forever.}. Whereas to Bayesians, $\theta$ merely gauges our subjective confidence in the event of the horse winning\footnote{If any of this is news to you, then have a re-read of section \ref{sec:Intro_FrequentistsWorld}.}.
+In this set-up it makes sense to model the outcome of a single race as being influenced by a background probability of success, $0\leq\theta\leq 1$. We don't actually witness this probability, and after the discussion in chapter \ref{chap:subjectiveFrequentistBayes}, we aren't sure it \textit{really} exists. In the Frequentist paradigm $\theta$ represents the proportion of races that the horse has won historically (and will win in total if we were to continue re-racing forever). Whereas to Bayesians, $\theta$ merely gauges our subjective confidence in the event of the horse winning (see section \ref{sec:Intro_FrequentistsWorld}).
 
 Now that we have a model, we can work out the probability of the two distinct possible outcomes. The probability that the horse wins is straightforwardly $p(win)=\theta$; meaning the probability of a loss \textit{must}\footnote{It \textit{must} be given by $1-\theta$, so that the Bernoulli distribution sums to 1, and hence is a valid probability density.} be given by $p(loss)=1-\theta$.
 
 We now are in a position to work out the likelihood of a given outcome. Remember that a likelihood is \textit{not} a valid probability density, and is found by holding the \textit{outcome}, or in other words \textit{data}, constant, whilst varying the parameters. Suppose that the horse has had a good meal of carrots this morning, and goes on to win by a country mile. We know that the likelihood of this event is given by $l(\theta|X=1)=p(X=1|\theta)=\theta$ (see the red line in figure \ref{fig:Distributions_bernoulliHorseRace}).
 
-Alternatively, if our horse spent the night in the midst of night-mares\footnote{Get it? Sorry, that is terrible.}, and went on to lose, then the likelihood is given by $l(\theta|X=1)=1-\theta$ (see the blue line in figure \ref{fig:Distributions_bernoulliHorseRace}).
+Alternatively, if our horse spent the night in the midst of night-mares, and went on to lose, then the likelihood is given by $l(\theta|X=1)=1-\theta$ (see the blue line in figure \ref{fig:Distributions_bernoulliHorseRace}).
 
 As you can see, in this situation, the maximum likelihood estimates in each case are given by $\hat{\theta}=1$, and $\hat{\theta}=0$, if the horse wins or loses respectively.
 
@@ -3396,6 +3398,7 @@ p(X|\theta) = \theta^X (1-\theta)^{1-X}
 \end{equation}
 
 This distribution is known as the \textit{Bernoulli}, after the Swiss mathematician Jacob Bernoulli who first probed this much-discussed distribution.
+
 
 \boxed{Properties:}
 \begin{subequations}
@@ -3429,7 +3432,7 @@ Distribution checklist (\textbf{want this in a different colour/shading. Not sur
 \item Individual outcome probabilities are not determined by any other factor that varies across individuals for which we have data.
 \item Probability of success is same in each trial.
 \item Overall data we measure is the aggregate number of successes. 
-\item Trials are independent\footnote{Knowing the outcome of a single trial would not influence our opinion as to the likelihood of another trial's result, apart from any information it provides on $\theta$. To be absolutely correct we should really say that the data are \textit{conditionally}-independent. See section \ref{sec:Probability_conditionalIndependence}}.
+\item Trials are independent\footnote{See section \ref{sec:Probability_conditionalIndependence}}.
 \end{enumerate}
 
 Example uses: clinical drug trials, Democrat voters exiting a poll station, or the number of mosquito bites over the course of a day.
@@ -4059,10 +4062,6 @@ There are a number of different categories of parameters in probability models: 
 
 We will already have encountered some of these distributions in section \ref{sec:Distributions_samplingDist}, however the difference in focus here is sufficient to merit another (albeit short) discussion of each of these.
 
-\subsection{Distributions for discrete random variables}
-\subsubsection{Discrete uniform}
-
-
 \subsection{Distributions for probabilities, proportions and percentages}
 It is common to deal with variables that are naturally constrained to lie between 0 and 1. Examples include: probabilities, proportions, and percentages. In these cases, it is important to use priors that are fit for the purpose, since a poor choice here can lead to nonsensical values outside of this range.
 
@@ -4539,9 +4538,9 @@ In summary, if we want to allow for a relatively unrestricted correlation struct
 
 \begin{figure}
 \centering
-\scalebox{0.5} 
+\scalebox{0.4} 
 {\includegraphics{Distributions_LKJ_determinants.pdf}}
-\caption{The LKJ distributions over allowable correlation matrices for left: $d=2$, and right: $d=3$, when $\eta=1$, $\eta=10$ (orange), and $\eta=0.5$ (green). \textbf{Add legends}.}\label{fig:Distributions_LKJ_determinants}
+\caption{The LKJ distributions over allowable correlation matrices for left: $d=2$, centre $d=3$, and right: $d=4$ when $\eta=1$, $\eta=10$ (orange), and $\eta=0.5$ (green). \textbf{Add legends. Also need to draw last figure from 0.9-1, as it was too difficult to find pdf here.}.}\label{fig:Distributions_LKJ_determinants}
 \end{figure}
 
 
@@ -4555,10 +4554,91 @@ marginal&: \rho_{ij} \sim Beta(\eta-1+\frac{d}{2},\eta-1+\frac{d}{2})\; over \; 
 \end{subequations}
 
 \subsubsection{Wishart and inverse-Wishart}
-On p60 of the manual it is said that this distribution is conjugate to the multivariate normal - see Gelman and Hill.
+Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
+
+\begin{enumerate}
+\item Distribution for covariances matrices.
+\item By their nature the parameters of these matrices are constrained (the matrices must be positive definite - see below).
+\item Mostly useful in hierarchical models, although can be used in non-hierarchical settings.
+\item Conjugate to multivariate normal likelihoods.
+\item Represent quite restrictive relationships; better to use LKJ in most applied settings.
+\item Gamma distribution is a univariate special case of the inverse-Wishart.
+\end{enumerate}
+
+Before the invention of the LKJ distribution, the most frequently used prior distributions for covariance matrices were the inverse-Wishart and the Wishart distributions, in order of importance. Whilst these distributions are now somewhat defunct, they are still encountered in the literature, and can be useful for finding pen-and-paper posterior distributions for simple problems due to their conjugacy with the multivariate normal. 
+
+We choose to carry on with our example from section \ref{sec:Distributions_LKJ}, on the prevalence and covariance of a number of conditions under the banner of 'mental health'. Recall that we had assumed a multivariate normal for the vector $\boldsymbol{d}$ where each element gives the prevalence of a particular disorder:
+
+\begin{equation}
+\boldsymbol{d} \sim N(\boldsymbol{\mu},\boldsymbol{\Sigma})
+\end{equation}
+
+We postpone until chapter \ref{chap:conjugate} a discussion of the conjugacy properties of the inverse-Wishart, and Wishart, and instead focus our efforts on what it would mean to ascribe such priors for $\boldsymbol{\Sigma}$:
+
+\begin{equation}
+\boldsymbol{\Sigma} \sim inv-Wishart\left(\boldsymbol{\Psi},\nu\right)
+\end{equation}
+
+We see that this distribution is parameterised by two parameters: $\boldsymbol{\Psi}$, a scale matrix; and $\nu$, the degrees of freedom. The probability distribution here is complex, and does not serve a purpose in explaining the functioning of this distribution, so we leave it till the end.
+
+For simplicity we illustrate the behaviour of the inverse-Wishart, by assuming an identity scale matrix $\boldsymbol{\Psi}$, which makes all variables exchangeable \cite{tokuda2011visualizing}. Instead of exactly drawing the distribution, we instead summarise it by drawing a large number of samples. In the present case, we consider a 4-dimensional distribution, and illustrate the behaviour as we vary $\nu$.
+
+Here we will introduce some of the ways to visualise these distributions, but refer the interested reader to \cite{tokuda2011visualizing} for a more thorough exposition of ways to visualise covariance/correlation matrices (from which we borrow here a few suggestions). 
+ 
+We firstly see that as we increase $\nu$, the mean variance decreases (compare top- and bottom-left panels). However, this change of $\nu$ also has other consequences - the distribution of the correlation ends up becoming more and more concentrated towards 0, meaning the matrices become more and more diagonal. Furthermore, we can see that for low values of $\nu$, the joint distributions of $(\rho_{12},\rho_{23})$ become concentrated at the corners of the distribution. This is very restrictive, and usually undesirable \cite{tokuda2011visualizing}. The problem when we increase $\nu$ is that whilst the joint distribution $(\rho_{12},\rho_{23})$ starts to adopt a more desirable symmetry, there is too much density in the centre (compare this with the density plot of figure \ref{fig:Distributions_LKJ_correlations}). 
+
+Even if we decompose $\boldsymbol{\Sigma}$ into scale vectors and a correlation matrix, it turns out that we still run into the same problem with the correlation distributions when we use the inverse-Wishart \cite{tokuda2011visualizing}. 
+
+Instead we might choose to use the Wishart distribution as a prior: 
+
+\begin{equation}
+\boldsymbol{\Sigma} \sim Wishart\left(\boldsymbol{\Psi},\nu\right)
+\end{equation}
+
+Although usually this distribution is more commonly used as a prior for the inverse of the correlation matrix, we can still describe its properties here. Again we assume that the scale matrix, $\boldsymbol{\Psi}$ is the identity, and examine the effects of changes in $\nu$. As an aside, the inverse Wishart distribution is obtained by first drawing $\boldsymbol{X} \sim Wishart\left(\boldsymbol{\Psi},\nu\right)$, then inverting $\boldsymbol{C}=\boldsymbol{X}^{-1}$ (hence the name \textit{inverse}). The Wishart distribution also turns out to be the sampling distribution for covariance matrices, where the data have been generated by multivariate normals.
+
+We see now that for low $\nu$, the joint correlation distribution of $(\rho_{12},\rho_{23})$ is fairly diffuse, and symmetrical around 0, although not as diffuse as for an LKJ - see figure \ref{fig:Distributions_LKJ_correlations}. Also, at low $\nu$, the marginal distribution of $\rho_{12}$ looks similar to that of the uniform distribution over all allowable correlation matrices (again see figure \ref{fig:Distributions_LKJ_correlations}). However, if we seek to increase the level of the variances by increasing $\nu$, we see that the correlations become increasing concentrated around 0, which is restrictive.
+
+Essentially, both distributions - the inverse-Wishart, and the Wishart - are too simple because they only depend on a single parameter $\nu$. This parameter affects not only the width of allowable correlations, but also the shape of the distribution. Whilst the LKJ distribution similarly only depends on a single parameter, $\eta$,  parameter has a much simpler (monotonic) effect on the correlation distribution. Also by decomposing $\boldsymbol{\Sigma}$ into a correlation matrix and scale vectors, it allows for simple separation of prior views on the correlation structure and the variances.
+
+\boxed{Inverse-Wishart\; properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+pdf&: f(\boldsymbol{X}|\boldsymbol{\Psi},\nu) = \frac{ |\boldsymbol{\Psi}|^{\frac{\nu}{2} }}{ 2^\frac{\nu d}{2} \Gamma_{\nu} \left(\frac{\nu}{2}\right) } |\boldsymbol{X}|^{-\frac{\nu+d-1}{2}} e^{\frac{tr(\boldsymbol{\Psi} \boldsymbol{X}^{-1} )}{2}} \\
+mean&: \mathrm{E}(\boldsymbol{X}) = \frac{1}{\nu - d - 1}\boldsymbol{\Psi}, \; \nu > d + 1
+\end{empheq}
+\end{subequations}
+
+\boxed{Wishart\; properties:}
+\begin{subequations}
+\begin{empheq}[box=\widefbox]{align}
+pdf&: f(\boldsymbol{X}|\boldsymbol{\Psi},\nu) = \frac{|\boldsymbol{X}|^{\frac{\nu-d-1}{2}}e^{\frac{-tr(\boldsymbol{\Psi}^{-1}\boldsymbol{X})}{2}}}{2^{\frac{\nu d}{2}} |\boldsymbol{\Psi}|^{\frac{\nu}{2}} \Gamma_{\nu} \left(\frac{\nu}{2}\right) }\\
+mean&: \mathrm{E}(\boldsymbol{X}) = \nu \boldsymbol{\Psi}
+\end{empheq}
+\end{subequations}
 
 
 \section{Chapter summary}
+The reader should now have a good idea as to the array of likelihood and prior distributions from which to choose for a particular circumstance, however this chapter was not meant to be all-encompassing. It is almost inevitable to come across situations where none of the distributions discussed are appropriate, but it is hoped that this chapter should provide some guidance as to where to look in the literature. It is also frequently the case that a suitable distribution can be constructed from the basic building blocks discussed.
+
+One of the most important decisions when choosing a likelihood and prior is how much variability to allow. We have tried to stress the benefits of the robust versions of sampling distributions (for example the negative binomial to the poisson, and the t distribution to the normal), as well as those choices for priors (again the t distribution to the normal, and the LKJ to the Wishart distributions). However, how should one decide on \textit{how} robust to make a model? We shall postpone some of this discussion until chapter \ref{chap:ModelFit}, where we will see there is a simple, but very general methodology for making these decisions. However, it would be remiss not to mention in passing some of the costs of more robust models: they are more complex than their simple alternatives, and can significantly lengthen the time taken for modern computational samplers to run (see part \ref{part:computationalBayes}). These costs must be balanced against the needs of the situation, although we advise to always err on the side of robustness. 
+
+We have in passing mentioned the property of \textit{conjugacy}. This is a condition which makes a narrow range of posterior distributions calculable by hand, without the need to appeal to a computer for sampling. Whilst this narrowing necessarily limits the complexity, and realism, of models we can build, we shall see that, equipped with our knowledge of distributions, we can use these toy problems to gain a better understanding of Bayesian statistics. It will also allow us to be better informed when it comes to designing models that are more appropriate to a given situation.
+
+\section{Chapter outcomes}
+The reader should now be familiar with the following concepts:
+
+\begin{enumerate}
+\item The various forms of sampling distribution that can be used, encompassing discrete and continuous probabilities, and multivariate outcomes.
+\item The robust versions of sampling distributions to allow for greater sampling variability.
+\item Prior distributions to use for: 
+\subitem Probabilities, proportions and percentages.
+\subitem Means and regression coefficients.
+\subitem Non-negative parameters for scale and shape.
+\subitem (Extra): covariance and correlation matrices.
+\item The robust versions of priors to allow for a wider possible range of parameter values.
+\end{enumerate}
+
 \section{Problem set}
 \subsection{Drug trials}
 We suppose that we are testing the efficacy of a certain drug which aims to cure depression, across two groups, each of size 10, with varying levels of the underlying condition: \textit{mild} and \textit{severe}. We suppose that the success rate of the drug varies across each of the groups, with $\theta_{mild}>\theta_{severe}$. We are comparing this with another group of 10 individuals, which has a success rate equal to the mean of the other two groups $\theta = \frac{\theta_{mild}+\theta_{severe}}{2}$.
