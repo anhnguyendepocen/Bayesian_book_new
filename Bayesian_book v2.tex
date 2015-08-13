@@ -4584,6 +4584,20 @@ We see that this distribution is parameterised by two parameters: $\boldsymbol{\
 For simplicity we illustrate the behaviour of the inverse-Wishart, by assuming an identity scale matrix $\boldsymbol{\Psi}$, which makes all variables exchangeable \cite{tokuda2011visualizing}. Instead of exactly drawing the distribution, we instead summarise it by drawing a large number of samples. In the present case, we consider a 4-dimensional distribution, and illustrate the behaviour as we vary $\nu$.
 
 Here we will introduce some of the ways to visualise these distributions, but refer the interested reader to \cite{tokuda2011visualizing} for a more thorough exposition of ways to visualise covariance/correlation matrices (from which we borrow here a few suggestions). 
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+%{\includegraphics{Distributions_invWishart.pdf}}
+\caption{Panels shows sample-based estimates of variance and correlation distributions for the inverse-Wishart distribution\textbf{Top:} $\nu=5$, and \textbf{Bottom:} $\nu=50$. In both cases, the scale matrix is 4-dimensional, and estimates are based on sample sizes of 4,000,000. \textbf{Add legends. Figure too big to keep in.}.}\label{fig:Distributions_invWishart}
+\end{figure}
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+%{\includegraphics{Distributions_Wishart.pdf}}
+\caption{Panels shows sample-based estimates of variance and correlation distributions for the Wishart distribution \textbf{Top:} $\nu=5$, and \textbf{Bottom:} $\nu=50$. In both cases, the scale matrix is 4-dimensional, and estimates are based on sample sizes of 4,000,000. \textbf{Add legends. Figure too big to keep in.}.}\label{fig:Distributions_Wishart}
+\end{figure}
  
 We firstly see that as we increase $\nu$, the mean variance decreases (compare top- and bottom-left panels). However, this change of $\nu$ also has other consequences - the distribution of the correlation ends up becoming more and more concentrated towards 0, meaning the matrices become more and more diagonal. Furthermore, we can see that for low values of $\nu$, the joint distributions of $(\rho_{12},\rho_{23})$ become concentrated at the corners of the distribution. This is very restrictive, and usually undesirable \cite{tokuda2011visualizing}. The problem when we increase $\nu$ is that whilst the joint distribution $(\rho_{12},\rho_{23})$ starts to adopt a more desirable symmetry, there is too much density in the centre (compare this with the density plot of figure \ref{fig:Distributions_LKJ_correlations}). 
 
