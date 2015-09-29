@@ -4686,13 +4686,168 @@ Hint: consider the points at particular values of the remaining probability for 
 \subsubsection{Prove that the distribution of the lower distribution is unconditionally normal}
 
 \chapter{Conjugate priors and their place in Bayesian analysis}\label{chap:conjugate}
+\section{Chapter mission statement}
+At the end of this chapter the reader should understand what is meant by a conjugate prior, and how they can be used to exactly derive posterior distributions for particular circumstances.
+
+\section{Chapter goals}
+Bayesian analysis requires us to evaluate the denominator of Bayes' rule in order to exactly derive the posterior. For realistic models of most phenomena, this is usually a bridge too far, since we need to calculate a highly-dimensional integral, which is practically-intractable. However, there are a class of models - pairs of likelihoods and priors - where this calculation is possible. Furthermore, researchers have tabulated the formulae for the particular posteriors in these circumstances, which we can use to avoid having to actually calculate the denominators! The choice of priors that result in these cases, are specific to the particular choice of likelihood, and are called \textit{conjugate}. Through this judicious choice, the resultant posteriors in these circumstances are actually within the same family of distributions as the priors themselves, making it even easier to remember and use this class of models. 
+
+Whilst the use of conjugate priors is usually overly-restrictive, they can nevertheless be a useful base from which to start an analysis, before moving onto more realistic models which require computational sampling to avoid having to actually calculate the posterior (see part \ref{part:computationalBayes}). Additionally, since many texts and research literature assumes a basic understanding of conjugate priors, it is important to be familiar with their use. 
+
 \section{What is a conjugate prior and why are they useful?}
-\section{Beta-binomial example}
+Suppose you run a restaurant and are interested in building a model for the number of people, $X$, who have food allergies within a particular sitting, in order to inform your buying of ingredients. If we make the assumption that the allergy-status of a given person is independent of everyone else's (see section \ref{sec:Likelihood_diseaseGroup}), then we might choose a binomial sampling model $X\sim B(n,\theta)$, where $n$ is the number of people eating, and $\theta$ is the probability that a randomly-chosen individual has an allergy. We can write the binomial likelihood as:
+
+\begin{equation}
+\begin{align}
+p(X=k|\theta,n) &= {n \choose k} \theta^k (1-\theta)^{n-k}\\
+&\propto \theta^k (1-\theta)^{n-k}
+\end{align}
+\end{equation}
+
+We choose to use a beta prior to represent our pre-data knowledge about the proportion of people that have an allergy to a miscellaneous type of model due to its flexibility, and since it is defined only over the [0,1] interval (see section \ref{sec:Distributions_beta}). This distribution can be written as:
+
+\begin{equation}
+\begin{align}
+p(\theta|\alpha,\beta) &= \frac{\theta^{\alpha-1}(1-\theta)^{\beta-1}}{B(\alpha,\beta)}\\
+&\propto \theta^{\alpha-1}(1-\theta)^{\beta-1}
+\end{align}
+\end{equation}
+
+where $B(\alpha,\beta)$ is a beta function, which is not dependent on $\theta$.
+
+We notice a similarity in the expressions for the sampling distribution, and the prior, in that they both contain a term $\theta^a (1-\theta)^b$. When we use Bayes' rule to calculate the posterior, we are required (in the numerator) to multiply together the likelihood and the prior, resulting in:
+
+\begin{equation}
+\begin{align}
+p(\theta|data) &\propto p(data|theta) \times p(\theta)\\
+&\propto \theta^k (1-\theta)^{n-k} \times \theta^{\alpha-1}(1-\theta)^{\beta-1}\\
+&= \theta^{k+ \alpha - 1} (1-\theta)^{n-k + \beta - 1}\\
+&= \theta^{\alpha' - 1}(1-\theta)^{\beta'-1}
+\end{align}
+\end{equation}
+
+where $\alpha'=\alpha + k$ and $\beta'= \beta + n - k$. Notice that the posterior in this case is proportional to a term containing $\theta$ which is of exactly the same form as the beta prior. Furthermore, since the prior is a proper probability distribution, the posterior must also be one. This means that, because the posterior has a dependence on $\theta$ that looks like a beta distribution, it must actually be one! Put another way, if you go through and actually carry out the calculation, you will find that the normalising factor of the posterior is $B(\alpha',\beta')$, meaning that the functional form of the posterior is a beta distribution, although with different parameters to the prior. Here we say that the beta prior is \textit{conjugate} to the binomial likelihood, since the posterior is also a beta distribution.
+
+Ok, let's step away from the maths for a minute, and examine what happens to the beta posterior as we collect samples with differing numbers of people with allergies (see the left hand panels of figure \ref{fig:Conjugate_binomial}). As we obtain a higher number of individuals with allergies within our sample, $k$, this leads to a shift rightwards in the likelihood, which is mirrored by $Beta(\alpha + k,\beta + n - k)$ posteriors. Alternatively, if we hold the number of people with allergies in our sample constant, and alter the priors, we again see that the $Beta(\alpha + k,\beta + n - k)$ posteriors are moved to reflect the priors.
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Conjugate_binomial.pdf}}
+\caption{The priors, likelihoods and posteriors for across left: samples with different numbers of people with allergies, and right: the same sample with different priors. \textbf{Add legends. Left assumes a beta(1,1) prior, with samples of (3,5,10) (blue, orange, green) out of 30 with allergies. Right assumes a sample of 3/30 was obtained, with priors given by (1,1), (5,5), (10,1), (blue, orange, green). We should actually label the posterior curves with their posteriors, since this is the point of this diagram. Left: Beta(4,28), Beta(6,26), Beta(11,21). Right: Beta(4,28), Beta(8,32), Beta(13,28) with colours (blue, orange, green).}}\label{fig:Conjugate_binomial}
+\end{figure}
+
+So we have seen that using binomial likelihood with a beta prior leads to beta posterior. We have also noted that the behaviour of the posterior described by the formula we obtained behaves as we would expect it to visually. However, we have not yet adequately defined what it means to be a conjugate prior. We can think about the property of conjugacy through the flow diagram below, which represents the Bayesian inference process:
+
+\begin{equation}
+prior\xrightarrow{likelihood} posterior 
+\end{equation}
+
+In our example we have found the following flow diagram:
+\begin{equation}
+beta\xrightarrow{binomial} beta'
+\end{equation}
+
+In other words, we specified a beta prior, and the data (through the binomial likelihood) updated our beliefs, and resulted in a beta posterior (albeit with different parameters, hence why $beta'$ is used above). Conjugate priors are always defined relative to a particular likelihood, and should (like our example) mean that both the prior and the posterior come from the same \textit{family} of distributions. Diagrammatically, we have that for a specified likelihood $L$, and a prior distribution $F$:
+\begin{equation}
+F\xrightarrow{L} F'
+\end{equation}
+
+For example if we feed a gamma prior into our Bayesian updating rule, we should get a gamma posterior out (as is the case for a poisson likelihood). If we feed a normal prior in, we should get a normal posterior out (for particular normal likelihoods) etc.
+
+Furthermore, for all conjugate prior examples we can actually write down a mechanistic rule using our flow diagram for how we should update our prior beliefs in light of data. In our example above:
+
+\begin{equation}
+beta(\alpha,\beta)\xrightarrow{binomial\;\; likelihood\; with\; (n, k)} beta(\alpha+k,\beta+n-k)
+\end{equation}
+
+This simple rule negates the need to actually do any maths, since we can just substitute our numbers into the above formula (which we can look up in table \ref{sec:Conjugate_tableConjugatePriors}), to yield the posterior. This really is Bayesian statistics made easy!
+
 \section{Gamma-poisson example}
+As another example imagine that you work for the department for transport, and are interested in building a model that predicts the number of cars, $Y$, which approach a particular intersection over a certain period of the day. Here we might choose to use a poisson likelihood if we believe that the arrival of cars are independent of one another (see section \ref{sec:Distributions_poisson}). We can write down the likelihood in this case as:
+
+\begin{equation}
+\begin{align}
+p(Y=\boldsymbol{y}|\lambda) &= \prod\limits_{i=1}^{n} \frac{\lambda^{y_i} e^{-\lambda}}{k!}\\
+&= \frac{\lambda^{\sum\limits_{i=1}^{n}y_i} e^{-n\lambda}}{k!}\\
+&\propto \lambda^{n \bar{y}} e^{-n\lambda}
+\end{align}
+\end{equation}
+
+where $\boldsymbol{y}$ represents a data vector with the numbers of cars that approached the intersection over $n$ samples, and we have used $n \bar{y} = \sum\limits_{i=1}^{n}y_i$.
+
+We might also choose to use a gamma prior to describe our prior preferences (see section \ref{sec:Distributions_gamma}), which we can write in the following form:
+
+\begin{equation}\label{eq:Conjugate_gammaPrior}
+\begin{align}
+p(\lambda|\alpha,\beta) &= \frac{\beta^\alpha \lambda^{\alpha-1} e^{-\beta \lambda}}{\Gamma(\alpha)}\\
+&\propto \lambda^{\alpha-1} e^{-\beta \lambda}
+\end{align}
+\end{equation}
+
+Again we notice a common form in both the likelihood and prior expressions (this time $\lambda^a e^{-b \lambda}$), meaning that when we multiply the two together in the numerator of the Bayes' rule we obtain a posterior given by:
+
+\begin{equation}
+\begin{align}
+p(\lambda|k) &\propto \lambda^{n \bar{y}} e^{-n\lambda} \times \lambda^{\alpha-1} e^{-\beta \lambda}\\
+&= \lambda^{n \bar{y} + \alpha-1} e^{-(\beta+n) \lambda}\\
+&= \lambda^{\alpha'-1} e^{-\beta' \lambda}
+\end{align}
+\end{equation}
+
+where $\alpha' = \alpha + n \bar{y}$, and $\beta' = \beta + n$. Again, we can use the argument that since the dependence on $\lambda$ is of the same form in both the posterior and prior distributions, and since the prior is a proper probability distribution, the posterior must also be a gamma density. Writing down the updating rule for this example, we find that:
+
+\begin{equation}
+gamma(\alpha,\beta)\xrightarrow{poisson\;\; likelihood\; with\; (n, \bar{y})} gamma(\alpha + n \bar{y}, \beta + n)
+\end{equation}
+
+Note that this rule is only correct for the form of gamma density parameterised as in (\ref{eq:Conjugate_gammaPrior}). If we use a different parameterisation of the gamma prior we would need to adjust the rule accordingly.
+
+Let us now apply this rule to the case of cars arriving at an intersection. Suppose that we have two data vectors representing the numbers of cars arriving at two different intersections over a particular period of time. We can use the above rule to calculate the posteriors in each of these cases (see the left hand plots of figure \ref{fig:Conjugate_poissonGamma}). We see that increases in the average number of cars in the sample, leads to an increase in $\alpha'$ resulting in a shift rightwards in the posterior, in accordance with the likelihood. Similarly, if we alter the prior parameters $(\alpha,\beta)$, this leads to changes in $(\alpha',\beta')$ for the posterior, resulting in a shift in the posterior (see the right hand panel of figure \ref{fig:Conjugate_poissonGamma}).
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Conjugate_poissonGamma.pdf}}
+\caption{The effect of left: different samples, and right: different priors, on the posterior. \textbf{Add legends. LH prior has $(\alpha,\beta)= (10,1)$ with samples of size 5, with means of (20.8,53) for (blue,orange). RH priors have (10,1) and (140,2) respectively for (blue,orange), with a sample of mean 20.8 and size 5. Add the labels to the posterior curves, importantly, with Gamma(114,1/6) and Gamma(275,1/6) for the left hand side (blue,orange), and Gamma(114,1/6) and Gamma(405,1/7), again for (blue,orange).}}\label{fig:Conjugate_poissonGamma}
+\end{figure}
+
 \section{Normal example}\label{sec:conjugate_normal}
+Suppose that we are modelling the average height of adult male giraffes in a particular nature reserve. Since the height of a giraffe is the result of a multitude of different factors - both genetic and environmental - we might choose to use a normal likelihood (see section \ref{sec:Distributions_normal}). Furthermore, we assume that the heights of the individual giraffes in our sample, $\boldsymbol{z} = \{z_1,z_2,...,z_n\}$ are independent of one another, resulting in a likelihood of the form:
+
+\begin{equation}
+\begin{align}
+p(\boldsymbol{z}|\mu,\sigma) &= \prod\limits_{i=1}^{n}\frac{1}{\sqrt{2\pi} \sigma} exp\left(-\frac{(z_i-\mu)^2}{2\sigma^2}\right)\\
+&\propto \sigma^{-n} exp\left(-\frac{1}{2\sigma^2}\sum\limits_{i=1}^{n}(z_i-\mu)^2 \right)
+\end{align}
+\end{equation} 
+
+If we now think about constructing a prior that will be conjugate to this likelihood, we know from our previous examples that its overall structure should be of the same form. This means that we require a prior distribution of something similar to the form:
+
+\begin{equation}
+p(\mu,\sigma^2) \propto (\sigma^2)^a \times exp\left(-\frac{1}{2\sigma^2} c(\mu-b)^2 \right) 
+\end{equation}
+
+Notice there that we could separate the prior using the law of conditional probability into $p(\mu,\sigma^2) = p(\sigma^2)\times p(\mu|\sigma^2)$, where we have that:
+
+\begin{align}
+p(\sigma^2) &\propto (\sigma^2)^a\\
+p(\mu|\sigma^2) &\propto exp\left(-\frac{1}{2\sigma^2} c(\mu-b)^2 \right)
+\end{align}
+
+It turns out these two relations can be satisfied using the following priors \cite{gelman2013bayesian} (see sections \ref{sec:Distributions_halfCauchyInvGamma} for a discussion of the first):
+
+\begin{align}
+\sigma^2 &\sim Inv-\chi^2(\nu_0,\sigma_0^2)\\
+\mu|\sigma^2 &\sim N(\mu_0,\sigma^2/\kappa_0)
+\end{align}
+
+Gelman et al. (2013) label the overall prior specified by these assumptions as a $N-Inv-\chi^2(\mu_0,\sigma_0^2\kappa_0;\nu_0,\sigma_0^2)$ distribution. If we then multiply together the likelihood and the prior we obtain the numerator of Bayes' rule, which dictates the form of the posterior. We won't go into the maths here, but it is possible because of our construction of the prior to derive the parameters (see \cite{gelman2013bayesian}) of the posterior $N-Inv-\chi^2$ distribution.
+
 Discuss the conjugate vs semi-conjugate prior structure on pages 78-82 of Gelman.
 
-\section{Dirichlet-multinomial example}
+\section{Table of conjugate priors}\label{sec:Conjugate_tableConjugatePriors}
+
 \section{The lessons from conjugate analysis}
 No need to do any calculation. Just look up the value in a table!
 Include table with all of the conjugate prior-likelihood combinations.
