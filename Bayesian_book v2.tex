@@ -1566,7 +1566,7 @@ The bottom line is that one should not use the MAP estimator unless you have a \
 \end{figure}
 
 
-\section{Prediction using predictive distributions}
+\section{Prediction using predictive distributions}\label{sec:Posterior_predictiveDistributions}
 Parameters of a statistical distribution are typically only of interest insomuch as they influence \textit{real variables}, for which we collected data in the first place. Be it income levels, disease cases, or electoral votes; the data is what drove us to conduct a statistical analysis. As such, it is frequently useful to compare models (which may have very different statistical formulations) using this common currency, of \textit{data}.
 
 Before we have run our model, we only have our prior views of the likely values of parameters. It is often informative to convert from the currency of \textit{parameters}, to that of \textit{data}, in order to evaluate the tangible implications of the chosen priors\footnote{See chapter \ref{chap:Prior} for a much more in-detail discussion.}.
@@ -4904,16 +4904,79 @@ The reader should now be familiar with the following concepts:
 \end{enumerate}
 
 
-\chapter{Evaluation of model fit}\label{chap:ModelFit}
-\section{The classical methodology}
+\chapter{Evaluation of model fit and hypothesis testing}\label{chap:ModelFit}
+\section{Chapter mission statement}
+At the end of this chapter the reader will understand the powerful methods that a Bayesian has at their disposal, which allow detailed evaluation of the performance of a given model, as well as comparison between models. We will also discuss how to go about testing hypotheses about your model in the Bayesian framework.
+
+\section{Chapter goals}
+Models are interpretations of data, which are necessarily reduced versions of the real world. However, a good model can, despite its simplicity, suggest extremely-valuable strategies for navigating the real world. Which begs us to ask, 'What is a \textit{good} model?' Such a model should incorporate just enough realism so that we trust its outputs, whilst being sufficiently parsimonious to allow interpretation and extrapolation. However, in practice how can we determine whether our model meets these criteria? 
+
+The Bayesian testing framework which allows us to test a model is known as \textit{posterior predictive checks} (PPCs). The idea behind this umbrella of methods is simple. You should be able to use your fitted model to generate fake data that looks indistinguishable from the real thing. In practice, this is not usually fully-attainable, so it is desirable to choose a model that sufficiently captures the variation in the data in which you are most interested. Choice of the particular features to use for evaluation and comparison hence becomes the most important part of Bayesian model checking. The beauty of PPCs is that they allow us to understand in what ways a model is good, and in what ways it is deficient. Examining models through this multidimensional lens is both more rewarding than widely used evaluation criteria, and easier to understand.
+
+However, there will inevitably be times when we are pushed, either due to policy-makers or an innate desire for simplicity, to choose between two models which perform similarly on PPCs. Recently, there has been a movement to introduce uni-dimensional model evaluation criteria that more closely follow the Bayesian spirit than traditional AICs or DICs. Towards the end of this chapter we shall introduce these relatively new additions to the modeller's arsenal, and discuss their use.
+
+We will also, in passing, discuss the ways in which Bayesians can go about testing hypotheses about a given model, or data, and we shall see that this is much more fluid, and less arcane than the classical equivalents. We'll also see that there is no need for the binary null hypothesis test that we all learned at school, since Bayesian posteriors adequately capture all we need to know about the question of interest.
+
 \section{Posterior predictive checks}
-\subsection{Graphical examples}
-\subsection{Bayesian p values}
-\subsection{A number of examples}
-\section{Deviance, WAIC and LOO}
+\subsection{Recap - posterior predictive distributions}
+If we fit a Bayesian model to data, $\boldsymbol{x}$, as a goal we seek to obtain the posterior distribution: $p(\theta|\boldsymbol{x})$. We can then use this distribution to generate the posterior predictive distribution, which is a probability distribution over possible values of a future datum, $x'$ (see section \ref{sec:Posterior_predictiveDistributions}):
+
+\begin{equation}\label{eq:Evaluation_posteriorPredictiveDistribution}
+\begin{align}
+p(x'|\boldsymbol{x}) &= \int\limits_{\theta\in\Theta} p(x',\theta|\boldsymbol{x}) \mathrm{d}\theta\\
+&= \int\limits_{\theta\in\Theta} p(x'|\theta,\boldsymbol{x}) p(\theta|\boldsymbol{x}) \mathrm{d}\theta\\
+&= \int\limits_{\theta\in\Theta} p(x'|\theta) p(\theta|\boldsymbol{x}) \mathrm{d}\theta
+\end{align}
+\end{equation}
+
+where we have assumed that $\theta$ is continuous, and potentially multi-dimensional. To obtain the second line of (\ref{eq:Evaluation_posteriorPredictiveDistribution}) from the first we have used the law of conditional probability. Finally, to obtain the third line from the second, we have assumed that once we know $\theta$, the past data does not convey any further information, so there is no need to condition on it. The first part of (\ref{eq:Evaluation_posteriorPredictiveDistribution}) within the integral sign is the likelihood of new data, $p(x'|\theta)$, and the second is the posterior distribution, $p(\theta|\boldsymbol{x})$. 
+
+To make concrete what we mean by a posterior predictive density, let's consider an example. Suppose that we are working on a project to determine the average birth weight of newly-born children in a tribe in the Amazon. We suppose that since a number of factors, such as maternal diet, and various genetic features result in the ultimate birth weight that we witness, that a normal likelihood model may be appropriate (see sections \ref{sec:Probability_CLT} and \ref{sec:Distributions_normal}): $W_i\sim N(\mu,\sigma^2)$. Further let us assume that from previous studies on other tribes, that there is similar variability of birth weight across different within any given tribe, so that $\sigma^2$ is known (this is a tad unrealistic, and we would prefer that we consider this parameter as uncertain and derive a posterior for it). 
+
+Next we assume that we would like to use a conjugate prior, if possible, for $\mu$; the parameter over which we want to infer. So, we look up in the table in section \ref{sec:Conjugate_tableConjugatePriors}, and find that for a known variance, a normal prior is conjugate to a normal likelihood. Believing that this prior will be adequate to express our pre-experimental uncertainty, we combine our data vector $\boldsymbol{W}$ with our prior parameters, in accordance with the rules in the table to yield the posterior, as well as using the table to carry out the calculation shown in (\ref{eq:Evaluation_posteriorPredictiveDistribution}), to yield the posterior predictive distribution (see figure \ref{fig:Evaluation_normalPosteriorPredictiveWeight}).
+
+In figure \ref{fig:Evaluation_normalPosteriorPredictiveWeight} we can see the effects of increasing $\sigma^2$; a slightly less peaked likelihood, resulting in less certainty in the posterior (as well as less weight given to the likelihood in determining the peak's location), and a significantly wider posterior predictive density. Intuitively, this is because the posterior predictive distribution must encompass uncertainty in the parameter, $\mu$, as well as sampling variability, $\sigma^2$. 
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Evaluation_normalPosteriorPredictiveWeight.pdf}}
+\caption{Prior, likelihood, posterior and posterior predictive distributions for the birth weight example. Blue corresponds to a lower sampling variability ($\sigma^2$) than the orange case. Note the $W$ label for the horizontal axis for the posterior predictive distribution.}\label{fig:Evaluation_normalPosteriorPredictiveWeight}
+\end{figure}
+
+\subsection{Graphical PPCs and Bayesian p values}
+Now that we understand the methodology for calculating the posterior predictive distributions, we are in a position to discuss posterior predictive checks (PPCs). Firstly, we need to discuss what is meant by a \textit{good} model. It does not make sense to talk about an unconditionally \textit{good} model. Since our statistical model is always a simplification of reality, we should not expect it to necessarily reproduce real life exactly. Typically, models that we build are usually good at reproducing some aspects of the real world, but worse at others.
+
+However, usually when we build a model we plan to use it for a particular purpose. We thus must ensure that our model is capable of handling the degree of variation in data which is pertinent to this specific purpose. A way to tackle this problem is to generate \textit{fake} data samples from our posterior predictive distribution, then see how well this variation is captured within the simulated data sets. These comparative tests are known as \textit{posterior predictive checks}.
+
+Graphical visualisations are a great way to test the performance of your model. By visually comparing the simulated data to the actual, we are often able to quickly see whether our model is any good. The choice of visualisations to make tests our creativity, and familiarity with the problem at hand, but definitely gets easier the more experienced we get with using PPCs. Usually graphical PPCs are an important first step to testing a model's performance, but may become cumbersome if you want to carry out a number of such tests across a large number of replicates. As such, a numerical measure of a model's coherence with the data is often used, and has come to be known as a \textit{Bayesian p value}.
+
+Both of these concepts are better explained through application, and we have thought up the following examples which should convey their use, as well as their usefulness. It is not possible to be exhaustive here, since the range of tests that could be used are essentially infinite, but the following should provide a flavour of the different types of tests we can apply in practice.
+
+\subsubsection{Amazon staff hiring}
+
+Consider we work as part of Amazon's logistics team, where we are tasked with building a statistical model to describe the weekly UK order volume. Amazon have helpfully been collecting data on the numbers of orders by week that need to be delivered within the UK over the past year (see the top panel of figure ). We might then ask, what eventualities would we want our model to be able to handle? 
+
+Suppose our model is to be used for planning the number of staff to hire in UK warehouses in a given year. In this case for a given year, we might want to hire sufficient staff numbers to be able to handle those weeks with the highest order volumes with a probability greater than 20\%. However, we are constrained by costs, and so do not want this probability to exceed 80\%, since then management views this as inefficient allocation of labour. So we firstly fit a model to the data, generating a posterior distribution. We can then sample from the posterior predictive distribution (and statistical software) to simulate fake data sets. If we are planning staff numbers purely on the basis of the most extreme data samples from the model, then we might hope that our model for order volume is capable of generating observations at least as extreme as the highest order volume from last year with a probability greater than 20\%, but less than 80\%.
+
+In figure \ref{fig:Evaluation_amazonExample} we show the actual order data from last year (in blue), along with 15 fake yearly samples (green and red) that we have generated from the posterior predictive distribution of our model. We colour those sets in green that produce at least a single observation as extreme as the highest order volume from the actual data, with those in red if they fail to do so. 
+
+In this case we notice that out of the $\frac{3}{15}\approx 33\%$ of the fake data sets we have generated from our model are able to generate data as extreme as the highest order volume from the actual data. Since this lies between 20\% and 80\%, we are able to conclude that for this particular application - planning staff allocation - we are reasonably confident in our model's capability.
+
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Evaluation_amazonExample.pdf}}
+\caption{The real weekly order volume for Amazon in the UK over the past year (blue), and 15 simulated yearly data sets from the posterior predictive distribution of our model. The blue dotted line in each case indicates the value of the highest weekly order volume from the real data. If the sample has at least a single data point more extreme than this value, then the graph is shown in green, and red otherwise.}\label{fig:Evaluation_amazonExample}
+\end{figure}
+
+
+\section{Univariate generic model evaluation criteria: AIC, Deviance, WAIC and LOO}
 See the two papers by Gelman on this subject. They are on my iPad. Suggests that deviance isn't a good way of evaluating model fit.
 \section{Sensitivity analysis}
 
+\section{Hypothesis testing in the Bayesian world}
 
 \chapter{Objective Bayesian analysis}\label{chap:ObjectiveBayes}
 \section{The illusion of uniformed uniform prior}
@@ -4942,6 +5005,10 @@ Include subsection on effective sample size.
 \section{Practical computational inference}
 \subsection{The importance of pre-simulation MLE}
 \subsection{Fake data simulation}
+Check coding ok.
+
+\section{Posterior predictive checks}
+Check model is ok.
 
 \chapter{Gibbs sampling}
 \section{The intuition behind the Gibbs algorithm}
