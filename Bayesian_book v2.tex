@@ -3422,7 +3422,7 @@ It is rare in life to come up against one-off events, and we typically have data
 
 \boxed{Video:} Need to make an intuitive video here. One exists but is overly mathematical.
 
-\subsection{Binomial}
+\subsection{Binomial}\label{sec:Distributions_binomial}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -4975,6 +4975,21 @@ As we started here, it is usually best to start with graphical checks of a model
 \end{figure}
 
 \subsubsection{Mosquito lifetime}
+Mosquito lifetime is an important determinant of malaria prevalence, and so knowledge about this characteristic is much sought after. One of the ways of determining the lifetime of mosquitoes in the wild is to use so-called Mark-Release-Recapture (MRR) experiments. The idea behind these is that you capture a load of wild mosquitoes, you mark them with a fluorescent dye, and then release them. By then capturing batches of mosquitoes over time, since the release, and counting the number of marked mosquitoes you recapture, this provides a way of gauging mortality (plus migration technically). 
+
+Suppose that you have the data series shown in figure , which illustrates the number of recaptured marked mosquitoes since release (on day 0). Since you know the number of mosquitoes you released, then you suppose that a binomial regression model (where time is the independent variable) may be appropriate, where you allow mosquito death to suppress the number of marked mosquitoes you expect to capture over time. This model importantly assumes that individual recapture events are independent of one another (see section \ref{sec:Distributions_binomial}). After setting priors on the relevant distribution parameters, you go ahead and infer the posterior, and hence generate samples from the posterior predictive distribution (see top left of figure \ref{fig:Evaluation_mosquitoPPC}). It is evident from this graph that the binomial sampling does not sufficiently capture the variation seen in the data at all time points (the red real data points frequently lie outside of the simulated blue lines). 
+
+A reason for this discrepancy could be that we assumed that captures of the mosquitoes were independent. In practice we might expect that mosquitoes might all respond similarly to weather conditions - making them all more or less likely to be captured at a given point in time. Similarly, if they exist in swarms we might expect them to be easier to catch en mass, again violating the independence assumption. In these circumstances a better mode to use might be to assume a beta-binomial sampling model, since this allows for non-independent events, which we find is better able to deal with the type of over-dispersion seen in the data (see top right panel of figure \ref{fig:Evaluation_mosquitoPPC}). We would hence be more confident in making any inferences about mortality or longevity from the beta-binomial model, due to the fact it is more robustly able to reproduce the variability seen in the data.
+
+Another way of displaying this data is to look at the residuals over time. In figure \ref{fig:Evaluation_mosquitoPPC} we see that both models tend to under-predict the number of mosquitoes recaptured on the first few days. This could be because immediately after release the mosquitoes behave differently - perhaps they disperse less during this time, due to the energy expended during their capture - meaning they are easier to recapture. A future iteration of this model might directly model this behaviour by introducing a parameter which increases the recapture probability \textit{only} for the first few days following release.
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Evaluation_mosquitoPPC.pdf}}
+\caption{Top row: The real recaptures of marked mosquitoes (red dots), vs simulations from the posterior predictive distribution, across both binomial, and beta-binomial models. Bottom row: Residual of simulated data vs actual for both model types, over time.}\label{fig:Evaluation_mosquitoPPC}
+\end{figure}
+
 
 \subsubsection{Snow days}
 Suppose we work for the New York City Council, that is responsible for planning road gritting during the winter. As such, we wish to build a generative model capable of reproducing realistic sequences of days in which the average temperature is below freezing (and hence the roads need gritting), and those where it is above.
@@ -4991,6 +5006,20 @@ We see here that the model is \textit{not} capable of reproducing this aspect of
 {\includegraphics{Evaluation_snowDays.pdf}}
 \caption{The real data set (blue), and 15 fake data samples from the Bernoulii model. In each case the average number of days in freezing spells, that occur in the data. If the fake data has an average freezing spell length that is greater than the real data, then we colour the graph green, and red otherwise.}\label{fig:Evaluation_snowDays}
 \end{figure}
+
+\subsubsection{Word distributions within topics}
+Google is interested in probabilistically decomposing corpuses into a set of topics, so that we are able to represent each document as being composed of different proportions of a subset of those topics (see \cite{mimno2011bayesian}). The most popular way to do this is via a method known as Latent Dirichlet Allocation (LDA) \cite{blei2003latent}. Whilst we do not intend to go into the detail of this method, we shall by discussing its broad brush strokes we can still use this example to illustrate a PPC. The assumptions of this model are that each word in a document is probabilistically assigned to a topic, with the words within a particular topic as being regarded as being drawn from the same multinomial distribution (see section \ref{sec:Distributions_multinomial}); independent of the particular document in question \cite{blei2003latent}. 
+
+This independence assumption has been shown to be an important fulcrum around which PPCs can be constructed \cite{mimno2011bayesian}. If we fit the LDA model and look at the word frequencies within a particular topic across different documents, then we should be able to determine whether or not this assumption holds. As an example, imagine we have 7 different documents, and we are interested in the frequency of the word \textit{kitchen}, which has been determined to belong to a topic concerning descriptions of people's houses. In LDA we don't assume that the percentage of the topics within each document is the same, so suppose that there is some variation in this factor throughout the different documents. 
+
+We can use the posterior distributions for the various parameters involved to generate samples of the word \textit{kitchen} across the different documents (see figure \ref{fig:Evaluation_wordPPC}). We see that for some of the documents the frequency of the word lies outside of the bounds of the posterior fake data samples (notably documents 2, 5, 6 and 7), which leads us to question this assumption of independence. One way to adjust the model to allow for this wider variance, is to allow for extra document level multinomial variance using Dirichlet compound distributions \cite{mimno2011bayesian}, or to add extra covariates that might explain this systematic variation, for example time, document type, or perspective \cite{blei2003latent}.
+
+\begin{figure}
+\centering
+\scalebox{0.8} 
+{\includegraphics{Evaluation_wordPPC.pdf}}
+\caption{Frequencies of the word \textit{kitchen} across 7 different documents, with simulations from the posterior predictive distributions for the LDA model shown as box and whisker charts.}\label{fig:Evaluation_wordPPC}
+\end{figure} 
 
 \subsubsection{Bacterial infection}
 Suppose you find yourself working in a lab at the CDC, and are trying to understand why some of your samples tend to become contaminated with a particular bacteria. Firstly, you graph the infected status of your 16 samples by sample number (see top left panel of figure \ref{fig:Evaluation_bacteriaPPC}). You decide to use an independent Bernoulli likelihood for the infectious status of each sample; supposing that the source of the infection is airborne, meaning that all samples are equally likely to become contaminated. You then proceed to generate some fake data sets from the posterior predictive distribution of the fitted model. Deciding that an important aspect of the data to recreate would be the number of infected samples, you decide to evaluate whether the recreated samples have a number of infected samples greater than the real.
