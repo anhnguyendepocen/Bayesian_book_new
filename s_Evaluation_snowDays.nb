@@ -1,0 +1,884 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     35256,        875]
+NotebookOptionsPosition[     34893,        858]
+NotebookOutlinePosition[     35240,        873]
+CellTagsIndexPosition[     35197,        870]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ClearAll", "[", "\"\<Global`*\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"p", "=", 
+   RowBox[{"DiscreteMarkovProcess", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"0.85", ",", "0.15"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"0.3", ",", "0.7"}], "}"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"n", " ", "=", " ", "30"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"data", "=", " ", 
+   RowBox[{
+    RowBox[{"Flatten", "[", " ", 
+     RowBox[{
+      RowBox[{"Normal", "@", 
+       RowBox[{"RandomFunction", "[", 
+        RowBox[{"p", ",", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", "n"}], "}"}]}], "]"}]}], ",", "1"}], "]"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"All", ",", "2"}], "]"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fPlotReal", "[", "data_", "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"yTicks", "=", " ", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"2", ",", "\"\<warm\>\""}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "\"\<freeze\>\""}], "}"}]}], "}"}]}], ",", 
+      RowBox[{"realMeanWet", "=", " ", 
+       RowBox[{"N", "@", 
+        RowBox[{"Mean", "@", 
+         RowBox[{"(", 
+          RowBox[{"Length", "/@", 
+           RowBox[{"Cases", "[", 
+            RowBox[{
+             RowBox[{"Split", "@", "data"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", "__"}], "}"}]}], "]"}]}], ")"}]}]}]}]}], 
+     "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"ListPlot", "[", 
+     RowBox[{"data", ",", 
+      RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+      RowBox[{"Frame", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"True", ",", "True", ",", "False", ",", "False"}], "}"}]}], 
+      ",", 
+      RowBox[{"FrameLabel", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"\"\<day\>\"", ",", "\"\<temperature\>\""}], "}"}]}], ",", 
+      RowBox[{"BaseStyle", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"FontSize", "\[Rule]", "16"}], "}"}]}], ",", 
+      RowBox[{"FrameTicks", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"True", ",", "yTicks"}], "}"}]}], ",", 
+      RowBox[{"PlotRange", "\[Rule]", 
+       RowBox[{"{", 
+        RowBox[{"Full", ",", 
+         RowBox[{"{", 
+          RowBox[{"0.75", ",", "2.1"}], "}"}]}], "}"}]}], ",", 
+      RowBox[{"PlotLabel", "\[Rule]", 
+       RowBox[{"StringJoin", "[", 
+        RowBox[{
+         RowBox[{"ToString", "@", 
+          RowBox[{"PaddedForm", "[", 
+           RowBox[{"realMeanWet", ",", 
+            RowBox[{"{", 
+             RowBox[{"2", ",", "1"}], "}"}]}], "]"}]}], ",", 
+         "\"\< days\>\""}], "]"}]}]}], "]"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fDataPlotter", "[", 
+   RowBox[{"data_", ",", "n_Integer"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"yTicks", "=", " ", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"2", ",", "\"\<warm\>\""}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"1", ",", "\"\<freeze\>\""}], "}"}]}], "}"}]}], ",", 
+      RowBox[{"realMeanWet", "=", " ", 
+       RowBox[{"N", "@", 
+        RowBox[{"Mean", "@", 
+         RowBox[{"(", 
+          RowBox[{"Length", "/@", 
+           RowBox[{"Cases", "[", 
+            RowBox[{
+             RowBox[{"Split", "@", "data"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", "__"}], "}"}]}], "]"}]}], ")"}]}]}]}], ",", 
+      RowBox[{"dataFake", " ", "=", " ", 
+       RowBox[{"1", "+", 
+        RowBox[{"RandomVariate", "[", 
+         RowBox[{
+          RowBox[{"BernoulliDistribution", "[", 
+           RowBox[{
+            RowBox[{"Total", "@", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"#", "\[Equal]", "2"}], ",", "1", ",", "0"}], "]"}],
+                 "&"}], "/@", "data"}], ")"}]}], "/", "n"}], "]"}], ",", 
+          RowBox[{"{", "n", "}"}]}], "]"}]}]}], ",", "numFake", ",", 
+      "aColour"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"numFake", " ", "=", " ", 
+      RowBox[{"N", "@", 
+       RowBox[{"Mean", "@", 
+        RowBox[{"(", 
+         RowBox[{"Length", "/@", 
+          RowBox[{"Cases", "[", 
+           RowBox[{
+            RowBox[{"Split", "@", "dataFake"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "__"}], "}"}]}], "]"}]}], ")"}]}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"aColour", " ", "=", " ", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"numFake", "<", "realMeanWet"}], ",", "Red", ",", "Green"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"ListPlot", "[", 
+      RowBox[{"dataFake", ",", 
+       RowBox[{"PlotStyle", "\[Rule]", "aColour"}], ",", 
+       RowBox[{"Frame", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "True", ",", "False", ",", "False"}], "}"}]}], 
+       ",", 
+       RowBox[{"FrameLabel", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"\"\<day\>\"", ",", "\"\<temperature\>\""}], "}"}]}], ",", 
+       RowBox[{"BaseStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"FontSize", "\[Rule]", "16"}], "}"}]}], ",", 
+       RowBox[{"FrameTicks", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "yTicks"}], "}"}]}], ",", 
+       RowBox[{"PlotRange", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Full", ",", 
+          RowBox[{"{", 
+           RowBox[{"0.75", ",", "2.1"}], "}"}]}], "}"}]}], ",", 
+       RowBox[{"PlotLabel", "\[Rule]", 
+        RowBox[{"StringJoin", "[", 
+         RowBox[{
+          RowBox[{"ToString", "@", 
+           RowBox[{"PaddedForm", "[", 
+            RowBox[{"numFake", ",", 
+             RowBox[{"{", 
+              RowBox[{"2", ",", "1"}], "}"}]}], "]"}]}], ",", 
+          "\"\< days\>\""}], "]"}]}]}], "]"}]}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"gFinal", "=", 
+  RowBox[{"Show", "[", 
+   RowBox[{
+    RowBox[{"GraphicsGrid", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"fPlotReal", "[", "data", "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}], ",", 
+         RowBox[{"fDataPlotter", "[", 
+          RowBox[{"data", ",", "n"}], "]"}]}], "}"}]}], "}"}], "]"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "1500"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<Evaluation_snowDays.pdf\>\"", ",", "gFinal"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.652776035330311*^9, 3.652776035459318*^9}, {
+  3.6527760756446166`*^9, 3.6527760763426566`*^9}, {3.6527762158336353`*^9, 
+  3.6527762228340354`*^9}, {3.6527762911549435`*^9, 3.6527763503393283`*^9}, {
+  3.6527764581434946`*^9, 3.6527764854010534`*^9}, {3.652776521319108*^9, 
+  3.65277653709701*^9}, {3.65277656856781*^9, 3.6527766175456114`*^9}, {
+  3.6527769789042797`*^9, 3.652777003418682*^9}, {3.6527778489220424`*^9, 
+  3.6527778766806297`*^9}, {3.6527779253614144`*^9, 3.6527779353769875`*^9}, {
+  3.652778132725275*^9, 3.6527781509523177`*^9}, {3.652778184933261*^9, 
+  3.652778278609619*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[0, 0, 1], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxTTMoPSmViYGCQB2IQDQEf7FFpBgdUmsMBVV4AjS+Cpl4CjS+Dpl4Bja+E
+xldB46uh8TXQ+FpofB00vh6aewzQ+IZofCM0vjEa3wSNb4rGN0Pjm6PxLdD4
+lmh8KzS+NRrfBkrD/GeLxrdD49vD+QACySVN
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 4.7 days\"", TraditionalForm],
+       PlotRange->{{0., 31.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {194.4, -120.14580741297955`}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 222.49223594996212`}], 
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxdi8sKQEAUQCcrSwsLCwlJkuT9fn2DT1DWft0nII9ypqZ7z5wz1rLNqySE
+MM57zfvs47NM//m+y2AFnQqvgXX0JthG74Bd9B68Dw7Qh+AIfQxO0KfwGXwO
+X4BLcIX/NXwD34I79D14+PoDTAsmaw==
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.1 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {583.2, -120.14580741297955`}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 222.49223594996212`}], 
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxTTMoPSmViYGCQA2IQDQEf7KEMB+w0hwOqOgE0eRE0vgQaXwaNr4BmnhKa
+vAoaXw2Nr4HG10Lj66CZr4cmb4DGN0RTb4Qmb4zGN0Hjm6LpN0OTN0eTt0CT
+t0STt0KTt0bj26DxbdH028H5AHvsHvM=
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.0 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {972., -120.14580741297955`}, 
+      ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}], InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxdzMsKQEAYhuHJytLCwkJCkiQ5nw9zDS5BWbt1l4CUmndq+nvm++b39nM7
+NCGE89x3fuda1Smkal2q7wZswhZsY58L++gHyEM4Qj9GnsApnME59hVwiX4F
+1+g3yFu4g3v8H5CP8IT+DC+/b2nrJms=
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.4 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {1360.8000000000002`, -120.14580741297955`},
+       ImageScaled[{0.5, 0.5}], {359.9999999999998, 222.49223594996212`}]}, {
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxdzcsKQEAUxvHJytLCwkJCkiS53y/zDB5BWXt1j4CUmv/U6evXd6bj7ed2
+aEII55k3v3etagqppi7V3kBvwhZs478L+9gP4BD7ERxjP4FTOINzuIBLuML9
+Gn0Dt3AH9/AAj7g3oZ/RL39/A4TZHvM=
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.0 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {194.4, -360.43742223893867`}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 222.49223594996215`}], 
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxTTMoPSmViYGCQA2IQDQEf7KEMB+w0hwOqOgE0eRE0vgQaXwZNvwIaXwmN
+r4KmXw2Nr4GmXgtNXgdNXg+Nb4DGN0TTb4TGN0bjm6DxTdH4Zmjmm6PxLdDU
+W6LJW6HJW6PJ26DJ26Lx7eDqAR/DIq8=
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.7 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {583.2, -360.43742223893867`}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 222.49223594996215`}], 
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxdzssKQEAUxvHJytLCwkJCkiS532/P4BGUtVf3CMil/KemM7/znTpjLdu8
+SkII47xXvc8+Po/pX9++jL6CXIU1zOuwCduwA7uwB/twgP+EyCPkMZxgPkWe
+Ic+RF8hLuIJruIFbuMO+Hh4+HyAHINE=
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.3 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {972., -360.43742223893867`}, 
+      ImageScaled[{0.5, 0.5}], {360., 222.49223594996215`}], InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxtzEsKQFAUgOGbkaGBgYGEJEnyfr/WYAnK2NYtAZHy55aur/+cay3bvEpC
+COP8rvs++/j8TP+3DCvTd09F12Ad8ya6je6gu7AH+9gP4BDzEXqMnsApnME5
+3ivQS7jCfA03cIv9Dr2Hh9cHFNUirw==
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.7 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {1360.8000000000002`, -360.43742223893867`},
+       ImageScaled[{0.5, 0.5}], {359.9999999999998, 222.49223594996215`}]}, {
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxTTMoPSmViYGCQA2IQDQEf7KEMB1QaJs6BJi6AxhdBUy+BJi+DxldAU6+E
+Jq+CJq+GJq+BxtdC4+ug6ddD4xug8Q3R9BuhyRujyZugyZuiyZuh8c3R+BZo
+fEs086zQ+NZo6m3Q5G3R+HZw9QDVBCKv
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.3 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {194.4, -600.7290370648977}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 222.49223594996215`}], 
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxdi8sKQFAURW9GhgYGBhKSJMn7/bjf4BOUsV/3CUipu06dTuusvb393A5N
+COE8+95vrlW9QqqsS/VvgE2whb4N74J95AP4ED4Cx+AE/RQ+g8/BBfIlfAVf
+wzfgFvkO3IMH9Ef4CX4GL3/+Bi5vJI0=
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.7 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {583.2, -600.7290370648977}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 222.49223594996215`}], 
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxdzcsKQEAYhuHJytLCwkJCkiQ5nw9zDS5BWbt1l4CUmndq+nv6vvnH28/t
+0IQQznPf+Z1rVaeQqnXYkGrPhC3YxnsX9uEADuEI+2PkCfIUztDP4QIu4Qqu
+4QZu8X+HvEc+IB/hCf0ZXn7f/wcoSQ==
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 4.3 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {972., -600.7290370648977}, 
+      ImageScaled[{0.5, 0.5}], {360., 222.49223594996215`}], InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxTTMoPSmViYGCQA2IQDQEf7KEMB+w0hwOqOgE0eRE0vgQaXwaNr4BmnhIa
+XwWNr4amXwONr4WmXgdNXg+Nb4DGN0TTb4Qmb4zGN0Hjm6LxzdDMM0eTt0Dj
+W6LxrdD0W6PJ26DxbdHU28HlAWj6HvM=
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 3.0 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {1360.8000000000002`, -600.7290370648977},
+       ImageScaled[{0.5, 0.5}], {359.9999999999998, 222.49223594996215`}]}, {
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[0, 1, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxdzssKQFAQxvGTlaWFhYWEJElyv1/OM3gEZe3VPQJS6vxPTV+/5sw03n5u
+hyaEcJ5683vXqqaQauqwIdX/JmzBNuZd2IcDOMS+CP0YTuAUzrAvhwu4hCu4
+hhu4hTu4x30DPMIT5md4+X0DUA0maw==
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 5.0 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {194.4, -841.0206518908569}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 222.49223594996204`}], 
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxTTMoPSmViYGCQA2IQDQEf7KEMB+w0BxpfAI0v4oBqjgQaXwZNvQIaXwlN
+vQoaXw1NvQaavBYaXweNr4fGN0DjG6LxjdDsM0bjm6CpN0Xjm6GpN0fjW6Cp
+t0STt0KTt0aTt0Hj26Lx7eB8AA6wI54=
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 3.0 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {583.2, -841.0206518908569}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 222.49223594996204`}], 
+     InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxdzUsKQFAYhuGTkaGBgYGEJElyv1/OGixBGdu6JSClzqv09/R+4e3ndmhC
+COd53/s916peIdWrw4ZU9ya6BdvYu+g+HGAfwhEcwwmcwhn+l6MXcIl9hV6j
+N+gt3GHfow/wCE/wjO8tf78BIvkoSQ==
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 3.5 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {972., -841.0206518908569}, 
+      ImageScaled[{0.5, 0.5}], {360., 222.49223594996204`}], InsetBox[
+      GraphicsBox[{{}, {{}, 
+         {RGBColor[1, 0, 0], PointSize[0.019444444444444445`], 
+          AbsoluteThickness[1.6], 
+          StyleBox[PointBox[CompressedData["
+1:eJxdzMsKQEAARuHJytLCwkJCkiS53y/zDB5BWXt1j4CUmjM1TV//abz93A5N
+COE8932/c63qK6RqHTak2pmwhd6GXfQ+HKAP4Qh9jD3BnsIZnMMFXOL/Cq7R
+N3CLvsPeYx+wj9gneIaX3zfjjiV8
+            "]],
+           FontSize->16]}, {}}, {}},
+       AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+       Axes->{True, True},
+       AxesLabel->{None, None},
+       AxesOrigin->{0, 0.75675},
+       BaseStyle->{FontSize -> 16},
+       DisplayFunction->Identity,
+       Frame->{{True, False}, {True, False}},
+       FrameLabel->{{
+          FormBox["\"temperature\"", TraditionalForm], None}, {
+          FormBox["\"day\"", TraditionalForm], None}},
+       FrameTicks->{{{{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}, {{2, 
+            FormBox["\"warm\"", TraditionalForm]}, {1, 
+            FormBox["\"freeze\"", TraditionalForm]}}}, {True, True}},
+       GridLines->{None, None},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{},
+       PlotLabel->FormBox["\" 2.6 days\"", TraditionalForm],
+       PlotRange->{{0., 30.}, {0.75, 2.1}},
+       PlotRangeClipping->True,
+       PlotRangePadding->{{
+          Scaled[0.02], 
+          Scaled[0.02]}, {0, 0}},
+       Ticks->{Automatic, Automatic}], {1360.8000000000002`, -841.0206518908569},
+       ImageScaled[{0.5, 0.5}], {359.9999999999998, 222.49223594996204`}]}}, \
+{}},
+  ContentSelectable->True,
+  ImageSize->1500,
+  PlotRangePadding->{6, 5}]], "Output",
+ CellChangeTimes->{
+  3.6527782400514135`*^9, {3.652778270724168*^9, 3.652778285005985*^9}}],
+
+Cell[BoxData["\<\"Evaluation_snowDays.pdf\"\>"], "Output",
+ CellChangeTimes->{
+  3.6527782400514135`*^9, {3.652778270724168*^9, 3.6527782858590336`*^9}}]
+}, Open  ]]
+},
+WindowSize->{1366, 686},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (September 9, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 8837, 233, 432, "Input"],
+Cell[9420, 257, 25301, 594, 942, "Output"],
+Cell[34724, 853, 153, 2, 31, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

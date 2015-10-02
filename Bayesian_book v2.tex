@@ -4957,12 +4957,15 @@ Both of these concepts are better explained through application, and we have tho
 
 Consider we work as part of Amazon's logistics team, where we are tasked with building a statistical model to describe the weekly UK order volume. Amazon have helpfully been collecting data on the numbers of orders by week that need to be delivered within the UK over the past year (see the top panel of figure ). We might then ask, what eventualities would we want our model to be able to handle? 
 
-Suppose our model is to be used for planning the number of staff to hire in UK warehouses in a given year. In this case for a given year, we might want to hire sufficient staff numbers to be able to handle those weeks with the highest order volumes with a probability greater than 20\%. However, we are constrained by costs, and so do not want this probability to exceed 80\%, since then management views this as inefficient allocation of labour. So we firstly fit a model to the data, generating a posterior distribution. We can then sample from the posterior predictive distribution (and statistical software) to simulate fake data sets. If we are planning staff numbers purely on the basis of the most extreme data samples from the model, then we might hope that our model for order volume is capable of generating observations at least as extreme as the highest order volume from last year with a probability greater than 20\%, but less than 80\%.
+Suppose our model is to be used for planning the number of staff to hire in UK warehouses in a given year. In this case for a given year, we might want to hire sufficient staff numbers to be able to handle those weeks with the highest order volumes with a probability greater than 20\%. However, we are constrained by costs, and so do not want this probability to exceed 80\%, since then management views this as inefficient allocation of labour. So we firstly fit a model to the data, generating a posterior distribution. We can then sample from the posterior predictive distribution (and statistical software) to simulate fake data sets. If we are planning staff numbers purely on the basis of the most extreme data samples from the model, then we might hope that our model for order volume is capable of generating observations at least as extreme as the maximum value from last year with a probability greater than 20\%, but less than 80\%.
 
 In figure \ref{fig:Evaluation_amazonExample} we show the actual order data from last year (in blue), along with 15 fake yearly samples (green and red) that we have generated from the posterior predictive distribution of our model. We colour those sets in green that produce at least a single observation as extreme as the highest order volume from the actual data, with those in red if they fail to do so. 
 
 In this case we notice that out of the $\frac{3}{15}\approx 33\%$ of the fake data sets we have generated from our model are able to generate data as extreme as the highest order volume from the actual data. Since this lies between 20\% and 80\%, we are able to conclude that for this particular application - planning staff allocation - we are reasonably confident in our model's capability.
 
+This value we have calculated, as the proportion of cases where our fake data sample can recreate the maximum seen in the actual data set is referred to as a \textit{Bayesian p value} by analogy with classic hypothesis tests. However, we should take care to not interpret it in the same manner. By contrast with classical p values, we need to be aware of both low, and high values of this statistic. In our example, if $p<20\%$, then the model is not generating sufficiently extreme observations, and is hence is restrictive. Whereas if $p>80\%$ then the model is too frequently generating these extremes, and thus is overly variable.
+
+As we started here, it is usually best to start with graphical checks of a model's performance, then move to p values. The danger of just starting with a numerical measure is that you won't fully understand the source of your model's problems, and may lead to erroneous conclusions.
 
 \begin{figure}
 \centering
@@ -4970,6 +4973,56 @@ In this case we notice that out of the $\frac{3}{15}\approx 33\%$ of the fake da
 {\includegraphics{Evaluation_amazonExample.pdf}}
 \caption{The real weekly order volume for Amazon in the UK over the past year (blue), and 15 simulated yearly data sets from the posterior predictive distribution of our model. The blue dotted line in each case indicates the value of the highest weekly order volume from the real data. If the sample has at least a single data point more extreme than this value, then the graph is shown in green, and red otherwise.}\label{fig:Evaluation_amazonExample}
 \end{figure}
+
+\subsubsection{Mosquito lifetime}
+
+\subsubsection{Snow days}
+Suppose we work for the New York City Council, that is responsible for planning road gritting during the winter. As such, we wish to build a generative model capable of reproducing realistic sequences of days in which the average temperature is below freezing (and hence the roads need gritting), and those where it is above.
+
+Suppose we have the data from the previous April (see top left panel of figure ) and want to build a model to generate realistic weather patterns for the coming April, to help inform policy-making. 
+
+First we start off by modelling the likelihood of a 'freeze' occurring on any particular day, as an independent Bernoulli process (see section \ref{sec:Distributions_bernoulli}). We then fit the model to the real data, and use it to generate fake data samples from the posterior predictive distribution. In planning the gritting, it is particularly important to know the persistence of freezing conditions, as this affects both the buying of the salt, as well as the hiring of temporary workers. A measure of this aspect of the data is to calculate the average number of days in freezing spells, which occur in the data. We show this measure for both the real data, as well as the fake data samples in figure \ref{fig:Evaluation_snowDays}; shading those data samples which have an average freeze spell equal to or greater than the real data. 
+
+We see here that the model is \textit{not} capable of reproducing this aspect of the real data particularly well, since we can only find 1 case out of 15 fake data samples, where this is true; resulting in $p=\frac{1}{15}\approx 6\%$. Since $p$ is small (in practice anywhere below 10-20\% can be symptomatic of issues), we would conclude that perhaps we need to change modelling tack. In particular, we might want to move from the memoryless Bernoulli process, to one where the weather status of the next day depends on the current day (a 2-state discrete Markov process is commonly used in the literature here). 
+
+\begin{figure}
+\centering
+\scalebox{0.25} 
+{\includegraphics{Evaluation_snowDays.pdf}}
+\caption{The real data set (blue), and 15 fake data samples from the Bernoulii model. In each case the average number of days in freezing spells, that occur in the data. If the fake data has an average freezing spell length that is greater than the real data, then we colour the graph green, and red otherwise.}\label{fig:Evaluation_snowDays}
+\end{figure}
+
+\subsubsection{Bacterial infection}
+Suppose you find yourself working in a lab at the CDC, and are trying to understand why some of your samples tend to become contaminated with a particular bacteria. Firstly, you graph the infected status of your 16 samples by sample number (see top left panel of figure \ref{fig:Evaluation_bacteriaPPC}). You decide to use an independent Bernoulli likelihood for the infectious status of each sample; supposing that the source of the infection is airborne, meaning that all samples are equally likely to become contaminated. You then proceed to generate some fake data sets from the posterior predictive distribution of the fitted model. Deciding that an important aspect of the data to recreate would be the number of infected samples, you decide to evaluate whether the recreated samples have a number of infected samples greater than the real.
+
+\begin{figure}
+\centering
+\scalebox{0.25} 
+{\includegraphics{Evaluation_bacteriaPPC.pdf}}
+\caption{The real data set (blue), and 15 fake data samples from the Bernoulii model. If the number of infected samples in your fake data set exceeds the real, then we colour the graph red, and green otherwise.}\label{fig:Evaluation_bacteriaPPC}
+\end{figure}
+
+Doing so you find that 6 out of 15 samples have a number of infected samples greater than the true number; resulting in $p=\frac{6}{15}=40\%$. Confident that you have created a model that adequately simulates the real data, you go to the lab manager, and tell her that it is reasonable to assume that the source of the infection is airborne. She looks at you with consternation. This is surprising to her, since airborne bacterial infections are relatively rare, and the bacteria that is colonising your samples isn't known to travel through the air. She advises that you actually go back and repeat the experiment, and see if your created model stands up to the test.
+
+Demoralised at the lack of confidence in your ability, as well as not excited by the prospect of redoing your experiment, you go back and repeat it. In 3 repeats, with 16 samples in each, you find $\{0,7,15\}$ samples are infected. You go back to your model and see whether these data samples could feasibly be produced by your model. Whilst the middle case, where 7 samples are infected, is produced in your fake data, the other two extremes where none are infected, and all but one are infected are not! Something is amiss with your model!
+
+You go back to your desk and start to rethink things. Suddenly you realise the error of your ways. Whilst you are graphing the infection status of your original sample by tube number, this isn't the way the tubes are organised during your experiment - they are in a 4 x 4 array! You then decide to graph your samples in this fashion (see figure \ref{fig:Evaluation_bateriaPPCArray}). When viewed in this light, you can see that all of the infected samples were actually next to one another - it looks like rather than transmission through the air, that it may just be that a few of your samples are themselves infected, and that the bacteria simply spreads from one tube into its neighbours with which it is in contact. To test this hypothesis you generate fake data samples from your original Bernoulli model and compare the number of infected blocks (those consecutive tubes that are in contact) in these with the original. 
+
+We can see from figure \ref{fig:Evaluation_bateriaPPCArray}, that only 14 samples out of 15 had one distinct block of infection; resulting in $p=\frac{14}{15}\approx 93\%$. Since this value is quite high (typically greater than 80-90\% may indicate problems), you conclude that your original model is not a good fit to the data. Furthermore examination of the other experimental repeats also illustrates similar behaviour to your original data sample - having only a single block of infection. 
+
+You go back to your supervisor and tell them you were wrong before; the infection is not airborne, and is spread simply by contact! She is pleased you have come to this conclusion yourself, albeit after a little prodding.  
+
+\begin{figure}
+\centering
+\scalebox{0.8} 
+{\includegraphics{Evaluation_bateriaPPCArray.pdf}}
+\caption{The real data set (blue), and 15 fake data samples from the Bernoulii model. If the number of separate connected blocks of infection exceeds that of the real, then we colour the graph red, and green otherwise.}\label{fig:Evaluation_bateriaPPCArray}
+\end{figure}
+
+
+This example demonstrates (it was actually inspired by a similar example in \cite{gelman2013bayesian}, which is the picture on the cover of the book), it is imperative to ensure that you have are using the correct visualisation of your data. Misleading visualisations lead to fallacious conclusions being drawn, as we saw here. The example also demonstrates that it is essential to try to use the most appropriate PPC for the particular situation. Again using the wrong form of PPC can lead to incorrect conclusions. 
+
+
 
 
 \section{Univariate generic model evaluation criteria: AIC, Deviance, WAIC and LOO}

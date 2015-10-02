@@ -1,0 +1,429 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     17003,        420]
+NotebookOptionsPosition[     16492,        398]
+NotebookOutlinePosition[     16839,        413]
+CellTagsIndexPosition[     16796,        410]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ClearAll", "[", "\"\<Global`*\>\"", "]"}]}], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"data", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "0", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "1", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "1", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "1", ",", "0"}], "}"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"yTicks", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0", ",", "\"\<normal\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "\"\<infected\>\""}], "}"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"xTicks", " ", "=", " ", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"i", "-", "1"}], ",", "i"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "16", ",", "1"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fPlot", "[", "data_", "]"}], ":=", 
+  RowBox[{"ArrayPlot", "[", 
+   RowBox[{"data", ",", 
+    RowBox[{"ColorRules", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"0", "\[Rule]", "White"}], ",", 
+       RowBox[{"1", "\[Rule]", "Blue"}]}], "}"}]}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fPlotDataFake", "[", "dataReal_", "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"dataFake", " ", "=", " ", 
+       RowBox[{"ArrayReshape", "[", 
+        RowBox[{
+         RowBox[{"RandomVariate", "[", 
+          RowBox[{
+           RowBox[{"BernoulliDistribution", "[", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"Total", "@", 
+               RowBox[{"Flatten", "@", "dataReal"}]}], ")"}], "/", "16"}], 
+            "]"}], ",", 
+           RowBox[{"{", "16", "}"}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"4", ",", "4"}], "}"}]}], "]"}]}], ",", 
+      "numConnectedComponents", ",", "aColour"}], "}"}], ",", 
+    RowBox[{
+     RowBox[{"numConnectedComponents", " ", "=", " ", 
+      RowBox[{"Max", "@", 
+       RowBox[{"Flatten", "@", 
+        RowBox[{"MorphologicalComponents", "[", 
+         RowBox[{"dataFake", ",", 
+          RowBox[{"CornerNeighbors", "\[Rule]", "False"}]}], "]"}]}]}]}], ";", 
+     RowBox[{"aColour", " ", "=", " ", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"numConnectedComponents", ">", "1"}], ",", "Red", ",", 
+        "Green"}], "]"}]}], ";", 
+     RowBox[{"ArrayPlot", "[", 
+      RowBox[{"dataFake", ",", 
+       RowBox[{"ColorRules", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"0", "\[Rule]", "White"}], ",", 
+          RowBox[{"1", "\[Rule]", "aColour"}]}], "}"}]}]}], "]"}]}]}], 
+   "]"}]}]}], "Input",
+ CellChangeTimes->{{3.6527795398677588`*^9, 3.6527799579836736`*^9}, {
+  3.65277999620586*^9, 3.6527804036691656`*^9}, {3.6527807332620173`*^9, 
+  3.6527807361391816`*^9}, {3.652782968790882*^9, 3.6527830468623476`*^9}, {
+  3.6527831242197723`*^9, 3.6527831511673136`*^9}, {3.6527834069759445`*^9, 
+  3.6527834728337116`*^9}, {3.652783541741653*^9, 3.652783609948554*^9}, {
+  3.652783707055108*^9, 3.652783746143344*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"gFinal", "=", 
+  RowBox[{"Show", "[", 
+   RowBox[{"GraphicsGrid", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"fPlot", "@", "data"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}], ",", 
+        RowBox[{"fPlotDataFake", "[", "data", "]"}]}], "}"}]}], "}"}], "]"}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.65278298395875*^9, 3.652782986729908*^9}, {
+   3.652783034977668*^9, 3.652783098615308*^9}, {3.6527832556332884`*^9, 
+   3.6527832573273854`*^9}, 3.6527837140515084`*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {{InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2JNGowNS9dPLfFzm0Np84mkAbLIusg==
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {194.4, -194.4}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 360.00000000000006`}], 
+     InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2A9OGh1QWz213EO+vQD0pTEQ
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {583.2, -194.4}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 360.00000000000006`}], 
+     InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2DNgBTBxXDSp6mlNDzb3EKYB5s4zbg==
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {972., -194.4}, 
+      ImageScaled[{0.5, 0.5}], {360., 360.00000000000006`}], InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2JNHowNy1Q8Vc0g1nzANANzGJ5g=
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {1360.8000000000002`, -194.4}, 
+      ImageScaled[{0.5, 0.5}], {359.9999999999998, 360.00000000000006`}]}, {
+     InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2JNHowNC4qSaQy2aWubjModUcQQNAAYYKfY=
+
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {194.4, -583.2}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 360.00000000000006`}], 
+     InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2DNgBTBxXDSp6mltDrXspbV7EAAAE84sVA==
+
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {583.2, -583.2}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 360.00000000000006`}], 
+     InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2OOn0cFAqx8omvr+AgCvQy6y
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {972., -583.2}, 
+      ImageScaled[{0.5, 0.5}], {360., 360.00000000000006`}], InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2OOn0QEh9dQyZ6ioJ9UcBA0AIskp9g==
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {1360.8000000000002`, -583.2}, 
+      ImageScaled[{0.5, 0.5}], {359.9999999999998, 360.00000000000006`}]}, {
+     InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2OOn0QEh9bQ2h1r2DpR7EDQAoEgxEA==
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {194.4, -972.}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 360.}], InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGxV8sMcQIkkcxqeUprX5g4cGACYLMRA=
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {583.2, -972.}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 360.}], InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2A8sjQ7oZQ4u9dRyD2EaANiGMRA=
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {972., -972.}, 
+      ImageScaled[{0.5, 0.5}], {360., 360.}], InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2JNHo4OBVk9rmlruQQAAkpIusg==
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {1360.8000000000002`, -972.}, 
+      ImageScaled[{0.5, 0.5}], {359.9999999999998, 360.}]}, {InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2DNgBTBxUmlc5pBq/lAxh3x7AcHsItw=
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {194.4, -1360.8000000000002`}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 359.9999999999998}], 
+     InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2FOXRgfUNp9a9lLLnbjMIWw+AJIALrI=
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {583.2, -1360.8000000000002`}, 
+      ImageScaled[{0.5, 0.5}], {360.00000000000006`, 359.9999999999998}], 
+     InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2OOn0QG11Q82mlruJ2wOALxnMRA=
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {972., -1360.8000000000002`}, 
+      ImageScaled[{0.5, 0.5}], {360., 359.9999999999998}], InsetBox[
+      GraphicsBox[RasterBox[CompressedData["
+1:eJxTTMoPSmVmYGBggWIQGwI+2JNHowNyzaE1PXjdCQCBwDXM
+        "], {{0, 0}, {4, 4}}, {0, 1}],
+       Frame->Automatic,
+       FrameLabel->{None, None},
+       FrameTicks->{{None, None}, {None, None}},
+       GridLinesStyle->Directive[
+         GrayLevel[0.5, 0.4]],
+       Method->{
+        "AxisPadding" -> Scaled[0.02], "DefaultBoundaryStyle" -> Automatic, 
+         "DefaultPlotStyle" -> Automatic, "DomainPadding" -> Scaled[0.02], 
+         "RangePadding" -> Scaled[0.05]}], {1360.8000000000002`, -1360.8000000000002`},
+       ImageScaled[{0.5, 0.5}], {359.9999999999998, 359.9999999999998}]}}, {}},
+  ContentSelectable->True,
+  PlotRangePadding->{6, 5}]], "Output",
+ CellChangeTimes->{
+  3.6527829871369314`*^9, {3.652783018634733*^9, 3.6527830287543116`*^9}, {
+   3.6527830993103476`*^9, 3.6527831527744055`*^9}, 3.652783258020425*^9, {
+   3.6527834646312428`*^9, 3.6527834741097846`*^9}, {3.652783606833376*^9, 
+   3.6527836211731963`*^9}, {3.65278370934824*^9, 3.652783715903614*^9}, 
+   3.652783747556425*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<Evaluation_bateriaPPCArray.pdf\>\"", ",", "gFinal"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.6527832624806805`*^9, 3.652783276382475*^9}}],
+
+Cell[BoxData["\<\"Evaluation_bateriaPPCArray.pdf\"\>"], "Output",
+ CellChangeTimes->{
+  3.6527832770845156`*^9, {3.652783752680718*^9, 3.6527837558809013`*^9}}]
+}, Open  ]]
+},
+WindowSize->{1366, 686},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (September 9, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 205, 5, 52, "Input"],
+Cell[766, 27, 3268, 89, 192, "Input"],
+Cell[CellGroupData[{
+Cell[4059, 120, 1464, 33, 112, "Input"],
+Cell[5526, 155, 10555, 227, 375, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[16118, 387, 195, 4, 31, "Input"],
+Cell[16316, 393, 160, 2, 31, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
