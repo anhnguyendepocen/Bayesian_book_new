@@ -4906,16 +4906,14 @@ The reader should now be familiar with the following concepts:
 
 \chapter{Evaluation of model fit and hypothesis testing}\label{chap:ModelFit}
 \section{Chapter mission statement}
-At the end of this chapter the reader will understand the powerful methods that a Bayesian has at their disposal, which allow detailed evaluation of the performance of a given model, as well as comparison between models. We will also discuss how to go about testing hypotheses about your model in the Bayesian framework.
+At the end of this chapter the reader will understand the powerful methods that a Bayesian has at their disposal, which allow detailed evaluation of the performance of a given model, as well as comparison between models.
 
 \section{Chapter goals}
 Models are interpretations of data, which are necessarily reduced versions of the real world. However, a good model can, despite its simplicity, suggest extremely-valuable strategies for navigating the real world. Which begs us to ask, 'What is a \textit{good} model?' Such a model should incorporate just enough realism so that we trust its outputs, whilst being sufficiently parsimonious to allow interpretation and extrapolation. However, in practice how can we determine whether our model meets these criteria? 
 
-The Bayesian testing framework which allows us to test a model is known as \textit{posterior predictive checks} (PPCs). The idea behind this umbrella of methods is simple. You should be able to use your fitted model to generate fake data that looks indistinguishable from the real thing. In practice, this is not usually fully-attainable, so it is desirable to choose a model that sufficiently captures the variation in the data in which you are most interested. Choice of the particular features to use for evaluation and comparison hence becomes the most important part of Bayesian model checking. The beauty of PPCs is that they allow us to understand in what ways a model is good, and in what ways it is deficient. Examining models through this multidimensional lens is both more rewarding than widely used evaluation criteria, and easier to understand.
+The Bayesian testing framework which allows us to judge the fit of a model is known as \textit{posterior predictive checks} (PPCs). The idea behind this umbrella of methods is simple. You should be able to use your fitted model to generate fake data that looks indistinguishable from the real thing. In practice, this is not usually fully-attainable, so it is desirable to choose a model that sufficiently captures the variation in the data in which you are most interested. Choice of the particular features to use for evaluation and comparison hence becomes the most important part of Bayesian model checking. The beauty of PPCs is that they allow us to understand in what ways a model is good, and in what ways it is deficient. Examining models through this multidimensional lens is both more rewarding than widely used evaluation criteria, and easier to understand.
 
-However, there will inevitably be times when we are pushed, either due to policy-makers or an innate desire for simplicity, to choose between two models which perform similarly on PPCs. Recently, there has been a movement to introduce uni-dimensional model evaluation criteria that more closely follow the Bayesian spirit than traditional AICs or DICs. Towards the end of this chapter we shall introduce these relatively new additions to the modeller's arsenal, and discuss their use.
-
-We will also, in passing, discuss the ways in which Bayesians can go about testing hypotheses about a given model, or data, and we shall see that this is much more fluid, and less arcane than the classical equivalents. We'll also see that there is no need for the binary null hypothesis test that we all learned at school, since Bayesian posteriors adequately capture all we need to know about the question of interest.
+There will inevitably be times when we are pushed, either due to policy-makers or an innate desire for simplicity, to choose between two models which perform similarly on PPCs. Alternatively, we may want simply to evaluate the predictive capability of a set of models, to understand better ways in which they may be improved. Recently, there has been a movement to introduce model criteria that estimate model predictive capability in a more Bayesian spirit than traditional AICs or DICs. Towards the end of this chapter we shall introduce these relatively new additions to the modeller's arsenal, and discuss their use. This section will inevitably be a little more advanced than those preceding it, although we shall endeavour to focus on the intuitive nature of the maths, rather than dwell on the minute algebraic details. Those wishing to ignore the maths entirely can skip to section \ref{sec:Evaluation_practicalSimplePredictiveAcc} which summarises the practical implications of the former without recourse to (much) maths.
 
 \section{Posterior predictive checks}
 \subsection{Recap - posterior predictive distributions}
@@ -4947,7 +4945,7 @@ In figure \ref{fig:Evaluation_normalPosteriorPredictiveWeight} we can see the ef
 \subsection{Graphical PPCs and Bayesian p values}
 Now that we understand the methodology for calculating the posterior predictive distributions, we are in a position to discuss posterior predictive checks (PPCs). Firstly, we need to discuss what is meant by a \textit{good} model. It does not make sense to talk about an unconditionally \textit{good} model. Since our statistical model is always a simplification of reality, we should not expect it to necessarily reproduce real life exactly. Typically, models that we build are usually good at reproducing some aspects of the real world, but worse at others.
 
-However, usually when we build a model we plan to use it for a particular purpose. We thus must ensure that our model is capable of handling the degree of variation in data which is pertinent to this specific purpose. A way to tackle this problem is to generate \textit{fake} data samples from our posterior predictive distribution, then see how well this variation is captured within the simulated data sets. These comparative tests are known as \textit{posterior predictive checks}.
+However, usually when we build a model we plan to use it for a particular purpose. We thus must ensure that our model is capable of handling the degree of variation in data which is pertinent to this specific purpose. A way to tackle this problem is to generate \textit{fake} data samples from our posterior predictive distribution, then see how well this variation is captured within the simulated data sets. These comparative tests are known as \textit{posterior predictive checks}. The data we generate from the posterior predictive distributions can be thought of as being the data that we might see tomorrow, if the data generating process, and parameters remained the same \cite{gelman2013bayesian}.
 
 Graphical visualisations are a great way to test the performance of your model. By visually comparing the simulated data to the actual, we are often able to quickly see whether our model is any good. The choice of visualisations to make tests our creativity, and familiarity with the problem at hand, but definitely gets easier the more experienced we get with using PPCs. Usually graphical PPCs are an important first step to testing a model's performance, but may become cumbersome if you want to carry out a number of such tests across a large number of replicates. As such, a numerical measure of a model's coherence with the data is often used, and has come to be known as a \textit{Bayesian p value}.
 
@@ -5051,14 +5049,102 @@ You go back to your supervisor and tell them you were wrong before; the infectio
 
 This example demonstrates (it was actually inspired by a similar example in \cite{gelman2013bayesian}, which is the picture on the cover of the book), it is imperative to ensure that you have are using the correct visualisation of your data. Misleading visualisations lead to fallacious conclusions being drawn, as we saw here. The example also demonstrates that it is essential to try to use the most appropriate PPC for the particular situation. Again using the wrong form of PPC can lead to incorrect conclusions. 
 
+\section{Why do we call it a \textit{p value}?}
+As we have discussed above, we can generate simulations from the posterior predictive distribution, $y_{sim}$, and use test statistics $T(y_{sim},\theta)$ to give a numerical estimation of model fit. We can then generate a Bayesian \textit{p value} based on comparing the simulated data test statistic with its value on the \textit{actual} data, $T(y,\theta)$ \cite{gelman2013bayesian}:
+
+\begin{equation}
+p = Pr(T(y_{sim},\theta)>T(y,\theta)|y)
+\end{equation}
+
+Importantly, this differs from the classical p value, because here we do not condition on the parameter value $\theta$, and allow for variation its value in accordance with its posterior distribution. Again this is due to a difference in perspective, where Bayesians regard the data as fixed, and the parameter which varies, whereas classical statisticians see the converse (see chapter \ref{chap:subjectiveFrequentistBayes}).
+
+This quantity $p$ \textit{is} a probability, although unlike classical p values it isn't $p(hypothesis true|data)$. It is simply a measure of model (mis)fit. So again, unlike classical p values, values near 0 or 1 are both indicative of discrepancy between the model and the data; values of $p=0.5$ are what you would expect a decent-fitting model to generate. Typically p values lower than 5-10\% or higher than 90-95\% are chosen. It is hard to draw a line in the sand as to where a model starts to show signs of misfit, partly because this depends on the circumstance (and ultimate intended use of the model).
+
+Also notice that by contrast to classical p values, a Bayesian $p=0.0001$ is not really more \textit{significant} of a model deficiency than $p=0.01$; they both show that the model is failing to capture a particular degree of variation seen in the data.
+
+\section{Statistics measuring predictive accuracy: AIC, Deviance, WAIC and LOO}
+\subsection{Independent evaluation of a model, and overfitting}
+
+Often as an independent judge of a model, we would like to be able to evaluate how a model is able to predict out-of-sample data. By conducting inference on one set of data, then evaluating its fit on another, we hope to gain a relatively unbiased perspective of a model. If instead we estimate a model on one set, and test its predictive capability on the same set, then we bias the odds in our favour, and leave ourselves susceptible to overfitting. 
+
+Overfitting is a statistician's equivalent of cheating on a test in high school. If we manage to steal the test beforehand, we are able to work away - textbook in hand - to write down the answers to the test before we take it. Unsurprisingly, when we take the test we perform well; artificially well in fact. However, if we were to take another test - written by for example a teacher from another school - we would perform badly. In this case our model of learning is overfit. We are able to perform well on one particular application, the test we've learned beforehand, but our performance generalises poorly to other tests. In this case, the performance on the first test is biased upwards, and doesn't actually represent our inherent ability. The second test performance - because it is independent of the first - more adequately represents our state of knowledge, or more likely lack thereof! We would do better to actually learn the material, and then our performance on the first test would probably be similar to that of the second. Our new model of learning would generalise much better to new out-of-sample data. 
+
+The same is true of statistical models. We are very able to generate a model that can predict a given dataset perfectly, by adding layer upon layer of additional complexity (see figure \ref{fig:Evaluation_overfit}). However, if we took that same model, and applied it to new data, it would be useless for prediction. What we would prefer is a model that is better able to handle new datasets. 
+
+In the machine learning literature it is advised that to combat this issue of overfitting we should split a data set into a \textit{training} set, and a \textit{cross-validation} set. The models are then trained on the training set, and then a gauge of its generalisable predictive capability is given by its performance on the independent cross-validation set. 
+
+Whilst we would ideally carry out this partitioning in statistical inference (in fact one measure we'll discuss LOO does exactly this), often the computational task of re-fitting a model on many data sets, makes it prohibitive to do this. As well as is often the case, the nature of the data makes it difficult to imagine carrying out such a data separation. Amongst other reasons, these two issues have lead for a demand for other measures of model predictive capability that can be calculated from within the fit of a model to a particular dataset; avoiding the need for re-estimation on a cross-validation set.
+
+These measures are at best approximations to the cross-validation ideal \cite{gelman2014understanding}. They aim to correct for the testing bias inherent in trying to evaluate a model's performance on the same data set to which it was fit. Over the next few sections we introduce the most popular of these measures. 
+
+\subsection{How to measure a model's predictive capability?}
+If we obtain new data $\boldsymbol{y^{new}}=\{y^{new}_1,y^{new}_2,...,y^{new}_n\}$ we can imagine a few different ways we might measure a fit of a model. Firstly, a popular way of summarising the discrepancy between the model's predictions $\boldsymbol{y^{pred}}=\{y^{pred}_1,y^{pred}_2,...,y^{pred}_n\}$ and the real data $\boldsymbol{y^{new}}$ is to measure the mean squared error (MSE):
+
+\begin{equation}
+MSE = \frac{1}{n}\sum\limits_{i=1}^{n} (y^{new}_i-y^{pred}_i)^2
+\end{equation}
+
+This measure is easy to calculate, but does not have any theoretical justification (apart from normal likelihood models), which limits its scope. A more theoretically motivated measure would be to consider the likelihood $p(\boldsymbol{y}|\theta)$, but more commonly we use its close cousin, the log-likelihood, $log p(\boldsymbol{y}|\theta)$. Since the log function is a monotonic transformation the score obtained from using the log-likelihood will mirror the likelihood. However, it is favoured to use the log-likelihood because of its connection with a concept called the Kullback-Leiber (KL) divergence measure, which can be used to find the difference between the true density and estimated. If we maximise the log-likelihood, it is approximately equivalent to finding the density has the lowest KL divergence from the true density (the approximation becomes better the larger the sample size). The log-likelihood in this case is also referred to as the \textit{log predictive density}. 
+
+Due to the generality of the log-likelihood, it is favoured as a measure of a model's predictive accuracy. However, seeing as we are Bayesians, you might ask why don't we use the log posterior rather than the likelihood? The reason for this is that we are interested in summarising the \textit{fit} of the model to data, and the prior is only useful in that it helps us to estimate better the parameters $\theta$ of a distribution \cite{gelman2014understanding}. Essentially all information in the prior has already been passed through to the posterior of $\theta$, and if we were to use it again in evaluating the model's predictive accuracy, we would be using it twice unnecessarily. 
 
 
+\subsection{The ideal measure of a model's predictive accuracy}\label{sec:Evaluation_idealAccuracy}
+In practice we don't know the true parameter value $\theta$ (nor are we sure such a value exists), so we cannot simply calculate the log predictive density $log\left[ p(\boldsymbol{y}|\theta)\right]$. As such, we need some way of incorporating our uncertainty in its value into our measure of predictive accuracy. A sensible thing to do would be to estimate its expectation (see section \ref{sec:Probability_meanVariance}) over all the values of the posterior:
 
-\section{Univariate generic model evaluation criteria: AIC, Deviance, WAIC and LOO}
-See the two papers by Gelman on this subject. They are on my iPad. Suggests that deviance isn't a good way of evaluating model fit.
+\begin{equation}\label{eq:Evaluation_logPosterior}
+log\left[\mathrm{E_{posterior}}(p(\boldsymbol{y^{new}}))\right] = log \left[\int\limits_{\theta\in\Theta} p(\boldsymbol{y^{new}}|\theta)p(\theta|\boldsymbol{y})\mathrm{d}\theta\right]
+\end{equation}
+
+where $\mathrm{E_{posterior}}$ denotes expectation under the posterior distribution of $\theta$. simplicity imagine we start by considering a single new data point $y^{new}$, which amounts to replacing $\boldsymbol{y^{new}}$ by $y^{new}$ above. Usually we don't have to hand the extra data, and hence the new data $y^{new}_1$ are unknown. If we knew the true distribution $f(y)$ for a single data point, then we could hence evaluate the expectation of (\ref{eq:Evaluation_logPosterior}), which Gelman et al. (2013) call the expected log predictive density (elpd):
+
+\begin{equation}
+\begin{align}
+elpd &= \mathrm{E_f}\left(log\left[\mathrm{E_{posterior}}(p(\boldsymbol{y^{new}}|\theta))\right]\right)\\
+&= \int\limits_{y^{new}\in Y} log\left[\mathrm{E_{posterior}}(p(\boldsymbol{y^{new}}|\theta))\right] f(y^{new})\mathrm{d}y^{new}
+\end{align}
+\end{equation}
+
+where $\mathrm{E_f}$ denotes expectation under the true data distribution $f(y)$. If we then consider the elpd for our $n$ new data points, taken one at a time, we have what Gelman  et al. (2013) calls the expected log pointwise predictive density (elppd):
+
+\begin{equation}\label{eq:Evaluation_elppd}
+elppd = \sum\limits_{i=1}^{n} \mathrm{E_f}(log\left[\mathrm{E_{posterior}}(p(\boldsymbol{y^{new}_i}|\theta))\right])
+\end{equation}
+
+Using the pointwise measure defined above is preferable to using the full joint predictive distribution $\mathrm{E_f}\left(p(\boldsymbol{y^{new}}|\theta)\right)$ is that it can enable a range of generalisable expressions which represent our out of sample error \cite{gelman2013bayesian}.
+
+\subsection{Estimating out-of-sample predictive accuracy from in-sample data}
+As we stated earlier attempts to estimate out-of-sample predictive accuracy from within a sample are at-best approximations. They can also be very misleading if attempts aren't made to correct for the selection bias due to the fact that you fit the model to the \textit{same} data set you are using for testing its predictive capability. In particular, in situations of overfit models (see figure \ref{fig:Evaluation_overfit}) if these sources of bias aren't corrected then there will be a big gap between the actual predictive capability of a model vs the amount we estimate from within the sample.
+
+Ultimately, we would like a measure of predictive accuracy that best approximates the elppd defined in (\ref{eq:Evaluation_elppd}), given that we do not have new data, $\boldsymbol{y^{new}}$ nor the true density of a datum $f(y)$. To tackle this we firstly substitute the actual data $\boldsymbol{y}$ in for the future data $\boldsymbol{y^{new}}$, allowing us to calculate the log pointwise predictive density (lppd) of the observed data \cite{gelman2013bayesian}:
+
+\begin{equation}
+lppd = \sum\limits_{i=1}^{n} log\left(\int\limits_{\theta\in\Theta} p(y_i|\theta)p(\theta|\boldsymbol{y})\mathrm{d}\theta\right)
+\end{equation}
+
+where $p(\theta|\boldsymbol{y})$ is the posterior density. 
+
+Finally, this section wouldn't be complete without a nod to the masters. For a more thorough, and nuanced, perspective on measures of model predictive accuracy see \cite{gelman2013bayesian}, \cite{gelman2014understanding}, which served as invaluable references for this section.
+
+\subsection{AIC}
+
+\subsection{DIC}
+
+\subsection{WAIC}
+
+\subsection{LOO}
+
+\subsection{A practical and short summary of measures of predictive accuracy in simple terms}\label{sec:Evaluation_practicalSimplePredictiveAcc}
+
+\begin{figure}
+\centering
+\scalebox{0.8} 
+{\includegraphics{Evaluation_overfit.pdf}}
+\caption{Left: the fit of a linear model (green) and nonlinear model (orange) to data. Right: the performance of each model when applied to a new data set. The nonlinear model does not generalise as well as the linear one to new data.}\label{fig:Evaluation_overfit}
+\end{figure}
+
 \section{Sensitivity analysis}
 
-\section{Hypothesis testing in the Bayesian world}
 
 \chapter{Objective Bayesian analysis}\label{chap:ObjectiveBayes}
 \section{The illusion of uniformed uniform prior}
@@ -5091,6 +5177,9 @@ Check coding ok.
 
 \section{Posterior predictive checks}
 Check model is ok.
+
+\section{Evaluating a models' accuracy}
+This section details how sampling is used to approximate the integrals in section \ref{sec:Evaluation_idealAccuracy}.
 
 \chapter{Gibbs sampling}
 \section{The intuition behind the Gibbs algorithm}
