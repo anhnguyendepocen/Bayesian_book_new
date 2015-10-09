@@ -5299,7 +5299,7 @@ We have now been introduced to the theoretical ideal measure of a model's predic
 
 However, there is a penalty to LOO-CV, which is that it requires repeated estimation on each of the $n$ training and cross validation set pairs, which may be computationally infeasible for complex models. Both LOO-CV and WAIC require a partitioning of the data sample into $n$ subsamples, which may not be easily done for situations where the data is structured (for example in time series, panel or network data). AIC and DIC do not require such a partitioning, and hence are more amenable in these circumstances. 
 
-Figure \ref{fig:Evaluation_criteriaDiagram} shows the general hierarchy of all the measures. For a reader unsure about which of the measures to use, we would argue that WAIC and LOO-CV being fully-Bayesian, would be the best choices. Better still, there is a great R package called $loo$ by Vethari, Gelman and Gabry [NEED A CITATION TO THE R PACKAGE], which can allow for the estimation of LOO and WAIC using \textit{existing} simulation draws from the posterior via a method using a method known as \textit{Pareto Smoothed Importance Sampling} [CITE THE PAPER]. This actually makes it \textit{a lot} easier to estimate LOO-CV, which negates many of the computational difficulty or time issues inherent in exactly calculating it. There really is now no need not to use LOO-CV as a method for comparing between models! 
+Figure \ref{fig:Evaluation_criteriaDiagram} shows the general hierarchy of all the measures. For a reader unsure about which of the measures to use, we would argue that WAIC and LOO-CV being fully-Bayesian, would be the best choices. Better still, there is a great R package called $loo$ by Vethari, Gelman and Gabry, which can allow for the estimation of LOO and WAIC using \textit{existing} simulation draws from the posterior via a method using a method known as \textit{Pareto Smoothed Importance Sampling} \cite{vehtari2015efficient}. This actually makes it \textit{a lot} easier to estimate LOO-CV, which negates many of the computational difficulty or time issues inherent in exactly calculating it. There really is now no need not to use LOO-CV as a method for comparing between models! 
 
 Whilst WAIC and LOO-CV do require the separation of the sample into $n$ partitions, it should be said that these individual sub-samples do not necessarily have to be individual data points. If a structured data set can be broken down into these bigger blocks more easily than at the individual data point level, then we would suggest using these in the expressions that we presented for WAIC and LOO-CV.
 
@@ -5367,15 +5367,81 @@ The reader should now be familiar with the following concepts:
 \item The importance of conducting a sensitivity analysis. 
 \end{enumerate}
 
-\chapter{Objective Bayesian analysis}\label{chap:ObjectiveBayes}
-\section{The illusion of uniformed uniform prior}
+\chapter{Making Bayesian analysis objective?}\label{chap:ObjectiveBayes}
+\section{Chapter mission statement}
+At the end of this chapter the reader should understand the principles behind various attempts to make Bayesian inference less dependent on priors, giving most weight to the likelihood.
+
+\section{Chapter goals}
+As we discussed in chapter \ref{chap:subjectiveFrequentistBayes}, there really is no such thing as an \textit{objective} analysis. For most real-world applications of statistical inference there will be aspects of the chosen modelling framework for which there is less consensus, and hence can be deemed \textit{subjective}. Critics of the Bayesian method ignore this aspect of data analysis and instead choose to object to the use of subjective \textit{priors} in Bayes' rule as it is used for inference. The misdirected criticism aimed at priors has lead to attempts to try to reduce the influence of this aspect of the Bayesian formula. In particular, these methods seek to maximise the effect of the current data (through the likelihood) on the posterior density. This type of approach is sometimes warranted if there is a premium placed on the 'objectivity' of the analysis, for example in clinical drug trials. However, we argue that in most circumstances, the use of weakly informative priors that give reasonable support only to realistic parameter values is a more sensible approach; avoiding the mathematical and computational difficulties of the methodologies we describe in this chapter.
+
+\section{The illusion of the 'uninformative' uniform prior}
+Suppose that we are interested in building a statistical model to describe the prevalence of obesity within a given population. We start by considering a sample of size 2, where each individual is chosen independently at random from the population. We assume that the probability a given individual has the condition is given by $\theta$. Wanting to limit the effect of previous results or experimenter prejudices, we choose to assign a uniform prior for $\theta$ over the range [0,1].
+
+This prior assigns the same weight to all \textit{feasible} values of this parameter. However, imagine that instead we are interested in a new hypothesis based on whether or not \textit{both} individuals in our sample have the disorder. Accordingly, we assign $\phi=\theta^2$ as the probability that this event occurs. We can now ask, if we assume a flat prior on $\theta$, what does this imply about our believe in the new event?
+
+In order to do this we need to know a little about how a change of variable impacts a probability density. Suppose we are changing from a variable $x$, with a pdf given by $f_X(x)$, to a new variable $y=g(x)$, and we want to find the density $f_Y(y)$? It turns out that we can apply the rule below:
+
+\begin{equation}\label{eq:Objective_jacobianTransform}
+\begin{align}
+f_Y(y) &= f_X(g^{-1}(y)) g'^{-1}(y)\\
+&= f_X(g^{-1}(y)) |\frac{dx}{dy}|
+\end{align}
+\end{equation}
+
+where $g^{-1}(y)$ is the inverse transform of $g$, and $g'^{-1}(y)$ is its derivative. Applying this to our particular example we have that $\phi=g(\theta) = \theta^2$, meaning that $g^{-1}(\phi) = \sqrt{\phi}$, and $\frac{d\theta}{d\phi}= \frac{1}{2}\phi^{-\frac{1}{2}}$. Now using the above rule we have that the probability density for the new event is given by:
+
+\begin{equation}
+\begin{align}
+f_\Phi(\phi) &= f_\theta(\sqrt{\phi}) \frac{1}{2}\phi^{-\frac{1}{2}}\\
+&= 1 \times \frac{1}{2}\phi^{-\frac{1}{2}}\\
+&= \frac{1}{2}\phi^{-\frac{1}{2}}
+\end{align}
+\end{equation}
+
+Where we have got to the second line from the first, by assuming a uniform prior (hence independent of the function argument). Figure illustrates that whilst this prior is uniform for the probability that one individual is obese, it is considerably different in nature for the event of \textit{both} people having the condition. In particular, it is downward-sloping implying that before we collect the data, we believe that this event is relatively unlikely, with more than 70\% of the prior weight assigned to values of $\phi<\frac{1}{2}$.
+
+This illustrates that whilst in one frame of reference we may specify a particular prior, that in a different frame, the nature of the prior may be completely different. Thus it is not necessarily the case that an uninformative prior for one event may also be uninformative for another event which can be thought of as a function of the first. In the example, for both people to be obese (the second event), we require that individually the people are obese (the first event).
+
+This would seem to put a spanner in the works of finding a prior that is \textit{objectively} uninformative, since we have found that the nature of a prior depends on the viewpoint.  However, we shall see in the next section that if we redefine our notion of 'uninformative' that we are able to construct such priors in special circumstances. 
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Objective_uniformPrior.pdf}}
+\caption{Left: a uniform prior (blue) and Jeffrey's prior (orange) for a Bernoulli probability parameter, which represents the probability an individual is obese. Right: the inferred priors for the probability of an event that both people are obese in corresponding colours.}\label{fig:Objective_uniformPrior}
+\end{figure}
+
 \section{Jeffrey's priors}
+An alternative view of what is meant by an uninformative prior was presented by Jeffreys. We know from (\ref{eq:Objective_jacobianTransform}) that if we define a prior in terms of one parameter $\theta$, that we can derive its form for another parameter $\phi = g(\theta)$:
+
+\begin{equation}
+p(\phi) = p(\theta)|\frac{d\theta}{d\phi}|
+\end{equation}
+
+Jeffreys said that a prior is uninformative if we can calculate it via the above, or directly through the function $p(.)$, and get the same result. 
+
+Note for a uniform distribution $p(\theta)=1$, and using the rule in (\ref{eq:Objective_jacobianTransform}) that we get $p(\phi)=p(\theta^2)=\frac{1}{2\sqrt{\phi}}$. If we approach the problem from the other side, and substitute directly in for $\phi$ we get $p(\phi)=1\neq \frac{1}{2\sqrt{\phi}}$. Clearly, this distribution does not satisfy the requirements set out by Jeffreys!
+
+
+Little difference between choosing a flat prior and Jeffrey's in practice (see figure \ref{fig:Objective_jeffreysPrior}). Why bother?
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Objective_jeffreysPrior.pdf}}
+\caption{The difference between using a uniform prior (blue) vs a Jeffrey's prior (orange) for different sample sizes, where in each case the proportion of obese cases is the same.}\label{fig:Objective_jeffreysPrior}
+\end{figure}
+
+
 \section{Reference priors}
 \section{Zellner's g-priors}
 \section{Empirical Bayes}
 \section{A move towards weakly informative priors}
+\section{Hierarchical models - a natural source of objectivity}
 
+\section{Chapter summary}
 
+\section{Chapter outcomes}
 
 \part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
 
