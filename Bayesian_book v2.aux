@@ -830,154 +830,165 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {10.5.1}Independent evaluation of a model, and overfitting}{361}}
 \citation{gelman2014understanding}
 \@writefile{toc}{\contentsline {subsection}{\numberline {10.5.2}How to measure a model's predictive capability?}{362}}
+\citation{gelman2013bayesian}
+\newlabel{eq:Evaluation_posteriorPredictiveDist}{{10.4}{363}}
 \newlabel{eq:Evaluation_logPosteriorPred}{{10.5}{363}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.3}The ideal measure of a model's predictive accuracy}{363}}
-\newlabel{sec:Evaluation_idealAccuracy}{{10.5.3}{363}}
-\newlabel{eq:Evaluation_elpd}{{10.6}{363}}
-\newlabel{eq:Evaluation_KL}{{10.7}{364}}
-\newlabel{eq:Evaluation_KLelpdDeriv}{{10.9}{364}}
+\newlabel{eq:Evaluation_logLikelihood}{{10.6}{363}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.3}The ideal measure of a model's predictive accuracy}{364}}
+\newlabel{sec:Evaluation_idealAccuracy}{{10.5.3}{364}}
+\newlabel{eq:Evaluation_elpd}{{10.7}{364}}
+\newlabel{eq:Evaluation_KL}{{10.8}{364}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10.8}{\ignorespaces The expected log predictive density (elpd) in top panel, as a function of the posterior predictive density (bottom). The true distribution - $f(y)$ in (10.7\hbox {}) - is shown in the middle in blue/green.\relax }}{365}}
+\newlabel{fig:Evaluation_elpd}{{10.8}{365}}
 \citation{gelman2013bayesian}
-\@writefile{lof}{\contentsline {figure}{\numberline {10.8}{\ignorespaces Top panels show a distribution $p(x)$ (blue) against two distributions: $q(x)$ and $q'(x)$ (both orange). The bottom panels show the products: $p(x)\frac  {p(x)}{q(x)}$ and $p(x)\frac  {p(x)}{q'(x)}$, which are then integrated (see (10.7\hbox {})) to yield the KL divergence from $p(x)$ to the other distributions, which are shown in each case.\relax }}{365}}
-\newlabel{fig:Evaluation_KLDivergence}{{10.8}{365}}
-\newlabel{eq:Evaluation_elppd}{{10.10}{365}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10.9}{\ignorespaces Left: the fit of a linear model (green) and nonlinear model (orange) to data. Right: the performance of each model when applied to a new data set. The nonlinear model does not generalise as well as the linear one to new data.\relax }}{366}}
-\newlabel{fig:Evaluation_overfit}{{10.9}{366}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.4}Estimating out-of-sample predictive accuracy from in-sample data}{366}}
+\newlabel{eq:Evaluation_KLelpdDeriv}{{10.10}{366}}
+\newlabel{eq:Evaluation_elppd}{{10.11}{366}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10.9}{\ignorespaces Top panels show a distribution $p(x)$ (blue) against two distributions: $q(x)$ and $q'(x)$ (both orange). The bottom panels show the products: $p(x)\frac  {p(x)}{q(x)}$ and $p(x)\frac  {p(x)}{q'(x)}$, which are then integrated (see (10.8\hbox {})) to yield the KL divergence from $p(x)$ to the other distributions, which are shown in each case.\relax }}{367}}
+\newlabel{fig:Evaluation_KLDivergence}{{10.9}{367}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.4}Estimating out-of-sample predictive accuracy from in-sample data}{367}}
 \citation{gelman2013bayesian}
+\@writefile{lof}{\contentsline {figure}{\numberline {10.10}{\ignorespaces Left: the fit of a linear model (green) and nonlinear model (orange) to data. Right: the performance of each model when applied to a new data set. The nonlinear model does not generalise as well as the linear one to new data.\relax }}{368}}
+\newlabel{fig:Evaluation_overfit}{{10.10}{368}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.5}AIC}{368}}
 \citation{spiegelhalter2002bayesian}
 \citation{gelman2013bayesian}
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.5}AIC}{367}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.6}DIC}{367}}
 \citation{gelman2013bayesian}
-\newlabel{eq:Evaluation_DIC}{{10.12}{368}}
-\newlabel{eq:Evaluation_DIC1}{{10.13}{368}}
-\newlabel{eq:Evaluation_DIC2}{{10.14}{368}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.7}WAIC}{368}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10.10}{\ignorespaces Top: the posterior density for a normal model with a single observation. Middle: the actual expected log pointwise predictive density (elppd) in green vs the log predictive density at the maximum likelihood estimates (orange), the log predictive density at the posterior median parameter estimates (black), and the log pointwise predictive density (grey). Bottom: the middle panel after bias corrections showing the AIC (orange), DIC (black) and WAIC (grey) estimates of the expected log pointwise predictive density (green).\relax }}{369}}
-\newlabel{fig:Evaluation_DIC}{{10.10}{369}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.6}DIC}{369}}
+\newlabel{eq:Evaluation_DIC}{{10.13}{369}}
+\newlabel{eq:Evaluation_DIC1}{{10.14}{369}}
+\newlabel{eq:Evaluation_DIC2}{{10.15}{369}}
+\citation{gelman2013bayesian}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.7}WAIC}{370}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10.11}{\ignorespaces Top: the posterior density for a normal model with a single observation. Middle: the actual expected log pointwise predictive density (elppd) in green vs the log predictive density at the maximum likelihood estimates (orange), the log predictive density at the posterior median parameter estimates (black), and the log pointwise predictive density (grey). Bottom: the middle panel after bias corrections showing the AIC (orange), DIC (black) and WAIC (grey) estimates of the expected log pointwise predictive density (green).\relax }}{371}}
+\newlabel{fig:Evaluation_DIC}{{10.11}{371}}
+\citation{gelman2013bayesian}
+\@writefile{lof}{\contentsline {figure}{\numberline {10.12}{\ignorespaces Bottom: the true posterior predictive density (blue solid line) vs posterior predictive densities after a single data point (dashed lines). Top: the resultant log posterior predictive density (grey) vs the expected log posterior predictive density (green) assuming a normal likelihood, and prior. In all cases, the lppd overestimates the elppd.\relax }}{372}}
+\newlabel{fig:Evaluation_lppdOverconfidence}{{10.12}{372}}
+\newlabel{eq:Evaluation_WAIC}{{10.17}{372}}
+\citation{gelman2013bayesian}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.8}LOO}{373}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10.13}{\ignorespaces A hypothetical posterior with only two potential parameter values (top), and the WAIC bias correction in both cases. The left two panels show this for high uncertainty, and the right for lower uncertainty.\textbf  {Add an arrow showing difference between the two dotted lines in each case in the bottom figures.}\relax }}{374}}
+\newlabel{fig:Evaluation_WAICBiasCorrection}{{10.13}{374}}
 \citation{gelman2013bayesian}
 \citation{gelman2013bayesian}
-\citation{gelman2013bayesian}
-\newlabel{eq:Evaluation_WAIC}{{10.16}{370}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10.11}{\ignorespaces A hypothetical posterior with only two potential parameter values (top), and the WAIC bias correction in both cases. The left two panels show this for high uncertainty, and the right for lower uncertainty.\textbf  {Add an arrow showing difference between the two dotted lines in each case in the bottom figures.}\relax }}{371}}
-\newlabel{fig:Evaluation_WAICBiasCorrection}{{10.11}{371}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.9}A practical and short summary of measures of predictive accuracy in simple terms}{376}}
+\newlabel{sec:Evaluation_practicalSimplePredictiveAcc}{{10.5.9}{376}}
 \citation{gelman2013bayesian}
 \citation{gelman2014understanding}
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.8}LOO}{372}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.5.9}A practical and short summary of measures of predictive accuracy in simple terms}{372}}
-\newlabel{sec:Evaluation_practicalSimplePredictiveAcc}{{10.5.9}{372}}
-\@writefile{toc}{\contentsline {section}{\numberline {10.6}Sensitivity analysis}{372}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {11}Objective Bayesian analysis}{373}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10.14}{\ignorespaces A representation of the different methods available for estimating the predictive accuracy of a model. The more blue the colour, the more Bayesian the method. The idea for this diagram came from a discussion on the Stan User Group forum, in particular due to suggestions from Michael Betancourt.\relax }}{377}}
+\newlabel{fig:Evaluation_criteriaDiagram}{{10.14}{377}}
+\@writefile{toc}{\contentsline {section}{\numberline {10.6}Sensitivity analysis}{377}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {11}Objective Bayesian analysis}{379}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:ObjectiveBayes}{{11}{373}}
-\@writefile{toc}{\contentsline {section}{\numberline {11.1}The illusion of uniformed uniform prior}{373}}
-\@writefile{toc}{\contentsline {section}{\numberline {11.2}Jeffrey's priors}{373}}
-\@writefile{toc}{\contentsline {section}{\numberline {11.3}Reference priors}{373}}
-\@writefile{toc}{\contentsline {section}{\numberline {11.4}Zellner's g-priors}{373}}
-\@writefile{toc}{\contentsline {section}{\numberline {11.5}Empirical Bayes}{373}}
-\@writefile{toc}{\contentsline {section}{\numberline {11.6}A move towards weakly informative priors}{373}}
-\@writefile{toc}{\contentsline {part}{IV\hspace  {1em}A practical guide to doing real life Bayesian analysis: Computational Bayes}{375}}
-\newlabel{part:computationalBayes}{{IV}{377}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {12}Discrete approximation of continuous posteriors}{377}}
+\newlabel{chap:ObjectiveBayes}{{11}{379}}
+\@writefile{toc}{\contentsline {section}{\numberline {11.1}The illusion of uniformed uniform prior}{379}}
+\@writefile{toc}{\contentsline {section}{\numberline {11.2}Jeffrey's priors}{379}}
+\@writefile{toc}{\contentsline {section}{\numberline {11.3}Reference priors}{379}}
+\@writefile{toc}{\contentsline {section}{\numberline {11.4}Zellner's g-priors}{379}}
+\@writefile{toc}{\contentsline {section}{\numberline {11.5}Empirical Bayes}{379}}
+\@writefile{toc}{\contentsline {section}{\numberline {11.6}A move towards weakly informative priors}{379}}
+\@writefile{toc}{\contentsline {part}{IV\hspace  {1em}A practical guide to doing real life Bayesian analysis: Computational Bayes}{381}}
+\newlabel{part:computationalBayes}{{IV}{383}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {12}Discrete approximation of continuous posteriors}{383}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {13}Leaving the conjugates behind: Markov Chain Monte Carlo}{379}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {13}Leaving the conjugates behind: Markov Chain Monte Carlo}{385}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:MCMC}{{13}{379}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.1}The difficulty with real life Bayesian inference}{379}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.2}Integrating using independent Monte Carlo samples}{379}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.3}Moving from independent to dependent samples}{379}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {13.3.1}The burn-in/warm-up phase}{379}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.4}Practical computational inference}{379}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {13.4.1}The importance of pre-simulation MLE}{379}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {13.4.2}Fake data simulation}{379}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.5}Posterior predictive checks}{380}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.6}Evaluating a models' accuracy}{380}}
-\newlabel{sec:MCMC_evaluationAccuracy}{{13.6}{380}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {14}Gibbs sampling}{381}}
+\newlabel{chap:MCMC}{{13}{385}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.1}The difficulty with real life Bayesian inference}{385}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.2}Integrating using independent Monte Carlo samples}{385}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.3}Moving from independent to dependent samples}{385}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.3.1}The burn-in/warm-up phase}{385}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.4}Practical computational inference}{385}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.4.1}The importance of pre-simulation MLE}{385}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.4.2}Fake data simulation}{385}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.5}Posterior predictive checks}{386}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.6}Evaluating a models' accuracy}{386}}
+\newlabel{sec:MCMC_evaluationAccuracy}{{13.6}{386}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {14}Gibbs sampling}{387}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {14.1}The intuition behind the Gibbs algorithm}{381}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.2}Simple examples}{381}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.3}DAG models}{381}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.4}The benefits and difficulties with Gibbs}{381}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {15}Metropolis-Hastings}{383}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.1}The intuition behind the Gibbs algorithm}{387}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.2}Simple examples}{387}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.3}DAG models}{387}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.4}The benefits and difficulties with Gibbs}{387}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {15}Metropolis-Hastings}{389}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {15.1}Intuition behind Metropolis}{383}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.2}The importance of the proposal distribution}{383}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.3}As a subset of Gibbs and vice versa}{383}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {16}Hamiltonian Monte Carlo}{385}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.1}Intuition behind Metropolis}{389}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.2}The importance of the proposal distribution}{389}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.3}As a subset of Gibbs and vice versa}{389}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {16}Hamiltonian Monte Carlo}{391}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {16.1}Introduction to Hamiltonian Monte Carlo}{385}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.2}Avoiding manual labour: the No-U-turn sampler}{385}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.3}Riemannian MCMC}{385}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {17}Stan and JAGS}{387}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.1}Introduction to Hamiltonian Monte Carlo}{391}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.2}Avoiding manual labour: the No-U-turn sampler}{391}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.3}Riemannian MCMC}{391}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {17}Stan and JAGS}{393}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {17.1}Motivation for Stan and JAGS}{387}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.1}Their similarities and differences}{387}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.2}The future}{387}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.3}The nuts and bolts of Stan and JAGS: access through R}{387}}
-\@writefile{toc}{\contentsline {subsubsection}{How to get packages}{387}}
-\@writefile{toc}{\contentsline {subsubsection}{How to package data}{387}}
-\@writefile{toc}{\contentsline {section}{\numberline {17.2}Stan}{387}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.1}How to download, and install}{387}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.2}A first program in Stan}{387}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.3}The building blocks of a Stan program}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{Parameters}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{Model}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{Transformed parameters}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{Transformed data}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{Generated quantities}{388}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.4}A simple model with data}{388}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.5}Diagnostics}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{$\mathaccentV {hat}05E{R}$ and effective sample size}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{Divergent iterations}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{Tree depth exceeding maximum}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{Leapfrog steps}{388}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.6}More complex models with array indexing}{388}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.7}Essential Stan reading}{388}}
-\@writefile{toc}{\contentsline {subsubsection}{The importance of log probability incrementing}{389}}
-\@writefile{toc}{\contentsline {subsubsection}{Marginalising of discrete parameters}{389}}
-\@writefile{toc}{\contentsline {section}{\numberline {17.3}JAGS}{389}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.1}How to download, and install}{389}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.2}A first program in JAGS}{389}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.3}The literal meaning of a for loop}{389}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.4}A simple model}{389}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.5}Diagnosis}{389}}
-\@writefile{toc}{\contentsline {subsubsection}{In-built using vanilla R}{389}}
-\@writefile{toc}{\contentsline {subsubsection}{coda}{389}}
-\@writefile{toc}{\contentsline {subsubsection}{More complex model}{389}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.6}Essential JAGS reading}{389}}
-\@writefile{toc}{\contentsline {subsubsection}{Controlling the flow without if conditions}{389}}
-\@writefile{toc}{\contentsline {subsubsection}{Storing values in matrices}{390}}
-\@writefile{toc}{\contentsline {part}{V\hspace  {1em}Regression analysis and hierarchical models}{391}}
-\newlabel{part:regressionHierarchical}{{V}{393}}
-\@writefile{toc}{\contentsline {section}{\numberline {17.4}Part mission statement}{393}}
-\@writefile{toc}{\contentsline {section}{\numberline {17.5}Part goals}{393}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {18}Hierarchical models}{395}}
+\@writefile{toc}{\contentsline {section}{\numberline {17.1}Motivation for Stan and JAGS}{393}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.1}Their similarities and differences}{393}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.2}The future}{393}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.3}The nuts and bolts of Stan and JAGS: access through R}{393}}
+\@writefile{toc}{\contentsline {subsubsection}{How to get packages}{393}}
+\@writefile{toc}{\contentsline {subsubsection}{How to package data}{393}}
+\@writefile{toc}{\contentsline {section}{\numberline {17.2}Stan}{393}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.1}How to download, and install}{393}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.2}A first program in Stan}{393}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.3}The building blocks of a Stan program}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{Parameters}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{Model}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{Transformed parameters}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{Transformed data}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{Generated quantities}{394}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.4}A simple model with data}{394}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.5}Diagnostics}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{$\mathaccentV {hat}05E{R}$ and effective sample size}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{Divergent iterations}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{Tree depth exceeding maximum}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{Leapfrog steps}{394}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.6}More complex models with array indexing}{394}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.2.7}Essential Stan reading}{394}}
+\@writefile{toc}{\contentsline {subsubsection}{The importance of log probability incrementing}{395}}
+\@writefile{toc}{\contentsline {subsubsection}{Marginalising of discrete parameters}{395}}
+\@writefile{toc}{\contentsline {section}{\numberline {17.3}JAGS}{395}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.1}How to download, and install}{395}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.2}A first program in JAGS}{395}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.3}The literal meaning of a for loop}{395}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.4}A simple model}{395}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.5}Diagnosis}{395}}
+\@writefile{toc}{\contentsline {subsubsection}{In-built using vanilla R}{395}}
+\@writefile{toc}{\contentsline {subsubsection}{coda}{395}}
+\@writefile{toc}{\contentsline {subsubsection}{More complex model}{395}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.6}Essential JAGS reading}{395}}
+\@writefile{toc}{\contentsline {subsubsection}{Controlling the flow without if conditions}{395}}
+\@writefile{toc}{\contentsline {subsubsection}{Storing values in matrices}{396}}
+\@writefile{toc}{\contentsline {part}{V\hspace  {1em}Regression analysis and hierarchical models}{397}}
+\newlabel{part:regressionHierarchical}{{V}{399}}
+\@writefile{toc}{\contentsline {section}{\numberline {17.4}Part mission statement}{399}}
+\@writefile{toc}{\contentsline {section}{\numberline {17.5}Part goals}{399}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {18}Hierarchical models}{401}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:hierarchicalModels}{{18}{395}}
-\@writefile{toc}{\contentsline {section}{\numberline {18.1}The spectrum from pooled to heterogeneous}{395}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {18.1.1}The logic and benefits of partial pooling}{395}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {18.1.2}Shrinkage towards the mean}{395}}
-\@writefile{toc}{\contentsline {section}{\numberline {18.2}Meta analysis example: simple}{395}}
-\@writefile{toc}{\contentsline {section}{\numberline {18.3}The importance of fake data simulation for complex models}{395}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {18.3.1}The importance of making 'good' fake data}{395}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {19}Linear regression models}{397}}
+\newlabel{chap:hierarchicalModels}{{18}{401}}
+\@writefile{toc}{\contentsline {section}{\numberline {18.1}The spectrum from pooled to heterogeneous}{401}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {18.1.1}The logic and benefits of partial pooling}{401}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {18.1.2}Shrinkage towards the mean}{401}}
+\@writefile{toc}{\contentsline {section}{\numberline {18.2}Meta analysis example: simple}{401}}
+\@writefile{toc}{\contentsline {section}{\numberline {18.3}The importance of fake data simulation for complex models}{401}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {18.3.1}The importance of making 'good' fake data}{401}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {19}Linear regression models}{403}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibstyle{plain}
 \bibdata{Bayes}
-\@writefile{toc}{\contentsline {chapter}{\numberline {20}Generalised linear models}{399}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {20}Generalised linear models}{405}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {20.1}Malarial example of complex meta-analysis}{399}}
+\@writefile{toc}{\contentsline {section}{\numberline {20.1}Malarial example of complex meta-analysis}{405}}
 \bibcite{stan-manual:2015}{{1}{}{{}}{{}}}
 \bibcite{angrist1990lifetime}{{2}{}{{}}{{}}}
 \bibcite{blei2003latent}{{3}{}{{}}{{}}}

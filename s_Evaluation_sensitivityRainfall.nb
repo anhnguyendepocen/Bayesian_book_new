@@ -1,0 +1,518 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     22825,        509]
+NotebookOptionsPosition[     22303,        487]
+NotebookOutlinePosition[     22650,        502]
+CellTagsIndexPosition[     22607,        499]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ClearAll", "[", "\"\<Global`*\>\"", "]"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"rain", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "0", ",", "2.602643312530441`", ",", "1.3458908181542324`", ",", 
+     "0.9786602954090866`", ",", "0.4545766440470834`", ",", 
+     "0.676163042182078`", ",", "0.5858979580792466`", ",", 
+     "1.780173188172434`", ",", "0.8754892033856505`", ",", 
+     "1.6056654237265842`", ",", "1.8116246020010855`", ",", "0", ",", 
+     "0.3433774351911117`", ",", "2.3056477739965553`", ",", 
+     "0.22590870432424015`", ",", "0", ",", "0", ",", "0.0505596826937425`", 
+     ",", "0", ",", "0", ",", "0.008287743798677472`", ",", 
+     "0.14685356313718784`", ",", "0.6632242738956761`", ",", "0", ",", "0", 
+     ",", "1.19902505990126`", ",", "1.0864416181527154`", ",", 
+     "0.03820805023453355`", ",", "1.3972017914558388`", ",", "0", ",", 
+     "1.7781017183985999`", ",", "3.039874652625664`", ",", 
+     "4.752551163814718`", ",", "2.7487873197896207`", ",", 
+     "2.1848992374647573`", ",", "1.6898070092856414`", ",", 
+     "1.7572237690038426`", ",", "0.9210565389605095`", ",", 
+     "0.8798577188194684`", ",", "1.405674033297716`", ",", 
+     "0.8593950413685687`", ",", "0.1548610040295721`", ",", "0", ",", 
+     "0.803128246156472`", ",", "0", ",", "0", ",", "0.4443343850224646`", 
+     ",", "0", ",", "0", ",", "0.19495627895958723`", ",", 
+     "1.0303566250921041`", ",", "1.5060380213700335`", ",", 
+     "1.8776085455049434`", ",", "1.0218522879163947`", ",", 
+     "1.1040194379800612`", ",", "2.091970259438136`", ",", 
+     "2.3119250069211956`", ",", "1.601353394714088`", ",", "0", ",", "0", 
+     ",", "0", ",", "0.080917812007125`", ",", "0.8343110398520945`", ",", 
+     "0.34855159245513195`", ",", "0.0410498805239195`", ",", 
+     "0.09275936292709935`", ",", "0", ",", "0.0215223707983517`", ",", "0", 
+     ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", "0", ",", 
+     "0.9761864121070692`", ",", "0.13821943122303676`", ",", "0", ",", 
+     "0.5527146222151169`", ",", "1.9753226492574207`", ",", 
+     "2.62421572641167`", ",", "2.2223606695535794`", ",", 
+     "2.8588785363899816`", ",", "1.1140898137926027`", ",", 
+     "0.5976927651918369`", ",", "0.961361506670672`", ",", 
+     "0.9407031547242389`", ",", "0", ",", "0.4946430097949919`", ",", "0", 
+     ",", "0.41462609161462266`", ",", "0.6485890215604861`", ",", 
+     "1.1368718051493785`", ",", "0", ",", "2.3345557323672965`", ",", 
+     "1.1047160918146637`", ",", "1.1204724264670545`", ",", 
+     "2.253916607007769`", ",", "2.041303730274357`", ",", 
+     "2.7323168706949703`"}], "}"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6533354039001827`*^9, 3.6533354074933887`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"rain", "=", 
+     RowBox[{"RandomFunction", "[", 
+      RowBox[{
+       RowBox[{"ARProcess", "[", 
+        RowBox[{"0.3", ",", 
+         RowBox[{"{", 
+          RowBox[{".4", ",", ".2"}], "}"}], ",", "1"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "100"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"rain", " ", "=", " ", 
+     RowBox[{"Normal", "@", "rain"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rain", " ", "=", " ", 
+     RowBox[{
+      RowBox[{"Flatten", "[", 
+       RowBox[{"rain", ",", "1"}], "]"}], "[", 
+      RowBox[{"[", 
+       RowBox[{"All", ",", "2"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"rain", " ", "=", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"#", "<", "0"}], ",", "0", ",", "#"}], "]"}], "&"}], "/@", 
+      "rain"}]}], ";"}], "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"wet", " ", "=", " ", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"#", "\[Equal]", "0"}], ",", "1", ",", "2"}], "]"}], "&"}], "/@",
+       "rain"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"wetVwet", "=", 
+     RowBox[{"MovingMap", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"#", "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ">", "0"}], "&&", 
+           RowBox[{
+            RowBox[{"#", "[", 
+             RowBox[{"[", "2", "]"}], "]"}], ">", "0"}]}], ",", "3", ",", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"#", "[", 
+              RowBox[{"[", "1", "]"}], "]"}], ">", "0"}], ",", "2", ",", 
+            "1"}], "]"}]}], "]"}], "&"}], ",", "rain", ",", "2"}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"fWetSimple", "[", 
+     RowBox[{"nIterations_Integer", ",", "rain__", ",", "wet__"}], "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", "}"}], ",", 
+      RowBox[{"ParallelTable", "[", 
+       RowBox[{
+        RowBox[{"Max", "@", 
+         RowBox[{"(", 
+          RowBox[{"Length", "/@", 
+           RowBox[{"Cases", "[", 
+            RowBox[{
+             RowBox[{"Split", "[", 
+              RowBox[{
+               RowBox[{"Flatten", "[", 
+                RowBox[{
+                 RowBox[{"Normal", "@", 
+                  RowBox[{"RandomFunction", "[", 
+                   RowBox[{
+                    RowBox[{"EstimatedProcess", "[", 
+                    RowBox[{"wet", ",", 
+                    RowBox[{"DiscreteMarkovProcess", "[", "2", "]"}]}], "]"}],
+                     ",", 
+                    RowBox[{"{", 
+                    RowBox[{"0", ",", "100"}], "}"}]}], "]"}]}], ",", "1"}], 
+                "]"}], "[", 
+               RowBox[{"[", 
+                RowBox[{"All", ",", "2"}], "]"}], "]"}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"2", ",", "__"}], "}"}]}], "]"}]}], ")"}]}], ",", 
+        RowBox[{"{", "nIterations", "}"}]}], "]"}]}], "]"}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"fWetComplex", "[", 
+     RowBox[{"nIterations_Integer", ",", "rain__", ",", "wetVwet__"}], "]"}], 
+    ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", "}"}], ",", 
+      RowBox[{"ParallelTable", "[", 
+       RowBox[{
+        RowBox[{"Max", "@", 
+         RowBox[{"(", 
+          RowBox[{"Length", "/@", 
+           RowBox[{"Cases", "[", 
+            RowBox[{
+             RowBox[{"Split", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"#", ">", "1"}], ",", "1", ",", "0"}], "]"}], "&"}],
+                "/@", 
+               RowBox[{
+                RowBox[{"Flatten", "[", 
+                 RowBox[{
+                  RowBox[{"Normal", "@", 
+                   RowBox[{"RandomFunction", "[", 
+                    RowBox[{
+                    RowBox[{"EstimatedProcess", "[", 
+                    RowBox[{"wetVwet", ",", 
+                    RowBox[{"DiscreteMarkovProcess", "[", "3", "]"}]}], "]"}],
+                     ",", 
+                    RowBox[{"{", 
+                    RowBox[{"0", ",", "100"}], "}"}]}], "]"}]}], ",", "1"}], 
+                 "]"}], "[", 
+                RowBox[{"[", 
+                 RowBox[{"All", ",", "2"}], "]"}], "]"}]}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", "__"}], "}"}]}], "]"}]}], ")"}]}], ",", 
+        RowBox[{"{", "nIterations", "}"}]}], "]"}]}], "]"}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Max", "@", 
+     RowBox[{"(", 
+      RowBox[{"Length", "/@", 
+       RowBox[{"Cases", "[", 
+        RowBox[{
+         RowBox[{"Split", "[", "wet", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"2", ",", "__"}], "}"}]}], "]"}]}], ")"}]}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"g1", "=", 
+     RowBox[{"ListPlot", "[", 
+      RowBox[{"rain", ",", 
+       RowBox[{"Filling", "\[Rule]", "Axis"}], ",", 
+       RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+       RowBox[{"Frame", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "True", ",", "False", ",", "False"}], "}"}]}], 
+       ",", 
+       RowBox[{"FrameLabel", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"\"\<day\>\"", ",", "\"\<rainfall amount\>\""}], "}"}]}], 
+       ",", 
+       RowBox[{"FrameTicks", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "None"}], "}"}]}], ",", 
+       RowBox[{"BaseStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"FontSize", "\[Rule]", "16"}], "}"}]}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"g2", "=", 
+     RowBox[{"Histogram", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"fWetSimple", "[", 
+          RowBox[{"1000", ",", "rain", ",", "wet"}], "]"}], ",", 
+         RowBox[{"fWetComplex", "[", 
+          RowBox[{"1000", ",", "rain", ",", "wetVwet"}], "]"}]}], "}"}], ",", 
+       "50", ",", 
+       RowBox[{"ChartStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"Blue", ",", "Orange"}], "}"}]}], ",", 
+       RowBox[{"Frame", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "True", ",", "False", ",", "False"}], "}"}]}], 
+       ",", 
+       RowBox[{"FrameLabel", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<maximum number of wet days\>\"", ",", "\"\<frequency\>\""}], 
+         "}"}]}], ",", 
+       RowBox[{"BaseStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"FontSize", "\[Rule]", "16"}], "}"}]}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"gFinal", "=", 
+    RowBox[{"Show", "[", 
+     RowBox[{
+      RowBox[{"GraphicsRow", "[", 
+       RowBox[{"{", 
+        RowBox[{"g1", ",", "g2"}], "}"}], "]"}], ",", 
+      RowBox[{"ImageSize", "\[Rule]", "800"}]}], "]"}]}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.6533338850613103`*^9, 3.6533340224901705`*^9}, {
+  3.6533340839716873`*^9, 3.6533341347515917`*^9}, {3.6533341766519885`*^9, 
+  3.6533341996983066`*^9}, {3.653334293262658*^9, 3.653334312965785*^9}, {
+  3.653334381423701*^9, 3.653334382607768*^9}, {3.6533348033878355`*^9, 
+  3.6533348043128886`*^9}, {3.653335299156192*^9, 3.653335349730085*^9}, {
+  3.653335420783149*^9, 3.653335499798668*^9}, {3.65333553200751*^9, 
+  3.6533357019872327`*^9}, {3.6533357357221622`*^9, 3.653335762890716*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {InsetBox[
+     GraphicsBox[{{}, GraphicsComplexBox[CompressedData["
+1:eJztlvtTVGUYx88SCDhNri0lIDSIO+IAIwiIsYD75SLIHdxddlEnGwtrGguV
+mkkDPTXW6IwlI7eJnJFRU0QZS0WLy3gMSRRMo8QLASNKF+5SZIxkbbPP/vA+
+TP/Bnl92Puf7fZ73Oe85+513wYaC1flOkiTNUUnSf7+2a1wviReMreE1kZ3O
+sKEbPrTsvH5p9yT51Nh70JQfkjNG7IEVqSOH2ub1EHvi1oRvnd/hAWIfzG+f
+p6m70E/sh0O1H92reG+a2B+3184dUzkPE2vxQlm47rsvpogXIbRsoccb03b/
+YojjBqJ5QXnewNRN0oPxwar2dx5tcSLfEkwHbC8pHewgPZTVL2UchppeY8Fk
+/3HyhzM9gvEySPnl2sApmfyR2NhVNOXZ8Q3xcgxsveLjH2XfjxdZfRRjHVSX
+6n+OCPmd/NEYrw35TL3hIXEMbri/tklVcpg4Flu2PpU4vuZP4hWsnx6TjZVX
+vAvt+wfsb0y+djzHzeaTgdKqs60HnDRUF4ds/fcRu/52IT0OpsZ9hSe3q0iP
+R/jY85pC98e2fnI8ilQNJyp87f0TsDZJU5K2bYT0BHhdH13fHmB/v4lwq/J9
+5kgxzSsn4sFX1a6B8hDpK5F5tSeuqLOF9JXseZKwfu8jle7Mb6QnMT1ZZDkZ
+70bNLp4q+In6r2I6YykF05L2muGPNuqfgv6OnTpzkf1/koqrc10MjZ5/kZ6K
+VK13/KnZT0hPwzqvvrb388gvp+HHdYkp6lr7+0tH4WjCL2uaJNrfdJzTN+3p
+3OFEc2TgpaCGJu1B+v7lDDZfJpufsZQFZVbMAdfzZ6k+C5tf71bXnR6k9bNR
+rj6SeyKzy8bIxq8N9ZuKnT8nfzbKNgf1ai6ct7GSzfrnoPLl23cn3SuoPofN
+w1hhLK0WGYxlxgpjyQCX8ryUoRjKHxgQtviV6uAvL9L8BlZvQP9gRmnXqXv0
+/EbENnsND1X9Q/VGhJ4uu/HqE8o72YjmpT2u+Zfpe1eMWIi2+se9s6ivCfqm
+0FtZP9D7hAlFysPSdL/7tL4Jzz53J2Jbyyjtnwlfz/9UjvUmlnLZ8+di90hJ
+QHRNH9UzXcnFnI33+6L33KV6M6rP7GqJvfiA1jdj+Ns3i6tDJ6jezOrNqD2W
+8klQnRPdt+Ccufvy4En7/BYcHW3c8fYIsWxBq8bzLRc38isWFNy5+XSlkb5X
+KQ+6j/dNtHW72NcR15PcGKsZezD2ZOzD2I+xP2Mt40WMAxkHM17COIzxMsaR
+jJcz1jGOZhzDOJaxnjFElhlb81rUGVvzWtQZW/Na1Blb81rUGUsz81n0szy2
+5quoM7bmq6gztuarqDO25quoM5Z4nmYxP2OJ5R8YyzPzUWSWR5iZT6LfyPyM
+ZcYKY2s+ifWMZcYK98/MH7E/yxfMzBvRb2F+xjJjhbE1b0R2nFdFdpxXHedV
+x3nVcV51nFdt9f9/Xv0Xx8j0mA==
+        "], {{{}, {}, {}, {}, 
+          {RGBColor[0, 0, 1], Opacity[0.3], LineBox[{101, 2}], 
+           LineBox[{102, 3}], LineBox[{103, 4}], LineBox[{104, 5}], 
+           LineBox[{105, 6}], LineBox[{106, 7}], LineBox[{107, 8}], 
+           LineBox[{108, 9}], LineBox[{109, 10}], LineBox[{110, 11}], 
+           LineBox[{111, 13}], LineBox[{112, 14}], LineBox[{113, 15}], 
+           LineBox[{114, 18}], LineBox[{115, 21}], LineBox[{116, 22}], 
+           LineBox[{117, 23}], LineBox[{118, 26}], LineBox[{119, 27}], 
+           LineBox[{120, 28}], LineBox[{121, 29}], LineBox[{122, 31}], 
+           LineBox[{123, 32}], LineBox[{124, 33}], LineBox[{125, 34}], 
+           LineBox[{126, 35}], LineBox[{127, 36}], LineBox[{128, 37}], 
+           LineBox[{129, 38}], LineBox[{130, 39}], LineBox[{131, 40}], 
+           LineBox[{132, 41}], LineBox[{133, 42}], LineBox[{134, 44}], 
+           LineBox[{135, 47}], LineBox[{136, 50}], LineBox[{137, 51}], 
+           LineBox[{138, 52}], LineBox[{139, 53}], LineBox[{140, 54}], 
+           LineBox[{141, 55}], LineBox[{142, 56}], LineBox[{143, 57}], 
+           LineBox[{144, 58}], LineBox[{145, 62}], LineBox[{146, 63}], 
+           LineBox[{147, 64}], LineBox[{148, 65}], LineBox[{149, 66}], 
+           LineBox[{150, 68}], LineBox[{151, 76}], LineBox[{152, 77}], 
+           LineBox[{153, 79}], LineBox[{154, 80}], LineBox[{155, 81}], 
+           LineBox[{156, 82}], LineBox[{157, 83}], LineBox[{158, 84}], 
+           LineBox[{159, 85}], LineBox[{160, 86}], LineBox[{161, 87}], 
+           LineBox[{162, 89}], LineBox[{163, 91}], LineBox[{164, 92}], 
+           LineBox[{165, 93}], LineBox[{166, 95}], LineBox[{167, 96}], 
+           LineBox[{168, 97}], LineBox[{169, 98}], LineBox[{170, 99}], 
+           LineBox[{171, 100}]}}, {{}, 
+          {RGBColor[0, 0, 1], PointSize[0.01388888888888889], 
+           AbsoluteThickness[1.6], 
+           StyleBox[PointBox[CompressedData["
+1:eJwN0NVZggEAAMAfG4sZXIkR/HzGxSxUMDCwMcAOwG7swq57uAWupbU9GgsF
+QdBGB5100U0PcXrpo58ESQYYZIhhUowwyhjjpJlgkimmmWGWOTLMs8AiS2TJ
+scwKq6yxzgabbLHNDnkKFNllj30OOOSIY0445YxzLrikxBXX3HDLHfc88MgT
+z7xQ5pU33vngky+++eGXPwKxISqopIpqaqiljjD1NNBIE81E+Adu2Uiu
+             "]],
+            FontSize->16]}, {}}}], {}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0},
+      BaseStyle->{FontSize -> 16},
+      DisplayFunction->Identity,
+      Frame->{{True, False}, {True, False}},
+      FrameLabel->{{
+         FormBox["\"rainfall amount\"", TraditionalForm], None}, {
+         FormBox["\"day\"", TraditionalForm], None}},
+      FrameTicks->{{None, None}, {True, True}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{},
+      PlotRange->{{0., 100.}, {0, 4.752551163814718}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], {192., -116.80842387373012`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}], InsetBox[
+     GraphicsBox[{
+       {RGBColor[0.987148, 0.8073604000000001, 0.49470040000000004`], 
+        EdgeForm[{Opacity[0.44799999999999995`], Thickness[Small]}], {{}, 
+         {RGBColor[0, 0, 1], Opacity[0.5], EdgeForm[{Opacity[
+          0.44799999999999995`], Thickness[Small]}], RectangleBox[{6., 0.}, {7., 9},
+           RoundingRadius->0], RectangleBox[{7., 0.}, {8., 20},
+           RoundingRadius->0], RectangleBox[{8., 0.}, {9., 41},
+           RoundingRadius->0], RectangleBox[{9., 0.}, {10., 57},
+           RoundingRadius->0], RectangleBox[{10., 0.}, {11., 85},
+           RoundingRadius->0], RectangleBox[{11., 0.}, {12., 119},
+           RoundingRadius->0], RectangleBox[{12., 0.}, {13., 109},
+           RoundingRadius->0], RectangleBox[{13., 0.}, {14., 84},
+           RoundingRadius->0], RectangleBox[{14., 0.}, {15., 91},
+           RoundingRadius->0], RectangleBox[{15., 0.}, {16., 74},
+           RoundingRadius->0], RectangleBox[{16., 0.}, {17., 63},
+           RoundingRadius->0], RectangleBox[{17., 0.}, {18., 44},
+           RoundingRadius->0], RectangleBox[{18., 0.}, {19., 37},
+           RoundingRadius->0], RectangleBox[{19., 0.}, {20., 37},
+           RoundingRadius->0], RectangleBox[{20., 0.}, {21., 36},
+           RoundingRadius->0], RectangleBox[{21., 0.}, {22., 19},
+           RoundingRadius->0], RectangleBox[{22., 0.}, {23., 11},
+           RoundingRadius->0], RectangleBox[{23., 0.}, {24., 8},
+           RoundingRadius->0], RectangleBox[{24., 0.}, {25., 15},
+           RoundingRadius->0], RectangleBox[{25., 0.}, {26., 8},
+           RoundingRadius->0], RectangleBox[{26., 0.}, {27., 13},
+           RoundingRadius->0], RectangleBox[{27., 0.}, {28., 5},
+           RoundingRadius->0], RectangleBox[{28., 0.}, {29., 3},
+           RoundingRadius->0], RectangleBox[{29., 0.}, {30., 4},
+           RoundingRadius->0], RectangleBox[{31., 0.},
+           RoundingRadius->0], RectangleBox[{32., 0.},
+           RoundingRadius->0], RectangleBox[{33., 0.},
+           RoundingRadius->0], RectangleBox[{35., 0.},
+           RoundingRadius->0], RectangleBox[{36., 0.},
+           RoundingRadius->0], RectangleBox[{38., 0.},
+           RoundingRadius->0], RectangleBox[{39., 0.},
+           RoundingRadius->0], RectangleBox[{41., 0.},
+           RoundingRadius->0]}, {}, {}}, {{}, 
+         {RGBColor[1, 0.5, 0], Opacity[0.5], EdgeForm[{Opacity[
+          0.44799999999999995`], Thickness[Small]}], RectangleBox[{7., 0.}, {8., 13},
+           RoundingRadius->0], RectangleBox[{8., 0.}, {9., 23},
+           RoundingRadius->0], RectangleBox[{9., 0.}, {10., 44},
+           RoundingRadius->0], RectangleBox[{10., 0.}, {11., 62},
+           RoundingRadius->0], RectangleBox[{11., 0.}, {12., 85},
+           RoundingRadius->0], RectangleBox[{12., 0.}, {13., 92},
+           RoundingRadius->0], RectangleBox[{13., 0.}, {14., 88},
+           RoundingRadius->0], RectangleBox[{14., 0.}, {15., 78},
+           RoundingRadius->0], RectangleBox[{15., 0.}, {16., 80},
+           RoundingRadius->0], RectangleBox[{16., 0.}, {17., 64},
+           RoundingRadius->0], RectangleBox[{17., 0.}, {18., 51},
+           RoundingRadius->0], RectangleBox[{18., 0.}, {19., 61},
+           RoundingRadius->0], RectangleBox[{19., 0.}, {20., 55},
+           RoundingRadius->0], RectangleBox[{20., 0.}, {21., 39},
+           RoundingRadius->0], RectangleBox[{21., 0.}, {22., 33},
+           RoundingRadius->0], RectangleBox[{22., 0.}, {23., 27},
+           RoundingRadius->0], RectangleBox[{23., 0.}, {24., 15},
+           RoundingRadius->0], RectangleBox[{24., 0.}, {25., 20},
+           RoundingRadius->0], RectangleBox[{25., 0.}, {26., 7},
+           RoundingRadius->0], RectangleBox[{26., 0.}, {27., 15},
+           RoundingRadius->0], RectangleBox[{27., 0.}, {28., 9},
+           RoundingRadius->0], RectangleBox[{28., 0.}, {29., 7},
+           RoundingRadius->0], RectangleBox[{29., 0.}, {30., 4},
+           RoundingRadius->0], RectangleBox[{30., 0.}, {31., 5},
+           RoundingRadius->0], RectangleBox[{31., 0.}, {32., 7},
+           RoundingRadius->0], RectangleBox[{32., 0.}, {33., 4},
+           RoundingRadius->0], RectangleBox[{33., 0.},
+           RoundingRadius->0], RectangleBox[{34., 0.}, {35., 3},
+           RoundingRadius->0], RectangleBox[{35., 0.}, {36., 2},
+           RoundingRadius->0], RectangleBox[{36., 0.},
+           RoundingRadius->0], RectangleBox[{37., 0.},
+           RoundingRadius->0], RectangleBox[{39., 0.}, {40., 2},
+           RoundingRadius->0], RectangleBox[{40., 0.},
+           RoundingRadius->0], RectangleBox[{41., 0.},
+           
+           RoundingRadius->
+            0]}, {}, {}}}, {{{{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, \
+{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, \
+{}}, {}}, {{{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, \
+{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}}, {}}}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{5.28, 0.},
+      BaseStyle->{FontSize -> 16},
+      Frame->{True, True, False, False},
+      FrameLabel->{{
+         FormBox["\"frequency\"", TraditionalForm], None}, {
+         FormBox["\"maximum number of wet days\"", TraditionalForm], None}},
+      FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      PlotRange->{{6., 42.}, {All, All}},
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {None, 
+         Scaled[0.05]}},
+      Ticks->{Automatic, Automatic}], {576., -116.80842387373012`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}]}, {}},
+  ContentSelectable->True,
+  ImageSize->800,
+  PlotRangePadding->{6, 5}]], "Output",
+ CellChangeTimes->{{3.653335289920664*^9, 3.653335359928668*^9}, {
+   3.6533354216591988`*^9, 3.653335438879184*^9}, {3.653335484833812*^9, 
+   3.6533355005167093`*^9}, {3.6533356017805014`*^9, 
+   3.6533356168633637`*^9}, {3.653335685701301*^9, 3.6533357156850157`*^9}, 
+   3.65333577887263*^9, 3.6533358112934847`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<Evaluation_sensitivityRainfall.pdf\>\"", ",", "gFinal"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.653335823349174*^9, 3.653335841841232*^9}}],
+
+Cell[BoxData["\<\"Evaluation_sensitivityRainfall.pdf\"\>"], "Output",
+ CellChangeTimes->{3.653335843317316*^9}]
+}, Open  ]]
+},
+WindowSize->{1366, 686},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (September 9, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 205, 5, 52, "Input"],
+Cell[766, 27, 2667, 43, 252, InheritFromParent],
+Cell[CellGroupData[{
+Cell[3458, 74, 7575, 204, 452, "Input"],
+Cell[11036, 280, 10903, 192, 278, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21976, 477, 197, 4, 31, "Input"],
+Cell[22176, 483, 111, 1, 31, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

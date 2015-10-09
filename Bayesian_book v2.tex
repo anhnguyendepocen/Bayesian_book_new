@@ -5086,7 +5086,7 @@ MSE = \frac{1}{n}\sum\limits_{i=1}^{n} (y^{new}_i-y^{pred}_i)^2
 
 This measure is easy to calculate, but does not have any theoretical justification (apart from normal likelihood models), which limits its scope. A more theoretically-justified Bayesian measure would be to use the posterior predictive distribution (see section \ref{sec:Evaluation_posteriorPredDist}) to measure a model's ability to predict new data. Ideally we would want to choose a model that had the highest posterior probability of generating the new data, $p(\boldsymbol{y^{new}}|\boldsymbol{y})$:
 
-\begin{equation}
+\begin{equation}\label{eq:Evaluation_posteriorPredictiveDist}
 \begin{align}
 p(\boldsymbol{y^{new}}|\boldsymbol{y}) &= \int\limits_{\theta\in\Theta} p(\boldsymbol{y^{new}},\theta|\boldsymbol{y})\mathrm{d}\theta\\
 &= \int\limits_{\theta\in\Theta} p(\boldsymbol{y^{new}}|\theta,\boldsymbol{y})p(\theta|\boldsymbol{y})\mathrm{d}\theta\\
@@ -5095,11 +5095,19 @@ p(\boldsymbol{y^{new}}|\boldsymbol{y}) &= \int\limits_{\theta\in\Theta} p(\bolds
 \end{equation} 
 
 
-Since the log function is a monotonic transformation, the score obtained from using the log-posterior-predictive-distribution will mirror the posterior-predictive-distribution. However, it is favoured to use the log-form because of its connection with a concept called the Kullback-Leiber (KL) divergence measure, which can be used to find the difference between the true density and estimated. If we maximise the log-posterior-predictive-distribution, it is approximately equivalent to finding the posterior density has the lowest KL divergence (see section \ref{sec:Evaluation_idealAccuracy}) from the true density (the approximation becomes better the larger the sample size). The scoring function hence used is: 
+Since the log function is a monotonic transformation, the score obtained from using the log-posterior-predictive-distribution will mirror the posterior-predictive-distribution. However, it is favoured to use the log-form because of its connection with a concept called the Kullback-Leiber (KL) divergence measure, which can be used to find the difference between the true density and estimated. If we maximise the log-posterior-predictive-distribution, it is equivalent to finding the posterior density has the lowest KL divergence (see section \ref{sec:Evaluation_idealAccuracy}) from the true density. In the large sample limit the model with the lowest KL divergence will have the highest posterior probability. The scoring function hence used is: 
 
 \begin{equation}\label{eq:Evaluation_logPosteriorPred}
 prediction\; accuracy = log\left[p(\boldsymbol{y^{new}}|\boldsymbol{y})\right]
 \end{equation}
+
+Notice also that in the bottom line of (\ref{eq:Evaluation_posteriorPredictiveDist}) that we are essentially finding the mean likelihood $p(\boldsymbol{y^{new}}|\theta)$ across the posterior density, which has confusingly lead some to actually call this measure the \textit{log-likelihood}. As a consequence of this, an alternative way of writing this predictive measure is sometimes given \cite{gelman2013bayesian}:
+
+\begin{equation}\label{eq:Evaluation_logLikelihood}
+prediction\; accuracy = log\left[\mathrm{E}_{posterior}(p(\boldsymbol{y^{new}}|\theta))\right]
+\end{equation}
+
+This latter way of writing predictive accuracy will turn out to be useful when we come to discuss AIC and DIC, which actually approximate the above by taking the value of log-likelihood at point parameter estimates.
 
 \subsection{The ideal measure of a model's predictive accuracy}\label{sec:Evaluation_idealAccuracy}
 For simplicity imagine we start by considering a single new data point $y^{new}$, which amounts to replacing $\boldsymbol{y^{new}}$ by $y^{new}$ in the above scoring rule. Usually we don't have to hand the extra data, and hence the new data $y^{new}$ are unknown. If we knew the true distribution $f(y)$ for a single new data point, then we could hence evaluate the expectation of (\ref{eq:Evaluation_logPosteriorPred}), which Gelman et al. (2013) call the expected log predictive density ($elpd$):
@@ -5111,7 +5119,17 @@ elpd &= \mathrm{E_f}\left(log\left[p(y^{new}|\boldsymbol{y})\right]\right)\\
 \end{align}
 \end{equation}
 
-where $\mathrm{E_f}$ denotes expectation under the true data distribution $f(y)$. Whilst (\ref{eq:Evaluation_elpd}) may appear fairly abstract, it is actually full of intuition. A useful concept here is the Kullback-Leiber divergence, $KL\geq 0$, which is a measure of discrepancy between two distributions (see figure \ref{fig:Evaluation_KLDivergence}). For two continuous distributions $p(x)$, and $q(x)$, we can quantify the distance of $q(x)$ from $p(x)$ (the measure is not symmetric) by the following:
+where $\mathrm{E_f}$ denotes expectation under the true data distribution $f(y)$. This measure is basically a way of quantifying how far away the estimated posterior predictive distribution lies from the true distribution $f(y)$ (see figure \ref{fig:Evaluation_elpd}).
+
+\begin{figure}
+\centering
+\scalebox{0.5} 
+{\includegraphics{Evaluation_elpd.pdf}}
+\caption{The expected log predictive density (elpd) in top panel, as a function of the posterior predictive density (bottom). The true distribution - $f(y)$ in (\ref{eq:Evaluation_elpd}) - is shown in the middle in blue/green.}\label{fig:Evaluation_elpd}
+\end{figure}
+
+
+Whilst (\ref{eq:Evaluation_elpd}) may appear fairly abstract, it is actually full of intuition. A useful concept here is the Kullback-Leiber divergence, $KL\geq 0$, which is a measure of discrepancy between two distributions (see figure \ref{fig:Evaluation_KLDivergence}). For two continuous distributions $p(x)$, and $q(x)$, we can quantify the distance of $q(x)$ from $p(x)$ (the measure is not symmetric) by the following:
 
 \begin{equation}\label{eq:Evaluation_KL}
 KL(p\rightarrow q) = \int\limits_{x\in X} p(x) log\left[\frac{p(x)}{q(x)}\right]\mathrm{d}x
@@ -5149,10 +5167,10 @@ However, a quick comparison between the second term on the second line of (\ref{
 If we then consider the elpd for our $n$ new data points, taken one at a time, we have what Gelman  et al. (2013) calls the expected log pointwise predictive density (elppd):
 
 \begin{equation}\label{eq:Evaluation_elppd}
-elppd = \sum\limits_{i=1}^{n} \mathrm{E_f}(log\left[\mathrm{E_{posterior}}(p(\boldsymbol{y^{new}_i}|\theta))\right])
+elppd = \sum\limits_{i=1}^{n} \mathrm{E_f}\left(log\left[p(y^{new}_i|\boldsymbol{y})\right]\right)
 \end{equation}
 
-Using the pointwise measure defined above is preferable to using the full joint predictive distribution $\mathrm{E_f}\left(p(\boldsymbol{y^{new}}|\theta)\right)$ is that it can enable a range of generalisable expressions which represent our out of sample error \cite{gelman2013bayesian}. The first two measures we introduce (AIC and DIC) however do not explicitly break the data up into $n$ pieces to estimate predictive accuracy; instead they implicitly do this by assuming the conditional independence of data given point parameter estimates.
+Using the pointwise measure defined above is preferable to using the full joint predictive distribution $\mathrm{E_f}\left(log\left[p(\boldsymbol{y^{new}}|\boldsymbol{y})\right]\right)$ is that it can enable a range of generalisable expressions which represent our out of sample error \cite{gelman2013bayesian}. The first two measures we introduce (AIC and DIC) however do not explicitly break the data up into $n$ pieces to estimate predictive accuracy; instead they implicitly do this by assuming the conditional independence of data given point parameter estimates.
 
 \subsection{Estimating out-of-sample predictive accuracy from in-sample data}
 As we stated earlier attempts to estimate out-of-sample predictive accuracy from within a sample are at-best approximations. They can also be very misleading if attempts aren't made to correct for the selection bias due to the fact that you fit the model to the \textit{same} data set you are using for testing its predictive capability. In particular, in situations of overfit models (see figure \ref{fig:Evaluation_overfit}) if these sources of bias aren't corrected then there will be a big gap between the actual predictive capability of a model vs the amount we estimate from within the sample.
@@ -5167,7 +5185,7 @@ As we stated earlier attempts to estimate out-of-sample predictive accuracy from
 Ultimately, we would like a measure of predictive accuracy that best approximates the elppd defined in (\ref{eq:Evaluation_elppd}), given that we do not have new data, $\boldsymbol{y^{new}}$ nor the true density of a datum $f(y^{new})$. All the methods (with the exception of LOO) use the data on which the model was estimated as a proxy for the future data and $f$, resulting in an overstatement of the predictive capability. In all cases this results in a bias correction being made to counter this overestimation. There are a number of different approaches to doing this, although as we suggest in the following sections, we would only recommend using WAIC or LOO, as these are the \textit{most} Bayesian of methods currently in wide use.
 
 \subsection{AIC}
-The most common method for evaluating a model's predictive accuracy, and for choosing between non-nested models is the Akaike Information Criterion (AIC). This method does not use the posterior distribution in order to evaluate the log predictive density, but instead uses the maximum likelihood point estimate, meaning that: $E_{posterior}(p(y_i|\theta))\rightarrow p(y_i|\hat{\theta})$. Since this method only uses point estimates it is inherently non-Bayesian.
+The most common method for evaluating a model's predictive accuracy, and for choosing between non-nested models is the Akaike Information Criterion (AIC). This method does not use the posterior distribution in order to evaluate the average log-likelihood, but instead uses the maximum likelihood point estimate, meaning that: $E_{posterior}(p(y_i|\theta))\rightarrow p(y_i|\hat{\theta})$. Since this method only uses point estimates it is inherently non-Bayesian.
 
 The next step is to correct for the upward bias in estimation of predictive accuracy due to fitting the model on the same data that you use to evaluate its fit. The assumption here is to rely on the asymptotic normal approximation for a posterior distribution \cite{gelman2013bayesian}, where subtracting the number of parameters $k$ from the log predictive density corrects for the increase in accuracy due to increased model complexity:
 
@@ -5175,12 +5193,12 @@ The next step is to correct for the upward bias in estimation of predictive accu
 \widehat{elpd}_{AIC} = log\left[p(\boldsymbol{y}|\hat{\theta}_{mle})\right] - k
 \end{equation}
 
-This results in an estimate of elpd, denoted $\widehat{elpd}_{AIC}$. Intuitively, AIC - like all the other measures we consider - attempts to correct for the problem of overfitting, by penalising additional model complexity, through $k$. AIC is actually given by -2 times the above, meaning that we seek to minimise this criterion.
+This results in an estimate of elpd, denoted $\widehat{elpd}_{AIC}$. Intuitively, AIC - like all the other measures we consider - attempts to correct for the problem of overfitting, in this case by penalising additional model complexity, through $k$. AIC is actually given by -2 times the above, meaning that we seek to minimise this criterion.
 
 However, this attempt at bias reduction is akin to using a kitchen knife to do surgery. In all but the most simplest of operations, this is not a great idea! In particular for more complex models (in particular hierarchical ones), the effective number of parameters is not necessarily given by $k$. A more nuanced (and Bayesian) approach is needed.
 
 \subsection{DIC}
-Deviance Information Criterion (DIC) \cite{spiegelhalter2002bayesian} is a more Bayesian alternative to AIC. It starts by firstly using the posterior mean point estimates, $\hat{\theta}_{Bayes}$ rather than the ML estimates as the point at which to evaluate the predictive density. It then subtracts a data-dependent term which captures the bias more effectively than the $k$ term in AIC \cite{gelman2013bayesian}:
+Deviance Information Criterion (DIC) \cite{spiegelhalter2002bayesian} is a more Bayesian alternative to AIC. It starts by firstly using the posterior mean point estimates, $\hat{\theta}_{Bayes}$ rather than the ML estimates as the point at which to evaluate the log-likelihood. It then subtracts a data-dependent term which captures the bias more effectively than the $k$ term in AIC \cite{gelman2013bayesian}:
 
 \begin{equation}\label{eq:Evaluation_DIC}
 \widehat{elpd_{DIC}} = log \left[p(\boldsymbol{y}|\hat{\theta}_{Bayes})\right] - k_{DIC}
@@ -5209,21 +5227,29 @@ DIC, like AIC, is again defined as -2 times $\widehat{elpd_{DIC}}$, meaning that
 \end{figure}
 
 \subsection{WAIC}
-Both the aforementioned methods use point estimates to first of all estimate the predictive accuracy of the model, they then perform a post-hoc correction to account for the overfitting. This correction for AIC is rigid, and data-independent, where we simply subtract the number of fitted parameters, and is based on asymptotic normality assumptions unlikely to be achieved in the majority of settings. The correction for DIC is more nuanced and incorporates both the data, and the posterior distribution in deriving the bias term. 
+Both the aforementioned methods use point estimates to first of all estimate the predictive accuracy of the model, they then perform a post-hoc correction to account for overfitting. This correction for AIC is rigid, and data-independent, where we simply subtract the number of fitted parameters, and is based on asymptotic normality assumptions unlikely to be achieved in the majority of settings. The correction for DIC is more nuanced and incorporates both the data, and the posterior distribution in deriving the bias term. 
 
-Both of these measures ignore the uncertainty in the parameter values when firstly estimating the predictive accuracy. In this sense these estimates are still somewhat Frequentist in nature. We can improve this somewhat if we choose to include the posterior in the estimation process. In correspondence with (\ref{eq:Evaluation_elppd}) we choose again to consider each of the $n$ data points separately. Considering a single data point $y_i$ we can take the log of the average the value of the predictive density over the posterior density, which following Gelman et al. (2013) we denote $lpd$:
+Both of these measures ignore the uncertainty in the parameter values when firstly estimating the predictive accuracy. In this sense these estimates are still somewhat Frequentist in nature. We can improve this somewhat if we choose to include the posterior in the estimation process. In correspondence with (\ref{eq:Evaluation_elppd}) we choose again to consider each of the $n$ data points separately. Considering a single data point $y_i$ we can take the log of the average the value of the likelihood over the posterior density, which following Gelman et al. (2013) we denote $lpd$:
 
 \begin{equation}
 lpd = log \left[\int\limits_{\theta\in\Theta} p(y_i|\theta)p(\theta|\boldsymbol{y}) \mathrm{d}\theta\right]
 \end{equation}
 
-where $p(\theta|\boldsymbol{y})$ is the posterior density. This allows us to calculate the log pointwise predictive density (lppd) of all the observed data \cite{gelman2013bayesian}:
+where $p(\theta|\boldsymbol{y})$ is the posterior density. (Note that through (\ref{eq:Evaluation_logPosteriorPred}) we could also have used: $lpd = log\left[p(y_i|\boldsymbol{y})\right]$.) This allows us to calculate the log pointwise predictive density (lppd) of all the observed data \cite{gelman2013bayesian}:
 
 \begin{equation}\label{eq:Evaluation_WAIC}
 \widehat{elppd} = lppd = \sum\limits_{i=1}^{n} log\left(\int\limits_{\theta\in\Theta} p(y_i|\theta)p(\theta|\boldsymbol{y})\mathrm{d}\theta\right)
 \end{equation}
 
-Note that since we do not actually know the true data distribution $f$ in (\ref{eq:Evaluation_elppd}), the above is not the same as the $elppd$. In fact the above will overestimate it because there will be strong overlap in likelihood and posterior for a given sample of data, due to the fact that the former is used to derive the latter. For new data, this overlap will inevitably be less, and hence the $elppd<lppd$. Thus like previous measures we need to correct for the overestimates of predictive accuracy caused by selection bias. The first way is analogous to the Bayesian-esq method used in DIC in (\ref{eq:Evaluation_DIC1}), although now done pointwise \cite{gelman2013bayesian}:
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Evaluation_lppdOverconfidence.pdf}}
+\caption{Bottom: the true posterior predictive density (blue solid line) vs posterior predictive densities after a single data point (dashed lines). Top: the resultant log posterior predictive density (grey) vs the expected log posterior predictive density (green) assuming a normal likelihood, and prior. In all cases, the lppd overestimates the elppd.}\label{fig:Evaluation_lppdOverconfidence}
+\end{figure}
+
+Note that since we do not actually know the true data distribution $f$ in (\ref{eq:Evaluation_elppd}), the above is not the same as the $elppd$. In fact the above will overestimate it because there will be strong overlap in likelihood and posterior for a given sample of data, due to the fact that the former is used to derive the latter (see figure \ref{fig:Evaluation_lppdOverconfidence}). For new data from the true data distribution $f(y)$, this overlap will inevitably be less, and hence the $elppd<lppd$. Thus like previous measures we need to correct for the overestimates of predictive accuracy caused by selection bias. The first way is analogous to the Bayesian-esq method used in DIC in (\ref{eq:Evaluation_DIC1}), although now done pointwise \cite{gelman2013bayesian}:
 
 \begin{equation}
 k_{WAIC} = 2\sum\limits_{i=1}^{n} \left(log(\mathrm{E_{posterior}}(p(y_i|\theta))) - \mathrm{E_{posterior}}(log(p(y_i|\theta)))\right)
@@ -5235,9 +5261,7 @@ As the amount of uncertainty in parameter values increases, then this leads to a
 k_{WAIC} = \sum\limits_{i=1}^{n} var_{posterior}(log(y_i|\theta))
 \end{equation}
 
-This makes more explicit the dependence of the bias correction on the parameter uncertainty in the posterior, and is recommended by Gelman et al. (2013) due to its closer series expansion resemblance of the cross validation ideal.
-
-Again to be on the same scale as AIC and DIC, we multiply (\ref{eq:Evaluation_WAIC}) by -2, then aim to minimise this criterion.
+This makes more explicit the dependence of the bias correction on the parameter uncertainty in the posterior, and is recommended by Gelman et al. (2013) due to its closer series expansion resemblance of the cross validation ideal. Again to be on the same scale as AIC and DIC, we multiply (\ref{eq:Evaluation_WAIC}) by -2, then aim to minimise this criterion.
 
 In all the expressions given in this section, we use a computer to approximate the integrals over the posterior (see section \ref{sec:MCMC_evaluationAccuracy}), since they are not simple to derive analytically, apart from the most simple of situations.
 
@@ -5252,18 +5276,96 @@ In all the expressions given in this section, we use a computer to approximate t
 \subsection{LOO}
 As we stated previously, the ideal measure of a model's predictive accuracy would be to follow the machine learning methodology of splitting a dataset into a training set, and a cross validation set. The model is then fitted (trained) on the former, and then its predictive performance can be evaluated on the independent cross validation set. The use of this independent cross validation set circumvents the issue of selection bias that caused our previous measures to be upwardly biased relative to the true predictive ability of a model. 
 
-Whilst the use of training and cross-validation sets provides a better measure of predictive accuracy in principle, there are practical concerns which limit its use. Here we consider the leave-one-out cross-validation where we leave one of the sample out for cross-validative testing of model prediction $y_{cv}$, and use the rest of the sample to train your model $\boldsymbol{y_{train}}$. Usually this process is iterated a number of times until 
+Whilst the use of training and cross-validation sets provides a better measure of predictive accuracy in principle, there are practical concerns which limit its use. Here we consider the leave-one-out cross-validation where we leave one of the sample out for cross-validative testing of model prediction $y_{cv}$, and use the rest of the sample to train your model $\boldsymbol{y_{train}}$. Ideally, this process is iterated $n$ times, so that each data point in the sample has been used as the single cross-validation datum in one of the iterations. This can be extremely computationally expensive, particularly if the data set is large, and/or the model takes a long time to fit. Also, if the data is structured, for example in the case of a time series, it may be intractable to estimate the model with gaps in the data series. 
 
+The idea is that for each iteration, we can evaluate the log posterior predictive density:
+
+\begin{equation}
+lpd = log\left[p(y_i|\boldsymbol{y_{-i}})\right]
+\end{equation}
+
+where $y_{cv}=y_i$ and $\boldsymbol{y_{-i}}$ denotes the training data vector with all data points apart from $y_i$. If this process is iterated $n$ times, we can estimate the overall expected log pointwise predictive density by summing together the individual $lpd$ \cite{gelman2013bayesian}:
+
+\begin{equation}
+\widehat{elppd} = lppd_{loo-cv} = \sum\limits_{i=1}^{n}log\left[p(y_i|\boldsymbol{y_{-i}})\right]
+\end{equation}
+
+since in this case we have approximated the integral in (\ref{eq:Evaluation_elpd}) by a sum, since $y_i\sim f(y)$ (see chapter \ref{chap:MCMC}). In estimations of $elppd$ through this method are likely to understate the predictive accuracy of the full model, because the training sample consists of only $n-1$ data points, rather than the full sample\cite{gelman2013bayesian}. So, a corrective term can be added for completeness, however in practice this term is small (particularly for large datasets), so can usually be ignored.
+
+If using $lppd_{loo-cv}$ to choose between models, there is also a danger for overfitting, which might overstate the predictive accuracy of a model when applied to a new data set. The reason for this is that if we choose a model in terms of this criterion, we will likely pick one that fits both the signal, \textit{and} the noise in the cross-validation set. This is well-documented in the machine-learning literature, and merits the use of a third data set, called the test set, which is only used once to test a model.
 
 \subsection{A practical and short summary of measures of predictive accuracy in simple terms}\label{sec:Evaluation_practicalSimplePredictiveAcc}
-Include diagram of hierarchy of measures.
+We have now been introduced to the theoretical ideal measure of a model's predictive accuracy, as well as the various methods that have been used to approximate this. Ultimately, we would like a measure that is both Bayesian, \textit{and} a reasonable approximation for the out-of-sample predictive accuracy of a given model. Whilst AIC and DIC are commonly used, they are \textit{not} fully Bayesian in nature. WAIC is fully Bayesian, as well as being closer in nature to the ideal measure of model out-of-sample predictive accuracy. However, this method, like AIC and DIC, estimates out-of-sample predictive accuracy from within the same sample that was used to originally fit the model, meaning that post-hoc bias corrections are required to estimate the degree of overconfidence due to overfitting. Leave-one-out cross validation (LOO-CV) partitions the sample into a training set, which is used to fit the model, and a cross-validation datum, that is used to estimate the out-of-sample predictive accuracy. Since this method uses an independent dataset to evaluate the predictive accuracy, it avoids the need to correct for the overfitting bias inherent in the other methods. In this respect this method is the closest, and cleanest, approximation to the ideal measure of out-of-sample predictive accuracy. 
 
-When to choose a model, and when to use \textit{all} models p178 BDA3.
+However, there is a penalty to LOO-CV, which is that it requires repeated estimation on each of the $n$ training and cross validation set pairs, which may be computationally infeasible for complex models. Both LOO-CV and WAIC require a partitioning of the data sample into $n$ subsamples, which may not be easily done for situations where the data is structured (for example in time series, panel or network data). AIC and DIC do not require such a partitioning, and hence are more amenable in these circumstances. 
+
+Figure \ref{fig:Evaluation_criteriaDiagram} shows the general hierarchy of all the measures. For a reader unsure about which of the measures to use, we would argue that WAIC and LOO-CV being fully-Bayesian, would be the best choices. Better still, there is a great R package called $loo$ by Vethari, Gelman and Gabry [NEED A CITATION TO THE R PACKAGE], which can allow for the estimation of LOO and WAIC using \textit{existing} simulation draws from the posterior via a method using a method known as \textit{Pareto Smoothed Importance Sampling} [CITE THE PAPER]. This actually makes it \textit{a lot} easier to estimate LOO-CV, which negates many of the computational difficulty or time issues inherent in exactly calculating it. There really is now no need not to use LOO-CV as a method for comparing between models! 
+
+Whilst WAIC and LOO-CV do require the separation of the sample into $n$ partitions, it should be said that these individual sub-samples do not necessarily have to be individual data points. If a structured data set can be broken down into these bigger blocks more easily than at the individual data point level, then we would suggest using these in the expressions that we presented for WAIC and LOO-CV.
+
+Another great thing about the $loo$ package is that it also outputs estimations of the standard errors of the measures, which are helpful when trying to decipher whether a model is actually better, or is just due to noisy measurements.
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Evaluation_criteriaDiagram.pdf}}
+\caption{A representation of the different methods available for estimating the predictive accuracy of a model. The more blue the colour, the more Bayesian the method. The idea for this diagram came from a discussion on the Stan User Group forum, in particular due to suggestions from Michael Betancourt.}\label{fig:Evaluation_criteriaDiagram}
+\end{figure}
 
 Finally, this section wouldn't be complete without a nod to the masters. For a more thorough, and nuanced, perspective on measures of model predictive accuracy see \cite{gelman2013bayesian}, \cite{gelman2014understanding}, which served as invaluable references for this section.
 
-\section{Sensitivity analysis}
+\section{Choosing one model, or a number?}
+Gelman et al. (2013) imagines that there are basically two different cases when models are compared. The first is when a model is expanded, and made more complex, meaning that the original model is nested within the second. In this circumstance, it seems logical to use criteria - perhaps both PPCs and the aforementioned measures of predictive accuracy - to ask whether the additional complexity is sufficiently compensated for by the better fit of the model to the data? For either answer to this question, it probably makes sense to go ahead with a single model. 
 
+The second example, is where we are comparing models which are not necessarily nested within one another. This is frequently the case with the building of regression models, where we have choice over which of the predictor variables to include, and which to omit. We strongly disagree with the Frequentist perspective that there exists one \textit{true} model; all models are really just interpretations, and it does not make sense to suppose that one interpretation is correct over all others! In light of this, it makes sense to not choose one particular model, but to construct a larger model that encapsulates all of the smaller models within it (see section \ref{sec:Regression_modelAveraging}). Machine learning algorithms often use this type of methodology, and it usually ends up being the method with the best predictive accuracy. 
+
+\section{Sensitivity analysis}
+Models are interpretations on reality. Posteriors are derived by assuming that those interpretations are true. As such, the degree of variability in a posterior, as well as posterior predictive distributions, are likely downwardly-biased relative to reality because they ignore the variability in the choice of model. Usually, there are a number of models that are able to represent a particular situation equally well. If we ignore this source of uncertainty, then we are doing ourselves an injustice due to our intellectual overconfidence. In these circumstances, it is sensible to try to model this epistemic uncertainty explicitly, rather than merely discuss it. 
+
+When we conduct a statistical analysis we usually have a few questions that we will use our models to address. It is our duty to check that the answers to those questions do not vary if we use any particular \textit{reasonable} model to represent a given phenomenon, and if they do, we should report that this is the case. 
+
+Imagine that we are charged with developing a model for rainfall, that is going to be used to help architects plan the construction of a dam. Unfortunately, we only have the past 100 days of rainfall available that we can use to build a model (see figure \ref{fig:Evaluation_sensitivityRainfall}). In particular, we are interested in building a model that generates realistic patterns of wet and dry days. We will then use this to investigate the maximum number of rainy days that we are likely to encounter in reality, since this information is crucial for when deciding the thickness of the dam. 
+
+We consult the literature and see that there are two models that might be appropriate in this circumstance. One is a two state model, consisting of \textit{dry} days  and \textit{wet} days, with probabilities of transitioning between these states. The other model is slightly more complex, having three states: dry, wet and persistently-wet. In both models dry days occur when there is no recorded rainfall. In the first model a wet day is when there is non-zero rainfall, and in the latter it is when there is a wet day following a dry. The \textit{persistently-wet} state occurs when there are two consecutive wet days. 
+
+We can fit both of these models to the data, and find that both are reasonable, with little to choose between them, even when accounting for the extra complexity of the three-state model. However, when we simulate rainfall series from each, we find that the three-state model assigns a greater probability to longer spells of wet days (see the right-hand panel of figure \ref{fig:Evaluation_sensitivityRainfall}). In this circumstance we should probably er on the side of caution and be sure to tell the architect about the results of the three-state model, since the two models differ considerably in their answers to the important question. 
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Evaluation_sensitivityRainfall.pdf}}
+\caption{Left: the past 100 days of rainfall. Right: the maximum number of consecutive rainy days from simulations from the simple rainfall model (blue), and the more complex one (orange).}\label{fig:Evaluation_sensitivityRainfall}
+\end{figure}
+
+
+A sensitivity analysis is more important, the less data we have, or the more uncertainty there is surrounding models of a particular situation. It is also imperative to conduct such an analysis when there is an inherent sensitivity of decisions to the exact conclusions of the models at hand.
+
+There are a number of ways in which changes in a model's conclusions can be tested for sensitivity to modelling assumptions. We list here some of the most common methods, although recognise that this list is not exhaustive:
+
+\begin{itemize}
+\item Use robust prior and likelihood distributions opposed to narrower ones.
+\item Consider different classes of models.
+\item Consider the effects of different priors.
+\item Within a particular model class compare simple models vs more complex ones.
+\end{itemize}
+
+Rather than choosing a particular model, a nice way to incorporate this uncertainty in the modelling process is to create a hierarchical model, of which the individual models are particular cases (see chapter \ref{chap:hierarchicalModels}). This naturally allows the data to dictate the amount of weight to lend to each model, rather than the extreme case of using only one of them.
+
+\section{Chapter summary}
+The reader should now be familiar with how a raft of flexible frameworks can be used to evaluate a model, and compare between different models. Posterior predictive checks (PPCs) are used to compare the fit of a given model to some aspect of the data, and statistical measures like WAIC and LOO-CV can be used to compare models in terms of their predictive accuracy. In reality, these two different frameworks should be used in tandem throughout the modelling process; we would not want to choose a model that had a good predictive accuracy but failed to represent some key aspect of variation seen in the data. In our view, PPCs are the more powerful of the methods, since they allow for a more multidimensional analysis of a model than the univariate measures of predictive accuracy. However, the latter can be important when considering an array of models which all perform similarly on PPCs. 
+
+We are now ready to move on to how we do modern Bayesian inference through computers in Part \ref{part:computationalBayes}. However, before we do, we turn our attention to a backwater of Bayesian statistics, concerning attempts to make it more \textit{objective}. Whilst we do think that there is an issue with \textit{any} method that suggests that one analysis is more \textit{objective} than another, it is still important to understand them, since it is still fairly prevalent in applied Bayesian statistics today.
+
+\section{Chapter outcomes}
+The reader should now be familiar with the following concepts:
+
+\begin{enumerate}
+\item How to evaluate a model's fit to data using PPCs.
+\item Bayesian p values.
+\item The theoretical ideal measure of a model's predictive accuracy through log posterior predictive probabilities, and problems with achieving this ideal in practice.
+\item WAIC and LOO-CV as the most Bayesian, and preferred of methods for estimating a model's out-of-sample predictive performance.
+\item The importance of conducting a sensitivity analysis. 
+\end{enumerate}
 
 \chapter{Objective Bayesian analysis}\label{chap:ObjectiveBayes}
 \section{The illusion of uniformed uniform prior}
@@ -5397,6 +5499,9 @@ Increases robustness naturally, and prevents overfitting.
 
 \chapter{Linear regression models}
 Include Gelman recommendations here about standardising your data beforehand: \url{https://groups.google.com/forum/?fromgroups=#!topic/stan-users/RMgEEFwCsQk}
+
+\section{Choosing covariates: model averaging}\label{sec:Regression_modelAveraging}
+Include model averaging for 
 
 \chapter{Generalised linear models}
 \section{Malarial example of complex meta-analysis}
