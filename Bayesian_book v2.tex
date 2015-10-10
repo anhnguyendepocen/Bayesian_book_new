@@ -2382,7 +2382,7 @@ Notice that the maximum likelihood estimators for the population mean and varian
 \hat{\sigma^2} = \frac{1}{N}\sum\limits_{i=1}^{N}(X_i-\bar{X})^2 = s^2
 \end{equation}
 
-\section{Frequentist inference in Maximum Likelihood}
+\section{Frequentist inference in Maximum Likelihood}\label{sec:Likelihood_maxlikelihoodInference}
 We have now detailed how to derive point estimates of parameters using the method of maximum likelihood. However, at the moment we are unable to make any conclusions about the population. This is because we do not have any idea as to whether we obtained a particular estimate of a parameter due to picking a weird sample, or because it \textit{actually} has a value in the population which is at this value. Frequentists get round this by examining a graph of log-likelihood near the maximum likelihood point estimate (see figure \ref{fig:Likelihood_likelihoodCurvature}). If the log-likelihood is strongly peaked near the maximum likelihood estimate, then this suggests that only a small range of parameters would yield a similar valued likelihood. By contrast, if the log-likelihood is gently peaked near the ML estimate, then it is feasible that a large range of parameters would yield estimates close to this value. In the latter case, it seems logical that we should be less confident in the particular value of the parameter which is given by maximum likelihood. We can measure the 'peakedness' in the log-likelihood by looking at the magnitude of the second derivative\footnote{The first derivative gives the gradient, the second derivative gives the rate of change of the gradient - a measure of curvature.} of the function at the ML point estimate value. The more curved the log-likelihood, the more confident we can be of our estimated parameter value, and any conclusions drawn from this. Note however, that the Frequentist inference is not based on proper probability distributions (since we infer based on a likelihood). This contrasts with the Bayesian method which, by its nature, allows for a more adequate description of parameters, using probability distributions.
 
 \begin{figure}
@@ -5095,7 +5095,7 @@ p(\boldsymbol{y^{new}}|\boldsymbol{y}) &= \int\limits_{\theta\in\Theta} p(\bolds
 \end{equation} 
 
 
-Since the log function is a monotonic transformation, the score obtained from using the log-posterior-predictive-distribution will mirror the posterior-predictive-distribution. However, it is favoured to use the log-form because of its connection with a concept called the Kullback-Leiber (KL) divergence measure, which can be used to find the difference between the true density and estimated. If we maximise the log-posterior-predictive-distribution, it is equivalent to finding the posterior density has the lowest KL divergence (see section \ref{sec:Evaluation_idealAccuracy}) from the true density. In the large sample limit the model with the lowest KL divergence will have the highest posterior probability. The scoring function hence used is: 
+Since the log function is a monotonic transformation, the score obtained from using the log-posterior-predictive-distribution will mirror the posterior-predictive-distribution. However, it is favoured to use the log-form because of its connection with a concept called the Kullback-Leibler (KL) divergence measure, which can be used to find the difference between the true density and estimated. If we maximise the log-posterior-predictive-distribution, it is equivalent to finding the posterior density has the lowest KL divergence (see section \ref{sec:Evaluation_idealAccuracy}) from the true density. In the large sample limit the model with the lowest KL divergence will have the highest posterior probability. The scoring function hence used is: 
 
 \begin{equation}\label{eq:Evaluation_logPosteriorPred}
 prediction\; accuracy = log\left[p(\boldsymbol{y^{new}}|\boldsymbol{y})\right]
@@ -5129,7 +5129,7 @@ where $\mathrm{E_f}$ denotes expectation under the true data distribution $f(y)$
 \end{figure}
 
 
-Whilst (\ref{eq:Evaluation_elpd}) may appear fairly abstract, it is actually full of intuition. A useful concept here is the Kullback-Leiber divergence, $KL\geq 0$, which is a measure of discrepancy between two distributions (see figure \ref{fig:Evaluation_KLDivergence}). For two continuous distributions $p(x)$, and $q(x)$, we can quantify the distance of $q(x)$ from $p(x)$ (the measure is not symmetric) by the following:
+Whilst (\ref{eq:Evaluation_elpd}) may appear fairly abstract, it is actually full of intuition. A useful concept here is the Kullback-Leibler divergence, $KL\geq 0$, which is a measure of discrepancy between two distributions (see figure \ref{fig:Evaluation_KLDivergence}). For two continuous distributions $p(x)$, and $q(x)$, we can quantify the distance of $q(x)$ from $p(x)$ (the measure is not symmetric) by the following:
 
 \begin{equation}\label{eq:Evaluation_KL}
 KL(p\rightarrow q) = \int\limits_{x\in X} p(x) log\left[\frac{p(x)}{q(x)}\right]\mathrm{d}x
@@ -5143,6 +5143,8 @@ KL &= \int\limits_{x\in X} p(x) log\left[0\right]\mathrm{d}x\\
 &= 0
 \end{align}
 \end{equation}
+
+Interestingly, the KL-divergence can be related back to Morse code. This code was approximately optimised to deal with the letter frequencies that occur in typical English texts. That's why the most common letter 'e' has the shortest Morse code equivalent: '.', whereas a less common letter 'q' has a longer representation: '--.-'. We can think about these letter frequencies in English text as being governed by a distribution, we call $p$. The KL-divergence tells us the penalty in terms of the length of Morse messages vs the optimum, that we would pay if we used the same code to transmit messages in Spanish, which has letters with a different frequency $q$. In this last sentence the optimum would be a bespoke Morse code written for Spanish messages. That's why the KL-divergence isn't a symmetric measure, since the inefficiencies from going English-Spanish are not the same as Spanish-English, since in both cases we are comparing the inefficient code with code optimised to the target language. You can also think of the letter frequencies in a Scrabble game as being optimised to help people make the most number of words in their particular language. The KL-divergence associated with using an English board to play Scrabble in Spanish would measure something like the reduction in mean length of words used vs using a Spanish board. So, in general we can think about the KL-divergence as measuring some sort of informational penalty in going from something optimised to distribution $p$, to code for another distribution $q$.
 
 We can use (\ref{eq:Evaluation_KL}) calculate the KL divergence between our posterior predictive distribution $p(\boldsymbol{y^{new}}|\boldsymbol{y})$, and the \textit{true} distribution of new (and old) data $f(y)$:
 
@@ -5374,7 +5376,7 @@ At the end of this chapter the reader should understand the principles behind va
 \section{Chapter goals}
 As we discussed in chapter \ref{chap:subjectiveFrequentistBayes}, there really is no such thing as an \textit{objective} analysis. For most real-world applications of statistical inference there will be aspects of the chosen modelling framework for which there is less consensus, and hence can be deemed \textit{subjective}. Critics of the Bayesian method ignore this aspect of data analysis and instead choose to object to the use of subjective \textit{priors} in Bayes' rule as it is used for inference. The misdirected criticism aimed at priors has lead to attempts to try to reduce the influence of this aspect of the Bayesian formula. In particular, these methods seek to maximise the effect of the current data (through the likelihood) on the posterior density. This type of approach is sometimes warranted if there is a premium placed on the 'objectivity' of the analysis, for example in clinical drug trials. However, we argue that in most circumstances, the use of weakly informative priors that give reasonable support only to realistic parameter values is a more sensible approach; avoiding the mathematical and computational difficulties of the methodologies we describe in this chapter.
 
-\section{The illusion of the 'uninformative' uniform prior}
+\section{The illusion of the 'uninformative' uniform prior}\label{sec:Objective_illusionUniformUninform}
 Suppose that we are interested in building a statistical model to describe the prevalence of obesity within a given population. We start by considering a sample of size 2, where each individual is chosen independently at random from the population. We assume that the probability a given individual has the condition is given by $\theta$. Wanting to limit the effect of previous results or experimenter prejudices, we choose to assign a uniform prior for $\theta$ over the range [0,1].
 
 This prior assigns the same weight to all \textit{feasible} values of this parameter. However, imagine that instead we are interested in a new hypothesis based on whether or not \textit{both} individuals in our sample have the disorder. Accordingly, we assign $\phi=\theta^2$ as the probability that this event occurs. We can now ask, if we assume a flat prior on $\theta$, what does this imply about our believe in the new event?
@@ -5411,30 +5413,128 @@ This would seem to put a spanner in the works of finding a prior that is \textit
 \caption{Left: a uniform prior (blue) and Jeffrey's prior (orange) for a Bernoulli probability parameter, which represents the probability an individual is obese. Right: the inferred priors for the probability of an event that both people are obese in corresponding colours.}\label{fig:Objective_uniformPrior}
 \end{figure}
 
-\section{Jeffrey's priors}
+\section{Jeffreys' priors}
+\subsection{Another definition of 'uninformative'}
 An alternative view of what is meant by an uninformative prior was presented by Jeffreys. We know from (\ref{eq:Objective_jacobianTransform}) that if we define a prior in terms of one parameter $\theta$, that we can derive its form for another parameter $\phi = g(\theta)$:
 
 \begin{equation}
 p(\phi) = p(\theta)|\frac{d\theta}{d\phi}|
 \end{equation}
 
-Jeffreys said that a prior is uninformative if we can calculate it via the above, or directly through the function $p(.)$, and get the same result. 
+Jeffreys said that a prior is uninformative if we can calculate it via the above, or directly through the function $p(.)$, and get the same result irrespective of the choice of parameter.
 
 Note for a uniform distribution $p(\theta)=1$, and using the rule in (\ref{eq:Objective_jacobianTransform}) that we get $p(\phi)=p(\theta^2)=\frac{1}{2\sqrt{\phi}}$. If we approach the problem from the other side, and substitute directly in for $\phi$ we get $p(\phi)=1\neq \frac{1}{2\sqrt{\phi}}$. Clearly, this distribution does not satisfy the requirements set out by Jeffreys!
 
+Jeffreys actually managed to find a \textit{general} form of such a prior that satisfied his condition:
 
-Little difference between choosing a flat prior and Jeffrey's in practice (see figure \ref{fig:Objective_jeffreysPrior}). Why bother?
+\begin{equation}\label{eq:Objective_jeffreysPrior}
+p(\theta)\propto I(\theta)^{\frac{1}{2}} = \left[-\mathrm{E}\left[\frac{\partial^2 log(p(y|\theta))}{\partial \theta^2}\right]\right]^{\frac{1}{2}}
+\end{equation}
+
+where $I(\theta)$ is the information matrix and shows the curvature of the likelihood surface at a given point, and is used in Maximum Likelihood inference (see section \ref{sec:Likelihood_maxlikelihoodInference}). 
+
+We can see that a prior that has the form which Jeffreys found satisfies his parameter invariance condition. Considering a parameter transformation $\theta\rightarrow\phi$:
+
+\begin{equation}
+\begin{align}
+p(\phi) &= \left[-\mathrm{E}\left[\frac{\partial^2 log(p(y|\phi))}{\partial \phi^2}\right]\right]^{\frac{1}{2}}\\
+&= \left[-\mathrm{E}\left[\frac{\partial^2 log(p(y|\theta))}{\partial \theta^2}\right]\left(\frac{\mathrm{d}\theta}{\mathrm{d}\phi}\right)^2\right]^{\frac{1}{2}}\\
+&= p(\theta) \lvert\frac{\mathrm{d}\theta}{\mathrm{d}\phi}\lvert
+\end{align}
+\end{equation}
+
+which is of the same form as that in the probability transformation rule given by (\ref{eq:Objective_jacobianTransform}). Note that we have used the chain rule of differentiation twice (since we differentiate the expression twice) here: $\frac{\partial}{\partial\phi} = \frac{\mathrm{d}\theta}{\mathrm{d}\phi} \frac{\partial}{\partial\theta}$ to get from the first line to the second.
+
+Now that we have shown that Jeffreys' prior works, let's apply it to our obesity example that we introduced in section \ref{sec:Objective_illusionUniformUninform}. We did not introduce a likelihood before since our discussion concerned only priors, but now this is necessary since Jeffreys' prior requires us to know it. A sensible likelihood to cover whether or not a particular individual is obese, $Y\in\{0,1\}$, is the \textit{bernoulli}, since we believe that the data are independent. We now need to derive the information matrix (which is actually a scalar quantity here because there is only a single parameter) for this particular case:
+
+\begin{equation}
+\begin{align}
+p(Y=y|\theta) &= \theta^y (1-\theta)^{1-y}\\
+&\\
+log\left[p(Y=y|\theta)\right] &= y log(\theta) + (1-y)log(1-\theta)\\
+&\\
+\frac{\partial log\left[p(Y=y|\theta)\right] }{\partial \theta} &= \frac{y}{\theta} - \frac{1-y}{1-\theta}\\
+&\\
+\frac{\partial^2 log\left[p(Y=y|\theta)\right] }{\partial \theta^2} &= -\frac{y}{\theta^2} - \frac{1-y}{(1-\theta)^2}
+&\\
+I(\theta) &= \mathrm{E}\left(\frac{\partial^2 log\left[p(Y=y|\theta)\right] }{\partial \theta^2}\right)\\
+&= -\frac{\theta}{\theta^2} - \frac{1-\theta}{(1-\theta)^2}\\
+&= -\frac{1}{\theta} - \frac{1}{1-\theta}\\
+&= \frac{1}{\theta(1-\theta)}
+\end{align}
+\end{equation}
+
+where we used the fact that for a Bernoulli density, $\mathrm{E}(y)=\theta$ to arrive at the final answer. It is now straightforward to find Jeffreys' Prior using (\ref{eq:Objective_jeffreysPrior}):
+
+\begin{equation}
+\begin{align}
+p(\theta) &\propto I(\theta)^{\frac{1}{2}}\\
+&= \theta^{-\frac{1}{2}} (1-\theta)^{-\frac{1}{2}}\\
+&\sim Beta\left(\frac{1}{2},\frac{1}{2}\right)
+\end{align}
+\end{equation}
+
+where we have got to the last line by noticing that the $\theta$ dependence is of the same form as a $Beta\left(\frac{1}{2},\frac{1}{2}\right)$ density, meaning that the prior \textit{must} be such a distribution.
+
+The Jeffreys' Prior in this case is shown in figure \ref{fig:Objective_uniformPrior} for comparison with a uniform density. We notice that the prior here is \textit{inversely} proportional to the standard deviation of the Bernoulli, which is given by $\theta^\frac{1}{2}(1-\theta)^\frac{1}{2}$ (see figure \ref{fig:Objective_jeffreysBeta}). This makes intuitive sense since the posteriors are least affected by data where $\theta=\frac{1}{2}$ (the posterior is not very peaked), compared to the more extreme values of $\theta$ where the likelihood exerts a strong effect (the posterior is more peaked). The reason the likelihood has a strong effect at more extreme values of $\theta$ is because the standard deviation is much lower near these points, so the posterior gives more weight to posteriors in this circumstance because it is less likely that these data sets would have arisen by chance. The Jeffreys' Prior here simply tries to align with the likelihood as much as possible. 
 
 \begin{figure}
 \centering
-\scalebox{0.4} 
+\scalebox{0.5} 
+{\includegraphics{Objective_jeffreysBeta.pdf}}
+\caption{Left: the $Beta\left(\frac{1}{2},\frac{1}{2}\right)$ distribution (grey) vs the Bernoulli standard deviation (black). Right: typical posteriors from a random sample of size 100, from $\theta=\frac{1}{10}$ (blue), and $\theta=\frac{1}{2}$ (orange), along with their respective 95\% central posterior intervals.}\label{fig:Objective_jeffreysBeta}
+\end{figure}
+
+
+\subsection{Being critical}
+Whilst Jeffreys' idea is interesting theoretically, and for a few simple applied examples, it two issues that limit its use practically:
+
+\begin{enumerate}
+\item It is not simple to extend Jeffreys' principle to multi-parameter models.
+\item Jeffreys' Priors can actually be improper for a lot of models.
+\end{enumerate}
+
+Whilst various workarounds have been proposed for 1. above, 2. is more problematic, since we know that we have to be careful when using improper priors, to ensure that the resultant 'posterior' density is itself valid.
+
+We believe that it is important \textit{not} to get too hung up on the use of uninformative priors. As we shall see, weakly informative priors and hierarchical models can help guard against some of the pitfalls that critics of Bayesian inference propose. However, even in the current case of comparing Jeffreys' Prior for the Bernoulli example, with the use of a uniform prior, we see little difference for modest sample sizes (see figure \ref{fig:Objective_jeffreysPrior}).
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
 {\includegraphics{Objective_jeffreysPrior.pdf}}
 \caption{The difference between using a uniform prior (blue) vs a Jeffrey's prior (orange) for different sample sizes, where in each case the proportion of obese cases is the same.}\label{fig:Objective_jeffreysPrior}
 \end{figure}
 
-
 \section{Reference priors}
+A more recent approach to defining uninformative distributions was given by Bernardo in 1979 \cite{bernardo1979reference}. His idea was to choose a prior distribution that maximised some measure of discrepancy (for example the KL-divergence) between the prior distribution and the posterior. By choosing a prior to maximise the discrepancy, it can be thought that we are allowing the data to exert the maximal effect on the posterior. 
+
+Does this involve getting the data, then working backwards to find the prior from a given posterior? No, since this would invalidate the whole Bayesian inference process by using the data to obtain the prior. However, before we obtain the data, we can take expectations of the divergence over the data distribution; giving us a prior without recourse to using our data. 
+
+So, the idea is that suppose we have some data $\boldsymbol{x}$ and a sufficient statistics $t(\boldsymbol{x})$ (a statistic which if calculated from the sample provides exactly the same information for finding parameter values as the sample itself). Then the idea is that we want to maximise the expected KL-divergence over choice of $p(\theta)$:
+
+\begin{equation}
+\begin{align}
+\mathrm{E_t}\left(\int\limits_{\theta\in\Theta} p(\theta|t) Log\left[\frac{p(\theta|t)}{p(\theta)}\right]\mathrm{d}\theta\right) &= \int\limits_{t\in T} p(t) \int\limits_{\theta\in\Theta} p(\theta|t) Log\left[\frac{p(\theta|t)}{p(\theta)}\right]\mathrm{d}\theta\mathrm{d}t\\
+&= \int\limits_{t\in T} \int\limits_{\theta\in\Theta} p(\theta,t) Log\left[\frac{p(\theta,t)}{p(\theta)p(t)}\right]\mathrm{d}\theta\mathrm{d}t
+\end{align}
+\end{equation}
+
+where the second line expression happens to be the \textit{mutual information} between $t$ and $\theta$, which is a measure of their dependence. (For independent variables, $x$ and $y$ their mutual information is zero because $log\left[\frac{p(x,y)}{p(x)p(y)}\right] = log\left[\frac{p(x)p(y)}{p(x)p(y)}\right]=Log(1)=0$.) This makes intuitive sense, since our original idea was to \textit{maximise} the transfer of information of the sample - here given by $t$ - through to posterior distribution of $\theta$. 
+
+To actually choose $p(\theta)$ to maximise the above expression is a job for an area of maths known as the \textit{calculus of variations}. For some fairly simple situations this can be done, but for most circumstances the required work is sufficiently onerous to put off even the most ardent objectivists!
+
+Again, we reason that whilst interesting theoretically, the practical importance of this area of statistics is insufficient to merit its use; particularly, when there is a reasonable amount of data available (see figure \ref{fig:Objective_referencePriorsExponential}). Furthermore, for many circumstances seeking an 'objective' answer is suboptimal, since using an informative prior distribution can help to reduce the variance in estimates. 
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{Objective_referencePriorsExponential.pdf}}
+\caption{Left: The reference prior for the exponential distribution, $p(\theta)=\frac{1}{\theta}$, (blue), and a Gamma(4,2) prior (orange). The effects of the respective priors on posterior distributions with sample sizes middle: $n=10$, and right: $n=100$. The data samples were randomly drawn, $X\sim Exp(\frac{1}{2})$. Note here that the reference prior distribution is improper.}\label{fig:Objective_referencePriorsExponential}
+\end{figure}
+
 \section{Zellner's g-priors}
+
+
 \section{Empirical Bayes}
 \section{A move towards weakly informative priors}
 \section{Hierarchical models - a natural source of objectivity}
