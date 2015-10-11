@@ -5532,16 +5532,87 @@ Again, we reason that whilst interesting theoretically, the practical importance
 \caption{Left: The reference prior for the exponential distribution, $p(\theta)=\frac{1}{\theta}$, (blue), and a Gamma(4,2) prior (orange). The effects of the respective priors on posterior distributions with sample sizes middle: $n=10$, and right: $n=100$. The data samples were randomly drawn, $X\sim Exp(\frac{1}{2})$. Note here that the reference prior distribution is improper.}\label{fig:Objective_referencePriorsExponential}
 \end{figure}
 
-\section{Zellner's g-priors}
-
-
 \section{Empirical Bayes}
+One particular attempt to make Bayesian analysis less dependent on the subjective whims of the investigator is a type of analysis which explicitly uses data to estimate priors, called \textit{empirical Bayes}. Whilst we regard this approach as an approximation to full hierarchical modelling which we will cover in Part \ref{part:regressionHierarchical}, it is describing briefly how this method works to allow the reader to understand attempts to use it.
+
+To explain the mechanics of this method of analysis we adapt an example originally given by George Casella \cite{casella1985introduction}. Suppose that we have the results of a particular drug trial, which are represented by a continuous variable $X_i$, where $i$ represents a particular patient who is part of the group who have actually taken the drug. Furthermore we suppose that the results within a particular patient are subject to variance around a patient-specific mean $\theta_i$:
+
+\begin{equation}
+X_i \sim N(\theta_i,\sigma_0^2)
+\end{equation} 
+
+There is variance around $\theta_i$ since we suppose that there are a multitude of factors that affect the ultimate results that we witness; diet, physical stress and time of day for example. Next we make the assumption that there is an overall distribution that dictates the distribution of $\theta_i$:
+
+\begin{equation}
+\theta_i \sim N(\mu,\sigma_1^2)
+\end{equation}
+
+We suppose that there are reasons to suggest that the inherent efficacy of the drug within a particular patient vary, for example due to genetics, or the conditions under which the trial was administered. However, nor do we have reason to believe that the efficacy of the drug will be completely unrelated between patients; after all we are discussing the same drug. This latter point provides the logic behind assuming that there is a common overarching mean $\mu$, with the former explaining inter-patient variability around this mast. 
+
+The model that we have discussed thus far is exactly the sort of hierarchical model that we will explore more thoroughly in Part \ref{part:regressionHierarchical}, so don't worry if you find yourself finding it a little hard going now. In hierarchical Bayesian modelling, the parameters $(\mu,\sigma_1^2)$ are assigned priors, and hence we can obtain posteriors for them. The empirical Bayesian approach by contrast uses the data to estimate point values of these parameters, and then uses these to estimate the values of $\theta_i$. 
+
+If we assume that the parameters $(\mu,\sigma_1^2)$ are fixed; given as prior parameters, then we can go ahead and calculate the posterior distribution for $\theta_i$:
+
+\begin{equation}\label{eq:Objective_empiricalBayes}
+\begin{align}
+p(\theta_i|X_i) &= \frac{p(X_i|\theta_i) p(\theta_i)}{p(X_i)}\\
+&= \frac{p(X_i|\theta_i) p(\theta_i)}{\int\limits_{-\infty}^{+\infty}p(X_i|\theta_i) p(\theta_i)\mathrm{d}\theta_i}
+\end{align}
+\end{equation}
+
+where $p(\theta_i)=N(\mu,\sigma_1^2)$, and $p(X_i|\theta_i)=N(\theta_i,\sigma_0^2)$, in a small abuse of notation. We can actually go through and calculate the posterior mean value of $\theta_i$, and we find it given by:
+
+\begin{equation}\label{eq:Objective_bayesEstimator}
+\mathrm{E_{posterior}}(\theta_i) = \mu\frac{\sigma_0^2}{\sigma_0^2+\sigma_1^2} + X_i\frac{\sigma_1^2}{\sigma_0^2+\sigma_1^2}
+\end{equation}
+
+Thus as the sampling variance increases, we give more weight to our prior $\mu$. This is the non-hierarchical Bayes point estimator of $\theta_i$; the drug efficacy in a particular patient. The hierarchical Bayesian estimates assign priors to $(\mu,\sigma_0^2)$, then go on to estimate their values. The empirical Bayes estimators do not quite go the full hog, and instead estimate point values of the parameters. As such, we can think of the empirical Bayes estimator as being somewhere along the spectrum between non-hierarchical models, and hierarchical ones. In the denominator of (\ref{eq:Objective_empiricalBayes}) we would have actually already worked out the marginal distribution: $X_i\sim N(\mu,\sigma_0^2+\sigma_1^2)$. Empirical Bayesians use this distribution to calculate point estimates via a Frequentist technique called method of moments\cite{casella1985introduction}: 
+
+\begin{align}
+\hat{\mu} &= \bar{X}\\
+\frac{\sigma_0^2}{\sigma_0^2+\hat{\sigma}_1^2} &= \frac{(n-3)\sigma_0^2}{\sum\limits_{i=1}^{n}(X_i-\bar{X})^2}
+\end{align}
+
+where we have assumed that $\sigma_0^2$ is fixed. The empirical Bayesian estimator of $\theta_i$ is calculated by substituting in the above estimates into the Bayes estimator (\ref{eq:Objective_bayesEstimator}):
+
+\begin{equation}
+\hat{\theta_i}^{EB} = \bar{X}\frac{(n-3)\sigma_0^2}{\sum\limits_{i=1}^{n}(X_i-\bar{X})^2} + X_i \left[1-\frac{(n-3)\sigma_0^2}{\sum\limits_{i=1}^{n}(X_i-\bar{X})^2}\right]
+\end{equation}
+
+So whilst we have not assigned priors to the parameters, we have nonetheless estimated them, albeit through a Frequentist method. We find this half-Bayesian-half-Frequentist methodology confusing, (as well as being somewhat long-winded) and instead prefer to employ the full hierarchical Bayesian models that we describe in Part \ref{part:regressionHierarchical}, which allow us to obtain posteriors for \textit{all} parameters above. Again, we believe that this search for objective solutions is misguided, and a recognition that \textit{all} analyses involve subjectivity would be a better approach. 
+
 \section{A move towards weakly informative priors}
-\section{Hierarchical models - a natural source of objectivity}
+We have tried to extol the benefits of avoiding the temptation to try to make Bayesian analysis \textit{objective}, by arguing that all analyses are inherently subjective. We have also reasoned that with a lot of data often the use of uninformative priors results in little difference in posterior distributions anyway. However, there are times - particularly when we move to computational methods - that the use of uninformative priors can actually be quite damaging by allowing for greater variation in parameters than is realistic. This results in two issues: firstly, the posterior densities that we estimate may have non-zero support in areas where it is unrealistic; secondly the computational methods we use may take considerably longer than if we used more reasonable priors. 
+
+Gelman terms priors that sit between being uninformative and informative as \textit{weakly informative}. These typically give a wider uncertainty than we would have assumed if we put \textit{all} our pre-experimental knowledge into a prior distribution, but less variability than assuming that we know nothing. Most people automatically use a variety of weakly informative priors in analysis, so this news isn't necessarily controversial. However, we do believe that by explicitly putting a moniker on this type of prior, it will encourage its continued use. 
+
+This advice amounts to a number of conditions that we believe are preferred when setting priors:
+
+\begin{itemize}
+\item Allow parameters considerable uncertainty in priors, such that the range of feasible parameter values is wider than we would expect, but not ridiculous. For example for parameters in a regression where all the variables have been standardised, use $\beta\sim N(0,10)$ rather than $\beta\sim N(0,1000)$.
+\item Use smooth distributions for parameters, rather than discontinuous ones. A typical example here is to use a fairly-long-tailed cauchy distribution rather than a uniform distribution over some non-infinite scale.
+\item Avoid altogether using some distributions that give too much weight to areas of unrealistic parameter values. Examples: inverse-gamma (use half-cauchy instead). 
+\end{itemize}
+
+Some of these lessons are hard to learn before one actually does applied Bayesian analysis, but it is hoped that these are somewhat abided by in the various examples in this book. 
 
 \section{Chapter summary}
+This chapter has given the reader a little insight into \textit{some} of the methods used by those intending to make Bayesian inference less dependent on subjective priors. We believe that the fear of this subjectivity is inherently misplaced, since most analyses require analysts to make decisions between a range of reasonable modelling options. Also, we argued that the effects of using noninformative prior distributions are slight vs more reasonable weakly informative priors, particularly when there is moderate amounts of data. 
+
+Before we take a plunge into modern methodologies that are used to do Bayesian inference, we wish to provide a carrot to entice the reader to proceed. Most objectivist critics of Bayesian analysis object to the use of prior distributions due to their inherent subjectivity. However, some of these issues can be relegated, if not dismissed, if instead we choose to abstract our model parameters up a given level; by assigning priors to the prior parameters themselves. These hierarchical models provide \textit{much} more freedom to parameters than is available through non-hierarchical equivalents. They essentially allow the data to much more determine the structure of the model, allowing the analyst to avoid having to make decisions for which there may, or may not, be consensus. Along with this benefit, the use of hierarchical models avoids a whole range of estimation pathologies, for example overfitting.
+
+However, these hierarchical models are typically not amenable to the exact forms of estimation - via pen and paper - that we have thus far been exposed. Nor for that matter, are the majority of interesting non-hierarchical models, since they require greater flexibility than we are given through the sole use of conjugate prior-likelihood pairs. It turns out that whilst we may not be able to exactly calculate posteriors, we can still obtain samples from them through straightforward computational methods. The use of these computational methods, rather than is often believed, actually make it \textit{easier}, and less mathematically-onerous to do Bayesian analysis in practice. Even better, past masters have actually made things a lot easier for us by coding up these methods into simple-to-implement statistical languages. However, whilst it may be fairly straightforward to implement a particular model in one of these languages, pitfalls still await those that do not fully understand the underlying algorithms. Fortunately however these methods are full of intuition, which we hope to confer onto the reader in Part \ref{part:regressionHierarchical}.
 
 \section{Chapter outcomes}
+The reader should now be familiar with the following concepts:
+
+\begin{enumerate}
+\item Jeffreys' definition of noninformative priors, and his solution.
+\item The limitations of Jeffreys' Priors.
+\item The framework behind Reference priors, and reasons for their practical limitations.
+\item Empirical Bayes estimates as half-Bayesian/half-Frequentist beasts lying somewhere in the spectrum between non-hierarchical and hierarchical Bayesian models.
+\end{enumerate}
+
 
 \part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
 
