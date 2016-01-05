@@ -2073,7 +2073,7 @@ Bayesians are acutely aware that their models are wrong. At best the abstraction
 \item Test your model's ability to explain said behaviour/data patterns. If unsuccessful go back to the second step and re-evaluate the appropriateness of your assumptions.
 \end{enumerate}
 
-Whilst this methodology is useful for building a statistical model in general, it is more applicable for use with a full Bayesian model, resulting in a posterior distribution. In which case how do we go about specifying a likelihood for a given situation? To answer this we will start with going through a simple example.
+Whilst this methodology is useful for building a statistical model in general, it is more applicable for use with a full Bayesian model, resulting in a posterior distribution. In which case how do we go about specifying a likelihood for a given situation? To answer this we will start with going through a few simple examples. For a quick graphical guide to choosing an appropriate likelihood, we refer the reader to figure \ref{fig:Distributions_likelihoodTree}.
 
 \subsection{A likelihood model for an individual's disease status}\label{sec:Likelihood_individualDisease}
 Suppose we work for the State as a healthcare analyst, and we want to build a statistical model to explain the prevalence of a certain disease within a sample, which can then be used to make inferences about the population incidence. Also, (unrealistically) let's imagine that we start off with a sample of only one person, for whom we have no prior information. Let the disease status of that individual be denoted by the variable $X$ which takes on the following binary outcome values dependent on the disease status the individual:
@@ -3430,16 +3430,23 @@ Often texts on Bayesian analysis assume a familiarity with probability distribut
 
 Generally, there are two classes of distributions: those that can be used for likelihoods, and those which are commonly used for priors. There is considerable overlap between these groupings (particularly for continuous distributions), meaning that we will often encounter the distributions twice. It is important to note that  
 
-Furthermore, it is important to stress that all distributions are related to one another (see section \ref{sec:Distributions_relationships}). Knowledge of these interrelations is both illuminating, as well as being practically useful, since it makes it easier to remember them!  
+Furthermore, it is important to stress that all distributions are related to one another (see section \ref{sec:Distributions_relationships}). Knowledge of these interrelations is both illuminating, as well as being practically useful, since it makes it easier to remember them! The graph of the interconnectivity of distributions is also available in interactive form online, see XXXX. NEED TO MAKE A WEBSITE THAT HAS DISTRIBUTIONS, THEIR MAIN PROPERTIES, AND THEIR INTERCONNECTIONS.
 
 Throughout the chapter there are considerable interactive elements. It is hoped that you will take the opportunity to use this material to gain hands-on experience. If the text becomes dense in places, there are videos which take you through some of the basic properties and uses of the distributions. 
 
-At the end of the chapter, there are two tree diagrams that allow a user to 
+At the end of the chapter, there are two tree diagrams (ALSO AVAILABLE IN INTERACTIVE FORM) that guide a user through choosing either a likelihood, or prior distribution. Whilst these are not exhaustive, it is hoped that they will nonetheless be useful starting points in an analysis.
 
 It should be stressed that this chapter, perhaps less than some of the others needn't necessarily be read in its entirety. Whilst it is recommended that you read all of section \ref{sec:Distributions_samplingDist}, it is not necessary to read the entirety of section \ref{sec:Distributions_priorAll}. Whilst there is much to be gained from persevering, to avoid boredom, it may be better to refer to the relevant section in the event that you come across a distribution which is hitherto unknown to you.
 
-\section{Graph showing interrelation of all distributions}\label{sec:Distributions_relationships}
+\section{The interrelation among distributions}\label{sec:Distributions_relationships}
+This chapter introduces the reader to a multitude of different distributions, and one could be forgiven for becoming overwhelmed by the sheer number of these types of entity. However, it is important to remember, that the distributions all have relationships with one another. The nexus of resultant connections is not merely academic - it is both informative when deciding upon a distribution for an analysis, as well as for recollection. Whilst it is not expected that the reader will be able to remember \textit{all} of the connections between disparate distributions, it is hoped that mere exposure to the graph shown in figure XX will be worthwhile. We strongly encourage the student to refer back to this graph throughout a reading of this chapter, as we believe one to be mutually-reinforcing of the other.
 
+\begin{figure}
+\centering
+\scalebox{0.12} 
+{\includegraphics{Distributions_nexusOfRelations.pdf}}
+\caption{\textbf{Some of the interrelations among common statistical distributions.} Discrete distributions are shown in rectangular boxes, and continuous ones in oval boxes. Black lines indicate that the resultant is a special case of the former, dashed lines indicate approximate/limiting cases, and  red lines indicate that the latter can be made via a transformation of the former. Note that the relationships shown here are \textit{not} exhaustive; there are many more relationships that are \textit{not} shown. CAN WE MAKE THIS OVER A DOUBLE PAGE? WOULD ALSO BE GOOD TO HAVE THIS AS A POSTER INCLUDED IN THE BOOK.}\label{fig:Distributions_nexusOfRelations}
+\end{figure}
 
 \section{Sampling distributions for likelihoods}\label{sec:Distributions_samplingDist}
 The first class of distributions which we came across in Part \ref{part:bayesianFormula} were those that were used to write down a probability model to describe the situation under inspection. As well as expressing our assumptions used to simplify the system, these \textit{likelihood} models also define the parameters over which we are interested in conducting inference. Specifying a likelihood that is adequate to the specifics of the system under consideration is the most important part of conducting Bayesian inference. As such, it is essential to have a reasonable grasp of some of the most common likelihood distributions on which many analyses are built. Whilst there are an infinity of potential sampling distributions out there, we believe that the collection here are the most frequently used, and are often a starting point for the construction of more complex models.
@@ -3735,7 +3742,7 @@ Be careful, $\Gamma$ in the above distributions is the gamma function, \textit{n
 \boxed{Video:} Need to make an intuitive video here.
 \boxed{Interactive:} Need to make an interactive element here.
 
-\subsection{Beta-binomial distribution}
+\subsection{Beta-binomial}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -3852,7 +3859,7 @@ Suppose that we are employed by the county, and are hence interested in developi
 \caption{\textbf{Left}: the distribution covering test scores across both schools can be made from an average of the two individual distributions. \textbf{Right:} a comparison of the resultant distribution with a normal distribution of the same mean and variance.}\label{fig:Distributions_tArithmeticDispersion}
 \end{figure}
 
-We now imagine we are combining a large number of schools, each with the same the mean arithmetic score, but different variances, which we do not know. If we suppose that it is feasible that the variances varies according to: $\frac{1}{\sigma^2}\sim Inv-\Gamma(\frac{\nu}{2},\frac{\nu}{2})$, then it turns out that an overall distribution across all schools can be proved to be a \textit{Student t}\footnote{Named after the pseudonym used by William Sealy Gosset; a Guiness Brewery worker. Remarkable as this is perhaps the first time that statistics and alcohol were found to mix well.} distribution with $\nu$ degrees of freedom (see the problem set at the end of the chapter). This distribution would have a larger variability than an equivalent normal with a variance equal to that of the mean of the variance distribution. The extra uncertainty has caused a widening of the distribution!
+We now imagine we are combining a large number of schools, each with the same the mean arithmetic score, but different variances, which we do not know. If we suppose that the variances varies according to: $\frac{1}{\sigma^2}\sim Inv-\Gamma(\frac{\nu}{2},\frac{\nu}{2})$, then it turns out that an overall distribution across all schools can be proved to be a \textit{Student t}\footnote{Named after the pseudonym used by William Sealy Gosset; a Guiness Brewery worker. Remarkable as this is perhaps the first, but not last time that statistics and alcohol were found to mix well.} distribution with $\nu$ degrees of freedom (see the problem set at the end of the chapter). This distribution would have a larger variability than an equivalent normal with a variance equal to that of the mean of the variance distribution. The extra uncertainty has caused a widening of the distribution!
 
 The higher the number of schools over which we are summing, the more the overall distribution starts to look normal (this is a consequence of the central limit theorem discussed in section \ref{sec:Probability_CLT}), and we see a reduction in the tails. Figure \ref{fig:Distributions_tArithmeticExposition} illustrates how manipulations of the parameters $\sigma$ and $\nu$ which characterise the distribution affect its shape.
 
@@ -3923,7 +3930,7 @@ variance&: var[X] = \frac{1}{\lambda^2}
 \end{empheq}
 \end{subequations}
 
-\subsection{Gamma distribution}
+\subsection{Gamma}
 Distribution checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -4712,13 +4719,23 @@ mean&: \mathrm{E}(\boldsymbol{X}) = \nu \boldsymbol{\Psi}
 \end{empheq}
 \end{subequations}
 
-\section{Choosing a likelihood - tree graph}
-\section{Choosing a prior - tree graph}
+\section{Choosing a likelihood made easy}
+Figure \ref{fig:Distributions_likelihoodTree} shows a tree diagram that gives a simple way of choosing a likelihood based on a given situation. Whilst, of course, this diagram is not exhaustive, nor should be followed blindly, it is hoped that it is suggestive of the type of questions that should be asked about a given situation.
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{Distributions_likelihoodTree.pdf}}
+\caption{\textbf{How to choose a likelihood.} Blue text represents an appropriate choice of distribution. \textbf{Want to have circles or squares round distributions, to make them stand out more.}}\label{fig:Distributions_likelihoodTree}
+\end{figure}
+
+\section{Choosing a prior made easy}
 
 \section{Table of common likelihoods, their uses, and reasonable priors}\label{sec:Distributions_table}
 Show over-dispersed, or robust distributions for each of the cases.
 
-
+\section{Distributions of distributions, and mixtures - link to website, and relevance}
+Create a web-page coded in something that allows common use - or using Mathematica, which allows a reader to look at samples from distributions of distributions. EG for hieararchical priors.
 
 \section{Chapter summary}
 The reader should now have a good idea as to the array of likelihood and prior distributions from which to choose for a particular circumstance, however this chapter was not meant to be all-encompassing. It is almost inevitable to come across situations where none of the distributions discussed are appropriate, but it is hoped that this chapter should provide some guidance as to where to look in the literature. It is also frequently the case that a suitable distribution can be constructed from the basic building blocks discussed.
