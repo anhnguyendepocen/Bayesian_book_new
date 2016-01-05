@@ -596,21 +596,29 @@ A quick note on terminology: often theorists use probability \textit{mass} to ha
 \boxed{Video:} see the video XXX which explains more about the difference between a probability and a probability density. A coin hidden in a Christmas pudding would be a good example.
 
 \subsubsection{A (wet) river crossing}
-Imagine you wish to cross a fast-flowing river to reach friends on the other side. Unbeknownst to you, a rather devious park ranger has arranged 6 stepping stones which \textit{guarantee} a person attempting to cross the river will suffer a wet fate! Since you are guaranteed a damp walk home, the only uncertainty is exactly \textit{where} along the stepping stone route you will fall. Your friends/schadenfreunde are anticipating this outcome, and have assigned probabilities of you falling when attempting to reach each individual stone; the higher the stone, the more probable a person will fall into the water whilst trying to reach that particular stone (see figure \ref{fig:Probability_steppingStones}). In this case, there only 6 outcomes to the crossing: you fall from stone 1, 2, 3, 4, 5, or 6 (we suppose that if a person did manage to get to the last stone, they would always reach the opposite bank). Thus each of these \textit{discrete} outcomes has associated with its own non-zero probability. 
+Imagine you wish to cross a fast-flowing river to reach friends on the other side. Unbeknownst to you, a rather devious park ranger has arranged 6 stepping stones which \textit{guarantee} a person attempting to cross the river will suffer a wet fate! Since you are guaranteed a damp walk home, the only uncertainty is exactly \textit{where} along the stepping stone route you will fall. Your friends/schadenfreunde are anticipating this outcome, and have assigned probabilities of you falling when attempting to reach each individual stone; the higher the stone, the more probable a person will fall into the water whilst trying to reach it (see figure \ref{fig:Probability_riverCrossing}). In this case, there only 6 outcomes to the crossing: you fall from stone 1, 2, 3, 4, 5, or 6 (we suppose that if a person did manage to get to the last stone, they would always reach the opposite bank). Thus each of these \textit{discrete} outcomes is associated with its own non-zero probability. 
 
-By contrast imagine that the malevolent omnipotent ranger has instead arranged a bridge across the river; again through their powers they have ensured that you will \textit{definitely} fall whilst attempting to navigate the path. Again your friends want to try to make sense of this divine intervention, and want to assign probabilities to each of the outcomes. However, this is different to before, since there are no longer a finite number of possible places where you can fall; there are in fact, a infinite continuum of possibilities. Here you could fall from a point 5m from the bank, or 5.000001m from the bank! Clearly here we are not going to be able to assign a positive probability to all of these possible outcomes, since this would result in the total probability integrating to infinity. Instead of attempting this full-hardy task, your friends instead prefer to deal with probabilities across particular non-zero intervals of the bridge length (see the middle panel of figure \ref{fig:Probability_steppingStones}). Thus here in order to get out the quantity of interest - a probability of falling across a small interval - we are required to multiply our measure - now called a probability \textit{density} - by the small length of bridge interval over which we are concerned. Note we have used a small interval here so that we can assume that the measure is unchanging across its length. Also notice that a probability density has no meaning without a corresponding length scale; in this case we can think of the density of having `units' probability/meter.  
+By contrast imagine that the malevolent omnipotent ranger has instead arranged a bridge across the river; again through their powers they have ensured that you will \textit{definitely} fall whilst attempting to navigate the path. Again your friends want to try to make sense of this divine intervention, and want to assign probabilities to each of the outcomes. However, this is different to before, since there are no longer a finite number of possible places where you can fall; there are in fact, a infinite continuum of possibilities. Here you could fall from a point 5m from the bank, or 5.000001m from the bank! Clearly here we are not going to be able to assign a positive probability to all of these possible outcomes, since this would result in the total probability integrating to infinity. Instead of attempting this full-hardy task, your friends instead prefer to deal with probabilities across particular non-zero intervals of the bridge length, again deciding that the higher the bridge, the greater the probability of you falling (see the middle panel of figure \ref{fig:Probability_riverCrossing}). Thus here in order to get out the quantity of interest - a probability of falling across a small interval - we are required to multiply our measure - now called a probability \textit{density} - by the small length of bridge interval over which we are concerned. Note we have used a small interval here so that we can assume that the measure is unchanging across its length. Also notice that a probability density has no meaning without a corresponding length scale; in this case we can think of the density of having `units' probability/meter.  
 
 Finally imagine that it is winter, and now the very top the river is frozen, allowing you the possibility of choosing your own (potentially) non-straight-line path across. Again we invoke the idea of our cunning (increasingly-deified) ranger who has determined that you will fall at some point in your attempted crossing. Your friends now note that the ice is thicker in some places than others, and hence the potentiality of falling in some places is greater than others. We suppose that we can characterise a given point in the path by its distance across the river - the y direction - together with the transverse distance along the bank - called `x'. This allows your friends to construct a probability density which is now defined in terms of these two coordinates. Again we see immediately that there are an infinity of different possible places where you could fall, for example, at a point (1.1m, 3.2m) or (1.1000001m,3.2000000001m) across. Clearly now in order for our density must have `units' probability/$m^{-2}$. Thus to calculate the quantity of interest - a probability of falling across a small area - we are required to multiply the value of the probability density by the corresponding value of area. 
 
+In closing our discussion of the differences between probabilities and probability densities, we note that in the case of the latter we always need to supply a `volume' which provides the necessary exchange rate for converting to a probability. Note the word `volume' is used for its analogy with 3D solids, where we can calculate the mass of an object by multiplying the density by the volume. Analogously here we can calculate the \textit{probability mass} of an infinitesimal volume:
+%
+\begin{equation}
+probability\; mass = probability\; density \times volume
+\end{equation}
+%
+However, here a volume need not correspond to an actual 3D volume in space, but corresponds to a unit of measurement across the range of a random variable of interest. In the above examples we first used a length, then an area as our volume unit, however in other examples it could correspond to a weight, percentage or even a probability.
+
 \begin{figure}
 \centering
-\scalebox{0.6} 
-{\includegraphics{Probability_steppingStones.png}}
-\caption{Left: a discrete probability distribution, and corresponding probabilities. Right: a probability density.}\label{fig:Probability_steppingStones}
+\scalebox{0.2} 
+{\includegraphics{Probability_riverCrossing.pdf}}
+\caption{Top: crossing on discrete stepping stones. Middle: crossing via a bridge whose height (B) is a probability density. Bottom: crossing on thin ice - the thickness of the ice (F) represents a probability density.}\label{fig:Probability_riverCrossing}
 \end{figure}
 
 \subsubsection{Probability zero vs impossibility}
-You may be left wondering, if we have a continuous distribution over some interval - say a standard normal distribution across the set of all numbers from minus infinity and plus infinity - then the aforementioned discussion of probabilities vs probability densities suggests that the probability of exactly obtaining any particular number is zero. However, does this mean that it is impossible to obtain a particular number? If you answered `yes' here, then how can we ever hope to obtain a sample of numbers from our distribution, since they are all individually impossible? The apparent paradox at hand is subtle, but important nonetheless. Whilst a full explanation of this issue requires a knowledge of \textit{measure theory}, we can still attempt a more heuristic explanation.
+You may be left wondering, if we have a continuous distribution over some interval - say a standard normal distribution which could potentially output any real number from minus infinity and plus infinity - then the aforementioned discussion of probabilities vs probability densities suggests that the probability of exactly obtaining any particular number is zero. However, does this mean that it is impossible to obtain a particular number? If you answered `yes' here, then how can we ever hope to obtain a sample of numbers from our distribution, since they are all individually impossible? The apparent paradox at hand is subtle, but important nonetheless. Whilst a full explanation of this issue requires a knowledge of \textit{measure theory}, we can still attempt a more heuristic explanation.
 
 When we say an event is impossible, we always say that it has a probability zero. Essentially when we use the word `impossible' we are saying that the event does not appear within our space of potential eventualities. Imagine the event that you simultaneously conclude \textit{both} of the following about a ball withdrawn from an urn of many balls:
 
@@ -621,7 +629,9 @@ When we say an event is impossible, we always say that it has a probability zero
 
 Philosophically, we could argue that such an event is impossible. We shouldn't even include it in our set of possible outcomes. Thus this event corresponds to an empty set in our outcome space. The empty set by default is assigned a probability zero, meaning that the above white/black ball outcome is also assigned a probability of zero.
 
-Discussion of the converse.
+Alternatively, going back to our example of a sample of numbers from a standard normal, we would assign the purely imaginary number $i$, to the empty set since it lies outside of the range of such a distribution; meaning it is impossible. By converse, consider attempting to exactly guess the number that we obtain from our distribution. Clearly obtaining the number 3.142 here \textit{is} possible - it does not lie outside of the range of the distribution - so we shouldn't assign it to the empty set. However, if we multiply our probability density by the volume corresponding to this particular value, then we get zero, because the volume element is of zero width! So we see that events that have probability zero, \textit{can} still be possible. 
+
+So basically, we have learned that events that are impossible have zero probability. However, the converse is \textit{not} true: events that are of zero probability are still possible. If this still does not sit right with you, then remember that probabilities are just units of measurement. For a Bayesian they measure subject points of view, so clearly an event to which we assign zero probability can still happen. For a Frequentist, they measure the outcome of an infinite series of identical trials. In our distribution example we can imagine attempting to guess the number our distribution outputs for each sample. We could then enumerate the ratio: $\frac{#successes}{#trials}$. Whilst we might correctly guess the number a few times, clearly the denominator here would dominate (go to infinity), and we would still get a probability of zero.
 
 \subsubsection{The good news: Bayes' rule doesn't distinguish between probabilities and probability densities}
 Whilst it is important to understand that probabilities and probability densities are \textit{not} the same type of entity, the good news for us is that Bayes' rule is the same for each. So we can readily write:
@@ -1050,9 +1060,9 @@ which we see is true. We could similarly also validate this by checking the othe
 \end{table}%
 
 \subsection{Conditional independence}\label{sec:Probability_conditionalIndependence}
-In statistics we often come across situations where we suppose that observations are \textit{conditionally} independent. This is often swept under the carpet, and in discussion authors (falsely) state that the observations are \textit{independent}. Suppose that we work for the WHO, as an epidemiologist, and are interested in estimating the proportion of obese individuals within a distinct urban area. Within this are, we can suppose that there exists a true proportion of this condition, $\theta$. Suppose we select an individual uniformly at random from this population, and record their status, $X_1$, for this disorder. We then pick another individual, and record their status, calling it $X_2$. If we knew $\theta$, then we might suppose that the outcomes of these two picks are independent \textit{conditional} on this overall parameter. In other words, the outcome of the first sampling provides us \textit{no} further information on the disorder status of the second.
+In statistics we often come across situations where we suppose that observations are \textit{conditionally} independent. This is often swept under the carpet, and in discussion authors (falsely) state that the observations are \textit{independent}. Suppose that we work for the WHO, as an epidemiologist, and are interested in estimating the proportion of obese individuals within a distinct urban area. Within this area, we can suppose that there exists a true proportion of this condition, $\theta$. Suppose we select an individual uniformly at random from this population, and record their status, $X_1$, for this disorder. We then pick another individual, and record their status, calling it $X_2$. If we knew $\theta$, then we might suppose that the outcomes of these two picks are independent \textit{conditional} on this overall parameter. In other words, the outcome of the first sampling provides us \textit{no} further information on the disorder status of the second.
 
-This conditional independence property has frequently be represented in diagrammatic form of the type shown in figure \ref{fig:Probability_conditionalIndependence}. The arrows represent a dependency. When viewed in this light we see that it is incorrect to view the disease statuses of individuals 1 and 2 as \textit{fully} independent, since they are linked through a joint dependence on $\theta$. However, note that there is no direct arrow joining $X_1$ and $X_2$; this means that the random variables are \textit{conditionally} independent, when we allow for a joint dependence on $\theta$. 
+This conditional independence property is frequently represented in diagrammatic form of the type shown in figure \ref{fig:Probability_conditionalIndependence}. The arrows represent a dependency. When viewed in this light we see that it is incorrect to view the disease statuses of individuals 1 and 2 as \textit{fully} independent, since they are linked through a joint dependence on $\theta$. However, note that there is no direct arrow joining $X_1$ and $X_2$; this means that the random variables are \textit{conditionally} independent, when we allow for a joint dependence on $\theta$. 
 
 \begin{figure}
 \centering
@@ -1146,6 +1156,8 @@ p(cancer|+ve) &= \frac{p(+ve|cancer)\times p(cancer)}{p(+ve)}\\
 \end{equation}
 
 In (\ref{eq:Probability_bayesBreastCancer}), we got from the first line to the second by using (\ref{eq:Probability_marginalDiscreteProbabilityTwoDimensions}) to work out the marginal probability of an individual testing positive. The fact that the probability is so small is due to the risk of false positives (see video XXX for a fully-intuitive explanation of this), which produce many more positive diagnoses than the real-positives (because the risk of cancer is much lower than the probability of not having cancer).
+
+\boxed{Video:} Make a video introducing Bayes' rule with Blair's decision to go to Iraq about WMDs. To coincide with the Chilcott enquiry (see Dad's email).
 
 \section{The Bayesian inference process from the Bayesian formula}
 In Bayesian statistics we aim to use probability distributions to describe all components of our system. Our starting point is Bayes' rule:
@@ -1332,7 +1344,7 @@ In many cases, it is easier to understand the meaning of uncertainty if it is ex
 
 In sections \ref{sec:Posterior_HDI} and \ref{sec:Posterior_CPI} we will introduce other summary measures of distributions, that are also often presented in research articles, and books. However, the important thing to note is that all of these are derived from the posterior distribution for our parameters. 
 
-Another example of the use of posteriors can be illustrated by a regression example. Suppose that we are investigating the effect of military participation on lifetime earnings\footnote{See Angrist's fantastic 1990 article for a detailed study of this effect for Vietnam war veterans \cite{angrist1990lifetime}.}. We suppose that the effect is, on average, negative due in part to the psychological stresses of warfare. We also suppose that the effect is can be modelled as being linear, and hence our relationship of interest can be represented as:
+Another example of the use of posteriors can be illustrated by a regression example. Suppose that we are investigating the effect of military participation on lifetime earnings\footnote{See Angrist's fantastic 1990 article for a detailed study of this effect for Vietnam war veterans \cite{angrist1990lifetime}.}. We suppose that the effect is, on average, negative due in part to the psychological stresses of warfare. We also suppose that the effect can be modelled as being linear, and hence our relationship of interest can be represented as:
 
 \begin{equation}\label{eq:Posterior_militaryParticipation}
 LI_i = \alpha + \beta MP_i + \epsilon_i
@@ -1413,10 +1425,9 @@ In the Frequentist paradigm we imagine that we are taking repeated samples from 
 \caption{The classical confidence interval. In each sample, we can calculate a 95\% confidence interval. Across repeated samples from a given population distribution, the classical confidence interval will contain the true parameter value 95\% of time.}\label{fig:Posterior_classicalConfidenceInterval}
 \end{figure}
 
-However, what is important to note here is that in reality, we only draw one sample from the population, and we have no way of knowing whether the confidence interval we calculate contains the true parameter value. This means that although 95\% of the time the confidence intervals we calculate will contain the true value of the parameter, and 5\% of confidence intervals will be nonsense! 
+However, what is important to note here is that in reality, we only draw one sample from the population, and we have no way of knowing whether the confidence interval we calculate contains the true parameter value. This means that although 95\% of the time the confidence intervals we calculate will contain the true value of the parameter, and 5\% of confidence intervals will be nonsense!
 
-In general, a confidence interval represents the uncertainty about the interval we obtained, rather than a statement of probability about the parameter of interest. The uncertainty is quantified in terms of all the samples we \textit{could}
-have taken, not only the one we have in our hands.
+In general, a confidence interval represents the uncertainty about the interval we obtained, rather than a statement of probability about the parameter of interest. The uncertainty is quantified in terms of all the samples we \textit{could} have taken, not only the one we have in our hands.
 
 \subsection{Credible intervals}
 Credible intervals, in contrast to confidence intervals, describe our uncertainty in the location of the parameter values and thus can be interpreted as a probabilistic statement about the parameters. They are a Bayesian concept, that is calculated from the posterior density.
@@ -1436,7 +1447,7 @@ In general an arbitrary credible interval of $X$\% can be constructed from the p
 \caption{Three examples of a 95\% credible interval for the regression parameter $\beta$ of the example described in section \ref{sec:Posterior_parameterUncertainty}.}\label{fig:Posterior_infiniteCredibleIntervals}
 \end{figure}
 
-In contrast to the classical confidence interval, a credible interval is more straightforward to understand. It is a probability statement of confidence in the location of a parameter. Also, in contrast to the classical confidence intervals, the uncertainty here refers to our inherent uncertainty in the value of the parameter, rather than counter-factual samples.
+In contrast to the classical confidence interval, a credible interval is more straightforward to understand. It is a probability statement of confidence in the location of a parameter. Also, in contrast to the classical confidence intervals, the uncertainty here refers to our inherent uncertainty in the value of the parameter, rather than an infinity of counterfactual samples.
 
 There are usually an infinite number of regions which satisfy this condition, as figure \ref{fig:Posterior_infiniteCredibleIntervals} indicates for the regression example used in section \ref{sec:Posterior_parameterUncertainty}. All three of the examples shown in figure \ref{fig:Posterior_infiniteCredibleIntervals} satisfy the condition, that given our choice of model and prior, we conclude that there is a 95\% probability that the parameter lies in this range. 
 
@@ -1472,9 +1483,9 @@ For a unimodal, symmetric distribution the central posterior density and highest
 
 
 \subsection{Reconciling the difference between confidence and credible intervals}
-It is easy to jump on the bandwagon, and dismiss classical confidence intervals as misleading; favouring the Bayesian alternative definitively. However, in doing so we are somewhat guilty of zealotry\footnote{Fanaticism.}. The two concepts really just represent different measures of uncertainty. As we explained in section \ref{sec:Intro_FrequentistsWorld}, Frequentists view data sets as one of an infinity of exactly repeated experiments, and hence design an interval which contains the true value X\% of the time across all these repetitions. The Frequentist confidence interval states uncertainty in terms of the interval itself. By contrast, Bayesians view the data as fixed, and the parameter as coming from an over-arching distribution. They correspondingly calculate an interval where X\% of the parameter's estimated probability mass lies.
+It is easy to jump on the bandwagon, and dismiss classical confidence intervals as misleading; favouring the Bayesian alternative definitively. However, in doing so we are somewhat guilty of zealotry. The two concepts really just represent different measures of uncertainty. As we explained in section \ref{sec:Intro_FrequentistsWorld}, Frequentists view data sets as one of an infinity of exactly repeated experiments, and hence design an interval which contains the true value X\% of the time across all these repetitions. The Frequentist confidence interval states uncertainty in terms of the interval itself. By contrast, Bayesians view the data as fixed, and the parameter as coming from an over-arching distribution. They correspondingly calculate an interval where X\% of the parameter's estimated probability mass lies.
 
-The problem with the classical confidence interval is more that it is often interpreted \textit{incorrectly}, as a \textit{credible} interval. It is not a problem with the concept itself. It just depends on your personal preference, and situation, as to which you find more useful.
+The main problem with the classical confidence interval is more that it is often interpreted \textit{incorrectly}, as a \textit{credible} interval. It is not necessarily a problem with the concept itself (although \textit{p values} and hence confidence intervals can be shown to violate the likelihood principle\footnote{Experiments yielding identical likelihoods should yield the same inferences.}). It just depends on your personal preference, and situation, as to which you find more useful.
 
 The following (slightly silly) example hopefully makes this difference of viewpoint clearer. 
 
@@ -1503,7 +1514,7 @@ Fortunately, previous code-breakers have managed to decode a significant proport
 
 Our job is to predict the next attack destination \textit{given} that we have received the mode of communication used. Since there is uncertainty regarding the attack destination, we shall be making confidence intervals which consist of groups of these entities. We are told to use the most narrow\footnote{We suppose there is a cost to readying a destination against attack.} intervals of width greater than or equal to 75\% in all cases.
 
-From this historical evidence we first put the data into a 'statistics-machine', turning the knob that says 'classical confidence intervals'. The result are the confidence intervals shown in table \ref{tab:Posterior_confidenceIntervalClassical}. In words, this is because the sum of the interval values contained in each column exceeds the threshold. So, for every attack destination, our intervals ensure that the true attack destination lies within the specified sets at least 75\% of the time.
+From this historical evidence we first put the data into a 'statistics-machine', turning the knob that says 'classical confidence intervals'. The result are the confidence intervals shown in table \ref{tab:Posterior_confidenceIntervalClassical}. Note that in all cases the sum of the interval values contained in each column exceeds the threshold. So, for every attack destination, our intervals ensure that the true attack destination lies within the specified sets at least 75\% of the time.
 
 \begin{table}[htbp]
   \centering
@@ -1720,7 +1731,7 @@ This factor represents in a narrow sense, the strength of support of model 1, ov
 
 And the choice of model is determined solely through the Bayes Factor. 
 
-However, there is uncertainty over when is the BF enough to prefer one model over another. Whereas a BF of 100 may be enough to prefer a given model, how about 1.01? Jeffrey's scale (introduced in chapter \ref{chap:ModelFit}), is an arbitrary, albeit industry-standard, meter to determine when a given model should be preferred over another.
+However, there is uncertainty over when the BF is enough to prefer one model over another. Whereas a BF of 100 may be enough to prefer a given model, how about 1.01? Jeffrey's scale (introduced in chapter \ref{chap:ModelFit}), is an arbitrary, albeit industry-standard, meter to determine when a given model should be preferred over another.
 
 I do importantly want to state here, that this is \textit{not} the correct way to choose between competing models. We will learn a much more nuanced, and reasonable way of choosing between models when we introduce the concept of \textit{Posterior Predictive Checks} in chapter \ref{chap:ModelFit}. That is not to say that these methods introduced above can't be used as additional evidence for or against a given model, it is just that they should not be used as \textit{sole}, or even \textit{primary}, method.
 
@@ -2389,6 +2400,8 @@ The first of these expressions yields $\hat{\mu} = \frac{71+75}{2} = 73$, which 
 \hat{\sigma^2} = \frac{1}{2}\left[(75-73)^2 + (71-73)^2)\right] = 4
 \end{equation}
 
+Note that technically, when we find the parameter values corresponding to the maximum likelihood we should check that we have not achieved a minimum (since this will also have a zero gradient). We could do this either by graphing the likelihood, or by checking that the second derivative is negative.
+
 Notice that the maximum likelihood estimators for the population mean and variance are for this case the \textit{sample mean} and \textit{sample variance}\footnote{Albeit a biased estimator of the population variance. The unbiased estimator would divide by 1, rather than 2.}. In fact, this holds for the case of N individuals' data, then the maximum likelihood estimators for this case would be:
 
 \begin{equation}
@@ -2397,6 +2410,18 @@ Notice that the maximum likelihood estimators for the population mean and varian
 \begin{equation}
 \hat{\sigma^2} = \frac{1}{N}\sum\limits_{i=1}^{N}(X_i-\bar{X})^2 = s^2
 \end{equation}
+
+\subsection{Maximum likelihood in simple steps}
+In the above examples we note that we follow the same procedure to arrive at maximum likelihood estimates of parameters. Here, for clarity and as a recap, we note down these steps:
+
+\begin{enumerate}
+\item Find the density of a single data point.
+\item Create the joint density.
+\item Change perspective from a probability density, to a \textit{likelihood} (assume that the data is fixed, and the parameters vary).
+\item Take the log of the joint density.
+\item Maximise the log-likelihood.
+\item (Check that it is a maximum, either graphically or by sign of second derivative).
+\end{enumerate}
 
 \section{Frequentist inference in Maximum Likelihood}\label{sec:Likelihood_maxlikelihoodInference}
 We have now detailed how to derive point estimates of parameters using the method of maximum likelihood. However, at the moment we are unable to make any conclusions about the population. This is because we do not have any idea as to whether we obtained a particular estimate of a parameter due to picking a weird sample, or because it \textit{actually} has a value in the population which is at this value. Frequentists get round this by examining a graph of log-likelihood near the maximum likelihood point estimate (see figure \ref{fig:Likelihood_likelihoodCurvature}). If the log-likelihood is strongly peaked near the maximum likelihood estimate, then this suggests that only a small range of parameters would yield a similar valued likelihood. By contrast, if the log-likelihood is gently peaked near the ML estimate, then it is feasible that a large range of parameters would yield estimates close to this value. In the latter case, it seems logical that we should be less confident in the particular value of the parameter which is given by maximum likelihood. We can measure the 'peakedness' in the log-likelihood by looking at the magnitude of the second derivative\footnote{The first derivative gives the gradient, the second derivative gives the rate of change of the gradient - a measure of curvature.} of the function at the ML point estimate value. The more curved the log-likelihood, the more confident we can be of our estimated parameter value, and any conclusions drawn from this. Note however, that the Frequentist inference is not based on proper probability distributions (since we infer based on a likelihood). This contrasts with the Bayesian method which, by its nature, allows for a more adequate description of parameters, using probability distributions.
@@ -2570,7 +2595,7 @@ We are given some data on a coin which has been flipped twice, with the result $
 \centering
 \scalebox{0.1} 
 {\includegraphics{Prior_priorJustificationCoin.png}}
-\caption{Ignoring common sense, by setting a uniform prior between a coin being fair and biased, results in an unrealistic posterior; supposing that the coin is \textit{very} likely to be biased.}\label{fig:Prior_priorJustificationCoin}
+\caption{The top two boxes represent the different world views for left: the coin being fair, and right: the coin being biased. If we suppose that these two views have the same prior probability, illustrated here by them having the same area, then use of Bayes' rule means that we suppose the coin is likely bias.}\label{fig:Prior_priorJustificationCoin}
 \end{figure}
 
 Figure \ref{fig:Prior_priorJustificationCoin} illustrates how assuming a uniform prior in this case results in a very strong posterior weighting towards the coin being biased. This is because from a likelihood perspective - $p(data|\theta)$ - if we assume that the coin is biased, then the probability of obtaining two heads is high. Whereas if we assume that the coin is fair, then the probability of obtaining this data is only $\frac{1}{4}$. Thus, by ignoring common sense - that it is likely the majority of coins are relatively unbiased - we end up with a result that is nonsensical. 
@@ -2658,27 +2683,51 @@ Now suppose that we had reason to believe that the game-maker had a prejudice to
 \boxed{Interactive:} see the interactive tool XXX to play the goldfish game!
 
 \subsection{Disease proportions revisited}\label{sec:Prior_diseaseProp}
-Suppose that we substitute our goldfish bowl from section \ref{sec:Prior_urn} for a sample of 100 individuals taken from the UK population. Suppose also that we continue to assert the independence of individuals within our sample, and make explicit the assumption that individuals are from the same population, and are hence identically-distributed. We are now interested in making conclusions about the overall proportion of individuals within the population who have the disease, $\theta$. Since the parameter of interest is now continuous, we cannot use Bayes' box as there would be infinitely many rows (corresponding to the continuum of possible $\theta$) over which to sum. Let's suppose that within our sample of 100 we find 3 of them who are disease-positive\footnote{We also suppose that there are no false-positives here.}. We could then use the assumptions of independence and identical-distribution to write down a likelihood of the form introduced in section \ref{sec:Likelihood_diseaseGroup}:
+Suppose that we substitute our goldfish bowl from section \ref{sec:Prior_urn} for a sample of 100 individuals taken from the UK population. Suppose also that we continue to assert the independence of individuals within our sample, and make explicit the assumption that individuals are from the same population, and are hence identically-distributed. We are now interested in making conclusions about the overall proportion of individuals within the population who have the disease, $\theta$. Let's suppose that within a sample of 10 we find 3 of them who are disease-positive\footnote{We also suppose that there are no false-positives here.}. We could then use the assumptions of independence and identical-distribution to write down a likelihood of the form introduced in section \ref{sec:Likelihood_diseaseGroup}:
 
 \begin{equation}\label{eq:Prior_binomial}
-P(Z=3|\theta) = {100 \choose 3} \theta^\beta (1-\theta)^{100-3}
+P(Z=3|\theta) = {10 \choose 3} \theta^\beta (1-\theta)^{10-3}
 \end{equation}
 
-The reason for the ${100 \choose 3}=161,700$ term at the beginning of (\ref{eq:Prior_binomial}) is that we have to count the number of different permutations of getting 3 individuals who are disease-positive within a sample size of 100. 
+The reason for the ${10 \choose 3}=120$ term at the beginning of (\ref{eq:Prior_binomial}) is that we have to count the number of different permutations of getting 3 individuals who are disease-positive within a sample size of 10. 
 
 We suppose that at the beginning of the experiment all values of $\theta$ are equally likely. However, we would expect researchers to have a pre-experimental idea as to the most probable frequencies of the disease within the population, meaning that a flat prior which is given is likely understating a prejudice towards a certain range of $\theta$ values. Whilst, this is the case, it is often assumed in research papers - for the sake of objectivity - that priors are flat, in order to try to minimise the effect which assumptions here make on the outcome of an analysis.
 
-The impact of using a flat prior here is that the posterior is peaked at the same value of $\theta$ as the likelihood (see figure \ref{fig:Prior_disease}). 
+Since the parameter of interest is now continuous, it would appear that we can't use Bayes' box here, as there would be infinitely many rows (corresponding to the continuum of possible $\theta$) over which to sum. However, we can still use it to approximate the shape of the posterior, if we discretise the prior and likelihood at XX intervals across the [0,1] range for $\theta$ (see table \ref{tab:Prior_BayesDiscretised}). 
 
-\subsubsection{Interactive effect of the prior on the posterior}
-See the following link to explore the effect of the prior, as well as the data sample, on the posterior for the disease proportions example.
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{ccccc}
+    \toprule
+    \textbf{$\theta$} & \textbf{Prior} & \textbf{Likelihood} & \textbf{Prior x likelihood} & \textbf{Posterior} \\
+    \midrule
+    0.00  & 0.09  & 0.00  & 0.00  & 0.00 \\
+    0.10  & 0.09  & 0.06  & 0.01  & 0.07 \\
+    0.20  & 0.09  & 0.20  & 0.02  & 0.22 \\
+    0.30  & 0.09  & 0.27  & 0.02  & 0.30 \\
+    0.40  & 0.09  & 0.21  & 0.02  & 0.23 \\
+    0.50  & 0.09  & 0.12  & 0.01  & 0.13 \\
+    0.60  & 0.09  & 0.04  & 0.00  & 0.04 \\
+    0.70  & 0.09  & 0.01  & 0.00  & 0.01 \\
+    0.80  & 0.09  & 0.00  & 0.00  & 0.00 \\
+    0.90  & 0.09  & 0.00  & 0.00  & 0.00 \\
+    1.00  & 0.09  & 0.00  & 0.00  & 0.00 \\
+    \bottomrule
+    \textbf{Total} & \textbf{1.00} & \textbf{0.91} & \textbf{p(data)=0.08} & \textbf{1.00} \\
+    \bottomrule
+    \end{tabular}%
+  \caption{A Bayes box for the discretised disease example of section \ref{sec:Prior_diseaseProp}.}\label{tab:Prior_BayesDiscretised}%
+\end{table}%
 
+The method used to exactly posterior is identical to that which we see in the discretised Bayes' box of table \ref{tab:Prior_BayesDiscretised}, except now that we are multiplying two functions - one for the prior, the other for the likelihood. Essentially all we are doing is multiplying one set of values by another. We see here that the shape of the posterior is the same in both the discretised, as well as the true posterior (see figure \ref{fig:Prior_diseaseDiscretised}). The impact of using a flat prior here is that the posterior is peaked at the same value of $\theta$ as the likelihood. 
+
+\boxed{Interactive:} See the following link to explore the effect of the prior, as well as the data sample, on the posterior for the disease proportions example.
 
 \begin{figure}
 \centering
-\scalebox{0.75} 
-{\includegraphics{Prior_disease.png}}
-\caption{The prior, likelihood and posterior for the disease proportion example described in section \ref{sec:Prior_diseaseProp}. Each point in $\theta$ along the continuous prior curve (top panel) is multiplied by the corresponding value of likelihood (middle panel), to form the numerator of Bayes' rule. The numerator is then normalised to make the posterior probability density shown in the bottom panel.}\label{fig:Prior_disease}
+\scalebox{0.5} 
+{\includegraphics{Prior_diseaseDiscretised.pdf}}
+\caption{The prior, likelihood and posterior for the \textbf{left:} discretised, and \textbf{right:} continuous disease proportion example described in section \ref{sec:Prior_diseaseProp}. Each point in $\theta$ along the continuous prior curve (top panel) is multiplied by the corresponding value of likelihood (middle panel), to form the numerator of Bayes' rule. The numerator is then normalised to make the posterior probability density shown in the bottom panel.}\label{fig:Prior_diseaseDiscretised}
 \end{figure}
 
 \section{Constructing priors}
@@ -2775,7 +2824,7 @@ We now recognise that each equation is of the form of a straight line $y = mx + 
 {\includegraphics{Prior_elicitingRegression.pdf}}\caption{Hypothetical data for the 25th and 75th percentiles of the estimated wage premium from 10 experts. In the left hand panel we regress these percentiles on the corresponding percentiles from a standard normal distribution, yielding estimates of the mean and variance of a normal prior, which is shown on the right.}\label{fig:Prior_elicitingRegression}
 \end{figure}
 
-\section{A strong model is not heavily influenced by priors}
+\section{A strong model is less sensitive to prior choice}
 Returning to the example of section \ref{sec:Prior_diseaseProp} for estimating the prevalence of a disease within a population, we now examine the effects of using an informative prior on the analysis. Suppose we choose a prior which represents our pre-data view that the prevalence of a disease within a particular population is high (see the topmost row of figure \ref{fig:Prior_weakPriorEffect}). If we only have a sample size of 10, and obtain 1 individual in our sample who tests positive for the disease we see that the posterior is located roughly equidistant between the peaks of the prior and likelihood functions respectively (see the left hand column of figure \ref{fig:Prior_weakPriorEffect}). Now if we increase the sample size to 100, keeping the same percentage of individuals who are disease-positive within our sample, we then find that the posterior is peaked much closer to the position of the likelihood peak (see the middle column of figure \ref{fig:Prior_weakPriorEffect}). If we increase sample size further, maintaining the percentage of individuals with a disease in the sample, we see that the posterior peak's position appears indistinguishable from that of the likelihood (see the rightmost column of figure \ref{fig:Prior_weakPriorEffect}). 
 
 We can see from figure \ref{fig:Prior_weakPriorEffect} that the effect of the prior on the posterior density decreases as we collect more data. Alternatively, we see that the likelihood - the effect of current data  - increases as we have access to further data points. This makes intuitive sense, since when we collect more evidence that comes solely from the data we should lend this source more weight, and pay less attention to our pre-experimental prejudices.
@@ -2786,6 +2835,19 @@ In general, in Bayesian analysis, when we collect more data our conclusions beco
 \centering
 \scalebox{0.40} 
 {\includegraphics{Prior_weakPriorEffect.pdf}}\caption{The effect of increasing sample size on the posterior density for the prevalence of a disease in a population. The leftmost column has N=10, the middle N=100, and the rightmost N=1,000. All three have the same proportion of disease cases in the sample.}\label{fig:Prior_weakPriorEffect}
+\end{figure}
+
+\subsection{Caveat: overly-zealous priors \textit{will} affect the posterior}
+Suppose that we strongly believe that the world is flat. So much so that we give the probability that the world is non-flat a prior probability of zero. We then collect some data on star movements in the night sky, and are able to calculate the likelihood of obtaining these results by either assuming a flat or non-flat world; finding overwhelming support in favour of the non-flat world. However, using Bayes' rule here, we find that the posterior probability of the world being flat is equal to zero, since it is the product of a zero-valued prior and a finite likelihood. Clearly here choosing a zero prior has (wrongly) dictated the ultimate inferential result!
+
+Alternatively, imagine that we are interested in estimating the literacy rate within a particular developing country. We speak with the Minister for Education for the country, and they state that they are `morally certain' that the literacy rate is not lower than 65\%. As such, we decide to use a zero-valued prior for values of the literacy rate lower than this value (see figure \ref{fig:Prior_overZealous}). We then collect sample data on literacy for individual families across the country, resulting in a likelihood that is peaked nearer 60\%. Multiplying together the prior and the likelihood to get the posterior, we notice that we end up with a rather ugly, distribution with a kink in it. This posterior is a bit nasty, and will result in very skewed, unrealistic estimates of the mean level of literacy, that lie quite a distance away from the maximum likelihood value.
+
+Generally, we see that choosing a zero-valued prior across particular parameter ranges necessarily results in a zero posterior probability across those ranges. For most cases, the type of discontinuous prior setting shown in the upper-left panel of figure \ref{fig:Prior_overZealous}, should be discouraged, and smoother, less-definitive, distributions chosen instead. It is important to remember that priors should represent well our subjective viewpoints as to the likelihood of a given event. Choosing a zero-valued prior for such an event should mean that, from our perspective, this event is impossible. For most circumstances, we aren't nearly this sure, and we should be more cautious in our certainty. That is not to say that we can't use priors that express a high degree of information about a particular situation - just that we should tend towards using smoother, more mathematically-friendly ways of doing this.
+
+\begin{figure}
+\centering
+\scalebox{0.40} 
+{\includegraphics{Prior_overZealous.pdf}}\caption{\textbf{Left panels:} The effect of choosing a discontinuous prior (top-left) on the posterior. \textbf{Right panels:} choosing a smoother prior that still puts most of its weight for higher values of literacy (top-right) results in a less-skewed mean (shown by orange line). In both cases the data are assumed to be the same, resulting in the same likelihood.}\label{fig:Prior_overZealous}
 \end{figure}
 
 \section{Chapter summary}
@@ -3008,7 +3070,7 @@ Pr(Z=40) &= \int\limits_{0}^{1} Pr(Z=40|\theta) \times p(\theta) \mathrm{d}\thet
 
 In (\ref{eq:Denominator_continuousExampleApprox}), we have used the fact that since $p(\theta)=0$ for $\theta>0.45$, we can restrict the integral to only the region below that value\footnotetext{The factor $\frac{20}{9}$ is from the uniform density for $\theta\leq 0.45$.}. The value $\theta\approx 0.018$ has come by numerically integrating the second line.
 
-Now that we have the value of the denominator, we can use it to normalise the product of the prior and the likelihood, resulting in the posterior distribution seen in figure \ref{fig:Denominator_continuousExample}. Notice the effect of truncating the uniform distribution at $\theta=0.45$ is to truncate the posterior distribution at this value; resulting in a discontinuous jump in the posterior, which could be seen as an undesirable consequence of this prior.
+Now that we have the value of the denominator, we can use it to normalise the product of the prior and the likelihood, resulting in the posterior distribution seen in figure \ref{fig:Denominator_continuousExample}. Notice the effect of truncating the uniform distribution at $\theta=0.45$ is to truncate the posterior distribution at this value; resulting in a discontinuous change in the posterior gradient, which could be seen as an undesirable consequence of this prior.
 
 \subsection{The denominator as a probability}\label{sec:Denominator_asAProbability}
 Another way to view the denominator is as the \textit{probability of the data given choice of model}. Where \textit{model} here encompasses both the likelihood and the prior. It is actually a \textit{marginal} probability density that is obtained by summing/integrating out the dependence on the parameter(s) of the joint density $p(data,\theta)$:
@@ -3153,7 +3215,7 @@ We assume that the patient takes a personality diagnostic test which provides so
     \textbf{} &       & \multicolumn{1}{c}{} & \textbf{0} & \textbf{1} &  \\
     \textbf{} & \textbf{D} & \multicolumn{1}{c}{\textbf{0}} & 0.03  & 0.02  &  \\
     \textbf{} & \textbf{} & \multicolumn{1}{c}{\textbf{1}} & 0.06  & 0.16  &  \\
-    $\textbf{p(X=1)=0.03+0.03+0.06+0.16=0.27}$ &     &  &  &       &  \\
+    $\textbf{p(X=1)=0.03+0.02+0.06+0.16=0.27}$ &     &  &  &       &  \\
     \midrule
     \textbf{Posterior} &       & \multicolumn{1}{c}{} & \multicolumn{2}{c}{\textbf{A}} &  \\
           &       & \multicolumn{1}{c}{} & \textbf{0} & \textbf{1} & \textbf{$p(D|X=1)$} \\
@@ -3214,7 +3276,7 @@ We imagine we only observe a sample of one individual, from which we would like 
 \begin{align}
 p(\boldsymbol{\theta}|\boldsymbol{IQ}) &= \frac{p(\boldsymbol{IQ}|\boldsymbol{\theta})\times p(\boldsymbol{\theta})}{p(\boldsymbol{IQ})}\\
 &= \frac{p(\boldsymbol{IQ}|\mu,\sigma^2)\times p(\mu,\sigma^2)}{p(\boldsymbol{IQ})}\\
-&= \frac{\frac{1}{\sqrt{2\pi\sigma^2}} exp\left(-\frac{\sum\limits_{i=1}^{3}(IQ_i-\mu)^2}{2\sigma^2}\right)\times\frac{1}{\sigma^2}}{\int\limits_{0}^{300}\int\limits_{0}^{\infty}\frac{1}{\sqrt{2\pi\sigma^2}} exp\left(-\frac{\sum\limits_{i=1}^{3}(IQ_i-\mu)^2}{2\sigma^2}\right)\times\frac{1}{\sigma^2}\mathrm{d}\sigma^2\mathrm{d}\mu}\\
+&= \frac{\frac{1}{(2\pi\sigma^2)^\frac{3}{2}} exp\left(-\frac{\sum\limits_{i=1}^{3}(IQ_i-\mu)^2}{2\sigma^2}\right)\times\frac{1}{\sigma^2}}{\int\limits_{0}^{300}\int\limits_{0}^{\infty}\frac{1}{\sqrt{2\pi\sigma^2}} exp\left(-\frac{\sum\limits_{i=1}^{3}(IQ_i-\mu)^2}{2\sigma^2}\right)\times\frac{1}{\sigma^2}\mathrm{d}\sigma^2\mathrm{d}\mu}\\
 &\propto \sigma^{-3} exp\left(-\frac{\sum\limits_{i=1}^{3}(IQ_i-\mu)^2}{2\sigma^2}\right)
 \end{align}
 \end{equation} 
@@ -3269,7 +3331,7 @@ Furthermore, the use of sampling allows one to bypass the difficulty with calcul
 
 \begin{equation}
 \begin{align}
-\mathrm{E}[\theta_1] &= \int\limits_{\Theta_1} \theta_1\int\limits_{\Theta_2} p(\theta_1,\boldsymbol{\theta_2}|data)\mathrm{d}\boldsymbol{\theta_2} \mathrm{d}\theta_1\\
+\mathrm{E}[\theta_1|data] &= \int\limits_{\Theta_1} \theta_1\int\limits_{\Theta_2} p(\theta_1,\boldsymbol{\theta_2}|data)\mathrm{d}\boldsymbol{\theta_2} \mathrm{d}\theta_1\\
 &= \int\limits_{\Theta_1} \theta_1 p(\theta_1|data) \mathrm{d}\theta_1
 \end{align}
 \end{equation}
@@ -3368,9 +3430,16 @@ Often texts on Bayesian analysis assume a familiarity with probability distribut
 
 Generally, there are two classes of distributions: those that can be used for likelihoods, and those which are commonly used for priors. There is considerable overlap between these groupings (particularly for continuous distributions), meaning that we will often encounter the distributions twice. It is important to note that  
 
+Furthermore, it is important to stress that all distributions are related to one another (see section \ref{sec:Distributions_relationships}). Knowledge of these interrelations is both illuminating, as well as being practically useful, since it makes it easier to remember them!  
+
 Throughout the chapter there are considerable interactive elements. It is hoped that you will take the opportunity to use this material to gain hands-on experience. If the text becomes dense in places, there are videos which take you through some of the basic properties and uses of the distributions. 
 
+At the end of the chapter, there are two tree diagrams that allow a user to 
+
 It should be stressed that this chapter, perhaps less than some of the others needn't necessarily be read in its entirety. Whilst it is recommended that you read all of section \ref{sec:Distributions_samplingDist}, it is not necessary to read the entirety of section \ref{sec:Distributions_priorAll}. Whilst there is much to be gained from persevering, to avoid boredom, it may be better to refer to the relevant section in the event that you come across a distribution which is hitherto unknown to you.
+
+\section{Graph showing interrelation of all distributions}\label{sec:Distributions_relationships}
+
 
 \section{Sampling distributions for likelihoods}\label{sec:Distributions_samplingDist}
 The first class of distributions which we came across in Part \ref{part:bayesianFormula} were those that were used to write down a probability model to describe the situation under inspection. As well as expressing our assumptions used to simplify the system, these \textit{likelihood} models also define the parameters over which we are interested in conducting inference. Specifying a likelihood that is adequate to the specifics of the system under consideration is the most important part of conducting Bayesian inference. As such, it is essential to have a reasonable grasp of some of the most common likelihood distributions on which many analyses are built. Whilst there are an infinity of potential sampling distributions out there, we believe that the collection here are the most frequently used, and are often a starting point for the construction of more complex models.
@@ -4067,10 +4136,6 @@ variance&: var[X] = \boldsymbol{\Sigma}
 \end{empheq}
 \end{subequations}
 
-
-\section{Table of common likelihoods, their uses, and reasonable priors}\label{sec:Distributions_table}
-Show over-dispersed, or robust distributions for each of the cases.
-
 \section{Prior distributions}\label{sec:Distributions_priorAll}
 After a likelihood model is specified Bayesian analyses require that all specified parameters are allocated prior distributions, which represent our pre-analysis prejudices (see chapter \ref{chap:Prior}). Much like the sampling distributions we have already met, there are a large number of possibilities available here, and it would be counter-productive to give space to all of them. Instead, we focus on some of the most common choices here from which, if necessary, more complex prior distributions can be constructed. 
 
@@ -4646,6 +4711,13 @@ pdf&: f(\boldsymbol{X}|\boldsymbol{\Psi},\nu) = \frac{|\boldsymbol{X}|^{\frac{\n
 mean&: \mathrm{E}(\boldsymbol{X}) = \nu \boldsymbol{\Psi}
 \end{empheq}
 \end{subequations}
+
+\section{Choosing a likelihood - tree graph}
+\section{Choosing a prior - tree graph}
+
+\section{Table of common likelihoods, their uses, and reasonable priors}\label{sec:Distributions_table}
+Show over-dispersed, or robust distributions for each of the cases.
+
 
 
 \section{Chapter summary}
