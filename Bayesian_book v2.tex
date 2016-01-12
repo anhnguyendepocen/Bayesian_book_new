@@ -555,7 +555,7 @@ The discrete probability distribution for the lottery shown on the left hand sid
 p(X=3)= \frac{1}{100}
 \end{equation}
 
-In the discrete case, if we want to calculate the probability that a random variable takes on a range of values, then we simply need to sum the individual probabilities corresponding to each specific event. In the die example, if we want to calculate the probability that the winning number is 10 or less, we just add together the probabilities of it being \{1, 2, 3, 4, 5, 6, 7, 8, 9, 10\}:
+In the discrete case, if we want to calculate the probability that a random variable takes on a range of values, then we simply need to sum the individual probabilities corresponding to each specific event. In the lottery example, if we want to calculate the probability that the winning number is 10 or less, we just add together the probabilities of it being \{1, 2, 3, 4, 5, 6, 7, 8, 9, 10\}:
 
 \begin{equation}
 \begin{align}
@@ -703,7 +703,7 @@ If we were to have a business buying (and selling) second-hand cars, we might ke
 \centering
 \scalebox{0.55} 
 {\includegraphics{Probability_meanContinuousLongRun.pdf}}
-\caption{Career second-hand car sales. We can see the approach of the sample mean towards the long-run mean of \$3,500.}\label{fig:Probability_meanContinuousLongRun}
+\caption{Career second-hand car sales. We can see the approach of the sample mean towards the long-run mean of \$3,000.}\label{fig:Probability_meanContinuousLongRun}
 \end{figure}
 
 If you can grasp the process undertaken to produce figures \ref{fig:Probability_meanDiscreteLongRun} and \ref{fig:Probability_meanContinuousLongRun} respectively, then you already understand the basis behind modern computational Bayesian statistics! If you need a bit more explanation of the theory of Bayesian computational, then fear not, we devote an entire Part of the book for this purpose (see Part \ref{part:computationalBayes}).  
@@ -864,7 +864,7 @@ Add a 3D version of the figure with the contours traced out on the landscape, an
 \end{figure}
 
 \subsubsection{Venn diagrams}
-An alternative way of thinking about marginal distributions is provided by the Venn diagram shown in figure \ref{fig:Probability_Venn}. In a Venn diagram, the area of a particular event indicates its probability, and the rectangular area represents all the events that can possibly happen, and so has an area of 1. We have chosen to specify the events of horse A winning, and B winning A as sub-areas the diagram, which overlap indicating a region of joint probability, $p(X_A=1,X_B=1)$. In this set-up it is straightforward to calculate the marginal probability of horse A winning, or horse B; we find the area of the elliptic shapes A or B respectively. Considering horse A, when we calculate the area of the entire ellipse, we are implicitly carrying out the sum of the form indicated in (\ref{eq:Probability_marginalDiscreteProbabilityTwoDimensions}):
+An alternative way of thinking about marginal distributions is provided by the Venn diagram shown in figure \ref{fig:Probability_Venn}. In a Venn diagram, the area of a particular event indicates its probability, and the rectangular area represents all the events that can possibly happen, and so has an area of 1. We have chosen to specify the events of horse A winning, and B winning as sub-areas the diagram, which overlap indicating a region of joint probability, $p(X_A=1,X_B=1)$. In this set-up it is straightforward to calculate the marginal probability of horse A winning, or horse B; we find the area of the elliptic shapes A or B respectively. Considering horse A, when we calculate the area of the entire ellipse, we are implicitly carrying out the sum of the form indicated in (\ref{eq:Probability_marginalDiscreteProbabilityTwoDimensions}):
 
 \begin{equation}\label{eq:Probability_vennMarginals}
 p(A) = p(A,B) + p(A,not\; B)
@@ -961,7 +961,7 @@ If we wanted to work out the new probabilities of the two horses winning \textit
 \end{align}
 \end{equation}
 
-Notice now however, that the denominator $p(X_C=1)$; representing the marginal probability of horse C winning is actually obtained by a sum over all the four possible ways this can occur: A and B winning, A winning and B not, B winning and A not, and finally both A and B losing\footnote{I have shortened the notation to allow all the outcomes to be shown on a single line, so $p(X_A=1,X_B=1,X_C)=p(1,1,X_C)$, for example.}.
+Notice now however, that the denominator $p(X_C=1)$; representing the marginal probability of horse C winning is actually obtained by a sum over all the four possible ways this can occur: A and B winning, A winning and B not, B winning and A not, and finally both A and B losing\footnote{The notation is shortened to allow all the outcomes to be shown on a single line, so $p(X_A=1,X_B=1,X_C)=p(1,1,X_C)$, for example.}.
 
 For another example, suppose that we have a continuous posterior density that is defined in terms of three person-specific variables, $p(IQ,FS,W)$; where $W$ represents the weight of an individual. If we wish to determine the posterior solely as a function of $IQ$ and $FS$, then we start by defining the parameter vector $\boldsymbol{\theta} = (IQ,FS)$, meaning we are left with $p(\boldsymbol{\theta},W)$. Note that all we have done is defined a new composite variable, $\boldsymbol{\theta}$. Now our density is of the '2-dimensional' form shown in (\ref{eq:Probability_marginalContinuousProbabilityTwoDimensions}), and we can apply this relation:\\
 
@@ -1084,7 +1084,7 @@ However, we also see another tendency of the probability densities: \textit{an i
 
 There are in fact a number of central limit theorems, of which we have only exposed you to the one for the average of independent, identically-distributed random variables\footnote{Known as the Lindeberg-Levy CLT. \textbf{Note: need an accent on the e.}}. However, what is important for you to note is that, whenever we have a number of factors, which additively result in an outcome, then an assumption of normality may be reasonable.
 
-For example, there is an argument which would suggest that an individual's intelligence is the result of a number of factors including: un-bringing, genetics, life-experience, and health amongst others. Hence, we might tentatively propose that an individual's test score picked at random from the population would actually be normally-distributed! This is why I earlier discussed that the assumption that individuals' test scores were uniform might not be reasonable.
+For example, there is an argument which would suggest that an individual's intelligence is the result of a number of factors including: un-bringing, genetics, life-experience, and health amongst others. Hence, we might tentatively propose that an individual's test score picked at random from the population would actually be normally-distributed! This is why we earlier mentioned that the assumption that individuals' test scores were uniform might not be reasonable.
 
 \begin{figure}
 \centering
@@ -1131,7 +1131,7 @@ p(A|B)\times p(B) = p(B|A)\times p(A) \;\;\;[= p(A,B)]
 
 In (\ref{eq:Probability_BayesianIntuition}), we have added the final part in square parentheses due to the reasoning of section \ref{sec:Probability_BayesianFormula}, that both sides are equivalent to the joint probability of A and B.
 
-What the relation (\ref{eq:Probability_BayesianIntuition}) tells us however, is that there are two ways of arriving at this joint probability (see figure \ref{fig:Probability_BayesianIntuition}). The first way is given by the left hand side, and is due to B occurring, with probability $p(B)$, followed by A \textit{given} that B has occurred, with probability $p(A|B)$. An exactly equivalent way route to both A and B occurring is given by the right hand side of the leftmost equals sign. Here we require that A occurs first, with probability $p(A)$, followed by B \textit{given} that A has occurred, with probability $p(B|A)$.
+What the relation (\ref{eq:Probability_BayesianIntuition}) tells us however, is that there are two ways of arriving at this joint probability (see figure \ref{fig:Probability_BayesianIntuition}). The first way is given by the left hand side, and is due to B occurring, with probability $p(B)$, followed by A \textit{given} that B has occurred, with probability $p(A|B)$. An exactly equivalent way for both A and B to occur is given by the right hand side of the leftmost equals sign. Here we require that A occurs first, with probability $p(A)$, followed by B \textit{given} that A has occurred, with probability $p(B|A)$.
 
 \begin{figure}
 \centering
@@ -1141,7 +1141,7 @@ What the relation (\ref{eq:Probability_BayesianIntuition}) tells us however, is 
 \end{figure}
 
 \subsection{Breast cancer screeing}
-Let's now make this discussion more concrete by means of an example. Let's imagine that we are an oncology doctor, working in breast cancer diagnosis. We suppose that out of all women aged forty who participate in screenings, about 1\% of them will have breast cancer at the time of testing. We suppose that the screening process is relatively robust, and it is known that for women who have breast cancer, the tests will indicate a positive result 80\% of the time. However, there is also the risk of false-positives, with 10\% of women without breast cancer also testing positive\footnote{I am not necessarily indicating clinically-up-to-date values, more I am using these example values to indicate the importance of reducing false-positives of any medical-test.}.
+Let's now make this discussion more concrete by means of an example. Let's imagine that we are an oncology doctor, working in breast cancer diagnosis. We suppose that out of all women aged forty who participate in screenings, about 1\% of them will have breast cancer at the time of testing. We suppose that the screening process is relatively robust, and it is known that for women who have breast cancer, the tests will indicate a positive result 80\% of the time. However, there is also the risk of false-positives, with 10\% of women without breast cancer also testing positive\footnote{We are not necessarily indicating clinically-up-to-date values, more we are using these example values to indicate the importance of reducing false-positives of any medical-test.}.
 
 We now suppose that we are in the position where a woman has tested positive. What we would like to do, is work out the probability that she has breast cancer.
 
@@ -1370,13 +1370,13 @@ In an attempt to improve the odds, you radio to the ship, and ask that they swit
 
 The trouble is, the search area inferred from the aforementioned posterior is still wide. Luckily for the crew however, another nearby radio station has also picked up the signal, and they share this information with you. Finally, feeding this information into the computer, you obtain a final estimation of the ship's location, shown in the right hand panel of figure 1. 
 
-Since there is only a small area of high density, you direct the rescue helicopter to search this area, and they find the find the captain and crew in time.
+Since there is only a small area of high density, you direct the rescue helicopter to search this area, and they find the captain and crew in time.
 
 \begin{figure}
 \centering
 \scalebox{0.2} 
 {\includegraphics{Posterior_bayesianLighthouse.jpg}}
-\caption{Three plots. Left hand plot is a contour plot of probability radiated symmetrically in a semi-circle away from the lighthouse, with the density declining to zero at 25km. The middle plot shows a contour plot of probability, with a higher density towards the centre of the diagram (here the densities are still relatively smooth, indicating high uncertainty). The final plot shows a definite peak in intensity around a particular point about 10km away from the coast, just right of centre. The different contours will be increasing shades of a particular colour.}\label{fig:Posterior_bayesianLighthouse}
+\caption{Three plots. Left hand plot is a contour plot of probability radiated symmetrically in a semi-circle away from the radio control tower, with the density declining to zero at 25km. The middle plot shows a contour plot of probability, with a higher density towards the centre of the diagram (here the densities are still relatively smooth, indicating high uncertainty). The final plot shows a definite peak in intensity around a particular point about 10km away from the coast, just right of centre. The different contours will be increasing shades of a particular colour.}\label{fig:Posterior_bayesianLighthouse}
 \end{figure}
 
 \subsection{Bayesian statistics: updating our pre-analysis uncertainty}
@@ -1386,7 +1386,7 @@ In Bayesian statistics the posterior distribution summarises the combination of 
 prior + data \rightarrow posterior
 \end{equation}
 
-In the Bayesian lighthouse example, we started off with a fairly wide prior, since we were quite uncertain of the boat's location. We then fed the data from the ships' emergency transmitter, along with the prior, into the computer - which uses Bayes' rule - to provide an updated estimate of the ship's location. We actually went through this process twice, to emphasise the fact that Bayes' rule can be used iteratively to update knowledge about an uncertain situation.
+In the Bayesian coastguard example, we started off with a fairly wide prior, since we were quite uncertain of the boat's location. We then fed the data from the ships' emergency transmitter, along with the prior, into the computer - which uses Bayes' rule - to provide an updated estimate of the ship's location. We actually went through this process twice, to emphasise the fact that Bayes' rule can be used iteratively to update knowledge about an uncertain situation.
 
 Statistical inference is useful whenever there is uncertainty regarding a parameter of interest. Bayesians use the posterior distribution, and various summaries of it, in order to describe the degree of uncertainty regarding a parameter. Before we delve too deep though, it is useful to take a step back, and ask the somewhat philosophical question, 'Do parameters actually exist?' 
 
@@ -1618,7 +1618,7 @@ p(x) &= \int\limits_{0}^{1} p(x,\theta) \mathrm{d}\theta\\
 \end{figure}
 
 
-where to get to the second line from the first, we have used the conditional law of probability (\ref{eq:Probability_conditionalProbability}), to decompose the joint distribution into a conditional and prior. Notice that the prior predictive distribution is essentially a sum of the probability of $x$ conditional on $\theta$, weighted by our prior probability to that proportion, $\theta$, voting Republican. this case, this results in the intuitive result, where the prior density and the prior predictive distribution\footnote{This is predictably called a Beta-binomial distribution, since it is made from combining a Beta prior, with a Binomial likelihood. Don't worry though, we will discuss this in detail in chapter \ref{chap:conjugate}.} exactly line up (albeit on different scales).
+where to get to the second line from the first, we have used the conditional law of probability (\ref{eq:Probability_conditionalProbability}), to decompose the joint distribution into a conditional and prior. Notice that the prior predictive distribution is essentially a sum of the probability of $x$ conditional on $\theta$, weighted by our prior probability to that proportion, $\theta$, voting Republican. In this case, this results in the intuitive result, where the prior density and the prior predictive distribution\footnote{This is predictably called a Beta-binomial distribution, since it is made from combining a Beta prior, with a Binomial likelihood. Don't worry though, we will discuss this in detail in chapter \ref{chap:conjugate}.} exactly line up (albeit on different scales).
 
 After our first sample of 100 people from that particular location, we find that 32 of them would vote Republican. We use this data to calculate our likelihood, then combine this with our prior via Bayes' rule; obtaining the posterior density shown in the top-right of figure \ref{fig:Posterior_priorPosteriorPredictiveVoting}. Our job is now to estimate the number of people who will vote republican in a new sample, of the same size. Ideally, we would like to have a probability distribution to describe all the possible outcomes. This distribution is known as the \textit{posterior predictive distribution}, because it is that which we would predict \textit{after} obtaining our data sample. It is written as $p(x'|x)$ where $x'$ represents the number of people voting Republican in the new sample, and $x$ is the number voting Republicans in the previous sample ($x=32$). We can use a method exactly analogous to that which we used previously, by integrating out $\theta$ dependence of the joint distribution of $x'$ and $\theta$, although now we have to condition on $x$:
 
@@ -1733,10 +1733,10 @@ And the choice of model is determined solely through the Bayes Factor.
 
 However, there is uncertainty over when the BF is enough to prefer one model over another. Whereas a BF of 100 may be enough to prefer a given model, how about 1.01? Jeffrey's scale (introduced in chapter \ref{chap:ModelFit}), is an arbitrary, albeit industry-standard, meter to determine when a given model should be preferred over another.
 
-I do importantly want to state here, that this is \textit{not} the correct way to choose between competing models. We will learn a much more nuanced, and reasonable way of choosing between models when we introduce the concept of \textit{Posterior Predictive Checks} in chapter \ref{chap:ModelFit}. That is not to say that these methods introduced above can't be used as additional evidence for or against a given model, it is just that they should not be used as \textit{sole}, or even \textit{primary}, method.
+Importantly we do want to state here, that this is \textit{not} the correct way to choose between competing models. We will learn a much more nuanced, and reasonable way of choosing between models when we introduce the concept of \textit{Posterior Predictive Checks} in chapter \ref{chap:ModelFit}. That is not to say that these methods introduced above can't be used as additional evidence for or against a given model, it is just that they should not be used as \textit{sole}, or even \textit{primary}, method.
 
 \subsection{Example: epidemiologist comparison}
-Suppose you find yourself in the (bizarre) situation, where you would like to compare two epidemiologists in terms of their ability to predict the underlying proportion of individuals having colds. The first epidemiologist, named \textit{optimist}, gives his estimation of the proportion of individuals with colds, $\theta$, via the (prior) distribution shown in figure \ref{fig:Posterior_bayesFactorFluEpidemiologist}. The second, named \textit{pessimist}, gives a slightly more conservative estimate of the underlying proportion of individuals with colds (also shown in figure \ref{fig:Posterior_bayesFactorFluEpidemiologist})\footnote{Here I have actually generated these priors by assuming, for the optimist, $\theta\sim Beta[3,40]$ and $\theta\sim Beta[4,15]$ for the optimist and pessimist respectively.}.
+Suppose you find yourself in the (bizarre) situation, where you would like to compare two epidemiologists in terms of their ability to predict the underlying proportion of individuals having colds. The first epidemiologist, named \textit{optimist}, gives his estimation of the proportion of individuals with colds, $\theta$, via the (prior) distribution shown in figure \ref{fig:Posterior_bayesFactorFluEpidemiologist}. The second, named \textit{pessimist}, gives a slightly more conservative estimate of the underlying proportion of individuals with colds (also shown in figure \ref{fig:Posterior_bayesFactorFluEpidemiologist})\footnote{Here we have actually generated these priors by assuming, for the optimist, $\theta\sim Beta[3,40]$ and $\theta\sim Beta[4,15]$ for the optimist and pessimist respectively.}.
 
 The data we have is 10 samples of 100 people, where survey respondents have indicated whether or not they are currently suffering from a cold, $\boldsymbol{x} = \{22, 18, 18, 12, 16, 15, 21, 19, 14, 15\}$. 
 
@@ -1751,7 +1751,7 @@ p(data) &= \int\limits_{0}^{1} p(data,\theta) \mathrm{d}\theta\\
 
 where $p(data|\theta)$ is the likelihood function\footnote{Which here is taken to be a binomial density.}. Carrying out this integrand for each of the different priors results in the probabilities of data given in the bottom panel of figure \ref{fig:Posterior_bayesFactorFluEpidemiologist}. From this, we note two things: firstly both of the probabilities are very small. This is typical, and is unsurprising when you consider the vast array of possible outcomes that could have occurred. Secondly, we see that the probability of the data for the pessimist is higher than for the optimist. Indeed, we can calculate the Bayes factor via (\ref{eq:Posterior_bayesFactorDefinition}), and find here $BF \approx 6$ for the pessimist vs the optimist model; which, if we assign equal priors to each model, results in us favouring the pessimistic perspective.
 
-I should add that this use of Bayes factors is atypical; it is not usually used as a means of testing between differing priors. However, since this forms part of a model, we can test its support with the data like any other part.
+It should be added that this use of Bayes factors is atypical; it is not usually used as a means of testing between differing priors. However, since this forms part of a model, we can test its support with the data like any other part.
 
 \begin{figure}
 \centering
@@ -1788,7 +1788,7 @@ The idea behind this methodology is to simulate data, of the same dimension, and
 \item Use these parameters in the likelihood function, then use this distribution to sample new data: $x'\sim p(x'|\theta)$
 \end{enumerate}
 
-We shall see a full description of this methodology in chapter \ref{chap:ModelFit}, so I only mention it briefly as a sign of things to come, and illustrate its basic mechanism through the following example.
+We shall see a full description of this methodology in chapter \ref{chap:ModelFit}, so it is only mentioned here briefly as a sign of things to come. Its basic mechanism is illustrated by the following example.
 
 \subsection{Example: stock returns}
 Suppose we are tasked with modelling the daily-stock returns for a particular company over a one year period (see the leftmost panel of figure \ref{fig:Posterior_PPCstockReturns}). 
@@ -1808,7 +1808,7 @@ Whilst these visual checks may become cumbersome with more complex data series, 
 
 
 \section{Chapter summary}
-In this chapter we have seen how the posterior distribution can be used to produce summaries of parameters. In particular, we have used these distributions to produce Bayesian credible intervals. We then compared and contrasted these with the classically-equivalent confidence interval, and have reasoned that in many cases the Bayesian formulation is more straightforward and intuitive than the former. We then move from the realm of the parameter, to that of the data, in order to produce prior and posterior data probabilities; which can be used to sense-check the implications of statistical models. We finally discussed methods of model comparison, introducing firstly the Bayes Factor method, followed by a short introduction to posterior predictive checks. Although the former method is common in the literature, we advocated the more nuanced approach of posterior predictive checks, albeit postponing more in-depth discussion until chapter \ref{chap:ModelFit}. Now that we have seen the utility of posterior probability distributions, we need to know how we can obtain them via Bayes' rule. In order to use the latter, we need to understand its constituent parts: the likelihood, prior and denominator. It is these three parts to which I devote the rest of the first part of this book.
+In this chapter we have seen how the posterior distribution can be used to produce summaries of parameters. In particular, we have used these distributions to produce Bayesian credible intervals. We then compared and contrasted these with the classically-equivalent confidence interval, and have reasoned that in many cases the Bayesian formulation is more straightforward and intuitive than the former. We then move from the realm of the parameter, to that of the data, in order to produce prior and posterior data probabilities; which can be used to sense-check the implications of statistical models. We finally discussed methods of model comparison, introducing firstly the Bayes Factor method, followed by a short introduction to posterior predictive checks. Although the former method is common in the literature, we advocated the more nuanced approach of posterior predictive checks, albeit postponing more in-depth discussion until chapter \ref{chap:ModelFit}. Now that we have seen the utility of posterior probability distributions, we need to know how we can obtain them via Bayes' rule. In order to use the latter, we need to understand its constituent parts: the likelihood, prior and denominator. It is these three parts to which the rest of the first part of this book are devoted.
 
 \section{Chapter outcomes}
 The reader should now be familiar with the following concepts:
@@ -2120,7 +2120,7 @@ When we hold the datum $X$ fixed and vary $\theta$, (\ref{eq:Likelihood_bernoull
 \end{figure}
 
 \subsection{A likelihood model for disease prevalence of a group}\label{sec:Likelihood_diseaseGroup}
-Now we imagine that instead of this solitary individual, we have a group of $N$ individuals. What we would like to do is to calculate the develop a model which will tell us the probability of obtaining $Z$ disease cases within our sample. We would also like to be able to use our model to predict the most likely number of individuals who have the disease in a sample, for a given value of the parameters\footnote{We are starting off by assuming that we know the parameters. Later in this chapter we will obtain a point estimate of the parameters using \textit{Maximum likelihood} estimation.}. 
+Now we imagine that instead of this solitary individual, we have a group of $N$ individuals. What we would like to do is to develop a model which will tell us the probability of obtaining $Z$ disease cases within our sample. We would also like to be able to use our model to predict the most likely number of individuals who have the disease in a sample, for a given value of the parameters\footnote{We are starting off by assuming that we know the parameters. Later in this chapter we will obtain a point estimate of the parameters using \textit{Maximum likelihood} estimation.}. 
 
 In order to write down a model we first need to make some simplifying assumptions. We might assume that one individual's disease status tells us nothing about the probability of another individual in the sample having the disease\footnote{Other than, if the disease prevalence were unknown, through our ability to estimate overall disease prevalence from their individual statuses.}. This would not be a reasonable assumption if the disease were contagious, and if the individuals in the sample came from the same neighbourhood or household. It also would not be a good assumption if (as is often the case with volunteer-dependent studies) the individuals who volunteered for the experiment, self-selected on the basis of some common pre-existing ailment/underlying-factor. If an advert for participants reads, 'Psychological experiment on sleep disorders: participants wanted', we might suspect that there would be an over-presence of insomniacs than is found in the population as a whole. This first assumption is that which in statistical language we call 'independence'. We also suppose that all individuals in our sample come from the same population - the one we are trying to draw conclusions about. If we knew beforehand that some individuals came from different populations, with significantly different prevalence rates, then we might abandon this assumption. Combining these two assumptions we say in statistical language that our data sample is \textit{independent} and \textit{identically-distributed}.
 
@@ -2246,7 +2246,7 @@ We have summed over all the disease cases from 10 to 100 here, because we wanted
 
 The probability found in this case is extremely small. What does this tell us? Well, it basically says that there is something wrong with our model which we have chosen here. It could be that the actual disease incidence in the population is much higher than the 1\% which we have assumed beforehand. It could also be that our assumption of  \textit{independence} is violated in this case, for example if we sampled whole households rather than individuals. This could mean that in a particular household, the chance of having the disease, if another member of your family has the disease, is substantially higher than for the population as a whole. 
 
-It is difficult to gauge what in particular is wrong with our model without knowing further details of data collection, as well as how the estimate of 1\% incidence was estimated for the population. However, it does suggest that we need to do adjust one or more of our assumptions, and reformulate the model to take these into account. We should never simply accept that our model is \textit{correct}. A model is only as good as its capability to reproduce the data which we see in real life. In this case we find it is not a good representation, and we should readjust appropriately.
+It is difficult to gauge what in particular is wrong with our model without knowing further details of data collection, as well as how the estimate of 1\% incidence was estimated for the population. However, it does suggest that we need to adjust one or more of our assumptions, and reformulate the model to take these into account. We should never simply accept that our model is \textit{correct}. A model is only as good as its capability to reproduce the data which we see in real life. In this case we find it is not a good representation, and we should readjust appropriately.
 
 \subsection{The intelligence of a group of people}\label{sec:Likelihood_normal}
 We are now tasked with formulating a model of intelligence test scores for a group of individuals for whom we have data. We are told that the test score is on a continuous scale from 0-200. We do not have any information on individual characteristics which might help us to predict scores, although we are going to, for this simplified example, assume that we do know the mean test score $\mu=70$, and its variance $\sigma^2=81$ in the population (although we will relax this assumption in section \ref{sec:Likelihood_MLE}). We might assume that there are a range of factors which overall result in an individual's performance on this test. For example, these might include their schooling, parental education, 'innate' ability, as well as how tired they were feeling on the day of the test. If we assume that there are a large range of such factors and the score which results is an average of all these, then we might assume that the Central Limit Theorem might be appropriate for determining the distribution of test scores\footnote{See section \ref{sec:Probability_CLT} for an introduction to the Central Limit Theorem.}. In which case, we assume that a normal distribution for our likelihood function for an individual's test score, $X$:
@@ -2424,7 +2424,7 @@ In the above examples we note that we follow the same procedure to arrive at max
 \end{enumerate}
 
 \section{Frequentist inference in Maximum Likelihood}\label{sec:Likelihood_maxlikelihoodInference}
-We have now detailed how to derive point estimates of parameters using the method of maximum likelihood. However, at the moment we are unable to make any conclusions about the population. This is because we do not have any idea as to whether we obtained a particular estimate of a parameter due to picking a weird sample, or because it \textit{actually} has a value in the population which is at this value. Frequentists get round this by examining a graph of log-likelihood near the maximum likelihood point estimate (see figure \ref{fig:Likelihood_likelihoodCurvature}). If the log-likelihood is strongly peaked near the maximum likelihood estimate, then this suggests that only a small range of parameters would yield a similar valued likelihood. By contrast, if the log-likelihood is gently peaked near the ML estimate, then it is feasible that a large range of parameters would yield estimates close to this value. In the latter case, it seems logical that we should be less confident in the particular value of the parameter which is given by maximum likelihood. We can measure the 'peakedness' in the log-likelihood by looking at the magnitude of the second derivative\footnote{The first derivative gives the gradient, the second derivative gives the rate of change of the gradient - a measure of curvature.} of the function at the ML point estimate value. The more curved the log-likelihood, the more confident we can be of our estimated parameter value, and any conclusions drawn from this. Note however, that the Frequentist inference is not based on proper probability distributions (since we infer based on a likelihood). This contrasts with the Bayesian method which, by its nature, allows for a more adequate description of parameters, using probability distributions.
+We have now detailed how to derive point estimates of parameters using the method of maximum likelihood. However, at the moment we are unable to make any conclusions about the population. This is because we do not have any idea as to whether we obtained a particular estimate of a parameter due to picking a weird sample, or because it \textit{actually} has a value in the population which is at this value. Frequentists get round this by examining a graph of log-likelihood near the maximum likelihood point estimate (see figure \ref{fig:Likelihood_likelihoodCurvature}). If the log-likelihood is strongly peaked near the maximum likelihood estimate, then this suggests that only a small range of parameters would yield a similar valued likelihood. By contrast, if the log-likelihood is gently peaked near the maximum likelihood estimate, then it is feasible that a large range of parameters would yield estimates close to this value. In the latter case, it seems logical that we should be less confident in the particular value of the parameter which is given by maximum likelihood. We can measure the 'peakedness' in the log-likelihood by looking at the magnitude of the second derivative\footnote{The first derivative gives the gradient, the second derivative gives the rate of change of the gradient - a measure of curvature.} of the function at the maximum likelihood point estimate value. The more curved the log-likelihood, the more confident we can be of our estimated parameter value, and any conclusions drawn from this. Note however, that the Frequentist inference is not based on proper probability distributions (since we infer based on a likelihood). This contrasts with the Bayesian method which, by its nature, allows for a more adequate description of parameters, using probability distributions.
 
 \begin{figure}
 \centering
@@ -2621,7 +2621,7 @@ In (\ref{eq:Prior_bernoulli}), $\alpha\in\{0,1,2,3,4,5\}$ represents the number 
 
 We can then illustrate the functioning of Bayes' rule in the \textit{Bayes' box} shown in table \ref{tab:Prior_bayesBoxDiscreteUrns}. We start by listing all the possible numbers of red fish that can exist in the bowl in the leftmost column. We then introduce our prior probabilities that we associate with each of the six potential numbers of red fish that can be in the bowl. In the third column we then calculate the likelihoods for each of the outcomes using the simple rule given in (\ref{eq:Prior_bernoulli}). We then multiply the prior by the likelihood in the fourth column, which on summation gives us $p(data)=\frac{1}{2}$, which we use to create a proper probability distribution for the posterior in the last column. For a mathematical description of this process see section \ref{app:Prior_bayesUrn}.
 
-The Bayes' box illustrates the straightforward and mechanical working of Bayes' rule for the case of discrete data. We also note that when we sum the likelihood over all possible numbers of red fish in the bowl - in this case the parameter which we are trying to infer - we find that this to be equal to 3; illustrating again that a likelihood is not a valid probability distribution. We also see that at a particular parameter value, if either the prior or the likelihood are found to be zero as is the case of 0 red fish being in the urn (impossible since we have at least one), then this ensures that the posterior distribution is zero at this point. This makes it important that we use a prior that gives a positive weight to \textit{all} possible ranges of parameter values. The results are also displayed graphically in figure \ref{fig:Prior_urnStacked}.
+The Bayes' box illustrates the straightforward and mechanical working of Bayes' rule for the case of discrete data. We also note that when we sum the likelihood over all possible numbers of red fish in the bowl - in this case the parameter which we are trying to infer - we find this to be equal to 3; illustrating again that a likelihood is not a valid probability distribution. We also see that at a particular parameter value, if either the prior or the likelihood are found to be zero as is the case of 0 red fish being in the urn (impossible since we have at least one), then this ensures that the posterior distribution is zero at this point. This makes it important that we use a prior that gives a positive weight to \textit{all} possible ranges of parameter values. The results are also displayed graphically in figure \ref{fig:Prior_urnStacked}.
 
 \begin{table}[htbp]
   \centering
@@ -2693,7 +2693,7 @@ The reason for the ${10 \choose 3}=120$ term at the beginning of (\ref{eq:Prior_
 
 We suppose that at the beginning of the experiment all values of $\theta$ are equally likely. However, we would expect researchers to have a pre-experimental idea as to the most probable frequencies of the disease within the population, meaning that a flat prior which is given is likely understating a prejudice towards a certain range of $\theta$ values. Whilst, this is the case, it is often assumed in research papers - for the sake of objectivity - that priors are flat, in order to try to minimise the effect which assumptions here make on the outcome of an analysis.
 
-Since the parameter of interest is now continuous, it would appear that we can't use Bayes' box here, as there would be infinitely many rows (corresponding to the continuum of possible $\theta$) over which to sum. However, we can still use it to approximate the shape of the posterior, if we discretise the prior and likelihood at XX intervals across the [0,1] range for $\theta$ (see table \ref{tab:Prior_BayesDiscretised}). 
+Since the parameter of interest is now continuous, it would appear that we can't use Bayes' box here, as there would be infinitely many rows (corresponding to the continuum of possible $\theta$) over which to sum. However, we can still use it to approximate the shape of the posterior, if we discretise the prior and likelihood at 0.1 intervals across the [0,1] range for $\theta$ (see table \ref{tab:Prior_BayesDiscretised}). 
 
 \begin{table}[htbp]
   \centering
@@ -3043,14 +3043,14 @@ We see that in this case, even though we started off with a fairly optimistic pr
 {\includegraphics{Denominator_discreteExample.pdf}}\caption{The prior is multiplied through by the likelihood, resulting in the numerator (the penultimate panel), which is then normalised by the sum over its values, to obtain the denominator.}\label{fig:Denominator_discreteExample}
 \end{figure}
 
-\subsection{Example: the proportion of people who vote for conservatively}\label{sec:Denominator_continuousExample}
+\subsection{Example: the proportion of people who vote the  Conservatives}\label{sec:Denominator_continuousExample}
 We now are in the position of interpreting exit polls in a general election, and are tasked with inferring the proportion of voters, $\theta$, that have voted for the conservative party. We suppose that conservatives are relatively unpopular at the time of the election, and hence we assume that, at most, 45\% of the electorate will vote for them, meaning we choose a cut-off uniform prior of the form shown in figure \ref{fig:Denominator_continuousExample}\footnote{This isn't really a reasonable prior in this case, since it is unrealistic to allow the probability density to jump from 0 at 46\% to above 2 at 45\%! However, we will stick with it to demonstrate its effect on inference.}. For data we obtain voter preference data from 100 individuals leaving a particular polling station. To simplify the analysis, we will assume that there are only two political parties, and all voters must choose between either of these two options. We will assume that the polling station chosen is thought to be representative of the electorate as a whole, and voters' choices are independent of one another. In this situation we can use the results of section \ref{sec:Likelihood_diseaseGroup}, and use a binomial likelihood function:
 
 \begin{equation}\label{eq:Denominator_binomial}
 Pr(Z=\beta|\theta) = {100 \choose \beta} \theta^\beta (1-\theta)^{100-\beta}
 \end{equation}
 
-In (\ref{eq:Denominator_binomial}), Z is a variable that represents the number of individuals who vote conservatively in the sample. $\beta\in[0,100]$ is the value which corresponds to the number of conservative voters. We assume in this case that 40 people out of the sample of 100 voted conservatively resulting in the likelihood shown in figure \ref{fig:Denominator_continuousExample}, which is peaked at the Maximum Likelihood estimate of $\theta=40\%$.
+In (\ref{eq:Denominator_binomial}), Z is a variable that represents the number of individuals voting Conservative in the sample. $\beta\in[0,100]$ is the value which corresponds to the number of conservative voters. We assume in this case that 40 people out of the sample of 100 voted for the Conservatives resulting in the likelihood shown in figure \ref{fig:Denominator_continuousExample}, which is peaked at the Maximum Likelihood estimate of $\theta=40\%$.
 
 \begin{figure}
 \centering
@@ -3126,13 +3126,13 @@ We are thus able to characterise the joint density of the data and $\theta$ in B
 \begin{figure}
 \centering
 \scalebox{0.8} 
-{\includegraphics{Denominator_continuousJointDensity.pdf}}\caption{Top-left: a contour plot of the joint density of the voting example described in section \ref{fig:Denominator_continuousJointDensity}. Top-right: the marginal density of $p(data)$ obtained by summing across all values of $\theta$. Bottom-left: the posterior obtained by summing the joint density across the line shown at 40. Note that in reality the data variable is discrete, but I have drawn it here as continuous to make the plot simpler to interpret. \textbf{The line at 40 may be dashed in the final version. The axes all need to be aligned.}}\label{fig:Denominator_continuousJointDensity}
+{\includegraphics{Denominator_continuousJointDensity.pdf}}\caption{Top-left: a contour plot of the joint density of the voting example described in section \ref{fig:Denominator_continuousJointDensity}. Top-right: the marginal density of $p(data)$ obtained by summing across all values of $\theta$. Bottom-left: the posterior obtained by summing the joint density across the line shown at 40. Note that in reality the data variable is discrete, but it is drawn here as continuous to make the plot simpler to interpret. \textbf{The line at 40 may be dashed in the final version. The axes all need to be aligned.}}\label{fig:Denominator_continuousJointDensity}
 \end{figure}
 
 
 
 \subsection{Using the denominator to choose between competing models}
-The denominator represents the accumulation of evidence for our particular model, with the result being a trade-off between our the data and our pre-experimental pre-conceptions. It represents the \textit{average} fit of our model to the data across all parameter values. To see this note that the denominator is actually the expected value of the likelihood - the fit - given choice of prior\footnote{This comes from the mathematical definition of the expected value of a quantity.}:
+The denominator represents the accumulation of evidence for our particular model, with the result being a trade-off between the data and our pre-experimental pre-conceptions. It represents the \textit{average} fit of our model to the data across all parameter values. To see this note that the denominator is actually the expected value of the likelihood - the fit - given choice of prior\footnote{This comes from the mathematical definition of the expected value of a quantity.}:
 
 \begin{equation}\label{eq:Denominator_expectedLikelihood}
 p(data) = \mathbb{E}_\theta\left[p(data|\theta)\right] = \int\limits_{All\; \theta} p(data|\theta) \times p(\theta) \mathrm{d}\theta
@@ -3160,7 +3160,7 @@ Bayes\; factor(model_1,model_2) = \frac{p(data|model_1)}{p(data|model_2)}
 
 We shall come to discuss the usefulness of the Bayes factor in chapter \ref{chap:ModelFit} for choosing between models, as well as comparing hypotheses.
 
-In both the examples discussed in sections \ref{sec:Denominator_discreteExample} and \ref{sec:Denominator_continuousExample}, we found the denominator as a means to obtaining the posterior distribution through Bayes' rule. However, as an ends in itself it is less useful, unless it is calculated across a number of models/hypotheses and then used to choose amongst them.
+In both the examples discussed in sections \ref{sec:Denominator_discreteExample} and \ref{sec:Denominator_continuousExample}, we found the denominator as a means to obtaining the posterior distribution through Bayes' rule. However, as an end in itself it is less useful, unless it is calculated across a number of models/hypotheses and then used to choose amongst them.
 
 \section{The difficulty with the denominator}\label{sec:Denominator_difficulty}
 We have come to realise that the denominator of Bayes' rule is obtained by summing/integrating the joint density $p(data,\theta)$, where the latter is obtained by the product of the prior and the likelihood. The examples in section \ref{sec:Denominator_asAProbability} indicate how this procedure works when there is a single parameter in the model. However, in most real-life applications of statistics, the likelihood is a function of a number of parameters. For the case of a two parameter discrete model, the denominator is given by a double sum:
@@ -3178,7 +3178,7 @@ p(data) = \int\limits_{All\;\theta_1}\int\limits_{All\;\theta_2}p(data,\theta_1,
 Whilst the two-parameter forms (\ref{eq:Denominator_doubleSum}) and (\ref{eq:Denominator_doubleIntegral}) may not look more intrinsically difficult than their single parameter counterparts, (\ref{eq:Denominator_discreteDenominator}) and (\ref{eq:Denominator_continuousDenominator}) respectively, this aesthetic similarity is misleading, particularly in the continuous case. Whilst in the discrete case, it is possible to enumerate all parameter values, and hence - by brute force - calculate the exact value of $p(data)$, for continuous parameters, the integral may be difficult to undertake. This difficulty is amplified the more parameters we include within the model, rendering the analytic\footnote{This just means to write down a relation for the denominator in closed form.} calculation of the denominator practically impossible, for all but the simplest models.
 
 \subsection{Multi-parameter discrete model example: the comorbidity between depression and anxiety}\label{sec:Denominator_comorbidityTwoParameterDiscrete}
-In medicine co-morbidity refers to the concurrence of two or more conditions. An example of this is the frequent coincidence of depression and anxiety in a patient. Let $D\in\{0,1\}$ and $A\in\{0,1\}$ be random variables representing the depression and anxiety statuses of a particular patient respectively. Now that we have two parameters, we must specify a joint prior distribution. An example prior is shown at of the top of table \ref{tab:Denominator_comorbidityTwoParameterDiscrete}, in which we have also calculated the marginal prior distributions by summing over all values of the other variable. We suppose that \textit{a priori} the clinician undertaking this case believes that the patient is unlikely to meet all the criteria necessary for them to be defined as having both disorders, which is reflected in a prior probability of $p(D=1,A=1)=0.2$.
+In medicine co-morbidity refers to the concurrence of two or more conditions. An example of this is the frequent coincidence of depression and anxiety in a patient. Let $D\in\{0,1\}$ and $A\in\{0,1\}$ be random variables representing the depression and anxiety statuses of a particular patient respectively. Now that we have two parameters, we must specify a joint prior distribution. An example prior is shown at the top of table \ref{tab:Denominator_comorbidityTwoParameterDiscrete}, in which we have also calculated the marginal prior distributions by summing over all values of the other variable. We suppose that \textit{a priori} the clinician undertaking this case believes that the patient is unlikely to meet all the criteria necessary for them to be defined as having both disorders, which is reflected in a prior probability of $p(D=1,A=1)=0.2$.
 
 We can also use this joint distribution to calculate prior conditional probabilities. For example, we can calculate the probability that an individual has anxiety, \textit{given} that they have depression:
 
@@ -3419,7 +3419,17 @@ Using computational simulation, find the position of the mode.
 
 \part{Analytic Bayesian methods}\label{part:analyticalBayes}
 \section{Part mission statement}
+This Part of the book aims to familiarise the reader with the nuts and bolts of \textit{analytic} Bayesian inference; firstly starting with a chapter where we introduce the main distributions that are useful in analyses. We then introduce the concept of a conjugate prior, which allows us to carry out pen-and-paper Bayesian inference in relatively straightforward circumstances. We then shift focus to model testing, and comparison in the third chapter, before a final chapter on some of the attempts to make Bayesian statistics objective.
+
 \section{Part goals}
+Up until now we have concerned ourselves with building our knowledge of the tools necessary to undertake a Bayesian analysis, firstly by learning the calculus of probability, then through our introduction to the various elements of the Bayesian formula. In undertaking a Bayesian analysis in practice we are required to specify two parts of the Bayesian formula - the likelihood, and the prior. There is considerable freedom to us here, and it pays to be familiar with the options which are available to us. Chapter \ref{chap:distributions} aims to introduce some of the more commonly-used distributions in a non-mathematical, and (hopefully) intuitive way. More than previous chapters, it is also supplemented with considerable interactive elements, which are strongly recommended as a way of building familiarity with the raft of distributions that are in our arsenal.
+
+As a step towards full - unconstrained - analysis in Part \ref{part:computationalBayes}, we next introduce the reader to a class of analyses that allow Bayesian inference to be carried out exactly, and simply; using only pen and paper. Whilst confining ourselves to this class of problems is ultimately overly-restrictive, it is believed that knowledge of this simplified type of analysis is important pedagogically (as a step towards unconstrained analysis), but also as a tool to help understand some of the literature.
+
+We argue that perhaps \textit{the} most important part of Bayesian inference is the flexibility it affords us in testing our model, as well as comparing it against a number of alternatives. Unlike Frequentist analyses where a standard array of tests are used, somewhat mechanically, to test between models, Bayesians are free to choose the way in which they test their model. This may seem like an extra hurdle for carrying out an analysis, since we are required to make yet another choice, but we shall see that this extra flexibility is ultimately beneficial in refining and choosing between models. Bayesians recognise that the worth of a model is, in-part, subjective; depending on its ultimate intended use, and exploit this as a way of evaluating a particular model. Chapter \ref{chap:ModelFit} provides an introduction to this aspect of Bayesian analysis, as well as the various measures of model predictive capability that are often used to score models.
+
+Chapter \ref{chap:ObjectiveBayes} provides a short summary of the various attempts to make Bayesian analysis 'Objective'. Whilst we argue that these attempts are somewhat misguided, since any analysis is at its heart subjective, it is nonetheless important to have a basic knowledge of these methods, if only to understand the existent literature.
+
 
 \chapter{An introduction to distributions for the mathematically-un-inclined}\label{chap:distributions}
 \section{Chapter mission statement}
@@ -3428,7 +3438,7 @@ At the end of this chapter the reader should be familiar with the commonplace li
 \section{Chapter goals}
 Often texts on Bayesian analysis assume a familiarity with probability distributions that evade all but the statistics fanatics. This presumed knowledge often makes it difficult to penetrate the literature, and makes Bayesian inference appear more difficult than it actually is. The idea behind this chapter is to redress the balance; by going through the commonly-used distributions, highlighting their interrelationships, and their use for a wide range of example situations. It is hoped that by addressing their practical applicability, that we can turn an oft-dry subject into something more palatable for bedtime reading.
 
-Generally, there are two classes of distributions: those that can be used for likelihoods, and those which are commonly used for priors. There is considerable overlap between these groupings (particularly for continuous distributions), meaning that we will often encounter the distributions twice. It is important to note that  
+Generally, there are two classes of distributions: those that can be used for likelihoods, and those which are commonly used for priors. There is considerable overlap between these groupings (particularly for continuous distributions), meaning that we will often encounter the distributions twice. 
 
 Furthermore, it is important to stress that all distributions are related to one another (see section \ref{sec:Distributions_relationships}). Knowledge of these interrelations is both illuminating, as well as being practically useful, since it makes it easier to remember them! The graph of the interconnectivity of distributions is also available in interactive form online, see XXXX. NEED TO MAKE A WEBSITE THAT HAS DISTRIBUTIONS, THEIR MAIN PROPERTIES, AND THEIR INTERCONNECTIONS.
 
@@ -3647,7 +3657,7 @@ Example uses: everything the poisson can do and more, numbers of measles cases o
 
 In real life it is not uncommon for us to want to model the count of events which occur in clumps; either in time or space. This 'clumping' behaviour indicates that the occurrence of one event makes it more likely that another will occur afterwards. 
 
-Again we imagine we are in the role of epidemiologists, this time modelling the occurrence of influenza over a winter season in three small villages: Socialville, Commuterville, and Hermitville, all of the same size. To keep things simple, we imagine that in each village, the magnitude of the outbreak is determined by a parameter $\theta$. If this number were known, we assume that the numbers of flu cases, $X$ is given by a poisson distribution:
+Again we imagine we are in the role of epidemiologists, this time modelling the occurrence of influenza over a winter season in three small villages: Socialville, Commuterville, and Academicville, all of the same size. To keep things simple, we imagine that in each village, the magnitude of the outbreak is determined by a parameter $\theta$. If this number were known, we assume that the numbers of flu cases, $X$ is given by a poisson distribution:
 
 \begin{equation}
 X|\theta \sim Pois(\lambda\theta)
@@ -3677,7 +3687,7 @@ The above example illustrates how contagion can result in a higher number of cas
 \end{align}
 \end{equation}
 
-where to obtain the right-hand-side of the first line, we have used the law of iterated expectations\footnote{Do not worry if you don't know what this is. It is not important, but I have a video here \url{https://www.youtube.com/watch?v=Ki2HpTCPwhM} which explains it in full.}. 
+where to obtain the right-hand-side of the first line, we have used the law of iterated expectations\footnote{Do not worry if you don't know what this is. It is not important, but we have a video here \url{https://www.youtube.com/watch?v=Ki2HpTCPwhM} which explains it in full.}. 
 
 Here because of the inherent variance in the connectivity across villages, we will get a greater variability of results than would be predicted, if all villages were equally connected. In this latter case we can suppose that $\theta=1$, which means that all villages would have a $Pois(\lambda)$ number of cases. In the former, we can calculate the variance in flu cases:
 
@@ -3848,7 +3858,7 @@ Example uses: same uses as normal (it is a robust/over-dispersed model), literac
 
 Like the binomial and poisson, the normal distribution has an over-dispersed cousin - the t distribution - which can be used to handle datasets with greater variability. Fortunately, like the other cases, this distribution can be derived in a similar manner; by imagining a process resulting in a mixture of normal distributions with different variances. The following example endeavours to make this a bit clearer.
 
-Suppose that we were measuring the mean level of a standardised arithmetic test for two neighbouring schools: Privilege High, where the times are easy, and the fees extortionate; and Normal (forgive its other connotations) Comprehensive, where there is no fees, and they take kids of all abilities. We suppose that controversially, a local newspaper has done some research and worked out that the mean test scores are the same across both schools. However, Privilege High has a lower variance of test scores Normal Comp. Since, a student's test score is likely the result of another of factors: tiredness, work ethic, as well as their brilliance in math; we think that a normal distribution may be a reasonable distribution for the test scores of a number of individuals (see section \ref{sec:Distributions_normal}). 
+Suppose that we were measuring the mean level of a standardised arithmetic test for two neighbouring schools: Privilege High, where the times are easy, and the fees extortionate; and Normal (forgive its other connotations) Comprehensive, where there are no fees, and they take kids of all abilities. We suppose that controversially, a local newspaper has done some research and worked out that the mean test scores are the same across both schools. However, Privilege High has a lower variance of test scores Normal Comp. Since, a student's test score is likely the result of another set of factors: tiredness, work ethic, as well as their brilliance in math; we think that a normal distribution may be a reasonable distribution for the test scores of a number of individuals (see section \ref{sec:Distributions_normal}). 
 
 Suppose that we are employed by the county, and are hence interested in developing a single model to explain the test scores across both schools. We can think of the resultant distribution as an average of the other two distributions; its head will rise, its shoulders fall, and its tails grow (see the left hand side of figure \ref{fig:Distributions_tArithmeticDispersion}). This distribution will, in some senses, have a wider variability of results than a normal distribution of the same characteristics would allow (see the right hand side of figure \ref{fig:Distributions_negativeBinomialDispersion}). This variability isn't borne out in the variance of the distribution, but will be borne out in higher order moments (the fourth moment, called the kurtosis, here). 
 
@@ -3859,7 +3869,7 @@ Suppose that we are employed by the county, and are hence interested in developi
 \caption{\textbf{Left}: the distribution covering test scores across both schools can be made from an average of the two individual distributions. \textbf{Right:} a comparison of the resultant distribution with a normal distribution of the same mean and variance.}\label{fig:Distributions_tArithmeticDispersion}
 \end{figure}
 
-We now imagine we are combining a large number of schools, each with the same the mean arithmetic score, but different variances, which we do not know. If we suppose that the variances varies according to: $\frac{1}{\sigma^2}\sim Inv-\Gamma(\frac{\nu}{2},\frac{\nu}{2})$, then it turns out that an overall distribution across all schools can be proved to be a \textit{Student t}\footnote{Named after the pseudonym used by William Sealy Gosset; a Guiness Brewery worker. Remarkable as this is perhaps the first, but not last time that statistics and alcohol were found to mix well.} distribution with $\nu$ degrees of freedom (see the problem set at the end of the chapter). This distribution would have a larger variability than an equivalent normal with a variance equal to that of the mean of the variance distribution. The extra uncertainty has caused a widening of the distribution!
+We now imagine we are combining a large number of schools, each with the same mean arithmetic score, but different variances, which we do not know. If we suppose that the variances varies according to: $\frac{1}{\sigma^2}\sim Inv-\Gamma(\frac{\nu}{2},\frac{\nu}{2})$, then it turns out that an overall distribution across all schools can be proved to be a \textit{Student t}\footnote{Named after the pseudonym used by William Sealy Gosset; a Guiness Brewery worker. Remarkable as this is perhaps the first, but not last time that statistics and alcohol were found to mix well.} distribution with $\nu$ degrees of freedom (see the problem set at the end of the chapter). This distribution would have a larger variability than an equivalent normal with a variance equal to that of the mean of the variance distribution. The extra uncertainty has caused a widening of the distribution!
 
 The higher the number of schools over which we are summing, the more the overall distribution starts to look normal (this is a consequence of the central limit theorem discussed in section \ref{sec:Probability_CLT}), and we see a reduction in the tails. Figure \ref{fig:Distributions_tArithmeticExposition} illustrates how manipulations of the parameters $\sigma$ and $\nu$ which characterise the distribution affect its shape.
 
@@ -3903,7 +3913,7 @@ Distribution checklist (\textbf{want this in a different colour/shading. Not sur
 
 Example uses: failure times for artificial heart valves, the distance between the appearance of a new type of plant in a study area. 
 
-Suppose that you work for the World Health Organisation, and are interested in modelling the time between new epidemics of Ebola. If we define these epidemics as those \textit{not} caused by spread from existent outbreaks, then we might suppose that each new case is a the result of a single new transfer of the virus from animal (most likely bats) to human. With this definition we might suppose that these crossover events occur independently of one another, and on a sufficiently long time scale (to neglect any seasonal effects), so that they might be considered to occur at a constant rate. In this circumstance, we might think that an \textit{exponential} model for the times between outbreaks might be reasonable. This distribution has the following pdf:
+Suppose that you work for the World Health Organisation, and are interested in modelling the time between new epidemics of Ebola. If we define these epidemics as those \textit{not} caused by spread from existent outbreaks, then we might suppose that each new case is the result of a single new transfer of the virus from animal (most likely bats) to human. With this definition we might suppose that these crossover events occur independently of one another, and on a sufficiently long time scale (to neglect any seasonal effects), so that they might be considered to occur at a constant rate. In this circumstance, we might think that an \textit{exponential} model for the times between outbreaks might be reasonable. This distribution has the following pdf:
 
 \begin{equation}
 f(x|\lambda) = \lambda e^{-\lambda x}
@@ -4017,7 +4027,7 @@ Example uses: modelling the political party affiliation across a group of people
 
 Suppose we work for the Department of Health, and want to build a model that can explain the prevalence of blood types within a sample of people. For simplicity's sake, we suppose that the only categories of blood for which we want to build a model are: A, B or O. We suppose further that our test group of $n$ people is randomly sampled from the larger US population. This latter assumption means that we can view the blood-type of one individual as being conditionally independent from another's. 
 
-Let's first of all consider how we might design a distribution to cope with the four categories of blood types. The probabilities of obtaining each of the four categories are equal to the proportions of each type in the population, which we call $\boldsymbol{p}=\{p_A,p_B,p_O\}$. We now create a set of binary random variables: $\{X_A,X_B,X_O\}$; each of which if equal to 1, means that the person has that bloody type. Note that here it is not possible for more than one of these set to be 1 for a given person (since they only have one blood type). We would like our distribution to return the relevant probabilities for each of the cases, in other words: $Pr(X_i=x_i,X_{-i}=0|\boldsymbol{p}) = p_i$. Here $i\in\{A,B,O\}$ and $X_{-i}$ represents the other three random variables. It turns out that we can get this behaviour from the following \textit{multi-bernoulli} distribution:
+Let's first of all consider how we might design a distribution to cope with the three categories of blood types. The probabilities of obtaining each of the four categories are equal to the proportions of each type in the population, which we call $\boldsymbol{p}=\{p_A,p_B,p_O\}$. We now create a set of binary random variables: $\{X_A,X_B,X_O\}$; each of which if equal to 1, means that the person has that bloody type. Note that here it is not possible for more than one of these set to be 1 for a given person (since they only have one blood type). We would like our distribution to return the relevant probabilities for each of the cases, in other words: $Pr(X_i=x_i,X_{-i}=0|\boldsymbol{p}) = p_i$. Here $i\in\{A,B,O\}$ and $X_{-i}$ represents the other three random variables. It turns out that we can get this behaviour from the following \textit{multi-bernoulli} distribution:
 
 \begin{equation}
 Pr(X_A=x_A,X_B=x_B,X_O=x_O|\boldsymbol{p}) = p_A^{x_A} p_B^{x_B} p_O^{x_O}
@@ -4108,7 +4118,7 @@ You fit your multivariate normal to the data using maximum likelihood (you haven
 \end{figure}
 
 
-Feeling ashamed, you retreat to your desk, and realise the error of your ways. How could you have fallen into the trap of show many before, and used a distribution without sufficient allowance for extreme points? You dive back onto the web, and quickly find that the \textit{multivariate t} distribution is a more robust alternative to the multivariate normal (see the bottom row of figure \ref{fig:Distributions_multivariateNormalT}). You fit the distribution's parameters to the data (which is slightly harder since there is one more than originally - the degrees of freedom $\nu$), then simulate the same number of replicates. To your shock, there are now a number of points in the danger area (see the right hand plot of figure \ref{fig:Distributions_multivariateNormalTEstimates}). What's more, because there are more than 1 point in the danger area, the modelled risk of the portfolio going bankrupt is more than the threshold of $\frac{1}{1000}$. You slink over to your boss, and tell her, "Sorry - here are the results. We shouldn't invest." She recognises that people make mistakes, and that your new work is of much better quality than before, and says, "That's better. Go to lunch. We need you in a meeting in half an hour."
+Feeling ashamed, you retreat to your desk, and realise the error of your ways. How could you have fallen into the trap of so many before, and used a distribution without sufficient allowance for extreme points? You dive back onto the web, and quickly find that the \textit{multivariate t} distribution is a more robust alternative to the multivariate normal (see the bottom row of figure \ref{fig:Distributions_multivariateNormalT}). You fit the distribution's parameters to the data (which is slightly harder since there is one more than originally - the degrees of freedom $\nu$), then simulate the same number of replicates. To your shock, there are now a number of points in the danger area (see the right hand plot of figure \ref{fig:Distributions_multivariateNormalTEstimates}). What's more, because there are more than 1 point in the danger area, the modelled risk of the portfolio going bankrupt is more than the threshold of $\frac{1}{1000}$. You slink over to your boss, and tell her, "Sorry - here are the results. We shouldn't invest." She recognises that people make mistakes, and that your new work is of much better quality than before, and says, "That's better. Go to lunch. We need you in a meeting in half an hour."
 
 This cautionary tale should have conveyed the seriousness of ensuring that your modelling choices sufficiently take account of extreme data. In situations where there is evidence of this type of behaviour in the real data, and some would argue even if there isn't (see Mandelbrot's "Misbehaviour of markets" \cite{mandelbrot2008misbehaviour} and Taleb's "Black Swan" \cite{taleb2010black}), there is an argument in the multivariate world, in similar fashion to the univariate, that you should replace normals with t distributions. The multivariate t gives much more weight to the tails of the distribution, and is much better equipped to handle extreme variation in the data.
 
@@ -4261,7 +4271,7 @@ Prior checklist (\textbf{want this in a different colour/shading. Not sure wheth
 \item Encompasses a wide range of priors, ranging from weakly informative to strongly informative.
 \end{enumerate}
 
-We are frequently required to conduct inference over a range of discrete categories (see section \ref{sec:Distributions_multinomial}). In particular, we may be interested in inferring the probabilities of obtaining each of the categories. For example, consider the example where there are \textit{only} three political parties for which people can vote: Republican, Democrat and Liberals. In this circumstance, we know that the proportions of voting individuals choosing each party must sum to 1. Hence, inferences that we make about the three parameter values must be constrained to satisfy this condition. 
+We are frequently required to conduct inference over a range of discrete categories (see section \ref{sec:Distributions_multinomial}). In particular, we may be interested in inferring the probabilities of obtaining each of the categories. For example, consider the example where there are \textit{only} three political parties for which people can vote: Republican, Democrat and Liberal. In this circumstance, we know that the proportions of voting individuals choosing each party must sum to 1. Hence, inferences that we make about the three parameter values must be constrained to satisfy this condition. 
 
 We start by considering the case where there are only two political parties: Republican and Democrat. We can represent a particular parameter set as a point along a line (see the left-hand-panel of figure \ref{fig:Distributions_dirichlet}) of length 1. If we consider the leftmost point on the line, this represents the case where nobody votes for Republican, and everyone for Democrat, with the rightmost point being the exact opposite. At the mid-point, 50\% vote Republican, and 50\% Democrat. 
 
@@ -4309,7 +4319,7 @@ Prior checklist (\textbf{want this in a different colour/shading. Not sure wheth
 \item Encompasses a wide range of priors, ranging from weakly informative to strongly informative.
 \end{enumerate}
 
-We already saw in section \ref{sec:Distributions_normal}, that the use normal distribution for likelihoods under a wide range of situations, however, here we seek to justify its use for an altogether different purpose, for specifying prior distributions. 
+We already saw in section \ref{sec:Distributions_normal}, that we can use normal distribution for likelihoods under a wide range of situations, however, here we seek to justify its use for an altogether different purpose, for specifying prior distributions. 
 
 For example consider the problem of trying to estimate the global mean sea temperature, via a sample of many readings worldwide. We might suppose that there are a range of factors contributing to the temperature that we measure $\theta_i$; time of year, geography, measurement error are some examples. These multitude of factors might justify the use of a normal distribution for the likelihood (see section \ref{sec:Distributions_normal}):
 
@@ -4346,7 +4356,7 @@ Prior checklist (\textbf{want this in a different colour/shading. Not sure wheth
 
 We suggested using the t-distribution for a sampling model when there was too much variation to be accounted for with the normal. Similarly, we advocate using the t-distribution for a prior when we wish to allow a wider range of parameter values, \textit{a priori}, than would be possible with a normal.
 
-To be clear, it is possible to set the parameters of a normal distribution such that it has the same amount of variance as that of a t distribution. However, the nature of that variance will not be the same (see figure ). Whereas the normal is more evenly spread about its centre, the t distribution is sharply peaked, with less weight on its shoulders, and more on its tails. This difference between the two distributions is controlled by a parameter, $\nu$, called the degree of freedom of this distribution (see section \ref{sec:Distributions_tDist} for a better explanation of this parameter). The higher this parameter, the greater the correspondence between the normal and the t distributions, with in the limit that $\nu\rightarrow\infty$ they are the same.
+To be clear, it is possible to set the parameters of a normal distribution such that it has the same amount of variance as that of a t distribution. However, the nature of that variance will not be the same (see figure ). Whereas the normal is more evenly spread about its centre, the t distribution is sharply peaked, with less weight on its shoulders, and more on its tails. This difference between the two distributions is controlled by a parameter, $\nu$, called the degree of freedom of this distribution (see section \ref{sec:Distributions_tDist} for a better explanation of this parameter). The higher this parameter, the greater the correspondence between the normal and the t distributions, within the limit that $\nu\rightarrow\infty$ they are the same.
 
 \begin{figure}
 \centering
@@ -4366,7 +4376,7 @@ Prior checklist (\textbf{want this in a different colour/shading. Not sure wheth
 \item Robust version of the t and normal distributions, allowing for a greater range of parameter values.
 \end{enumerate}
 
-Imagine that you are building a model to help understand the effect of a new micro finance policy on the wage that an individual obtains in a particular location in a unspecified developing country. There are a number of factors which will also help determine a person's wage: education, social status and health to name but a few. To a first approximation we suppose that the relationship of interest can be assumed to be linear:
+Imagine that you are building a model to help understand the effect of a new micro finance policy on the wage that an individual obtains in a particular location in an unspecified developing country. There are a number of factors which will also help determine a person's wage: education, social status and health to name but a few. To a first approximation we suppose that the relationship of interest can be assumed to be linear:
 
 \begin{equation}
 wage_i = \alpha + \beta mfinance_i + \epsilon_i
@@ -4440,7 +4450,7 @@ Whilst in this non-hierarchical example, we could have easily assigned independe
 See section \ref{sec:Distributions_multinormalSampling}.
 
 \subsection{Distributions for non-negative parameters}
-There are a wide class of parameters which are naturally constrained to be non-negative in value. Examples include variances, as well as a range of other parameters including the mean of a poisson distribution, the shape parameter of a gamma, and so on. Whilst with Stan it is feasible to use some of the aforementioned distributions by setting bounds on parameter values, it is still preferable in many circumstances to set priors for parameters that naturally have support (also called positive density) on the correct range of parameter values. This section not only introduces a wide range of these distributions, but also provides some discussion as to which are preferred under particular circumstances.
+There are a wide class of parameters which are naturally constrained to be non-negative in value. Examples include variances, as well as a range of other parameters including the mean of a poisson distribution, the shape parameter of a gamma, and so on. Whilst with Stan MCMC software it is feasible to use some of the aforementioned distributions by setting bounds on parameter values, it is still preferable in many circumstances to set priors for parameters that naturally have support (also called positive density) on the correct range of parameter values. This section not only introduces a wide range of these distributions, but also provides some discussion as to which are preferred under particular circumstances.
 
 \subsubsection{Gamma}\label{sec:Distributions_gamma}
 Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
@@ -4720,7 +4730,7 @@ mean&: \mathrm{E}(\boldsymbol{X}) = \nu \boldsymbol{\Psi}
 \end{subequations}
 
 \section{Choosing a likelihood made easy}
-Figure \ref{fig:Distributions_likelihoodTree} shows a tree diagram that gives a simple way of choosing a likelihood based on a given situation. Whilst, of course, this diagram is not exhaustive, nor should be followed blindly, it is hoped that it is suggestive of the type of questions that should be asked about a given situation.
+Figure \ref{fig:Distributions_likelihoodTree} shows a tree diagram that gives a simple way of choosing a likelihood based on a given situation. Whilst, of course, this diagram is not exhaustive, nor should be followed blindly, it is hoped that it is suggestive of the type of questions that should be asked about a given situation. Also, we recognise that a full model for a given circumstance may be much more complex than any of the distributions in figure \ref{fig:Distributions_likelihoodTree}, we believe that it nonetheless provides a basis from which to start.
 
 \begin{figure}
 \centering
@@ -4729,10 +4739,11 @@ Figure \ref{fig:Distributions_likelihoodTree} shows a tree diagram that gives a 
 \caption{\textbf{How to choose a likelihood.} Blue text represents an appropriate choice of distribution. \textbf{Want to have circles or squares round distributions, to make them stand out more.}}\label{fig:Distributions_likelihoodTree}
 \end{figure}
 
-\section{Choosing a prior made easy}
 
 \section{Table of common likelihoods, their uses, and reasonable priors}\label{sec:Distributions_table}
 Show over-dispersed, or robust distributions for each of the cases.
+
+See Excel - too big to export as a Latex table.
 
 \section{Distributions of distributions, and mixtures - link to website, and relevance}
 Create a web-page coded in something that allows common use - or using Mathematica, which allows a reader to look at samples from distributions of distributions. EG for hieararchical priors.
@@ -4769,7 +4780,7 @@ We suppose that we are testing the efficacy of a certain drug which aims to cure
 \item How does the variance across the combination of both heterogeneous studies compare with that of an equivalent 10-person homogeneous group?
 \end{enumerate}
 
-No consider the extension to a large number of trials, with the depressive status of each group unknown to the experimenter, but follows $\theta\sim Beta(\alpha,\beta)$.
+Now consider the extension to a large number of trials, with the depressive status of each group unknown to the experimenter, but follows $\theta\sim Beta(\alpha,\beta)$.
 
 \begin{enumerate}
 \item Calculate the mean value of the Beta distribution.
@@ -4799,7 +4810,7 @@ Bayesian analysis requires us to evaluate the denominator of Bayes' rule in orde
 
 Whilst the use of conjugate priors is usually overly-restrictive, they can nevertheless be a useful base from which to start an analysis, before moving onto more realistic models which require computational sampling to avoid having to actually calculate the posterior (see part \ref{part:computationalBayes}). Additionally, since many texts and research literature assumes a basic understanding of conjugate priors, it is important to be familiar with their use.  
 
-This chapter is deliberately kept short for three reasons. Firstly, I believe that a few indicative examples can provide sufficient insight into the workings of conjugate priors; specifically how we can construct conjugate priors, and how we can use these to derive the algebraic form of the posterior parameters. Secondly, the whole point of using conjugate priors is that you don't need to do the maths - so why learn it! Thirdly, as we shall see the use of conjugate priors is very restrictive, and quite rightly now becoming less important with new computational methods.
+This chapter is deliberately kept short for three reasons. Firstly, we believe that a few indicative examples can provide sufficient insight into the workings of conjugate priors; specifically how we can construct conjugate priors, and how we can use these to derive the algebraic form of the posterior parameters. Secondly, the whole point of using conjugate priors is that you don't need to do the maths - so why learn it! Thirdly, as we shall see the use of conjugate priors is very restrictive, and quite rightly now becoming less important with new computational methods.
 
 \section{What is a conjugate prior and why are they useful?}
 Suppose you run a restaurant and are interested in building a model for the number of people, $X$, who have food allergies within a particular sitting, in order to inform your buying of ingredients. If we make the assumption that the allergy-status of a given person is independent of everyone else's (see section \ref{sec:Likelihood_diseaseGroup}), then we might choose a binomial sampling model $X\sim B(n,\theta)$, where $n$ is the number of people eating, and $\theta$ is the probability that a randomly-chosen individual has an allergy. We can write the binomial likelihood as:
@@ -5018,7 +5029,7 @@ Models are interpretations of data, which are necessarily reduced versions of th
 
 The Bayesian testing framework which allows us to judge the fit of a model is known as \textit{posterior predictive checks} (PPCs). The idea behind this umbrella of methods is simple. You should be able to use your fitted model to generate fake data that looks indistinguishable from the real thing. In practice, this is not usually fully-attainable, so it is desirable to choose a model that sufficiently captures the variation in the data in which you are most interested. Choice of the particular features to use for evaluation and comparison hence becomes the most important part of Bayesian model checking. The beauty of PPCs is that they allow us to understand in what ways a model is good, and in what ways it is deficient. Examining models through this multidimensional lens is both more rewarding than widely used evaluation criteria, and easier to understand.
 
-There will inevitably be times when we are pushed, either due to policy-makers or an innate desire for simplicity, to choose between two models which perform similarly on PPCs. Alternatively, we may want simply to evaluate the predictive capability of a set of models, to understand better ways in which they may be improved. Recently, there has been a movement to introduce model criteria that estimate model predictive capability in a more Bayesian spirit than traditional AICs or DICs. Towards the end of this chapter we shall introduce these relatively new additions to the modeller's arsenal, and discuss their use. This section will inevitably be a little more advanced than those preceding it, although we shall endeavour to focus on the intuitive nature of the maths, rather than dwell on the minute algebraic details. Those wishing to ignore the maths entirely can skip to section \ref{sec:Evaluation_practicalSimplePredictiveAcc} which summarises the practical implications of the former without recourse to (much) maths.
+There will inevitably be times when we are pushed, either due to policy-makers or an innate desire for simplicity, to choose between two models which perform similarly on PPCs. Alternatively, we may want simply to evaluate the predictive capability of a set of models, to understand better ways in which they may be improved. Recently, there has been a movement to introduce model criteria that estimate model predictive capability in a more Bayesian spirit than the more conventionally-used AICs or DICs (if you don't know these, don't worry - we will cover them in this chapter). Towards the end of this chapter we shall introduce these relatively new additions to the modeller's arsenal, and discuss their use. This section will inevitably be a little more advanced than those preceding it, although we shall endeavour to focus on the intuitive nature of the maths, rather than dwell on the minute algebraic details. Those wishing to ignore the maths entirely can skip to section \ref{sec:Evaluation_practicalSimplePredictiveAcc} which summarises the practical implications of the former without recourse to (much) maths.
 
 \section{Posterior predictive checks}
 \subsection{Recap - posterior predictive distributions}\label{sec:Evaluation_posteriorPredDist}
@@ -5034,7 +5045,7 @@ p(x'|\boldsymbol{x}) &= \int\limits_{\theta\in\Theta} p(x',\theta|\boldsymbol{x}
 
 where we have assumed that $\theta$ is continuous, and potentially multi-dimensional. To obtain the second line of (\ref{eq:Evaluation_posteriorPredictiveDistribution}) from the first we have used the law of conditional probability. Finally, to obtain the third line from the second, we have assumed that once we know $\theta$, the past data does not convey any further information, so there is no need to condition on it. The first part of (\ref{eq:Evaluation_posteriorPredictiveDistribution}) within the integral sign is the likelihood of new data, $p(x'|\theta)$, and the second is the posterior distribution, $p(\theta|\boldsymbol{x})$. 
 
-To make concrete what we mean by a posterior predictive density, let's consider an example. Suppose that we are working on a project to determine the average birth weight of newly-born children in a tribe in the Amazon. We suppose that since a number of factors, such as maternal diet, and various genetic features result in the ultimate birth weight that we witness, that a normal likelihood model may be appropriate (see sections \ref{sec:Probability_CLT} and \ref{sec:Distributions_normal}): $W_i\sim N(\mu,\sigma^2)$. Further let us assume that from previous studies on other tribes, that there is similar variability of birth weight across different within any given tribe, so that $\sigma^2$ is known (this is a tad unrealistic, and we would prefer that we consider this parameter as uncertain and derive a posterior for it). 
+To make concrete what we mean by a posterior predictive density, let's consider an example. Suppose that we are working on a project to determine the average birth weight of newly-born children in a tribe in the Amazon. We suppose that since a number of factors, such as maternal diet, and various genetic features result in the ultimate birth weight that we witness, that a normal likelihood model may be appropriate (see sections \ref{sec:Probability_CLT} and \ref{sec:Distributions_normal}): $W_i\sim N(\mu,\sigma^2)$. Further let us assume that from previous studies on other tribes, that there is similar within-tribe variability of birth weight across a range of tribes, so that $\sigma^2$ is known (this is a tad unrealistic, and we would prefer that we consider this parameter as uncertain and derive a posterior for it). 
 
 Next we assume that we would like to use a conjugate prior, if possible, for $\mu$; the parameter over which we want to infer. So, we look up in the table in section \ref{sec:Conjugate_tableConjugatePriors}, and find that for a known variance, a normal prior is conjugate to a normal likelihood. Believing that this prior will be adequate to express our pre-experimental uncertainty, we combine our data vector $\boldsymbol{W}$ with our prior parameters, in accordance with the rules in the table to yield the posterior, as well as using the table to carry out the calculation shown in (\ref{eq:Evaluation_posteriorPredictiveDistribution}), to yield the posterior predictive distribution (see figure \ref{fig:Evaluation_normalPosteriorPredictiveWeight}).
 
@@ -5152,7 +5163,7 @@ You go back to your supervisor and tell them you were wrong before; the infectio
 \end{figure}
 
 
-This example demonstrates (it was actually inspired by a similar example in \cite{gelman2013bayesian}, which is the picture on the cover of the book), it is imperative to ensure that you have are using the correct visualisation of your data. Misleading visualisations lead to fallacious conclusions being drawn, as we saw here. The example also demonstrates that it is essential to try to use the most appropriate PPC for the particular situation. Again using the wrong form of PPC can lead to incorrect conclusions. 
+This example demonstrates (it was actually inspired by a similar example in \cite{gelman2013bayesian}, which is the picture on the cover of the book), it is imperative to ensure that you are using the correct visualisation of your data. Misleading visualisations lead to fallacious conclusions being drawn, as we saw here. The example also demonstrates that it is essential to try to use the most appropriate PPC for the particular situation. Again using the wrong form of PPC can lead to incorrect conclusions. 
 
 \section{Why do we call it a \textit{p value}?}
 As we have discussed above, we can generate simulations from the posterior predictive distribution, $y_{sim}$, and use test statistics $T(y_{sim},\theta)$ to give a numerical estimation of model fit. We can then generate a Bayesian \textit{p value} based on comparing the simulated data test statistic with its value on the \textit{actual} data, $T(y,\theta)$ \cite{gelman2013bayesian}:
@@ -5161,7 +5172,7 @@ As we have discussed above, we can generate simulations from the posterior predi
 p = Pr(T(y_{sim},\theta)>T(y,\theta)|y)
 \end{equation}
 
-Importantly, this differs from the classical p value, because here we do not condition on the parameter value $\theta$, and allow for variation its value in accordance with its posterior distribution. Again this is due to a difference in perspective, where Bayesians regard the data as fixed, and the parameter which varies, whereas classical statisticians see the converse (see chapter \ref{chap:subjectiveFrequentistBayes}).
+Importantly, this differs from the classical p value, because here we do not condition on the parameter value $\theta$, and allow for variation in its value in accordance with its posterior distribution. Again this is due to a difference in perspective, where Bayesians regard the data as fixed, and the parameter which varies, whereas classical statisticians see the converse (see chapter \ref{chap:subjectiveFrequentistBayes}).
 
 This quantity $p$ \textit{is} a probability, although unlike classical p values it isn't $p(hypothesis true|data)$. It is simply a measure of model (mis)fit. So again, unlike classical p values, values near 0 or 1 are both indicative of discrepancy between the model and the data; values of $p=0.5$ are what you would expect a decent-fitting model to generate. Typically p values lower than 5-10\% or higher than 90-95\% are chosen. It is hard to draw a line in the sand as to where a model starts to show signs of misfit, partly because this depends on the circumstance (and ultimate intended use of the model).
 
@@ -5251,7 +5262,7 @@ KL &= \int\limits_{x\in X} p(x) log\left[0\right]\mathrm{d}x\\
 
 Interestingly, the KL-divergence can be related back to Morse code. This code was approximately optimised to deal with the letter frequencies that occur in typical English texts. That's why the most common letter 'e' has the shortest Morse code equivalent: '.', whereas a less common letter 'q' has a longer representation: '--.-'. We can think about these letter frequencies in English text as being governed by a distribution, we call $p$. The KL-divergence tells us the penalty in terms of the length of Morse messages vs the optimum, that we would pay if we used the same code to transmit messages in Spanish, which has letters with a different frequency $q$. In this last sentence the optimum would be a bespoke Morse code written for Spanish messages. That's why the KL-divergence isn't a symmetric measure, since the inefficiencies from going English-Spanish are not the same as Spanish-English, since in both cases we are comparing the inefficient code with code optimised to the target language. You can also think of the letter frequencies in a Scrabble game as being optimised to help people make the most number of words in their particular language. The KL-divergence associated with using an English board to play Scrabble in Spanish would measure something like the reduction in mean length of words used vs using a Spanish board. So, in general we can think about the KL-divergence as measuring some sort of informational penalty in going from something optimised to distribution $p$, to code for another distribution $q$.
 
-We can use (\ref{eq:Evaluation_KL}) calculate the KL divergence between our posterior predictive distribution $p(\boldsymbol{y^{new}}|\boldsymbol{y})$, and the \textit{true} distribution of new (and old) data $f(y)$:
+We can use (\ref{eq:Evaluation_KL}) to calculate the KL divergence between our posterior predictive distribution $p(\boldsymbol{y^{new}}|\boldsymbol{y})$, and the \textit{true} distribution of new (and old) data $f(y)$:
 
 \begin{equation}\label{eq:Evaluation_KLelpdDeriv}
 \begin{align}
@@ -5305,7 +5316,7 @@ This results in an estimate of elpd, denoted $\widehat{elpd}_{AIC}$. Intuitively
 However, this attempt at bias reduction is akin to using a kitchen knife to do surgery. In all but the most simplest of operations, this is not a great idea! In particular for more complex models (in particular hierarchical ones), the effective number of parameters is not necessarily given by $k$. A more nuanced (and Bayesian) approach is needed.
 
 \subsection{DIC}
-Deviance Information Criterion (DIC) \cite{spiegelhalter2002bayesian} is a more Bayesian alternative to AIC. It starts by firstly using the posterior mean point estimates, $\hat{\theta}_{Bayes}$ rather than the ML estimates as the point at which to evaluate the log-likelihood. It then subtracts a data-dependent term which captures the bias more effectively than the $k$ term in AIC \cite{gelman2013bayesian}:
+Deviance Information Criterion (DIC) \cite{spiegelhalter2002bayesian} is a more Bayesian alternative to AIC. It starts by firstly using the posterior mean point estimates, $\hat{\theta}_{Bayes}$ rather than the maximum likelihood estimates as the point at which to evaluate the log-likelihood. It then subtracts a data-dependent term which captures the bias more effectively than the $k$ term in AIC \cite{gelman2013bayesian}:
 
 \begin{equation}\label{eq:Evaluation_DIC}
 \widehat{elpd_{DIC}} = log \left[p(\boldsymbol{y}|\hat{\theta}_{Bayes})\right] - k_{DIC}
@@ -5431,7 +5442,7 @@ Models are interpretations on reality. Posteriors are derived by assuming that t
 
 When we conduct a statistical analysis we usually have a few questions that we will use our models to address. It is our duty to check that the answers to those questions do not vary if we use any particular \textit{reasonable} model to represent a given phenomenon, and if they do, we should report that this is the case. 
 
-Imagine that we are charged with developing a model for rainfall, that is going to be used to help architects plan the construction of a dam. Unfortunately, we only have the past 100 days of rainfall available that we can use to build a model (see figure \ref{fig:Evaluation_sensitivityRainfall}). In particular, we are interested in building a model that generates realistic patterns of wet and dry days. We will then use this to investigate the maximum number of rainy days that we are likely to encounter in reality, since this information is crucial for when deciding the thickness of the dam. 
+Imagine that we are charged with developing a model for rainfall, that is going to be used to help architects plan the construction of a dam. Unfortunately, we only have the past 100 days of rainfall available that we can use to build a model (see figure \ref{fig:Evaluation_sensitivityRainfall}). In particular, we are interested in building a model that generates realistic patterns of wet and dry days. We will then use this to investigate the maximum number of rainy days that we are likely to encounter in reality, since this information is crucial for when deciding the height and thickness of the dam. 
 
 We consult the literature and see that there are two models that might be appropriate in this circumstance. One is a two state model, consisting of \textit{dry} days  and \textit{wet} days, with probabilities of transitioning between these states. The other model is slightly more complex, having three states: dry, wet and persistently-wet. In both models dry days occur when there is no recorded rainfall. In the first model a wet day is when there is non-zero rainfall, and in the latter it is when there is a wet day following a dry. The \textit{persistently-wet} state occurs when there are two consecutive wet days. 
 
@@ -5505,7 +5516,7 @@ f_\Phi(\phi) &= f_\theta(\sqrt{\phi}) \frac{1}{2}\phi^{-\frac{1}{2}}\\
 \end{align}
 \end{equation}
 
-Where we have got to the second line from the first, by assuming a uniform prior (hence independent of the function argument). Figure illustrates that whilst this prior is uniform for the probability that one individual is obese, it is considerably different in nature for the event of \textit{both} people having the condition. In particular, it is downward-sloping implying that before we collect the data, we believe that this event is relatively unlikely, with more than 70\% of the prior weight assigned to values of $\phi<\frac{1}{2}$.
+Where we have got to the second line from the first, by assuming a uniform prior (hence independent of the function argument). Figure \ref{fig:Objective_uniformPrior} illustrates that whilst this prior is uniform for the probability that one individual is obese, it is considerably different in nature for the event of \textit{both} people having the condition. In particular, it is downward-sloping implying that before we collect the data, we believe that this event is relatively unlikely, with more than 70\% of the prior weight assigned to values of $\phi<\frac{1}{2}$.
 
 This illustrates that whilst in one frame of reference we may specify a particular prior, that in a different frame, the nature of the prior may be completely different. Thus it is not necessarily the case that an uninformative prior for one event may also be uninformative for another event which can be thought of as a function of the first. In the example, for both people to be obese (the second event), we require that individually the people are obese (the first event).
 
@@ -5720,18 +5731,107 @@ The reader should now be familiar with the following concepts:
 
 
 \part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
+\section{Part mission statement}
+This Part aims to introduce the reader to Bayesian inference in practice. We start by introducing the most commonly-used algorithms that sit behind computational attempts to compute posterior distributions. Fortunately for us, for many purposes we do not need to rewrite these algorithms ourselves, since others have already produced software which implements them, and are well-tuned for Bayesian inference. In chapter \ref{chap:StanJAGS} we provide a thorough introduction to two of these languages: Stan and JAGS, providing a base which should allow the reader to write their own programs to suit the majority of circumstances.
 
-\chapter{Discrete approximation of continuous posteriors}
-Unsure whether as it stands to keep this chapter, or lose it.
+\section{Part goals}
+We are now familiar with the range of distributions which we have at our disposal for both the likelihood and prior in the Bayesian formula. In chapter \ref{chap:conjugate} we illustrated how, in certain simplified circumstances, we can compute posteriors exactly, by choice of priors that are conjugate to the likelihood in question. Whilst this can be useful as a starting point to an analysis, we should not let an analysis be dictated solely by ease of calculation! In most real-world circumstances using conjugate priors is overly-restrictive. However, we shall see in chapter \ref{chap:MCMC} that choosing a non-conjugate prior poses difficulties in calculating the posterior, meaning that in most cases it is difficult, or impossible, to carry out this calculation. 
 
-\chapter{Leaving the conjugates behind: Markov Chain Monte Carlo}\label{chap:MCMC}
+Fortunately for us, all is not lost, if we abandon the goal of exact calculation of the posterior, and choose instead to \textit{sample} from it. Sampling from a distribution provides a window that allows us to understand its shape - its mean, variance, quantiles - that we usually require as part of a Bayesian analysis. It is akin to trying to understand the probability distribution for a die, by throwing it a large number of times, and enumerating the number of times it lands face-up on each of the six numbers. Unfortunately, unlike the die example, we are unable to generate \textit{independent} samples from posteriors, and we have to resort to \textit{dependent} sampling. The type of dependent sampling that is most frequently used computational Bayesian inference is \textit{Markov Chain Monte Carlo} (MCMC), first invented for use in physics in the early fifties. Essentially MCMC allows us to undertake a random walk through posterior space, where each step represents a sample from the posterior. In chapter \ref{chap:MCMC} we shall see that this technique provides a framework which is capable of tackling the majority of problems that we encounter in reality. However MCMC is not without its pitfalls. In particular, we shall see that the question of just how many samples we need to take in order to represent our posterior distribution adequately, is fraught with danger, and rife with opportunities for misuse. This makes understanding the algorithms behind MCMC, as well as methods used to judge their convergence (to the desired posterior) pivotal, and we shall devote significant time to this issue.
 
-\section{The difficulty with real life Bayesian inference}
+Three of the most frequently used algorithms in Bayesian inference are: Metropolis-Hastings, Gibbs, and Hamiltonian Monte Carlo. We start by introducing Metropolis-Hastings in chapter \ref{chap:MCMC}, since we believe that this is the simplest of the three to understand. It can also be regarded as a special case of Gibbs sampling (and vice versa as it turns out) that we introduce in chapter \ref{chap:Gibbs}. Gibbs sampling is the algorithm that is implemented in the BUGS languages, as well as for JAGS, which we introduce in chapter \ref{chap:StanJAGS}. Gibbs sampling is a powerful technique, that is sufficiently general to be applied in a large range of circumstances. However, there are still cases where it is limiting. In particular, for multivariate quantities such as covariance matrices, Gibbs sampling restricts us to conjugate sampling (we saw in chapter \ref{chap:distributions} that using the inverse-Wishart as a conjugate prior for multivariate normal covariance matrices is \textit{very} restrictive). Also, for many types of problem, Gibbs sampling is too slow to be useful practically; in particular for the types of hierarchical models for which we advocate in Part \ref{part:regressionHierarchical}.
+
+A more recently-invented way of sampling from the posterior is through Hamiltonian Monte Carlo (HMC), that represents less of a random walk through parameter space, and more of a directed one. This direction allows for a much faster, and more independent-sampling-type way of sampling from a posterior distribution, meaning that we are able to tackle bigger, more complex problems. Stan\cite{stan-software:2014} is a programming language created by Andrew Gelman (the de facto king of Bayesian statistics), which implements HMC in a fast, and extremely sensible manner. In particular, unlike JAGS (as well as BUGS) the language is much more similar to normal programming languages, making its learning curve less-steep, as well as extending its potential use. We introduce HMC in chapter \ref{chap:HMC}, before we introduce Stan in chapter \ref{chap:StanJAGS}.
+
+\chapter{Leaving conjugates behind: Markov Chain Monte Carlo}\label{chap:MCMC}
+\section{Chapter mission statement}
+By the end of this chapter the reader should understand the problems inherent in attempting to calculate posterior distributions exactly via Bayes' rule, as well as how sampling can help us to side-step the problem. The reader will also have gained a knowledge of the Metropolis-Hastings - one of the most important sampling algorithms used in Bayesian inference. Finally the chapter finishes with a short section on computational posterior predictive checking, which illustrates how we can use posterior samples to undertake the type of model evaluation that we introduced in chapter \ref{chap:ModelFit}.
+
+\section{Chapter goals}
+Bayes' rule requires us to sum/integrate the likelihood times the prior, across all parameter ranges, in order to estimate its denominator, which normalises the distribution, making it a proper probability density. For many continuous parameter settings this multidimensional integral is practically-intractable. Furthermore, as we shall see in section \ref{sec:MCMC_difficultyBayesPosterior}, even if we did manage to calculate the exact posterior density, we would still be required to carry out further difficult/impossible multidimensional integrals in order to calculate its moments; often the most sought-after parts of a Bayesian analysis!
+
+This means that in order to conduct Bayesian analysis in practice, we need to change tact somewhat; abandoning the relative comfort of exact calculation, in favour of an alternative approach. Whereas we are unable to exactly calculate the posterior distribution, it turns out we are nevertheless able to \textit{sample} from it. In life, we already use sampling unwittingly use sampling to gain an understanding of various entities: we don't know whether we like a particular food before we try a bit of it; when voters are quized at exit-polls these represent a sample from the overall population. In practical statistics, the situation can also be similar. When a manufacturer of dice wants to check that its dice roll near random, they are unable to carry out a calculation to validate this, and instead need to resort to rolling them a large number of times; in other words, sampling\footnote{See \url{http://www.forbes.com/sites/davidewalt/2012/09/06/dice-chessex-gamescience-roll-randomn/}.}. 
+
+Whilst we are able to sample from a posterior, it is worth noting that the sampling is somewhat different to that of the dice example. Whereas it is possible to independently sample dice (supposing that sufficiently random initial throw conditions are chosen), we are unable to generate independent samples for posteriors; the experimental ideal. Instead we have to make-do with dependent samples: where the next sample depends on the value of the current sample. Monte Carlo Markov Chains are one such type of dependent sampling algorithm, which we introduce in section \ref{sec:MCMC_independentToDependent}. As one might expect, this strategy results in a correlation of consecutive samples, reducing the effective sample size. This means that we need to take many more dependent samples to fully represent our posterior, than we would need to if we were able to take independent samples. Since our samples are dependent, we also need to start a number of such samplers across wide portions of the posterior landscape, in order to ensure that we traverse a majority of the parameter space.
+
+In all sampling types we also need to make sure that we take sufficient samples, such that we feel confident in their representation of the posterior. This is actually quite a difficult problem, since for the vast majority of cases we do not know the thing from which we're trying to sample - hence the reason for doing the sampling in the first place! However, as we shall see in section \ref{sec:MCMC_convergence}, that by using independent samplers, and comparing the samples across all of these, that we can judge convergence by monitoring their convergence to one another. Whilst this method isn't foolproof, it is currently the best available method for judging whether we our samples are sufficiently representative of the posterior.
+
+Finally the last part of this chapter explains some important practical considerations, and tips for undertaking Bayesian analysis in practice.
+
+\section{The difficulty with real life Bayesian inference}\label{sec:MCMC_difficultyBayesPosterior}
+Bayes' rule gives us the correct recipe for calculating a posterior probability density, in any circumstance:
+%
+\begin{equation}
+p(\theta|data) = \frac{p(data|\theta) p(\theta)}{p(data)}
+\end{equation}
+%
+As an example, imagine that we count the number of people of secondary BSE cases originating from a particular infected cow. We suppose that we can use a Poisson distribution for our likelihood in this case (see section \ref{sec:Distributions_poisson}), with mean parameter $\lambda$. Furthermore we suppose that we expect that the mean could potentially exist across a range of scales, and in accordance with our prejudices hence we assign a $log-Normal(-2,3)$ prior on $\lambda$, which is spread out across a wide span of parameter space. In order to calculate the posterior, Bayes' rule tells us that we need to calculate the denominator: $p(data)$, which in general we obtain by multiplying the likelihood and prior, then integrating over $\theta$:
+%
+\begin{equation}
+p(data) = \int\limits_{\theta\in\Theta} p(data|\theta) \times p(\theta) \mathrm{d}\theta
+\end{equation}
+%
+where $\Theta$ represents the entire range of $\theta$. In our BSE example this means that we are required to calculate the following integral:
+%
+\begin{equation}\label{eq:MCMC_denominatorBSE}
+p(\boldsymbol{x}) = \int\limits_{0}^{\infty}\left(\prod\limits_{i=1}^{n} \frac{\lambda^{x_i} exp(-\lambda)}{x_i!}\right) \times \frac{1}{3\lambda\sqrt{2\pi}} exp\left(-\frac{(log(\lambda)-2)^2}{18}\right)\mathrm{d}\lambda
+\end{equation}
+%
+From the above, it is evident that whilst we have not strayed far from a well-trodden path of analysis in this book, that we have nevertheless arrived at an expression that is, at least, difficult to work out. Furthermore, suppose that we were able to actually work this expression out, and hence we arrive at a formula for $p(\lambda|\boldsymbol{x})$. At this point we might be interested in a summary measure of our posterior, such as its mean. We know from chapter \ref{chap:Probability}, that we can derive this expression by taking a weighted mean of the posterior of the form:
+%
+\begin{equation}
+\begin{align}
+\mathrm{E(\lambda)} &= \int\limits_{0}^{\infty} \lambda p(\lambda|\boldsymbol{x}) \mathrm{d}\lambda\\
+&= \int\limits_{0}^{\infty} \lambda \frac{p(\boldsymbol{x}|\lambda)\times p(\lambda)}{p(\boldsymbol{x})} \mathrm{d}\lambda
+\end{align}
+\end{equation}
+%
+Knowing that the formula for the denominator given in eqn. (\ref{eq:MCMC_denominatorBSE}) was sufficiently tricky to calculate, we expect that calculating the above integral is going to be similarly, and most likely more, difficult. 
+
+So we have seen here that even though we are dealing with a situation of quite modest complexity - we were able to explain the situation, and model in a couple of lines - that we have nevertheless found that calculating quantities of interest, such as the posterior, and its mean, are practically-difficult/impossible to evaluate. This problem only becomes exacerbated as the complexity of the problem increases. In particular if the dimensionality of the problem increases linearly (the number of free parameters), we see an exponential-like increase in the difficultly of the problem. Clearly exact calculation of the posterior is going to be difficult for all but the most simple of examples.
+
+There are a number of methods that have been used to either derive approximate expressions for the posterior, or instead to merely sample from it. Over the next few sections we survey a few methods that aim to approximate the posterior, as a stepping stone before we move on to Monte Carlo Markov Chain sampling later on in the chapter.
+
+\section{Discrete approximation to continuous posteriors}
+Whilst calculating the denominator can be difficult for continuous parameters, this difficulty is not matched for discrete parameters, where we can usually calculate:
+%
+\begin{equation}
+p(data) = \sum\limits_{\theta=\theta_1}^{\theta_p} p(data|\theta) \times p(\theta)
+\end{equation}
+%
+directly. The relative ease of this calculation comes about because of modern computers, which can evaluate each of the $p$ terms in the above sum, and add them together in the blink of an eye. This ease carries over into formulae for the moments of these distributions, where for example we can calculate the posterior mean value of $\theta$ through:
+%
+\begin{equation}
+\mathrm{E}(\theta) = 
+\end{equation}
+
+So if we had a way of making our continuous parameter problems discrete, we could then easily solve for the posterior. Typically, this discretisation process is an approximation, where we suppose that our prior and likelihood only exist at a finite set of points on a grid, resulting in an approximate posterior that is also discrete. 
+
+As an example, suppose that we continue our BSE example, where we had a Poisson likelihood, and a log-normal prior.  
+
+\section{Integrating using quadrature}
+
 \section{Integrating using independent Monte Carlo samples}
-\section{Moving from independent to dependent samples}
+\section{Moving from independent to dependent samples}\label{sec:MCMC_independentToDependent}
 Include subsection on effective sample size.
 
+\section{Metropolis-Hastings}
+\section{Intuition behind Metropolis}
+The analogy of walking around a landscape. Moving to a new spot probabilistically if it is lower, and moving to a higher spot definitely. The idea is that you will visit positions at a rate proportional to their height. Rain analogy: absolute height is unimportant, only the relative difference between parts of the landscape.
+
+Show exactly integrated vs sampled.
+
+
+
 \subsection{The burn-in/warm-up phase}
+
+\section{The importance of the proposal distribution}
+The annoyance of having to pick a step length.
+
+\section{Judging convergence}\label{sec:MCMC_convergence}
+
+\section{As a subset of Gibbs and vice versa}
+
 
 \section{Practical computational inference}
 \subsection{The importance of pre-simulation MLE}
@@ -5744,7 +5844,7 @@ Check model is ok.
 \section{Evaluating a models' accuracy}\label{sec:MCMC_evaluationAccuracy}
 This section details how sampling is used to approximate the integrals in section \ref{sec:Evaluation_idealAccuracy}.
 
-\chapter{Gibbs sampling}
+\chapter{Gibbs sampling}\label{chap:Gibbs}
 \section{The intuition behind the Gibbs algorithm}
 Imagine wanting to sample the heights of all the points on earth as a posterior distribution. One could do a random walk a la MH, but if the proposal distribution is too narrow, then the sampler could get stuck on a mountain range or desert; alternatively large swathes of landscape may be ignored if the step size is too large. This means it can take require a long burn-in, and may or may not be representative of the underlying landscape. The Gibbs algorithm works by cutting through the earth along lines of latitude or longitude, and allowing all steps along this conditional distribution. Since arbitrary step lengths are allowed, the algorithm is quicker, and there is no need to fine tune it to the degree of MH.
 
@@ -5752,15 +5852,8 @@ Imagine wanting to sample the heights of all the points on earth as a posterior 
 \section{DAG models}
 \section{The benefits and difficulties with Gibbs}
 
-\chapter{Metropolis-Hastings}
-\section{Intuition behind Metropolis}
-The analogy of walking around a landscape. Moving to a new spot probabilistically if it is lower, and moving to a higher spot definitely. The idea is that you will visit positions at a rate proportional to their height. Rain analogy: absolute height is unimportant, only the relative difference between parts of the landscape.
-\section{The importance of the proposal distribution}
-The annoyance of having to pick a step length.
 
-\section{As a subset of Gibbs and vice versa}
-
-\chapter{Hamiltonian Monte Carlo}
+\chapter{Hamiltonian Monte Carlo}\label{chap:HMC}
 \section{Introduction to Hamiltonian Monte Carlo}
 \section{Avoiding manual labour: the No-U-turn sampler}
 Reference Hoffman and Gelman 2014 paper.
@@ -5768,7 +5861,7 @@ Reference Hoffman and Gelman 2014 paper.
 Reference downloaded Girolami article.
 Remember the comment from Ben Goodrich here: \url{https://groups.google.com/forum/?fromgroups=#!topic/stan-users/0F0O4hfHA8g} - in other words, using the second derivative is not free computationally! Ideal to design programs that don't need to use RMHMC.
 
-\chapter{Stan and JAGS}
+\chapter{Stan and JAGS}\label{chap:StanJAGS}
 \section{Motivation for Stan and JAGS}
 \subsection{Their similarities and differences}
 \subsection{The future}
@@ -5806,6 +5899,8 @@ The idea behind this section is to introduce the reader to a wide, and somewhat 
 \subsubsection{The importance of log probability incrementing}
 \subsubsection{Marginalising of discrete parameters}
 If model has many discrete parameters consider moving to JAGS.
+
+\subsection{Calculating LOO-CV and WAIC}
 
 \section{JAGS}
 \subsection{How to download, and install}
