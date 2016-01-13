@@ -21,16 +21,20 @@
 \usepackage{pst-func}
 \usepackage{pst-math}
 \usepackage{empheq}
+\usepackage{makeidx}
 \newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
 \newcommand*\widefbox[1]{\fbox{\hspace{2em}#1\hspace{2em}}}
 \interfootnotelinepenalty=10000
 
+
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.1in}
 \maketitle
+\makeindex
 
 \begin{document}
 \tableofcontents
+
 
 \chapter{How to best use this book}
 \section{The purpose of this book}
@@ -5781,7 +5785,7 @@ From the above, it is evident that whilst we have not strayed far from a well-tr
 %
 \begin{equation}
 \begin{align}
-\mathrm{E(\lambda)} &= \int\limits_{0}^{\infty} \lambda p(\lambda|\boldsymbol{x}) \mathrm{d}\lambda\\
+\mathrm{E(\lambda|\boldsymbol{x})} &= \int\limits_{0}^{\infty} \lambda p(\lambda|\boldsymbol{x}) \mathrm{d}\lambda\\
 &= \int\limits_{0}^{\infty} \lambda \frac{p(\boldsymbol{x}|\lambda)\times p(\lambda)}{p(\boldsymbol{x})} \mathrm{d}\lambda
 \end{align}
 \end{equation}
@@ -5790,7 +5794,7 @@ Knowing that the formula for the denominator given in eqn. (\ref{eq:MCMC_denomin
 
 So we have seen here that even though we are dealing with a situation of quite modest complexity - we were able to explain the situation, and model in a couple of lines - that we have nevertheless found that calculating quantities of interest, such as the posterior, and its mean, are practically-difficult/impossible to evaluate. This problem only becomes exacerbated as the complexity of the problem increases. In particular if the dimensionality of the problem increases linearly (the number of free parameters), we see an exponential-like increase in the difficultly of the problem. Clearly exact calculation of the posterior is going to be difficult for all but the most simple of examples.
 
-There are a number of methods that have been used to either derive approximate expressions for the posterior, or instead to merely sample from it. Over the next few sections we survey a few methods that aim to approximate the posterior, as a stepping stone before we move on to Monte Carlo Markov Chain sampling later on in the chapter.
+There are a number of methods that have been used to either derive approximate expressions for the posterior, or instead to merely sample from it. In the next section we survey a few methods that aims to approximate the posterior, as a stepping stone before we move on to Monte Carlo Markov Chain sampling later on in the chapter.
 
 \section{Discrete approximation to continuous posteriors}
 Whilst calculating the denominator can be difficult for continuous parameters, this difficulty is not matched for discrete parameters, where we can usually calculate:
@@ -5802,20 +5806,173 @@ p(data) = \sum\limits_{\theta=\theta_1}^{\theta_p} p(data|\theta) \times p(\thet
 directly. The relative ease of this calculation comes about because of modern computers, which can evaluate each of the $p$ terms in the above sum, and add them together in the blink of an eye. This ease carries over into formulae for the moments of these distributions, where for example we can calculate the posterior mean value of $\theta$ through:
 %
 \begin{equation}
-\mathrm{E}(\theta) = 
+\mathrm{E}(\theta|data) = \sum\limits_{\theta=\theta_1}^{\theta_p} \theta \times p(\theta|data) 
 \end{equation}
+%
+So if we had a way of making our continuous parameter problems discrete, we could then straightforwardly solve for the posterior. Typically, this discretisation process is an approximation, where we suppose that our prior and likelihood only exist at a finite set of points on a grid, resulting in an approximate posterior that is also discrete. This is exactly what we did in the when we used Bayes box to calculate the posterior for a discretised version of the continuous disease proportion situation in section \ref{sec:Prior_diseaseProp}.
 
-So if we had a way of making our continuous parameter problems discrete, we could then easily solve for the posterior. Typically, this discretisation process is an approximation, where we suppose that our prior and likelihood only exist at a finite set of points on a grid, resulting in an approximate posterior that is also discrete. 
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{MCMC_discreteApproxBSE.pdf}}
+\caption{Left: the actual prior, likelihood and posterior for the BSE problem with a one datum equal to 7. Discrete prior, likelihood and posterior(=likelihood x prior divided by their sum) for the same problem, at intervals of 2 units (middle), and 0.5 units (right).\textbf{ADD LINES TO SHOW THAT POSTERIOR IS ESSENTIALLY JUST LIKELIHOOD TIMES PRIOR.}}\label{fig:MCMC_discreteApproxBSE}
+\end{figure}
 
-As an example, suppose that we continue our BSE example, where we had a Poisson likelihood, and a log-normal prior.  
+As another example, suppose that we continue our BSE problem, where we had a Poisson likelihood, and a log-normal prior. We could take the value of our prior and likelihood at only integer values of $\lambda$, and then use Bayes' rule to calculate a discretised posterior (see figure \ref{fig:MCMC_discreteApproxBSE}). The approximation of the discretised posterior to the actual improves as the interval width decreases (compare the middle and right panels of figure \ref{fig:MCMC_discreteApprox2DPolitician}). Furthermore, we can use our discretised posterior to calculate the posterior mean, once again using Bayes' box (see table \ref{tab:MCMC_discreteApproxBSE}).
 
-\section{Integrating using quadrature}
 
-\section{Integrating using independent Monte Carlo samples}
+\begin{table}[htbp]
+  \centering
+    \begin{tabular}{cccccc}
+    \toprule
+    \textbf{$\lambda$} & \textbf{Prior} & \textbf{Likelihood} & \textbf{Prior $\times$ Likelihood} & \textbf{Posterior} & \textbf{$\lambda \times$ Posterior} \\
+    \midrule
+    0     & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    2     & 0.468 & 0.000 & 0.000 & 0.002 & 0.004 \\
+    4     & 0.228 & 0.060 & 0.014 & 0.301 & 1.204 \\
+    6     & 0.120 & 0.138 & 0.016 & 0.365 & 2.192 \\
+    8     & 0.069 & 0.140 & 0.010 & 0.212 & 1.698 \\
+    10    & 0.042 & 0.090 & 0.004 & 0.084 & 0.840 \\
+    12    & 0.027 & 0.044 & 0.001 & 0.026 & 0.316 \\
+    14    & 0.018 & 0.017 & 0.000 & 0.007 & 0.099 \\
+    16    & 0.013 & 0.006 & 0.000 & 0.002 & 0.027 \\
+    18    & 0.009 & 0.002 & 0.000 & 0.000 & 0.007 \\
+    20    & 0.007 & 0.001 & 0.000 & 0.000 & 0.002 \\
+    \midrule
+          & 1.00  & 0.50  & $p(data)=$0.045 & 1.000 & $\mathrm{E}(\lambda)=6.39$ \\
+    \bottomrule
+    \end{tabular}%
+  \caption{A Bayes box illustrating the calculation of the posterior, and posterior mean for the BSE example, with a single data of 7.}\label{tab:MCMC_discreteApproxBSE}
+\end{table}%
+
+
+We can similarly discretise priors of more dimensions than the 1 we considered here, by again taking the values of the prior and likelihood only at particular grid points. Imagine that we were interested in determining in politician expenditure claims, for which we assign a normal likelihood, which has two unknown parameters - the mean, $\mu$, and the standard deviation, $\sigma$. We then assign independent priors for $(\mu,\sigma)$, of another normal, and exponential distribution respectively. In this case again, calculating the integral that corresponds to the denominator is difficult, but we can gain significant insight into the posterior from discretising the problem (see figure \ref{fig:MCMC_discreteApprox2DPolitician}).
+
+Whilst this discretisation procedure works well for low complexity problems, it quickly becomes unwieldy as the number of parameters involved increases. This is easy to see in comparing figure \ref{fig:MCMC_discreteApproxBSE} with figure \ref{fig:MCMC_discreteApprox2DPolitician}, where even though we have increased the number of parameters by 1, the number of grid points at which we are required to evaluate the posterior has increased considerably. In fact, for linear increases in the dimensionality of the problem, there are exponential increases in the number of grid points we need. Suppose we discretise a given parameter by representing the posterior space by 10 values along its axis. For 1D this means we need to do 10 calculations. If we introduce another parameter into the mix, and again represent it by 10 points, this means that we need to do $10\times 10=100$ calculations. If we increase the number of parameters to 20, this requires $10^20=100,000,000,000,000,000,000$ calculations! Thus this methodology clearly becomes impractical as the complexity of the problem increases. We say that is suffers from \textit{the curse of dimensionality} \index{curse of dimensionality}; a term which is used to explain problems in a method that only arise as the dimensionality increases (here this is the dimensionality of the posterior, determined by the number of parameters).
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{MCMC_discreteApprox2DPolitician.png}}
+\caption{Left: the actual prior, likelihood and posterior for the politician expenditure example with data given by x=(105,100). Right: discrete prior, likelihood and posterior(=likelihood x prior divided by their sum) for the same problem.\textbf{ADD LINES TO SHOW THAT POSTERIOR IS ESSENTIALLY JUST LIKELIHOOD TIMES PRIOR.}}\label{fig:MCMC_discreteApprox2DPolitician}
+\end{figure}
+
+\boxed{Interactive:} allow reader to control the number of discretisation points in both the 1D and 2D examples.
+
+\section{The posterior through quadrature}
+As opposed to discretising the entire prior, likelihood and posterior space, we could simply seek approximate values for the integrals involved in Bayesian inference; for example that of the denominator, and the posterior mean. A commonly-used method in numerical computing is to approximate integrals by discretising the function being questioned, then summing together these values multiplied by a type of weighting function. 
+
+A particularly simple, and somewhat crude method is to discretise a function over a range, and assume its value is constant over the interval used; summing together the area of all resultant rectangles as an approximation to the integral in question. However, from figure \ref{fig:MCMC_quadratureBSE}, we can see that this rule allows for accurate evaluation of the denominator for our BSE example, after only modest decreases in the interval width.
+
+However, once again this method suffers from the curse of dimensionality\index{curse of dimensionality}; as the number of parameters increases, we are required to sum our function across an exponentially-increasing number of points, as part of any quadrature method to evaluate an integral.
+
+\begin{figure}
+\centering
+\scalebox{0.25} 
+{\includegraphics{MCMC_quadratureBSE.pdf}}
+\caption{Rectangular quadrature in action: as the interval width decreases, there is a corresponding improvement in the error.}\label{fig:MCMC_quadratureBSE}
+\end{figure}
+
+\section{Integrating using independent samples: an introduction to Monte Carlo}\index{Independent sampling}\index{Monte Carlo}
+Frequently in applied Bayesian analyses we would like to estimate models with hundreds, or thousands of parameters. Neither distributional discretisation, nor quadrature are going to perform adequately in these types of settings. Evidently if we are to handle problems of any sort of complexity, indexed by the number of parameters, we need a new approach. Fortunately, such an approach exists, but it requires a change of perspective. This means we have to abandon the use of brute force to directly estimate posteriors densities, as well as posterior summaries such as the mean. However, it turns out that we can actually still estimate these quantities \textit{indirectly} through sampling\index{sampling}.
+
+Suppose that we had a black box containing a die of an unknown number of sides, which may or may not be fair, we just don't know. However, fortunately for us, there exists a tiny window in the top of the box. Each time we shake the box, we are able to look at this window, and see the number that resulted from the previous throw. Suppose we play a game where we pay \$X to stand a chance to win the amount of money that shows on the top of the box. If we were left in a room with the box for long enough, could we work out a fair amount to pay for such a bet?
+
+In this example a fair amount to pay would correspond to the mean of the die, since in this circumstance our expected winnings are zero. How can we estimate the mean of the die? Suppose we shake the box, recording the number which shows at the top afterwards. We then repeat this process - shaking and recording - a large number of times. Here clearly we can estimate the mean of the die if we just average the numbers we obtained across all of our throws. There is of course the question of `just how many throws do we need to be confident in our estimate?' but let's leave this aside for the time being. 
+
+So to recap if we sample from our black box die a large number of times, then take the mean of the resultant dataset, then this provides us a way of estimating the mean of the die itself. Whilst this might not appear revolutionary, remember that the mean of a discrete distribution is given by:
+%
+\begin{equation}
+\mathrm{E}(X) = \sum\limits_{X=0}^{k} x_i \times Pr(X=x_i)
+\end{equation}
+%
+which we have somewhat-unwittingly estimated, even though we have no idea of $k$ - the number of sides - nor the individual face probabilities!
+
+Furthermore, let's suppose that we increase the number of sides of our die such that it now has an infinite number of faces (albeit this is a pretty strange die). Finally we suppose that the die is able to represent all of the real values between 0 and $\infty$ (ok, this die is getting weirder by the minute, but bear with us), with each side corresponding to each of these values. Now after we shake our box, we see one of these real numbers at the top afterwards. If our task remains to estimate the mean of the die, then we could still estimate its mean by repeatedly shaking the box, and recording its value\footnote{Technically for this to work we require that there is a proper probability distribution over the sides, which has a finite first moment, but let's not get caught up in this issue here.}. Now, since we are dealing with a continuous random variable, we have essentially estimated the \textit{integral}:
+%
+\begin{equation}
+\mathrm{E}(X) = \int\limits_{0}^{\infty} x p(x)\mathrm{d}x
+\end{equation}
+%
+Again without any knowledge of the underlying probability distribution $p(x)$. This is the sort of maths that we'd always like to do, if we can!
+
+In general, if we are able to repeatedly generate independent samples from a probability distribution, $X_i\sim p(x)$ we are able to estimate its mean by the following formula:
+%
+\begin{equation}
+\begin{align}
+\mathrm{E}(X) &= \int\limits_{0}^{\infty} x \times p(x) \mathrm{d}x\\
+&\approx \frac{1}{n} \sum\limits_{i=1}^{n} X_i
+\end{align}
+\end{equation}
+%
+where $n$ is the number of samples. The above is really just a grandiose way of saying that we just take the mean of all our samples. Whilst this method might seem limiting, in that we are only able to calculate the mean of a given distribution, it turns out that the above is a specific example of a more general rule: if we can generate a large number of samples from a given probability distribution $X_i\sim p(x)$, we can estimate the expectation of \textit{any} function, $g(X)$ by:
+%
+\begin{equation}
+\begin{align}
+\mathrm{E}(g(X)) &= \int\limits_{0}^{\infty} g(x) \times p(x) \mathrm{d}x\\
+&\approx \frac{1}{n} \sum\limits_{i=1}^{n} g(X_i)
+\end{align}
+\end{equation}
+%
+The above might appear a bit purposeless, until you realise that we could manipulate it to allow us to estimate the variance of a distribution by the below:
+%
+\begin{equation}
+\begin{align}
+var(X) &= \mathrm{E}(X^2) - \left[\mathrm{E}(X)\right]^2\\
+&\approx \frac{1}{n} \sum\limits_{i=1}^{n} X_i^2 - \left[\sum\limits_{i=1}^{n} X_i\right]^2
+\end{align}
+\end{equation}
+%
+This class of method that relies on computational random sampling are known as \textit{Monte Carlo} methods; being originally named by Nicholas Metropolis whose MCMC method we shall encounter in section \ref{sec:MCMC_metropolisHastings}. 
+
+Whilst you start to see that this method may have some promise, the best is yet to come. So long as we are able to generate independent samples from a probability distribution, $\boldsymbol{X_i}=(X_{1i},X_{2i},...,X_{ki})\sim p(\boldsymbol{x})$, then we can approximate multidimensional integrals just as simply as we did for the univariate case:
+%
+\begin{equation}
+\begin{align}
+\mathrm{E}(g(\boldsymbol{X})) &= \int\limits_{x_1\in X_1}\int\limits_{x_2\in X_2}...\int\limits_{x_{k}\in X_{k}} g(\boldsymbol{x}) p(\boldsymbol{x}) \mathrm{d}x_{k} ... \mathrm{d}x_{2}\mathrm{d}x_{1}\\
+&\approx \frac{1}{n} \sum\limits_{i=1}^{n} g(\boldsymbol{X_i})
+\end{align}
+\end{equation}
+%
+Importantly, we have found a methodology whose complexity appears insensitive to the dimensionality of the problem at hand; note we could have chosen $k$ above to be 10, 1,000 or 1,000,000, and the method is still as easy to carry out!
+
+So can we use sampling to approximate the integrals involved in Bayesian inference? The answer is yes, but it turns out that in all but the easiest of problems we need to modify our method a bit, since in general we are not able to generate \textit{independent} samples from a particular posterior. Before we turn to this modification, we first show how we can use independent sampling to evaluate the denominator of our BSE example.
+
+\subsection{BSE revisited}
+Since today most software packages come equipped with pseudo-random number generators capable of generating independent samples from a wide range of univariate distributions, it turns out we can use independent sampling to evaluate our BSE integral? Remember that here we came unstuck when attempting to evaluate:
+%
+\begin{equation}\label{eq:MCMC_denominatorBSE2}
+\begin{align}
+p(\boldsymbol{x}) &= \int\limits_{0}^{\infty}\left(\prod\limits_{i=1}^{n} \frac{\lambda^{x_i} exp(-\lambda)}{x_i!}\right) \times \frac{1}{3\lambda\sqrt{2\pi}} exp\left(-\frac{(log(\lambda)-2)^2}{18}\right)\mathrm{d}\lambda\\
+&= \int\limits_{0}^{\infty} L(\lambda|\boldsymbol{x}) p(\lambda)\mathrm{d}\lambda
+\end{align}
+\end{equation} 
+%
+However, the preceding work shows us that we can estimate the above integral, so long as we are able to generate \textit{independent} samples, $\lambda_j\sim p(\lambda)$, (where $p(\lambda)$ corresponds to a log-normal distribution), by the following:
+%
+\begin{equation}
+\begin{align}
+\mathrm{E}(L(\lambda|\boldsymbol{x}) &= \int\limits_{0}^{\infty} L(\lambda|\boldsymbol{x}) p(\lambda)\mathrm{d}\lambda\\
+&\approx \sum\limits_{j=1}^{n} L(\lambda_j|\boldsymbol{x})
+\end{align}
+\end{equation}
+%
+where we have rewritten the likelihood term $p(\boldsymbol{x}|\theta)=L(\theta|\boldsymbol{x})$ to emphasise that it is a function of $\lambda$, with $\boldsymbol{x}$ held constant.
+
+Figure X shows that as we increase the sample size $n$, that the above method rapidly converges on the true value for the denominator integral. Although we don't show it, we could use the same framework to allow us to estimate the mean of the posterior, again exploiting the fact that we are in this example able to generate independent samples from the prior. However, we leave this for exercise \ref{sec:MCMC_problemBSE} in the problem set.
+
+Insert figure diagram.
+
+Insert a diagram showing the black box.
+
+
+\section{Why is independent sampling easier said than done?}
+Section on how computers actually generate random samples.
+
 \section{Moving from independent to dependent samples}\label{sec:MCMC_independentToDependent}
 Include subsection on effective sample size.
 
-\section{Metropolis-Hastings}
+\section{Metropolis-Hastings}\label{sec:MCMC_metropolisHastings}
 \section{Intuition behind Metropolis}
 The analogy of walking around a landscape. Moving to a new spot probabilistically if it is lower, and moving to a higher spot definitely. The idea is that you will visit positions at a rate proportional to their height. Rain analogy: absolute height is unimportant, only the relative difference between parts of the landscape.
 
@@ -5843,6 +6000,12 @@ Check model is ok.
 
 \section{Evaluating a models' accuracy}\label{sec:MCMC_evaluationAccuracy}
 This section details how sampling is used to approximate the integrals in section \ref{sec:Evaluation_idealAccuracy}.
+
+\section{Chapter summary}
+\section{Chapter outcomes}
+
+\section{Problem set}
+\subsection{Evaluate the mean and variance of the posterior for the BSE example}\label{sec:MCMC_problemBSE}
 
 \chapter{Gibbs sampling}\label{chap:Gibbs}
 \section{The intuition behind the Gibbs algorithm}
@@ -5944,8 +6107,10 @@ Include model averaging for
 \section{Malarial example of complex meta-analysis}
 
 
+
+
 \bibliographystyle{plain}
 \bibliography{Bayes}
 
-
+\printindex
 \end{document}

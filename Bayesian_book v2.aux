@@ -135,7 +135,7 @@
 \@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces A probability distribution showing the historical performance of two horses, A and B, in two separate races. $\{0,1\}$ refers to each horse losing or winning in their respective races.\relax }}{71}}
 \newlabel{tab:Probability_coinBiased}{{3.1}{71}}
 \newlabel{eq:Probability_discreteTwoDimensionalCoinSum}{{3.18}{71}}
-\newlabel{fig:Probability_footSizeIntelligenceTwoDimensionalExample}{{\caption@xref {fig:Probability_footSizeIntelligenceTwoDimensionalExample}{ on input line 785}}{72}}
+\newlabel{fig:Probability_footSizeIntelligenceTwoDimensionalExample}{{\caption@xref {fig:Probability_footSizeIntelligenceTwoDimensionalExample}{ on input line 789}}{72}}
 \@writefile{toc}{\contentsline {subsubsection}{Foot length and literacy: a 2-dimensional continuous probability example}{72}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.5}Marginal distributions}{72}}
 \newlabel{sec:Probability_marginal}{{3.3.5}{72}}
@@ -758,8 +758,8 @@
 \citation{tokuda2011visualizing}
 \citation{tokuda2011visualizing}
 \citation{tokuda2011visualizing}
-\newlabel{fig:Distributions_invWishart}{{\caption@xref {fig:Distributions_invWishart}{ on input line 4690}}{310}}
-\newlabel{fig:Distributions_Wishart}{{\caption@xref {fig:Distributions_Wishart}{ on input line 4697}}{310}}
+\newlabel{fig:Distributions_invWishart}{{\caption@xref {fig:Distributions_invWishart}{ on input line 4694}}{310}}
+\newlabel{fig:Distributions_Wishart}{{\caption@xref {fig:Distributions_Wishart}{ on input line 4701}}{310}}
 \@writefile{toc}{\contentsline {section}{\numberline {8.6}Choosing a likelihood made easy}{312}}
 \@writefile{toc}{\contentsline {section}{\numberline {8.7}Table of common likelihoods, their uses, and reasonable priors}{312}}
 \newlabel{sec:Distributions_table}{{8.7}{312}}
@@ -945,105 +945,122 @@
 \newlabel{sec:MCMC_difficultyBayesPosterior}{{12.3}{389}}
 \newlabel{eq:MCMC_denominatorBSE}{{12.3}{389}}
 \@writefile{toc}{\contentsline {section}{\numberline {12.4}Discrete approximation to continuous posteriors}{390}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.5}Integrating using quadrature}{391}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.6}Integrating using independent Monte Carlo samples}{391}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.7}Moving from independent to dependent samples}{391}}
-\newlabel{sec:MCMC_independentToDependent}{{12.7}{391}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.8}Metropolis-Hastings}{391}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.9}Intuition behind Metropolis}{391}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {12.9.1}The burn-in/warm-up phase}{391}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.10}The importance of the proposal distribution}{391}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.11}Judging convergence}{392}}
-\newlabel{sec:MCMC_convergence}{{12.11}{392}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.12}As a subset of Gibbs and vice versa}{392}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.13}Practical computational inference}{392}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {12.13.1}The importance of pre-simulation MLE}{392}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {12.13.2}Fake data simulation}{392}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.14}Posterior predictive checks}{392}}
-\@writefile{toc}{\contentsline {section}{\numberline {12.15}Evaluating a models' accuracy}{392}}
-\newlabel{sec:MCMC_evaluationAccuracy}{{12.15}{392}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {13}Gibbs sampling}{393}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12.1}{\ignorespaces Left: the actual prior, likelihood and posterior for the BSE problem with a one datum equal to 7. Discrete prior, likelihood and posterior(=likelihood x prior divided by their sum) for the same problem, at intervals of 2 units (middle), and 0.5 units (right).\textbf  {ADD LINES TO SHOW THAT POSTERIOR IS ESSENTIALLY JUST LIKELIHOOD TIMES PRIOR.}\relax }}{391}}
+\newlabel{fig:MCMC_discreteApproxBSE}{{12.1}{391}}
+\@writefile{lot}{\contentsline {table}{\numberline {12.1}{\ignorespaces A Bayes box illustrating the calculation of the posterior, and posterior mean for the BSE example, with a single data of 7.\relax }}{392}}
+\newlabel{tab:MCMC_discreteApproxBSE}{{12.1}{392}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.5}The posterior through quadrature}{393}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12.2}{\ignorespaces Left: the actual prior, likelihood and posterior for the politician expenditure example with data given by x=(105,100). Right: discrete prior, likelihood and posterior(=likelihood x prior divided by their sum) for the same problem.\textbf  {ADD LINES TO SHOW THAT POSTERIOR IS ESSENTIALLY JUST LIKELIHOOD TIMES PRIOR.}\relax }}{394}}
+\newlabel{fig:MCMC_discreteApprox2DPolitician}{{12.2}{394}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12.3}{\ignorespaces Rectangular quadrature in action: as the interval width decreases, there is a corresponding improvement in the error.\relax }}{395}}
+\newlabel{fig:MCMC_quadratureBSE}{{12.3}{395}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.6}Integrating using independent samples: an introduction to Monte Carlo}{395}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.6.1}BSE revisited}{398}}
+\newlabel{eq:MCMC_denominatorBSE2}{{12.13}{398}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.7}Why is independent sampling easier said than done?}{399}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.8}Moving from independent to dependent samples}{399}}
+\newlabel{sec:MCMC_independentToDependent}{{12.8}{399}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.9}Metropolis-Hastings}{400}}
+\newlabel{sec:MCMC_metropolisHastings}{{12.9}{400}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.10}Intuition behind Metropolis}{400}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.10.1}The burn-in/warm-up phase}{400}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.11}The importance of the proposal distribution}{400}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.12}Judging convergence}{400}}
+\newlabel{sec:MCMC_convergence}{{12.12}{400}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.13}As a subset of Gibbs and vice versa}{400}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.14}Practical computational inference}{400}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.14.1}The importance of pre-simulation MLE}{400}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.14.2}Fake data simulation}{400}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.15}Posterior predictive checks}{400}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.16}Evaluating a models' accuracy}{401}}
+\newlabel{sec:MCMC_evaluationAccuracy}{{12.16}{401}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.17}Chapter summary}{401}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.18}Chapter outcomes}{401}}
+\@writefile{toc}{\contentsline {section}{\numberline {12.19}Problem set}{401}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.19.1}Evaluate the mean and variance of the posterior for the BSE example}{401}}
+\newlabel{sec:MCMC_problemBSE}{{12.19.1}{401}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {13}Gibbs sampling}{403}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:Gibbs}{{13}{393}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.1}The intuition behind the Gibbs algorithm}{393}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.2}Simple examples}{393}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.3}DAG models}{393}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.4}The benefits and difficulties with Gibbs}{393}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {14}Hamiltonian Monte Carlo}{395}}
+\newlabel{chap:Gibbs}{{13}{403}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.1}The intuition behind the Gibbs algorithm}{403}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.2}Simple examples}{403}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.3}DAG models}{403}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.4}The benefits and difficulties with Gibbs}{403}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {14}Hamiltonian Monte Carlo}{405}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:HMC}{{14}{395}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.1}Introduction to Hamiltonian Monte Carlo}{395}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.2}Avoiding manual labour: the No-U-turn sampler}{395}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.3}Riemannian MCMC}{395}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {15}Stan and JAGS}{397}}
+\newlabel{chap:HMC}{{14}{405}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.1}Introduction to Hamiltonian Monte Carlo}{405}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.2}Avoiding manual labour: the No-U-turn sampler}{405}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.3}Riemannian MCMC}{405}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {15}Stan and JAGS}{407}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:StanJAGS}{{15}{397}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.1}Motivation for Stan and JAGS}{397}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.1.1}Their similarities and differences}{397}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.1.2}The future}{397}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.1.3}The nuts and bolts of Stan and JAGS: access through R}{397}}
-\@writefile{toc}{\contentsline {subsubsection}{How to get packages}{397}}
-\@writefile{toc}{\contentsline {subsubsection}{How to package data}{397}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.2}Stan}{397}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.1}How to download, and install}{397}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.2}A first program in Stan}{397}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.3}The building blocks of a Stan program}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{Parameters}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{Model}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{Transformed parameters}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{Transformed data}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{Generated quantities}{398}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.4}A simple model with data}{398}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.5}Diagnostics}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{$\mathaccentV {hat}05E{R}$ and effective sample size}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{Divergent iterations}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{Tree depth exceeding maximum}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{Leapfrog steps}{398}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.6}More complex models with array indexing}{398}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.7}Essential Stan reading}{398}}
-\@writefile{toc}{\contentsline {subsubsection}{The importance of log probability incrementing}{399}}
-\@writefile{toc}{\contentsline {subsubsection}{Marginalising of discrete parameters}{399}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.8}Calculating LOO-CV and WAIC}{399}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.3}JAGS}{399}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.1}How to download, and install}{399}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.2}A first program in JAGS}{399}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.3}The literal meaning of a for loop}{400}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.4}A simple model}{400}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.5}Diagnosis}{400}}
-\@writefile{toc}{\contentsline {subsubsection}{In-built using vanilla R}{400}}
-\@writefile{toc}{\contentsline {subsubsection}{coda}{400}}
-\@writefile{toc}{\contentsline {subsubsection}{More complex model}{400}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.6}Essential JAGS reading}{400}}
-\@writefile{toc}{\contentsline {subsubsection}{Controlling the flow without if conditions}{400}}
-\@writefile{toc}{\contentsline {subsubsection}{Storing values in matrices}{400}}
-\@writefile{toc}{\contentsline {part}{V\hspace  {1em}Regression analysis and hierarchical models}{401}}
-\newlabel{part:regressionHierarchical}{{V}{403}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.4}Part mission statement}{403}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.5}Part goals}{403}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {16}Hierarchical models}{405}}
+\newlabel{chap:StanJAGS}{{15}{407}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.1}Motivation for Stan and JAGS}{407}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.1.1}Their similarities and differences}{407}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.1.2}The future}{407}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.1.3}The nuts and bolts of Stan and JAGS: access through R}{407}}
+\@writefile{toc}{\contentsline {subsubsection}{How to get packages}{407}}
+\@writefile{toc}{\contentsline {subsubsection}{How to package data}{407}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.2}Stan}{407}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.1}How to download, and install}{407}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.2}A first program in Stan}{407}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.3}The building blocks of a Stan program}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{Parameters}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{Model}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{Transformed parameters}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{Transformed data}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{Generated quantities}{408}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.4}A simple model with data}{408}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.5}Diagnostics}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{$\mathaccentV {hat}05E{R}$ and effective sample size}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{Divergent iterations}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{Tree depth exceeding maximum}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{Leapfrog steps}{408}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.6}More complex models with array indexing}{408}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.7}Essential Stan reading}{408}}
+\@writefile{toc}{\contentsline {subsubsection}{The importance of log probability incrementing}{409}}
+\@writefile{toc}{\contentsline {subsubsection}{Marginalising of discrete parameters}{409}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.2.8}Calculating LOO-CV and WAIC}{409}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.3}JAGS}{409}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.1}How to download, and install}{409}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.2}A first program in JAGS}{409}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.3}The literal meaning of a for loop}{410}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.4}A simple model}{410}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.5}Diagnosis}{410}}
+\@writefile{toc}{\contentsline {subsubsection}{In-built using vanilla R}{410}}
+\@writefile{toc}{\contentsline {subsubsection}{coda}{410}}
+\@writefile{toc}{\contentsline {subsubsection}{More complex model}{410}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {15.3.6}Essential JAGS reading}{410}}
+\@writefile{toc}{\contentsline {subsubsection}{Controlling the flow without if conditions}{410}}
+\@writefile{toc}{\contentsline {subsubsection}{Storing values in matrices}{410}}
+\@writefile{toc}{\contentsline {part}{V\hspace  {1em}Regression analysis and hierarchical models}{411}}
+\newlabel{part:regressionHierarchical}{{V}{413}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.4}Part mission statement}{413}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.5}Part goals}{413}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {16}Hierarchical models}{415}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:hierarchicalModels}{{16}{405}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.1}The spectrum from pooled to heterogeneous}{405}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.1}The logic and benefits of partial pooling}{405}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.2}Shrinkage towards the mean}{405}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.2}Meta analysis example: simple}{405}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.3}The importance of fake data simulation for complex models}{405}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.1}The importance of making 'good' fake data}{405}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {17}Linear regression models}{407}}
+\newlabel{chap:hierarchicalModels}{{16}{415}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.1}The spectrum from pooled to heterogeneous}{415}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.1}The logic and benefits of partial pooling}{415}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.2}Shrinkage towards the mean}{415}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.2}Meta analysis example: simple}{415}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.3}The importance of fake data simulation for complex models}{415}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.1}The importance of making 'good' fake data}{415}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {17}Linear regression models}{417}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {17.1}Choosing covariates: model averaging}{407}}
-\newlabel{sec:Regression_modelAveraging}{{17.1}{407}}
+\@writefile{toc}{\contentsline {section}{\numberline {17.1}Choosing covariates: model averaging}{417}}
+\newlabel{sec:Regression_modelAveraging}{{17.1}{417}}
 \bibstyle{plain}
 \bibdata{Bayes}
-\@writefile{toc}{\contentsline {chapter}{\numberline {18}Generalised linear models}{409}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {18}Generalised linear models}{419}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {18.1}Malarial example of complex meta-analysis}{409}}
+\@writefile{toc}{\contentsline {section}{\numberline {18.1}Malarial example of complex meta-analysis}{419}}
 \bibcite{stan-manual:2015}{{1}{}{{}}{{}}}
 \bibcite{angrist1990lifetime}{{2}{}{{}}{{}}}
 \bibcite{bernardo1979reference}{{3}{}{{}}{{}}}

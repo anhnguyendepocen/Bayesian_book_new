@@ -1,0 +1,3685 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[    159341,       3676]
+NotebookOptionsPosition[    158783,       3652]
+NotebookOutlinePosition[    159130,       3667]
+CellTagsIndexPosition[    159087,       3664]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fPrior", "[", "\[Lambda]_", "]"}], ":=", 
+  RowBox[{"PDF", "[", 
+   RowBox[{
+    RowBox[{"LogNormalDistribution", "[", 
+     RowBox[{"1", ",", "1"}], "]"}], ",", "\[Lambda]"}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"data", "=", 
+   RowBox[{"{", "7", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fLikelihood", "[", 
+   RowBox[{"\[Lambda]_", ",", "lData__"}], "]"}], ":=", 
+  RowBox[{"Likelihood", "[", 
+   RowBox[{
+    RowBox[{"PoissonDistribution", "[", "\[Lambda]", "]"}], ",", "lData"}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"aDenominator", "=", 
+   RowBox[{"NIntegrate", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"fLikelihood", "[", 
+       RowBox[{"\[Lambda]", ",", "data"}], "]"}], 
+      RowBox[{"fPrior", "[", "\[Lambda]", "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\[Lambda]", ",", "0", ",", "\[Infinity]"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fPosteriorUnnormalised", "[", 
+   RowBox[{"\[Lambda]_", ",", "lData_"}], "]"}], ":=", 
+  RowBox[{
+   RowBox[{"fLikelihood", "[", 
+    RowBox[{"\[Lambda]", ",", "lData"}], "]"}], " ", 
+   RowBox[{"fPrior", "[", "\[Lambda]", "]"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fPosterior", "[", 
+   RowBox[{"\[Lambda]_", ",", "lData_", ",", "aDenominator_"}], "]"}], ":=", 
+  RowBox[{
+   RowBox[{"fLikelihood", "[", 
+    RowBox[{"\[Lambda]", ",", "lData"}], "]"}], " ", 
+   RowBox[{
+    RowBox[{"fPrior", "[", "\[Lambda]", "]"}], "/", 
+    "aDenominator"}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lPosteriorUnnormalised", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"i", "\[Equal]", "0"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "0"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", 
+         RowBox[{"fPosteriorUnnormalised", "[", 
+          RowBox[{"i", ",", "data"}], "]"}]}], "}"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "0", ",", "20", ",", "2"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g2", "=", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"RectangleChart", "[", 
+      RowBox[{"lPosteriorUnnormalised", ",", 
+       RowBox[{"ChartLabels", "\[Rule]", 
+        RowBox[{"Table", "[", 
+         RowBox[{"i", ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "0", ",", "20", ",", "2"}], "}"}]}], "]"}]}], 
+       ",", 
+       RowBox[{"Frame", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "True", ",", "False", ",", "False"}], "}"}]}], 
+       ",", 
+       RowBox[{"FrameTicks", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "None"}], "}"}]}], ",", 
+       RowBox[{"BaseStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"FontSize", "\[Rule]", "14"}], "}"}]}], ",", 
+       RowBox[{"FrameLabel", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<\[Lambda]\>\"", ",", "\"\<p(x|\[Lambda]) p(\[Lambda])\>\""}], 
+         "}"}]}], ",", 
+       RowBox[{"PlotLabel", "\[Rule]", 
+        RowBox[{"StringJoin", "[", 
+         RowBox[{
+         "\"\<p(x\!\(\*SubscriptBox[\()\), \(\(actual\)\(\\\ \)\)]\)= \>\"", 
+          ",", 
+          RowBox[{"ToString", "@", 
+           RowBox[{"NumberForm", "[", 
+            RowBox[{"aDenominator", ",", 
+             RowBox[{"{", 
+              RowBox[{"6", ",", "6"}], "}"}]}], "]"}]}], ",", 
+          "\"\<, p(x\!\(\*SubscriptBox[\()\), \(est\)]\)= \>\"", ",", 
+          RowBox[{"ToString", "@", 
+           RowBox[{"NumberForm", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"N", "@", 
+               RowBox[{"Total", "@", 
+                RowBox[{"lPosteriorUnnormalised", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"All", ",", "2"}], "]"}], "]"}]}]}], "2"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"6", ",", "6"}], "}"}]}], "]"}]}]}], "]"}]}]}], "]"}], 
+     ",", 
+     RowBox[{"Plot", "[", 
+      RowBox[{
+       RowBox[{"fPosteriorUnnormalised", "[", 
+        RowBox[{
+         RowBox[{"\[Lambda]", "-", "1.25"}], ",", "data"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"\[Lambda]", ",", "1.25", ",", "20"}], "}"}], ",", 
+       RowBox[{"PlotRange", "\[Rule]", "Full"}], ",", 
+       RowBox[{"PlotStyle", "\[Rule]", "Blue"}]}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lPosteriorUnnormalised", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"i", "\[Equal]", "0"}], ",", "0", ",", 
+       RowBox[{"fPosteriorUnnormalised", "[", 
+        RowBox[{"i", ",", "data"}], "]"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "0", ",", "40", ",", "1"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g3", "=", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"BarChart", "[", 
+      RowBox[{"lPosteriorUnnormalised", ",", 
+       RowBox[{"Frame", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "True", ",", "None", ",", "None"}], "}"}]}], 
+       ",", 
+       RowBox[{"FrameTicks", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "None"}], "}"}]}], ",", 
+       RowBox[{"BaseStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"FontSize", "\[Rule]", "14"}], "}"}]}], ",", 
+       RowBox[{"FrameLabel", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<\[Lambda]\>\"", ",", "\"\<p(x|\[Lambda]) p(\[Lambda])\>\""}], 
+         "}"}]}], ",", 
+       RowBox[{"PlotLabel", "\[Rule]", 
+        RowBox[{"StringJoin", "[", 
+         RowBox[{
+         "\"\<p(x\!\(\*SubscriptBox[\()\), \(\(actual\)\(\\\ \)\)]\)= \>\"", 
+          ",", 
+          RowBox[{"ToString", "@", 
+           RowBox[{"NumberForm", "[", 
+            RowBox[{"aDenominator", ",", 
+             RowBox[{"{", 
+              RowBox[{"6", ",", "6"}], "}"}]}], "]"}]}], ",", 
+          "\"\<, p(x\!\(\*SubscriptBox[\()\), \(est\)]\)= \>\"", ",", 
+          RowBox[{"ToString", "@", 
+           RowBox[{"NumberForm", "[", 
+            RowBox[{
+             RowBox[{"N", "@", 
+              RowBox[{"Total", "@", "lPosteriorUnnormalised"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{"6", ",", "6"}], "}"}]}], "]"}]}]}], "]"}]}]}], "]"}], 
+     ",", 
+     RowBox[{"Plot", "[", 
+      RowBox[{
+       RowBox[{"fPosteriorUnnormalised", "[", 
+        RowBox[{
+         RowBox[{"\[Lambda]", "-", "1"}], ",", "data"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"\[Lambda]", ",", "1", ",", "20"}], "}"}], ",", 
+       RowBox[{"PlotStyle", "\[Rule]", "Blue"}]}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lPosteriorUnnormalised1", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"i", "\[Equal]", "0"}], ",", "0", ",", 
+       RowBox[{"fPosteriorUnnormalised", "[", 
+        RowBox[{
+         RowBox[{"i", "+", "2"}], ",", "data"}], "]"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "0", ",", "20", ",", "4"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g1", "=", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"RectangleChart", "[", 
+      RowBox[{
+       RowBox[{"Thread", "[", 
+        RowBox[{"{", 
+         RowBox[{"4", ",", "lPosteriorUnnormalised1"}], "}"}], "]"}], ",", 
+       RowBox[{"Frame", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "True", ",", "None", ",", "None"}], "}"}]}], 
+       ",", 
+       RowBox[{"FrameTicks", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"True", ",", "None"}], "}"}]}], ",", 
+       RowBox[{"BaseStyle", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{"FontSize", "\[Rule]", "14"}], "}"}]}], ",", 
+       RowBox[{"FrameLabel", "\[Rule]", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<\[Lambda]\>\"", ",", "\"\<p(x|\[Lambda]) p(\[Lambda])\>\""}], 
+         "}"}]}], ",", 
+       RowBox[{"PlotLabel", "\[Rule]", 
+        RowBox[{"StringJoin", "[", 
+         RowBox[{
+         "\"\<p(x\!\(\*SubscriptBox[\()\), \(\(actual\)\(\\\ \)\)]\)= \>\"", 
+          ",", 
+          RowBox[{"ToString", "@", 
+           RowBox[{"NumberForm", "[", 
+            RowBox[{"aDenominator", ",", 
+             RowBox[{"{", 
+              RowBox[{"6", ",", "6"}], "}"}]}], "]"}]}], ",", 
+          "\"\<, p(x\!\(\*SubscriptBox[\()\), \(est\)]\)= \>\"", ",", 
+          RowBox[{"ToString", "@", 
+           RowBox[{"NumberForm", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"N", "@", 
+               RowBox[{"Total", "@", "lPosteriorUnnormalised1"}]}], " ", 
+              "4"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"6", ",", "6"}], "}"}]}], "]"}]}]}], "]"}]}]}], "]"}], 
+     ",", 
+     RowBox[{"Plot", "[", 
+      RowBox[{
+       RowBox[{"fPosteriorUnnormalised", "[", 
+        RowBox[{"\[Lambda]", ",", "data"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"\[Lambda]", ",", "1", ",", "20"}], "}"}], ",", 
+       RowBox[{"PlotStyle", "\[Rule]", "Blue"}]}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"gFinal", "=", 
+  RowBox[{"Show", "[", 
+   RowBox[{
+    RowBox[{"GraphicsRow", "[", 
+     RowBox[{"{", 
+      RowBox[{"g1", ",", "g2", ",", "g3"}], "}"}], "]"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "1500"}]}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.661615409539501*^9, 3.661615443625451*^9}, {
+  3.6616157714992037`*^9, 3.661615781480775*^9}, {3.6616162712687893`*^9, 
+  3.6616162758250504`*^9}, {3.661616311525092*^9, 3.661616337702589*^9}, {
+  3.661616412664877*^9, 3.66161644367165*^9}, {3.6616164903803215`*^9, 
+  3.661616522148139*^9}, {3.661616832120868*^9, 3.66161683249189*^9}, {
+  3.6616169126854763`*^9, 3.6616169136765327`*^9}, {3.6616282482078314`*^9, 
+  3.6616282604825335`*^9}, {3.661628314867644*^9, 3.6616283463834467`*^9}, {
+  3.6616287796072254`*^9, 3.6616287798072367`*^9}, {3.661628822291667*^9, 
+  3.6616288224276743`*^9}, {3.6616290764482036`*^9, 3.661629093136158*^9}, {
+  3.66162912394392*^9, 3.6616291369026613`*^9}, {3.6616293909761934`*^9, 
+  3.661629404930992*^9}, {3.6616297129256077`*^9, 3.6616297130396147`*^9}, {
+  3.6616304995496006`*^9, 3.661630503401821*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {InsetBox[
+     GraphicsBox[{{
+        {Opacity[0], PointBox[{-0.48940000000000006`, 0.}]}, {{}, 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+          0.6579999999999999], Thickness[Small]}], {}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+           0.6579999999999999], Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{4.094, 0.}, {8.094000000000001, 
+                 0.006691049056742139}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{130.79157158882987`, 
+                188.6972373153941}, {-251.30942153282885`, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               4, Rational[162, 35] 
+                E^(-6 + Rational[-1, 2] (-1 + Log[6])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{4, (162*E^(-6 - (-1 + Log[6])^2/2)*Sqrt[2/Pi])/35}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"4", ",", 
+                  RowBox[{
+                    FractionBox["162", "35"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "6"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "6", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{4, Rational[162, 35] 
+               E^(-6 + Rational[-1, 2] (-1 + Log[6])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+           0.6579999999999999], Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{8.188, 0.}, {12.188, 0.0015384908684929874`}, 
+                 "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{189.54627045996833`, 
+                247.45193618653252`}, {-90.2381992298993, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               4, Rational[6250, 63] 
+                E^(-10 + Rational[-1, 2] (-1 + Log[10])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{4, (6250*E^(-10 - (-1 + Log[10])^2/2)*Sqrt[2/Pi])/63}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"4", ",", 
+                  RowBox[{
+                    FractionBox["6250", "63"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "10"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "10", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{4, Rational[6250, 63] 
+               E^(-10 + Rational[-1, 2] (-1 + Log[10])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+           0.6579999999999999], Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{12.282, 0.}, {16.282, 0.0001293471889796522}, 
+                 "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{248.30096933110678`, 
+                306.20663505767095`}, {-46.187751555714726`, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               4, Rational[33614, 45] 
+                E^(-14 + Rational[-1, 2] (-1 + Log[14])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{4, (33614*E^(-14 - (-1 + Log[14])^2/2)*Sqrt[2/Pi])/45}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"4", ",", 
+                  RowBox[{
+                    FractionBox["33614", "45"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "14"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "14", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{4, Rational[33614, 45] 
+               E^(-14 + Rational[-1, 2] (-1 + Log[14])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+           0.6579999999999999], Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{16.376, 0.}, {20.376, 6.868106980305444*^-6}, 
+                 "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{307.0556682022453, 
+                364.9613339288095}, {-42.3590018893516, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               4, Rational[118098, 35] 
+                E^(-18 + Rational[-1, 2] (-1 + Log[18])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{4, (118098*E^(-18 - (-1 + Log[18])^2/2)*Sqrt[2/Pi])/35}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"4", ",", 
+                  RowBox[{
+                    FractionBox["118098", "35"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "18"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "18", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{4, Rational[118098, 35] 
+               E^(-18 + Rational[-1, 2] (-1 + Log[18])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+           0.6579999999999999], Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{20.470000000000002`, 0.}, {24.470000000000002`, 
+                 2.812352174481209*^-7}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{365.81036707338376`, 
+                423.716032799948}, {-42.153093397446426`, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               4, Rational[3543122, 315] 
+                E^(-22 + Rational[-1, 2] (-1 + Log[22])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{4, (3543122*E^(-22 - (-1 + Log[22])^2/2)*Sqrt[2/Pi])/315}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"4", ",", 
+                  RowBox[{
+                    FractionBox["3543122", "315"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "22"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "22", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{4, Rational[3543122, 315] 
+               E^(-22 + Rational[-1, 2] (-1 + Log[22])^2) (2/Pi)^
+                Rational[1, 2]}, {}], 
+             "Tooltip"]& ]}}, {}, {}}, {}, {}, {}}, {{}, {}, 
+        {RGBColor[0, 0, 1], AbsoluteThickness[1.6], Opacity[1.], 
+         LineBox[CompressedData["
+1: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
+f/9o+NFyS4j9WDHxP89gmHQ=
+          "]]}}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{False, False},
+      AxesLabel->{None, None},
+      AxesOrigin->{-0.48940000000000006`, 0.},
+      BaseStyle->{FontSize -> 14},
+      CoordinatesToolOptions:>{"DisplayFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& )},
+      Frame->{True, True, None, None},
+      FrameLabel->{{
+         FormBox["\"p(x|\[Lambda]) p(\[Lambda])\"", TraditionalForm], None}, {
+         FormBox["\"\[Lambda]\"", TraditionalForm], None}},
+      FrameTicks->{{None, None}, {True, True}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      PlotLabel->FormBox[
+       "\"p(x\\!\\(\\*SubscriptBox[\\()\\), \\(\\(actual\\)\\(\\\\ \
+\\)\\)]\\)= 0.037914, p(x\\!\\(\\*SubscriptBox[\\()\\), \\(est\\)]\\)= \
+0.033464\"", TraditionalForm],
+      PlotRange->{{All, All}, {All, All}},
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {None, 
+         Scaled[0.05]}},
+      Ticks->{None, Automatic}], {193.5, -116.80842387373012`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}], InsetBox[
+     GraphicsBox[{{
+        {Opacity[0], PointBox[{-0.45780000000000004`, 0.}]}, {{}, 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623], 
+          Thickness[Small]}], {}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{2.089, 0.}, {4.089, 0.0006540700270039689}, 
+                 "RoundingRadius" -> 0]},
+               ImageSizeCache->{{107.9082286885062, 
+                139.09229684772475`}, {-62.59082647307814, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[2, 315] 
+                E^(-2 + Rational[-1, 2] (-1 + Log[2])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (2*E^(-2 - (-1 + Log[2])^2/2)*Sqrt[2/Pi])/315}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["2", "315"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "2"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "2", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[2, 315] 
+               E^(-2 + Rational[-1, 2] (-1 + Log[2])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{4.178000000000001, 0.}, {6.178000000000001, 
+                 0.005511351556876515}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{139.95773788080993`, 
+                171.14180604002848`}, {-214.4316420514052, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[128, 315] 
+                E^(-4 + Rational[-1, 2] (-1 + Log[4])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (128*E^(-4 - (-1 + Log[4])^2/2)*Sqrt[2/Pi])/315}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["128", "315"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "4"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "4", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[128, 315] 
+               E^(-4 + Rational[-1, 2] (-1 + Log[4])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{6.267000000000001, 0.}, {8.267000000000001, 
+                 0.006691049056742139}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{172.00724707311377`, 
+                203.19131523233233`}, {-251.30951899011538`, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[162, 35] 
+                E^(-6 + Rational[-1, 2] (-1 + Log[6])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (162*E^(-6 - (-1 + Log[6])^2/2)*Sqrt[2/Pi])/35}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["162", "35"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "6"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "6", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[162, 35] 
+               E^(-6 + Rational[-1, 2] (-1 + Log[6])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{8.356000000000002, 0.}, {10.356000000000002`, 
+                 0.0038872719516861776`}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{204.0567562654175, 
+                235.24082442463617`}, {-163.66217968863805`, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[8192, 315] 
+                E^(-8 + Rational[-1, 2] (-1 + Log[8])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (8192*E^(-8 - (-1 + Log[8])^2/2)*Sqrt[2/Pi])/315}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["8192", "315"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "8"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "8", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[8192, 315] 
+               E^(-8 + Rational[-1, 2] (-1 + Log[8])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{10.445000000000002`, 0.}, {12.445000000000002`, 
+                 0.0015384908684929874`}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{236.10626545772135`, 
+                267.2903336169399}, {-90.23822163851477, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[6250, 63] 
+                E^(-10 + Rational[-1, 2] (-1 + Log[10])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (6250*E^(-10 - (-1 + Log[10])^2/2)*Sqrt[2/Pi])/63}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["6250", "63"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "10"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "10", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[6250, 63] 
+               E^(-10 + Rational[-1, 2] (-1 + Log[10])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{12.534000000000002`, 0.}, {14.534000000000002`, 
+                 0.00048220854339767243`}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{268.1557746500252, 
+                299.33984280924375`}, {-57.218358833145786`, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[10368, 35] 
+                E^(-12 + Rational[-1, 2] (-1 + Log[12])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (10368*E^(-12 - (-1 + Log[12])^2/2)*Sqrt[2/Pi])/35}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["10368", "35"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "12"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "12", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[10368, 35] 
+               E^(-12 + Rational[-1, 2] (-1 + Log[12])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{14.623000000000003`, 0.}, {16.623000000000005`, 
+                 0.0001293471889796522}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{300.2052838423289, 
+                331.3893520015476}, {-46.18775343969823, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[33614, 45] 
+                E^(-14 + Rational[-1, 2] (-1 + Log[14])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (33614*E^(-14 - (-1 + Log[14])^2/2)*Sqrt[2/Pi])/45}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["33614", "45"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "14"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "14", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[33614, 45] 
+               E^(-14 + Rational[-1, 2] (-1 + Log[14])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{16.712000000000003`, 0.}, {18.712000000000003`, 
+                 0.00003105958970962989}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{332.25479303463277`, 
+                363.4388611938513}, {-43.115238671383466`, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[524288, 315] 
+                E^(-16 + Rational[-1, 2] (-1 + Log[16])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (524288*E^(-16 - (-1 + Log[16])^2/2)*Sqrt[2/Pi])/315}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["524288", "315"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "16"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "16", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[524288, 315] 
+               E^(-16 + Rational[-1, 2] (-1 + Log[16])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{18.801000000000002`, 0.}, {20.801000000000002`, 
+                 6.868106980305444*^-6}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{364.3043022269366, 
+                395.48837038615505`}, {-42.35900198938779, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[118098, 35] 
+                E^(-18 + Rational[-1, 2] (-1 + Log[18])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (118098*E^(-18 - (-1 + Log[18])^2/2)*Sqrt[2/Pi])/35}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["118098", "35"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "18"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "18", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[118098, 35] 
+               E^(-18 + Rational[-1, 2] (-1 + Log[18])^2) (2/Pi)^
+                Rational[1, 2]}, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.623],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{20.89, 0.}, {22.89, 1.4252263613360169`*^-6}, 
+                 "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{396.35381141924034`, 
+                427.5378795784589}, {-42.18885508165822, \
+-41.644301861558034`}}],
+              
+              StatusArea[#, {
+               2, Rational[400000, 63] 
+                E^(-20 + Rational[-1, 2] (-1 + Log[20])^2) (2/Pi)^
+                 Rational[1, 2]}]& ,
+              
+              TagBoxNote->
+               "{2, (400000*E^(-20 - (-1 + Log[20])^2/2)*Sqrt[2/Pi])/63}"],
+             StyleBox[
+              RowBox[{"{", 
+                RowBox[{"2", ",", 
+                  RowBox[{
+                    FractionBox["400000", "63"], " ", 
+                    SuperscriptBox["\[ExponentialE]", 
+                    RowBox[{
+                    RowBox[{"-", "20"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "20", "]"}]}], ")"}], "2"]}]}]], " ", 
+                    SqrtBox[
+                    FractionBox["2", "\[Pi]"]]}]}], "}"}], {}, StripOnInput -> 
+              False]],
+            Annotation[#, 
+             
+             Style[{2, Rational[400000, 63] 
+               E^(-20 + Rational[-1, 2] (-1 + Log[20])^2) (2/Pi)^
+                Rational[1, 2]}, {}], 
+             "Tooltip"]& ]}}, {}, {}}, {}, {}, {}}, {{}, {}, 
+        {RGBColor[0, 0, 1], AbsoluteThickness[1.6], Opacity[1.], 
+         LineBox[CompressedData["
+1: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
+oA8=
+          "]]}}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{False, False},
+      AxesLabel->{None, None},
+      AxesOrigin->{-0.45780000000000004`, 0.},
+      BaseStyle->{FontSize -> 14},
+      CoordinatesToolOptions:>{"DisplayFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& )},
+      Frame->{True, True, False, False},
+      FrameLabel->{{
+         FormBox["\"p(x|\[Lambda]) p(\[Lambda])\"", TraditionalForm], None}, {
+         FormBox["\"\[Lambda]\"", TraditionalForm], None}},
+      FrameTicks->{{None, None}, {True, True}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      PlotLabel->FormBox[
+       "\"p(x\\!\\(\\*SubscriptBox[\\()\\), \\(\\(actual\\)\\(\\\\ \
+\\)\\)]\\)= 0.037914, p(x\\!\\(\\*SubscriptBox[\\()\\), \\(est\\)]\\)= \
+0.037866\"", TraditionalForm],
+      PlotRange->{{All, All}, {All, All}},
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {None, 
+         Scaled[0.05]}},
+      Ticks->{None, Automatic}], {580.5, -116.80842387373012`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}], InsetBox[
+     GraphicsBox[{{
+        {Opacity[0], PointBox[{-0.2910292728989615, 0.}]}, {{}, 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413], 
+          Thickness[Small]}], 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{0.5278564683663833, 0.}, {1.4721435316336167`, 
+                 0.}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{75.85871949620241, 
+                84.457869867103}, {-42.14430186155802, -41.64430186155802}}],
+              StatusArea[#, 0]& ,
+              TagBoxNote->"0"],
+             StyleBox["0", {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[0, {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                RectangleBox[{1.5278564683663833`, 0.}, {2.4721435316336167`, 
+                 0.000017661915657926877`}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{84.43571973898611, 
+                93.03487010988692}, {-42.6964214867684, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[1, 5040] 
+               E^Rational[-3, 2] (2 Pi)^Rational[-1, 2]]& ,
+              TagBoxNote->"1/(5040*E^(3/2)*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox["1", 
+               RowBox[{"5040", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{"3", "/", "2"}]], " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[1, 5040] E^Rational[-3, 2] (2 Pi)^Rational[-1, 2], {}], 
+             "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{2.5278564683663833`, 0.}, {3.4721435316336167`, 
+                 0.0006540700270039689}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{93.01271998177003, 
+                101.61187035267085`}, {-62.59083241718855, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[2, 315] 
+               E^(-2 + Rational[-1, 2] (-1 + Log[2])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              TagBoxNote->"(2*E^(-2 - (-1 + Log[2])^2/2)*Sqrt[2/Pi])/315"],
+             StyleBox[
+              RowBox[{
+                FractionBox["2", "315"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "2"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "2", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[2, 315] 
+              E^(-2 + Rational[-1, 2] (-1 + Log[2])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{3.5278564683663833`, 0.}, {4.472143531633616, 
+                 0.002858985738321056}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{101.58972022455396`, 
+                110.18887059545477`}, {-131.51751396922532`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[81, 560] 
+               E^(-3 + Rational[-1, 2] (-1 + Log[3])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              TagBoxNote->"(81*E^(-3 - (-1 + Log[3])^2/2))/(560*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"81", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "3"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "3", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"560", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[81, 560] 
+              E^(-3 + Rational[-1, 2] (-1 + Log[3])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{4.527856468366383, 0.}, {5.472143531633616, 
+                 0.005511351556876515}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{110.16672046733788`, 
+                118.7658708382387}, {-214.43169213791106`, \
+-41.644301861558006`}}],
+              
+              StatusArea[#, Rational[128, 315] 
+               E^(-4 + Rational[-1, 2] (-1 + Log[4])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              TagBoxNote->"(128*E^(-4 - (-1 + Log[4])^2/2)*Sqrt[2/Pi])/315"],
+             StyleBox[
+              RowBox[{
+                FractionBox["128", "315"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "4"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "4", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[128, 315] 
+              E^(-4 + Rational[-1, 2] (-1 + Log[4])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{5.527856468366383, 0.}, {6.472143531633616, 
+                 0.0069211059398719965`}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{118.7437207101218, 
+                127.34287108102262`}, {-258.5012640152297, \
+-41.644301861558006`}}],
+              
+              StatusArea[#, Rational[3125, 1008] 
+               E^(-5 + Rational[-1, 2] (-1 + Log[5])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(3125*E^(-5 - (-1 + Log[5])^2/2))/(1008*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"3125", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "5"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "5", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"1008", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[3125, 1008] 
+              E^(-5 + Rational[-1, 2] (-1 + Log[5])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{6.527856468366383, 0.}, {7.472143531633616, 
+                 0.006691049056742139}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{127.32072095290573`, 
+                135.91987132380632`}, {-251.30957979757142`, \
+-41.644301861558006`}}],
+              
+              StatusArea[#, Rational[162, 35] 
+               E^(-6 + Rational[-1, 2] (-1 + Log[6])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              TagBoxNote->"(162*E^(-6 - (-1 + Log[6])^2/2)*Sqrt[2/Pi])/35"],
+             StyleBox[
+              RowBox[{
+                FractionBox["162", "35"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "6"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "6", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[162, 35] 
+              E^(-6 + Rational[-1, 2] (-1 + Log[6])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{7.527856468366383, 0.}, {8.472143531633616, 
+                 0.005428936584643174}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{135.89772119568943`, 
+                144.49687156659024`}, {-211.85536211445896`, \
+-41.644301861558006`}}],
+              
+              StatusArea[#, Rational[16807, 720] 
+               E^(-7 + Rational[-1, 2] (-1 + Log[7])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(16807*E^(-7 - (-1 + Log[7])^2/2))/(720*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"16807", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "7"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "7", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"720", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[16807, 720] 
+              E^(-7 + Rational[-1, 2] (-1 + Log[7])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{8.527856468366384, 0.}, {9.472143531633616, 
+                 0.0038872719516861776`}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{144.47472143847335`, 
+                153.07387180937417`}, {-163.6622150157021, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[8192, 315] 
+               E^(-8 + Rational[-1, 2] (-1 + Log[8])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              TagBoxNote->"(8192*E^(-8 - (-1 + Log[8])^2/2)*Sqrt[2/Pi])/315"],
+             StyleBox[
+              RowBox[{
+                FractionBox["8192", "315"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "8"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "8", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[8192, 315] 
+              E^(-8 + Rational[-1, 2] (-1 + Log[8])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{9.527856468366384, 0.}, {10.472143531633616`, 
+                 0.00253534444725114}, "RoundingRadius" -> 0]},
+               ImageSizeCache->{{153.05172168125728`, 
+                161.6508720521581}, {-121.40033801906577`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[59049, 560] 
+               E^(-9 + Rational[-1, 2] (-1 + Log[9])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(59049*E^(-9 - (-1 + Log[9])^2/2))/(560*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"59049", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "9"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "9", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"560", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[59049, 560] 
+              E^(-9 + Rational[-1, 2] (-1 + Log[9])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{10.527856468366384`, 0.}, {11.472143531633616`, 
+                 0.0015384908684929874`}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{161.6287219240412, 
+                170.22787229494202`}, {-90.23823562013635, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[6250, 63] 
+               E^(-10 + Rational[-1, 2] (-1 + Log[10])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              TagBoxNote->"(6250*E^(-10 - (-1 + Log[10])^2/2)*Sqrt[2/Pi])/63"],
+             StyleBox[
+              RowBox[{
+                FractionBox["6250", "63"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "10"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "10", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[6250, 63] 
+              E^(-10 + Rational[-1, 2] (-1 + Log[10])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{11.527856468366384`, 0.}, {12.472143531633616`, 
+                 0.0008815896546872432}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{170.20572216682513`, 
+                178.80487253772594`}, {-69.70320085996926, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[1771561, 5040] 
+               E^(-11 + Rational[-1, 2] (-1 + Log[11])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(1771561*E^(-11 - (-1 + Log[11])^2/2))/(5040*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"1771561", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "11"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "11", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"5040", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[1771561, 5040] 
+              E^(-11 + Rational[-1, 2] (-1 + Log[11])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{12.527856468366384`, 0.}, {13.472143531633616`, 
+                 0.00048220854339767243`}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{178.78272240960905`, 
+                187.38187278050964`}, {-57.21836321539953, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[10368, 35] 
+               E^(-12 + Rational[-1, 2] (-1 + Log[12])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(10368*E^(-12 - (-1 + Log[12])^2/2)*Sqrt[2/Pi])/35"],
+             StyleBox[
+              RowBox[{
+                FractionBox["10368", "35"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "12"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "12", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[10368, 35] 
+              E^(-12 + Rational[-1, 2] (-1 + Log[12])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{13.527856468366384`, 0.}, {14.472143531633616`, 
+                 0.0002538068545893318}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{187.35972265239297`, 
+                195.95887302329356`}, {-50.078421135239026`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[4826809, 5040] 
+               E^(-13 + Rational[-1, 2] (-1 + Log[13])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(4826809*E^(-13 - (-1 + Log[13])^2/2))/(5040*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"4826809", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "13"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "13", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"5040", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[4826809, 5040] 
+              E^(-13 + Rational[-1, 2] (-1 + Log[13])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{14.527856468366384`, 0.}, {15.472143531633616`, 
+                 0.0001293471889796522}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{195.9367228951769, 
+                204.5358732660775}, {-46.18775461519005, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[33614, 45] 
+               E^(-14 + Rational[-1, 2] (-1 + Log[14])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(33614*E^(-14 - (-1 + Log[14])^2/2)*Sqrt[2/Pi])/45"],
+             StyleBox[
+              RowBox[{
+                FractionBox["33614", "45"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "14"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "14", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[33614, 45] 
+              E^(-14 + Rational[-1, 2] (-1 + Log[14])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{15.527856468366384`, 0.}, {16.472143531633616`, 
+                 0.00006413524940950564}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{204.5137231379606, 
+                213.1128735088614}, {-44.149199322998314`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[253125, 112] 
+               E^(-15 + Rational[-1, 2] (-1 + Log[15])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(253125*E^(-15 - (-1 + Log[15])^2/2))/(112*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"253125", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "15"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "15", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"112", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[253125, 112] 
+              E^(-15 + Rational[-1, 2] (-1 + Log[15])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{16.527856468366384`, 0.}, {17.472143531633616`, 
+                 0.00003105958970962989}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{213.09072338074452`, 
+                221.68987375164534`}, {-43.115238953649296`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[524288, 315] 
+               E^(-16 + Rational[-1, 2] (-1 + Log[16])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(524288*E^(-16 - (-1 + Log[16])^2/2)*Sqrt[2/Pi])/315"],
+             StyleBox[
+              RowBox[{
+                FractionBox["524288", "315"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "16"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "16", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[524288, 315] 
+              E^(-16 + Rational[-1, 2] (-1 + Log[16])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{17.527856468366384`, 0.}, {18.472143531633616`, 
+                 0.000014736908739751725`}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{221.66772362352845`, 
+                230.26687399442926`}, {-42.60498442214421, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[24137569, 5040] 
+               E^(-17 + Rational[-1, 2] (-1 + Log[17])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(24137569*E^(-17 - (-1 + Log[17])^2/2))/(5040*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"24137569", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "17"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "17", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"5040", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[24137569, 5040] 
+              E^(-17 + Rational[-1, 2] (-1 + Log[17])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{18.527856468366384`, 0.}, {19.472143531633616`, 
+                 6.868106980305444*^-6}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{230.24472386631237`, 
+                238.84387423721319`}, {-42.359002051804325`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[118098, 35] 
+               E^(-18 + Rational[-1, 2] (-1 + Log[18])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(118098*E^(-18 - (-1 + Log[18])^2/2)*Sqrt[2/Pi])/35"],
+             StyleBox[
+              RowBox[{
+                FractionBox["118098", "35"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "18"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "18", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[118098, 35] 
+              E^(-18 + Rational[-1, 2] (-1 + Log[18])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{19.527856468366384`, 0.}, {20.472143531633616`, 
+                 3.1506950107755155`*^-6}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{238.8217241090963, 
+                247.4208744799971}, {-42.242794039993996`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[47045881, 5040] 
+               E^(-19 + Rational[-1, 2] (-1 + Log[19])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(47045881*E^(-19 - (-1 + Log[19])^2/2))/(5040*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"47045881", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "19"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "19", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"5040", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[47045881, 5040] 
+              E^(-19 + Rational[-1, 2] (-1 + Log[19])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{20.527856468366384`, 0.}, {21.472143531633616`, 
+                 1.4252263613360169`*^-6}, "RoundingRadius" -> 0]},
+               ImageSizeCache->{{247.39872435188022`, 
+                255.9978747227808}, {-42.1888550946105, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[400000, 63] 
+               E^(-20 + Rational[-1, 2] (-1 + Log[20])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(400000*E^(-20 - (-1 + Log[20])^2/2)*Sqrt[2/Pi])/63"],
+             StyleBox[
+              RowBox[{
+                FractionBox["400000", "63"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "20"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "20", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[400000, 63] 
+              E^(-20 + Rational[-1, 2] (-1 + Log[20])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{21.527856468366384`, 0.}, {22.472143531633616`, 
+                 6.366783416277217*^-7}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{255.97572459466414`, 
+                264.57487496556473`}, {-42.16420472001161, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[1361367, 80] 
+               E^(-21 + Rational[-1, 2] (-1 + Log[21])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(1361367*E^(-21 - (-1 + Log[21])^2/2))/(80*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"1361367", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "21"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "21", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"80", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[1361367, 80] 
+              E^(-21 + Rational[-1, 2] (-1 + Log[21])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{22.527856468366384`, 0.}, {23.472143531633616`, 
+                 2.812352174481209*^-7}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{264.55272483744784`, 
+                273.15187520834866`}, {-42.15309340409853, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[3543122, 315] 
+               E^(-22 + Rational[-1, 2] (-1 + Log[22])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(3543122*E^(-22 - (-1 + Log[22])^2/2)*Sqrt[2/Pi])/315"],
+             StyleBox[
+              RowBox[{
+                FractionBox["3543122", "315"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "22"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "22", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[3543122, 315] 
+              E^(-22 + Rational[-1, 2] (-1 + Log[22])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{23.527856468366384`, 0.}, {24.472143531633616`, 
+                 1.2297283349919945`*^-7}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{273.12972508023176`, 
+                281.7288754511326}, {-42.148146049020895`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[148035889, 5040] 
+               E^(-23 + Rational[-1, 2] (-1 + Log[23])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(148035889*E^(-23 - (-1 + Log[23])^2/2))/(5040*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"148035889", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "23"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "23", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"5040", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[148035889, 5040] 
+              E^(-23 + Rational[-1, 2] (-1 + Log[23])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{24.527856468366384`, 0.}, {25.472143531633616`, 
+                 5.327832994247308*^-8}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{281.7067253230157, 
+                290.3058756939165}, {-42.14596736671213, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[663552, 35] 
+               E^(-24 + Rational[-1, 2] (-1 + Log[24])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(663552*E^(-24 - (-1 + Log[24])^2/2)*Sqrt[2/Pi])/35"],
+             StyleBox[
+              RowBox[{
+                FractionBox["663552", "35"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "24"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "24", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[663552, 35] 
+              E^(-24 + Rational[-1, 2] (-1 + Log[24])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{25.527856468366384`, 0.}, {26.472143531633616`, 
+                 2.2890361546486124`*^-8}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{290.2837255657996, 
+                298.88287593670043`}, {-42.1450174248119, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[48828125, 1008] 
+               E^(-25 + Rational[-1, 2] (-1 + Log[25])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(48828125*E^(-25 - (-1 + Log[25])^2/2))/(1008*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"48828125", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "25"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "25", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"1008", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[48828125, 1008] 
+              E^(-25 + Rational[-1, 2] (-1 + Log[25])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{26.527856468366384`, 0.}, {27.472143531633616`, 
+                 9.759539171670415*^-9}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{298.86072580858354`, 
+                307.4598761794841}, {-42.144606949251454`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[9653618, 315] 
+               E^(-26 + Rational[-1, 2] (-1 + Log[26])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(9653618*E^(-26 - (-1 + Log[26])^2/2)*Sqrt[2/Pi])/315"],
+             StyleBox[
+              RowBox[{
+                FractionBox["9653618", "315"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "26"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "26", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[9653618, 315] 
+              E^(-26 + Rational[-1, 2] (-1 + Log[26])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{27.527856468366384`, 0.}, {28.472143531633616`, 
+                 4.131967480431058*^-9}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{307.43772605136746`, 
+                316.03687642226805`}, {-42.144431028766206`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[43046721, 560] 
+               E^(-27 + Rational[-1, 2] (-1 + Log[27])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(43046721*E^(-27 - (-1 + Log[27])^2/2))/(560*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"43046721", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "27"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "27", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"560", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[43046721, 560] 
+              E^(-27 + Rational[-1, 2] (-1 + Log[27])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{28.527856468366384`, 0.}, {29.472143531633616`, 
+                 1.7381199926093073`*^-9}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{316.0147262941514, 
+                324.613876665052}, {-42.14435619599023, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[2151296, 45] 
+               E^(-28 + Rational[-1, 2] (-1 + Log[28])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(2151296*E^(-28 - (-1 + Log[28])^2/2)*Sqrt[2/Pi])/45"],
+             StyleBox[
+              RowBox[{
+                FractionBox["2151296", "45"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "28"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "28", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[2151296, 45] 
+              E^(-28 + Rational[-1, 2] (-1 + Log[28])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{29.527856468366384`, 0.}, {30.472143531633616`, 
+                 7.2680006666182*^-10}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{324.5917265369353, 
+                333.1908769078359}, {-42.14432458166314, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[594823321, 5040] 
+               E^(-29 + Rational[-1, 2] (-1 + Log[29])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(594823321*E^(-29 - (-1 + Log[29])^2/2))/(5040*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"594823321", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "29"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "29", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"5040", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[594823321, 5040] 
+              E^(-29 + Rational[-1, 2] (-1 + Log[29])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                RectangleBox[{30.527856468366384`, 0.}, {31.472143531633616`, 
+                 3.022429241944861*^-10}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{333.168726779719, 
+                341.7678771506198}, {-42.14431130981116, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[506250, 7] 
+               E^(-30 + Rational[-1, 2] (-1 + Log[30])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(506250*E^(-30 - (-1 + Log[30])^2/2)*Sqrt[2/Pi])/7"],
+             StyleBox[
+              RowBox[{
+                FractionBox["506250", "7"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "30"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "30", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[506250, 7] 
+              E^(-30 + Rational[-1, 2] (-1 + Log[30])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{31.527856468366384`, 0.}, {32.47214353163362, 
+                 1.250479911437835*^-10}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{341.74572702250293`, 
+                350.34487739340375`}, {-42.14430577061587, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[887503681, 5040] 
+               E^(-31 + Rational[-1, 2] (-1 + Log[31])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(887503681*E^(-31 - (-1 + Log[31])^2/2))/(5040*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"887503681", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "31"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "31", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"5040", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[887503681, 5040] 
+              E^(-31 + Rational[-1, 2] (-1 + Log[31])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{32.52785646836639, 0.}, {33.47214353163362, 
+                 5.149114583109748*^-11}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{350.32272726528686`, 
+                358.9218776361877}, {-42.144303471194974`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[33554432, 315] 
+               E^(-32 + Rational[-1, 2] (-1 + Log[32])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              TagBoxNote->
+               "(33554432*E^(-32 - (-1 + Log[32])^2/2)*Sqrt[2/Pi])/315"],
+             StyleBox[
+              RowBox[{
+                FractionBox["33554432", "315"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "32"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "32", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[33554432, 315] 
+              E^(-32 + Rational[-1, 2] (-1 + Log[32])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{33.52785646836639, 0.}, {34.47214353163362, 
+                 2.110883320586379*^-11}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{358.8997275080708, 
+                367.4988778789716}, {-42.14430252142988, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[143496441, 560] 
+               E^(-33 + Rational[-1, 2] (-1 + Log[33])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(143496441*E^(-33 - (-1 + Log[33])^2/2))/(560*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"143496441", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "33"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "33", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"560", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[143496441, 560] 
+              E^(-33 + Rational[-1, 2] (-1 + Log[33])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{34.52785646836639, 0.}, {35.47214353163362, 
+                 8.61784987568176*^-12}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{367.4767277508547, 
+                376.0758781217555}, {-42.14430213095598, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[48275138, 315] 
+               E^(-34 + Rational[-1, 2] (-1 + Log[34])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(48275138*E^(-34 - (-1 + Log[34])^2/2)*Sqrt[2/Pi])/315"],
+             StyleBox[
+              RowBox[{
+                FractionBox["48275138", "315"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "34"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "34", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[48275138, 315] 
+              E^(-34 + Rational[-1, 2] (-1 + Log[34])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{35.52785646836639, 0.}, {36.47214353163362, 
+                 3.5047098415764565`*^-12}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{376.05372799363863`, 
+                384.65287836453945`}, {-42.14430197111686, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[52521875, 144] 
+               E^(-35 + Rational[-1, 2] (-1 + Log[35])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(52521875*E^(-35 - (-1 + Log[35])^2/2))/(144*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"52521875", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "35"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "35", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"144", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[52521875, 144] 
+              E^(-35 + Rational[-1, 2] (-1 + Log[35])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{36.52785646836639, 0.}, {37.47214353163362, 
+                 1.4201319640352786`*^-12}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{384.6307282364223, 
+                393.22987860732314`}, {-42.144301905952005`, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[7558272, 35] 
+               E^(-36 + Rational[-1, 2] (-1 + Log[36])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(7558272*E^(-36 - (-1 + Log[36])^2/2)*Sqrt[2/Pi])/35"],
+             StyleBox[
+              RowBox[{
+                FractionBox["7558272", "35"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "36"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "36", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[7558272, 35] 
+              E^(-36 + Rational[-1, 2] (-1 + Log[36])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{37.52785646836639, 0.}, {38.47214353163362, 
+                 5.734884536418908*^-13}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{393.20772847920625`, 
+                401.80687885010707`}, {-42.14430187948554, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[2565726409, 5040] 
+               E^(-37 + Rational[-1, 2] (-1 + Log[37])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(2565726409*E^(-37 - (-1 + Log[37])^2/2))/(5040*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"2565726409", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "37"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "37", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"5040", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[2565726409, 5040] 
+              E^(-37 + Rational[-1, 2] (-1 + Log[37])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{38.52785646836639, 0.}, {39.47214353163362, 
+                 2.3084883076059827`*^-13}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{401.7847287219902, 
+                410.383879092891}, {-42.14430186877446, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[94091762, 315] 
+               E^(-38 + Rational[-1, 2] (-1 + Log[38])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(94091762*E^(-38 - (-1 + Log[38])^2/2)*Sqrt[2/Pi])/315"],
+             StyleBox[
+              RowBox[{
+                FractionBox["94091762", "315"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "38"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "38", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[94091762, 315] 
+              E^(-38 + Rational[-1, 2] (-1 + Log[38])^2) (2/Pi)^
+               Rational[1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{39.52785646836639, 0.}, {40.47214353163362, 
+                 9.264417280591775*^-14}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{410.3617289647741, 
+                418.9608793356749}, {-42.14430186445412, -41.64430186155802}}],
+              
+              StatusArea[#, Rational[390971529, 560] 
+               E^(-39 + Rational[-1, 2] (-1 + Log[39])^2) (2 Pi)^
+                Rational[-1, 2]]& ,
+              
+              TagBoxNote->
+               "(390971529*E^(-39 - (-1 + Log[39])^2/2))/(560*Sqrt[2*Pi])"],
+             StyleBox[
+              FractionBox[
+               RowBox[{"390971529", " ", 
+                 SuperscriptBox["\[ExponentialE]", 
+                  RowBox[{
+                    RowBox[{"-", "39"}], "-", 
+                    RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "39", "]"}]}], ")"}], "2"]}]}]]}], 
+               RowBox[{"560", " ", 
+                 SqrtBox[
+                  RowBox[{"2", " ", "\[Pi]"}]]}]], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[390971529, 560] 
+              E^(-39 + Rational[-1, 2] (-1 + Log[39])^2) (2 Pi)^
+               Rational[-1, 2], {}], "Tooltip"]& ]}, 
+          {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[0.413],
+            Thickness[Small]}], 
+           TagBox[
+            TooltipBox[
+             TagBox[
+              DynamicBox[{
+                FEPrivate`If[
+                 CurrentValue["MouseOver"], 
+                 EdgeForm[{
+                   GrayLevel[0.5], 
+                   AbsoluteThickness[1.5], 
+                   Opacity[0.66]}], {}, {}], 
+                
+                RectangleBox[{40.52785646836639, 0.}, {41.47214353163362, 
+                 3.7074035244017687`*^-14}, "RoundingRadius" -> 0]},
+               
+               ImageSizeCache->{{418.938729207558, 
+                427.53787957845884`}, {-42.14430186271697, \
+-41.64430186155802}}],
+              
+              StatusArea[#, Rational[25600000, 63] 
+               E^(-40 + Rational[-1, 2] (-1 + Log[40])^2) (2/Pi)^
+                Rational[1, 2]]& ,
+              
+              TagBoxNote->
+               "(25600000*E^(-40 - (-1 + Log[40])^2/2)*Sqrt[2/Pi])/63"],
+             StyleBox[
+              RowBox[{
+                FractionBox["25600000", "63"], " ", 
+                SuperscriptBox["\[ExponentialE]", 
+                 RowBox[{
+                   RowBox[{"-", "40"}], "-", 
+                   RowBox[{
+                    FractionBox["1", "2"], " ", 
+                    SuperscriptBox[
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"-", "1"}], "+", 
+                    RowBox[{"Log", "[", "40", "]"}]}], ")"}], "2"]}]}]], " ", 
+                SqrtBox[
+                 FractionBox["2", "\[Pi]"]]}], {}, StripOnInput -> False]],
+            Annotation[#, 
+             Style[
+             Rational[25600000, 63] 
+              E^(-40 + Rational[-1, 2] (-1 + Log[40])^2) (2/Pi)^
+               Rational[1, 2], {}], 
+             "Tooltip"]& ]}}, {}, {}}, {}, {}, {}}, {{}, {}, 
+        {RGBColor[0, 0, 1], AbsoluteThickness[1.6], Opacity[1.], 
+         LineBox[CompressedData["
+1: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
+5H/NeOHS
+          "]]}}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{False, False},
+      AxesLabel->{None, None},
+      AxesOrigin->{-0.2910292728989615, 0.},
+      BaseStyle->{FontSize -> 14},
+      CoordinatesToolOptions:>{"DisplayFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& )},
+      Frame->{True, True, None, None},
+      FrameLabel->{{
+         FormBox["\"p(x|\[Lambda]) p(\[Lambda])\"", TraditionalForm], None}, {
+         FormBox["\"\[Lambda]\"", TraditionalForm], None}},
+      FrameTicks->{{None, None}, {True, True}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      PlotLabel->FormBox[
+       "\"p(x\\!\\(\\*SubscriptBox[\\()\\), \\(\\(actual\\)\\(\\\\ \
+\\)\\)]\\)= 0.037914, p(x\\!\\(\\*SubscriptBox[\\()\\), \\(est\\)]\\)= \
+0.037914\"", TraditionalForm],
+      PlotRange->{{All, All}, {All, All}},
+      PlotRangePadding->{{
+         Scaled[0.02], 
+         Scaled[0.02]}, {None, 
+         Scaled[0.05]}},
+      Ticks->{None, Automatic}], {967.5, -116.80842387373012`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}]}, {}},
+  ContentSelectable->True,
+  ImageSize->1500,
+  PlotRangePadding->{6, 5}]], "Output",
+ CellChangeTimes->{3.6616305058859625`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<MCMC_quadratureBSE.pdf\>\"", ",", "gFinal"}], "]"}]], "Input",
+ CellChangeTimes->{{3.661630516517571*^9, 3.661630526079118*^9}}],
+
+Cell[BoxData["\<\"MCMC_quadratureBSE.pdf\"\>"], "Output",
+ CellChangeTimes->{3.6616305267191544`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"10", "^", "20"}]], "Input",
+ CellChangeTimes->{{3.6616312951501064`*^9, 3.661631296299172*^9}}],
+
+Cell[BoxData["100000000000000000000"], "Output",
+ CellChangeTimes->{3.661631296647192*^9}]
+}, Open  ]]
+},
+WindowSize->{1366, 686},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (September 9, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 10369, 270, 492, "Input"],
+Cell[10952, 294, 147243, 3334, 338, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[158232, 3633, 182, 3, 31, "Input"],
+Cell[158417, 3638, 101, 1, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[158555, 3644, 119, 2, 31, "Input"],
+Cell[158677, 3648, 90, 1, 31, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
