@@ -5796,7 +5796,7 @@ So we have seen here that even though we are dealing with a situation of quite m
 
 There are a number of methods that have been used to either derive approximate expressions for the posterior, or instead to merely sample from it. In the next section we survey a few methods that aims to approximate the posterior, as a stepping stone before we move on to Monte Carlo Markov Chain sampling later on in the chapter.
 
-\section{Discrete approximation to continuous posteriors}
+\section{Discrete approximation to continuous posteriors}\label{sec:MCMC_discreteApproximation}
 Whilst calculating the denominator can be difficult for continuous parameters, this difficulty is not matched for discrete parameters, where we can usually calculate:
 %
 \begin{equation}
@@ -5873,7 +5873,7 @@ However, once again this method suffers from the curse of dimensionality\index{c
 \caption{Rectangular quadrature in action: as the interval width decreases, there is a corresponding improvement in the error.}\label{fig:MCMC_quadratureBSE}
 \end{figure}
 
-\section{Integrating using independent samples: an introduction to Monte Carlo}\index{Independent sampling}\index{Monte Carlo}
+\section{Integrating using independent samples: an introduction to Monte Carlo}\index{Independent sampling}\index{Monte Carlo}\label{sec:MCMC_integratingUsingIndependentSampling}
 Frequently in applied Bayesian analyses we would like to estimate models with hundreds, or thousands of parameters. Neither distributional discretisation, nor quadrature are going to perform adequately in these types of settings. Evidently if we are to handle problems of any sort of complexity, indexed by the number of parameters, we need a new approach. Fortunately, such an approach exists, but it requires a change of perspective. This means we have to abandon the use of brute force to directly estimate posteriors densities, as well as posterior summaries such as the mean. However, it turns out that we can actually still estimate these quantities \textit{indirectly} through sampling\index{sampling}.
 
 Suppose that we had a black box containing a die of an unknown number of sides, which may or may not be fair, we just don't know. However, fortunately for us, there exists a tiny window in the top of the box. Each time we shake the box, we are able to look at this window, and see the number that resulted from the previous throw. Suppose we play a game where we pay \$X to stand a chance to win the amount of money that shows on the top of the box. If we were left in a room with the box for long enough, could we work out a fair amount to pay for such a bet?
@@ -5923,7 +5923,7 @@ var(X) &= \mathrm{E}(X^2) - \left[\mathrm{E}(X)\right]^2\\
 \end{align}
 \end{equation}
 %
-This class of method that relies on computational random sampling are known as \textit{Monte Carlo} methods; being originally named by Nicholas Metropolis whose MCMC method we shall encounter in section \ref{sec:MCMC_metropolisHastings}. 
+This class of method that relies on computational random sampling are known as \textit{Monte Carlo} methods; being originally named by Nicholas Metropolis whose MCMC method we shall encounter in chapter \ref{chap:MCMC_metropolisHastings}. 
 
 Whilst you start to see that this method may have some promise, the best is yet to come. So long as we are able to generate independent samples from a probability distribution, $\boldsymbol{X_i}=(X_{1i},X_{2i},...,X_{ki})\sim p(\boldsymbol{x})$, then we can approximate multidimensional integrals just as simply as we did for the univariate case:
 %
@@ -5971,9 +5971,14 @@ It is important to note that \textit{do not} commonly use sampling as we have do
 \end{figure}
 
 
-Insert a diagram showing the black box.
+\begin{figure}
+\centering
+\scalebox{0.25} 
+%{\includegraphics{MCMC_BSEindependentSampling.pdf}}
+\caption{An illustration showing the black box, with a window in its top showing a number, being shaken to the left. Then a cartooned histogram to the right representing the samples generated from this procedure.}\label{fig:MCMC_blackBox}
+\end{figure}
 
-\section{Why is independent sampling easier said than done?}
+\section{Why is independent sampling easier said than done?}\label{sec:MCMC_independentSamplingDifficult}
 Let's take a step away from Bayes' rule for a minute to talk about how computers actually generate seemingly-random samples from a particular distribution. Many users of statistical software just take for granted the fact that computers are able to, almost instantaneously, produce an arbitrarily-long list of independent samples from a range of distributions. Typically statistical software uses pseudorandom number generators (PRNG), that produce sequences of numbers that \textit{approximate} the distribution from which they purport to represent samples. Computers are not yet able to generate truly random numbers\footnote{A possible caveat to this is quantum-based random number generators, see \url{http://arxiv.org/pdf/1004.1521v2.pdf}.}, and instead rely on seed values, that completely determine the sequence of numbers that PRNGs output. If the software-user does not specify the seeds explicitly, the seed can often be determined by a rapidly-changing input, such as the internal clock of a computer, meaning that consecutive samples from a given distribution are different, and have a veneer of randomness. 
 
 Rather than going into depth about how PRNGs work, let us suppose for argument's sake that we have at our disposal a random number generator that is capable of producing independent random samples from a continuous uniform distribution (see section \ref{sec:Distributions_uniform} for a recap on this distribution). How might we be able to use such a generator to produce independent samples from another distribution, for example an exponential?
@@ -5990,18 +5995,96 @@ There are a number of ways that we might approach this problem. One intuitive me
 
 It is evident from the right-hand plot of figure \ref{fig:MCMC_rejectionSamplingExponential} that rejection sampling is pretty wasteful, since only a small proportion of the initial samples are accepted. Can we design a better way of generating exponential samples from a uniform generator? Yes, we can, with a bit of thought.
 
-If we \textit{could} draw samples from an exponential distribution, then we worked out the exponential-CDF value for each of those points, what would the \textit{transformed} sample look like? We know it would be bounded between 0 and 1, since all CDFs are, but what about the distribution? Those samples that are most extreme will be squashed the most - towards zero or 1 dependent on the nature of the extremity. In fact, samples will be squashed in relation to the distance that they lie from the middle of the sample, with those around the mean not being squashed much at all. The CDF transform acts part like a vice, part as a sieve, reducing variation between samples until the distribution looks homogeneous overall; resulting in a uniform distribution. So what, why does this help us? Well, if we run the whole process in reverse, creating uniform samples, then taking the \textit{inverse-}exponential-CDF transform of these, then we \textit{should} get out samples that are exponentially-distributed! If you are still unmoved by this rather hand-wavy explanation, then have a look at problem X at the end of the chapter, where we ask you to prove it. Furthermore, have a look at figure X which shows how the method works for our exponential example.
+If we \textit{could} draw samples from an exponential distribution, then we worked out the exponential-CDF value for each of those points, what would the \textit{transformed} sample look like? We know it would be bounded between 0 and 1, since all CDFs are, but what about the distribution? Those samples that are most extreme will be squashed the most - towards zero or 1 dependent on the nature of the extremity. In fact, samples will be squashed in relation to the distance that they lie from the middle of the sample, with those around the mean not being squashed much at all. The CDF transform acts part like a vice, part as a mixer, reducing variation between samples until the distribution looks homogeneous overall; resulting in a uniform distribution. So what, why does this help us? Well, if we run the whole process in reverse, creating uniform samples, then taking the \textit{inverse-}exponential-CDF transform of these, then we \textit{should} get out samples that are exponentially-distributed! If you are still unmoved by this rather hand-wavy explanation, then have a look at problem X at the end of the chapter, where we ask you to prove it. Furthermore, have a look at figure \ref{fig:MCMC_inverseSamplingExponential} which shows how the method works for our exponential example. This type of method used to generate samples is known as \textit{Inverse Transform Sampling}.
 
-Insert figure. Show the amount that points have moved via a red line in low n plot.
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{MCMC_inverseSamplingExponential.pdf}}
+\caption{\textbf{Using inverse transform sampling to sample from an exponential(1) distribution.} The top-left panel shows 1,000 samples generated from a uniform distribution, arranged in the order they were generated. The bottom-left shows the exponential samples that result from transforming the above using the exponential-inverse-CDF, with the red lines showing the amount they were moved by the transform. The histograms show the sampling distribution for both sets: original and transformed.}\label{fig:MCMC_inverseSamplingExponential}
+\end{figure}
 
 This new method is clearly better than rejection sampling, since we have moved from a rather poor efficiency, to 100\%! However, it is not without a catch. In order to do this type of sampling we were required to know, and be able to compute the inverse-CDF, which in general is typically not possible. Remember that our example is univariate, whereas in most applied problems in inference we are dealing with highly multivariate distributions, with hundreds, or often thousands of dimensions. Furthermore, both problems suffer from the issue that, in general, we are unable to exactly compute the posterior distribution in Bayesian inference; the reason we started sampling in the first place! Whilst there are many more methods for generating \textit{exactly} independent samples from a particular distribution, they all suffer from similar problems when faced with the types of posterior that we encounter in practice.
 
-It is hoped that this section has conveyed the non-triviality of drawing computational independent samples from a particular distribution. This difficulty motivates the side-step that we take in Bayesian inference, by moving from independent to dependent sampling; discussed in the next section.
+It is hoped that this section has conveyed the non-triviality of drawing computational independent samples from a particular distribution. This difficulty motivates the side-step that we take in Bayesian inference, by moving from independent to dependent sampling; discussed in the section \ref{sec:MCMC_independentToDependent}.
 
-\section{Moving from independent to dependent samples}\label{sec:MCMC_independentToDependent}
-Include subsection on effective sample size.
+\section{Ideal sampling from a posterior using only the unnormalised posterior}\label{sec:MCMC_idealSampling}
+Before we progress to talk about how we actually carry out sampling from the posterior in practice, let's pause a second to think about what samples from such a sampler would look like. Consider two points in posterior space $\theta_A$ and $\theta_B$, each representing different parameter values (bear in mind that the parameter here usually represents a vector). If the ratio of the posterior at the two points was given by:
+%
+\begin{equation}
+\frac{p(\theta_A|data)}{p(\theta_B|data)} = \frac{3}{1}
+\end{equation}
+%
+Then, intuitively, we would want an ideal sampler to generate random samples three times as often from point $\theta_A$ as we would for point $\theta_B$. This is because we use the number of samples from a given distribution to try to represent its PDF (this was the underlying premise behind Rejection Sampling, and figure \ref{fig:MCMC_rejectionSamplingExponential}). Essentially we are using the histogram of samples to proxy for the PDF (see figure \ref{fig:MCMC_ideaHistogram}). We've done this frequently throughout this book, but it is worth making this point explicitly. We also see from figure \ref{fig:MCMC_ideaHistogram} that this sampling representation of a PDF works for both positive, and zero values of the PDF. If the value of a PDF is zero at any point; then we want our sampler to generate zero samples at that point. However, it is important to note that we wouldn't need the absolute height to tell us to generate zero samples at this point - we could have used its relative height vs all other points as an input to the sampler - that would have also been zero. So we see that in both cases considered - those where the ratio of PDFs at one point vs another is zero, or some finite-positive number, that the relative height correctly tells us the relative frequency to sample from each point. 
 
-\section{Metropolis-Hastings}\label{sec:MCMC_metropolisHastings}
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{MCMC_ideaHistogram.pdf}}
+\caption{A PDF (orange) and its histogram representation through sampling (blue).}\label{fig:MCMC_ideaHistogram}
+\end{figure}
+
+Therefore we see that what matters for a sampling methodology is that it produces samples across parameter space in accordance with the \textit{relative} heights of the posterior across the space. This is a very important point underling all of the MCMC methods that we discuss in this book, so it is worth repeating: to determine the frequency of samples at a given point in parameter space, we do not need the \textit{absolute} values of the PDF at that point, so long as we know its value \textit{relative} to other parameter values. So how does this help us? Well it turns out that whilst we are not generally able to calculate the absolute PDF value at a given point, since this requires knowledge of the denominator, we \textit{are} generally able to write down its value relative to other points. We can explain this considering our points $\theta_A$ and $\theta_B$ again, since we can calculate their ratio as:
+%
+\begin{equation}
+\begin{align}
+\frac{p(\theta_A|data)}{p(\theta_B|data)} &= \frac{\frac{p(data|\theta_A)\times p(\theta_A)}{p(data)}}{\frac{p(data|\theta_B)\times p(\theta_B)}{p(data)}}\\
+&=\frac{p(data|\theta_A)\times p(\theta_A)}{p(data|\theta_B)\times p(\theta_B)}
+\end{align}
+\end{equation}
+%
+Where we have used Bayes' rule to get the first expression on the right-hand side. Thus we see that here the problem denominator term has cancelled! Now everything in the last expression is known; we just have the likelihoods and priors at each of the two points. Thus knowledge of the \textit{unnormalised} posterior suffices to tell us the sampling frequency. In theory we could work out the frequency of samples at all points in parameter space since, for each point, we are able to calculate the ratio of the PDF value to \textit{all} other points, if we wanted.
+
+However, how can we do this in practice? Doesn't this mean that we need now to carry out an infinite number of calculations for each parameter value, in order to work out the ratio vs all other points? A suggestion might be to partition parameter space into a finite number of points, then only work out the ratio for those points. However, we have already seen in section \ref{sec:MCMC_discreteApproximation}, that as the complexity of our problem - indexed by the number of parameters - grows, we soon run into the issue that we have too many calculations to carry out. Clearly, we need a different way of carrying out this type of procedure, which we discuss in the next section.
+
+\subsection{The unnormalised posterior - a window onto the real deal}
+Before we proceed however, let's have a brief think about why the unnormalised posterior tells us everything we need to know about the posterior. Revisiting Bayes' rule we see that we can write:
+%
+\begin{equation}
+\begin{align}
+p(\theta|data) &= \frac{p(data|\theta)\times p(\theta)}{p(data)}\\
+&\propto p(data|\theta)\times p(\theta)
+\end{align}
+\end{equation}
+%
+Thus all the `shape' of the posterior is determined by the numerator, since the denominator does not contain any $\theta$ dependence. If we could generate samples from something that had the same shape as the posterior, then it turns out we are still able to calculate all the properties that we want! The mean and variance can both be calculated, as well as \textit{any} other use for the posterior of which we can think. Essentially, if we don't know the denominator we can imagine a family of landscapes, each of the same shape, but of heights different to the previous (see figure \ref{fig:MCMC_familityOfDistributionsShape}). The differing heights represent different possible values of the normalising denominator term. Only one of these surfaces will actually be at the correct height, corresponding to the surface encompassing a volume of 1. However, if all we need is the relative heights of the posterior at one point vs another, then we see that the unnormalised density gives us all the richness of the actual posterior landscape; nothing is lost!
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{MCMC_familityOfDistributionsShape.png}}
+\caption{A family of distributions, each with the same shape, but at different heights, corresponding to different denominator terms. \textbf{I would like this diagram to have more complex surface structure, with more peaks, and troughs; cf E.Tufte's CO2 diagram.}}\label{fig:MCMC_familityOfDistributionsShape}
+\end{figure}
+
+\section{Moving from independent to dependent sampling}\label{sec:MCMC_independentToDependent}
+Let's recap. We would ideally like to draw \textit{independent} samples from our posterior distribution, in order to try to understand its properties; mean, variance, as well as its overall shape. Also, inadvertently \textit{if} we were able to do this, this would negate the need to calculate the difficult multidimensional integrals necessary to find these properties analytically.
+
+The problem is twofold here. Firstly, calculating the denominator of Bayes' rule is typically very difficult; particularly in highly-dimensional problems. Secondly, even if we did have the denominator, and hence had an expression for the posterior density, it is practically impossible to generate independent samples from it. Neither of the strategies we discussed in section \ref{sec:MCMC_independentSamplingDifficult} - Rejection Sampling, nor Inverse Transform Sampling - are generally usable in the types of complex problems that we encounter in Bayesian inference: Rejection Sampling is too inefficient, as well as difficult to design for multi-parameter settings; Inverse Transform Sampling is unusable since we are in general unable to calculate the posterior CDF, and definitely unable to invert it! Once more in our zig-zaggy path towards practical applications of Bayesian inference we are required to tack. Don't worry however, this \textit{is} the final time. We are nearly there, just bear with us.
+
+We learned in section \ref{sec:MCMC_idealSampling} that we don't actually need the denominator if we want to calibrate a sampler, since we knowledge of the unnormalised PDF suffices to calculate the relative height of the posterior at one points vs all others. Thus we can forget about the first of the above problems. However, we did run into another problem which was that in order to calculate the relative height of the posterior at a particular point, we were required to undertake an impractically-large number of calculations. 
+
+It turns out that using \textit{dependent} sampling is a way out both of these problems - the impossibility of generating independent samples, as well as the practical intractability of evaluating the ratio of PDF at a point in parameter space to all others. What does dependent sampling mean? Well, in this context it means that the next sample depends on the current sample value.
+
+The idea is that we essentially do a type of random walk through posterior space: at each point in parameter space we randomly determine the point to which we might next step then, based on how high the posterior is at this next point, we probabilistically take the step, with the probability increasing the higher the point is compared to our current location. If we repeat this process a large number of times, then hopefully we will have surveyed much of parameter space, with those areas which have higher posteriors having been visited in proportion to their height. Thus, our simple dependent sampler will have replicated the behaviour of the ideal sampler we discussed in section \ref{sec:MCMC_idealSampling} - at an conceptual level at least we're done!
+
+The key to the success of this new sampling technique is that it forgets about the \textit{global} structure of the posterior density, something which is for most problems, far too complex to contemplate, and instead focusses on \textit{local} steps. These local steps are easy enough for us to handle, since they only require us to evaluate the unnormalised posterior at our point, and compare it with a point to which we consider stepping. Whilst we haven't yet formalised exactly how we select the next point in parameter space to which we consider stepping (see chapter X), it suffices for now to say that we do it in a randomised fashion, meriting the use of `Monte Carlo' - an ode to the randomness of dice in casino games - in our sampler name. 
+
+The random walk through parameter space that we have described represents the most simple type of dependent sampler, where the decision as to whether to step to the point depends on two things: the unnormalised posterior value at the current point, and the value at the proposed step point. However, we can imagine more complex samplers, where the stepping probability depends also on the history of all places we've stepped thus far. To capture this memoryless of the algorithm we term these samplers `Markov Chains', where the run of consecutive samples we generate forms the chain. Specifically the `Markov' part designates the amnesia of the stepping routine, and refers to the Russian statistician Andrey Markov, born in the 19th century. Strictly, our Markov Chain should be called `1st order', since it is possible to have chains that remember the previous $m$ states, but otherwise are memoryless, however this term is usually left out. Overall this means that our sampler method is categorised as a type of Markov Chain Monte Carlo (MCMC for short).
+
+There is a slight catch with using dependent samplers, which we discuss in section \ref{sec:MCMC_correlationInDependentSamplers}, but before we rein-in the elation you are without-doubt feeling, we want to use an analogy to help with the intuition behind 
+
+\subsection{An analogy to MCMC: mapping mountains}
+As an analogy suppose that you are an explorer tasked with creating a contour map of a hitherto unknown mountainous area. The catch is that the area is perpetually covered in fog, and you can only see as far as your feet. You 
+
+\section{What's the catch with dependent samplers?}\label{sec:MCMC_correlationInDependentSamplers}
+In section \ref{sec:MCMC_integratingUsingIndependentSampling} we used the analogy of a die in a black box to represent our posterior, and the shaking of the box to represent the act of sampling. This, in turn, was used to motivate the use of sampling in general, as a way of understanding a distribution - both its overall aesthetics, as well as its properties. However, the analogy no longer appears perfect for our eventual MCMC sampling algorithm, since each time we shake the `box' the result we get should depend on the current value of the die; it isn't an independent realisation. We should expect that the dependency structure of our sampling algorithm detrimentally affects its ability to approximate the posterior. Intuitively, this is because of informational value of each incremental sample is less than it would be for a purely independent sampler.
+
+\section{Chapter summary}
+
+\section{Chapter outcomes}
+
+
+\chapter{Metropolis-Hastings}\label{chap:MCMC_metropolisHastings}
 \section{Intuition behind Metropolis}
 The analogy of walking around a landscape. Moving to a new spot probabilistically if it is lower, and moving to a higher spot definitely. The idea is that you will visit positions at a rate proportional to their height. Rain analogy: absolute height is unimportant, only the relative difference between parts of the landscape.
 
