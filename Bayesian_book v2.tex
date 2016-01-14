@@ -5959,15 +5959,44 @@ However, the preceding work shows us that we can estimate the above integral, so
 %
 where we have rewritten the likelihood term $p(\boldsymbol{x}|\theta)=L(\theta|\boldsymbol{x})$ to emphasise that it is a function of $\lambda$, with $\boldsymbol{x}$ held constant.
 
-Figure X shows that as we increase the sample size $n$, that the above method rapidly converges on the true value for the denominator integral. Although we don't show it, we could use the same framework to allow us to estimate the mean of the posterior, again exploiting the fact that we are in this example able to generate independent samples from the prior. However, we leave this for exercise \ref{sec:MCMC_problemBSE} in the problem set.
+Figure \ref{fig:MCMC_BSEindependentSampling} shows that as we increase the sample size $n$, that the above method rapidly converges on the true value for the denominator integral. Although we don't show it, we could use the same framework to allow us to estimate the mean of the posterior, again exploiting the fact that we are in this example able to generate independent samples from the prior. However, we leave this for exercise \ref{sec:MCMC_problemBSE} in the problem set.
 
-Insert figure diagram.
+It is important to note that \textit{do not} commonly use sampling as we have done here to explicitly evaluate the denominator term. We shall see in section \ref{sec:MCMC_independentToDependent} that we instead choose another route to the posterior, but the premise is the same; by taking samples from the a distribution this allows us insight into its characteristics, without having to do the heavy lifting of calculating a high-dimensional integral.
+
+\begin{figure}
+\centering
+\scalebox{0.25} 
+{\includegraphics{MCMC_BSEindependentSampling.pdf}}
+\caption{Using independent sampling to estimate the denominator in the BSE example: as the number of independent samples increases, there is a corresponding improvement in the error. The orange dotted line shows the true value of the denominator, and the histogram show counts of values obtained at each sample size across 10,000 repetitions.}\label{fig:MCMC_BSEindependentSampling}
+\end{figure}
+
 
 Insert a diagram showing the black box.
 
-
 \section{Why is independent sampling easier said than done?}
-Section on how computers actually generate random samples.
+Let's take a step away from Bayes' rule for a minute to talk about how computers actually generate seemingly-random samples from a particular distribution. Many users of statistical software just take for granted the fact that computers are able to, almost instantaneously, produce an arbitrarily-long list of independent samples from a range of distributions. Typically statistical software uses pseudorandom number generators (PRNG), that produce sequences of numbers that \textit{approximate} the distribution from which they purport to represent samples. Computers are not yet able to generate truly random numbers\footnote{A possible caveat to this is quantum-based random number generators, see \url{http://arxiv.org/pdf/1004.1521v2.pdf}.}, and instead rely on seed values, that completely determine the sequence of numbers that PRNGs output. If the software-user does not specify the seeds explicitly, the seed can often be determined by a rapidly-changing input, such as the internal clock of a computer, meaning that consecutive samples from a given distribution are different, and have a veneer of randomness. 
+
+Rather than going into depth about how PRNGs work, let us suppose for argument's sake that we have at our disposal a random number generator that is capable of producing independent random samples from a continuous uniform distribution (see section \ref{sec:Distributions_uniform} for a recap on this distribution). How might we be able to use such a generator to produce independent samples from another distribution, for example an exponential?
+
+There are a number of ways that we might approach this problem. One intuitive method known as `Rejection Sampling' is shown in figure \ref{fig:MCMC_rejectionSamplingExponential}, where we use our uniform random generator twice for each point: once to generate an $x\in[0,8]$ (to be correct here we would need to choose an infinite range of $x$, but this is computationally impossible, and inefficient for our approximate purposes), and $y\in [0,1]$. We then compare the $y$ value for the individual coordinates with the PDF of an exponential distribution, and that $x$ value; accepting the $x$ value as a sample from an exponential if the $y$ is lower than the corresponding value of the PDF, and rejecting otherwise.
+
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{MCMC_rejectionSamplingExponential.pdf}}
+\caption{\textbf{Using Rejection Sampling to generate samples from ax exponential(1) distribution.} Left: independent $(x,y)\sim (U(0,8),U(0,1))$ samples and the exponential PDF (blue). The points are coloured blue if they are accepted, (if the PDF exceeds the $y$ value), and red otherwise. Right: shows a stacked histogram for accepted (blue), and rejected (red) points.}\label{fig:MCMC_rejectionSamplingExponential}
+\end{figure}
+
+
+It is evident from the right-hand plot of figure \ref{fig:MCMC_rejectionSamplingExponential} that rejection sampling is pretty wasteful, since only a small proportion of the initial samples are accepted. Can we design a better way of generating exponential samples from a uniform generator? Yes, we can, with a bit of thought.
+
+If we \textit{could} draw samples from an exponential distribution, then we worked out the exponential-CDF value for each of those points, what would the \textit{transformed} sample look like? We know it would be bounded between 0 and 1, since all CDFs are, but what about the distribution? Those samples that are most extreme will be squashed the most - towards zero or 1 dependent on the nature of the extremity. In fact, samples will be squashed in relation to the distance that they lie from the middle of the sample, with those around the mean not being squashed much at all. The CDF transform acts part like a vice, part as a sieve, reducing variation between samples until the distribution looks homogeneous overall; resulting in a uniform distribution. So what, why does this help us? Well, if we run the whole process in reverse, creating uniform samples, then taking the \textit{inverse-}exponential-CDF transform of these, then we \textit{should} get out samples that are exponentially-distributed! If you are still unmoved by this rather hand-wavy explanation, then have a look at problem X at the end of the chapter, where we ask you to prove it. Furthermore, have a look at figure X which shows how the method works for our exponential example.
+
+Insert figure. Show the amount that points have moved via a red line in low n plot.
+
+This new method is clearly better than rejection sampling, since we have moved from a rather poor efficiency, to 100\%! However, it is not without a catch. In order to do this type of sampling we were required to know, and be able to compute the inverse-CDF, which in general is typically not possible. Remember that our example is univariate, whereas in most applied problems in inference we are dealing with highly multivariate distributions, with hundreds, or often thousands of dimensions. Furthermore, both problems suffer from the issue that, in general, we are unable to exactly compute the posterior distribution in Bayesian inference; the reason we started sampling in the first place! Whilst there are many more methods for generating \textit{exactly} independent samples from a particular distribution, they all suffer from similar problems when faced with the types of posterior that we encounter in practice.
+
+It is hoped that this section has conveyed the non-triviality of drawing computational independent samples from a particular distribution. This difficulty motivates the side-step that we take in Bayesian inference, by moving from independent to dependent sampling; discussed in the next section.
 
 \section{Moving from independent to dependent samples}\label{sec:MCMC_independentToDependent}
 Include subsection on effective sample size.

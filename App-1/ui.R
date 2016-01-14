@@ -125,26 +125,36 @@ shinyUI(fluidPage(
                        sliderInput("dfInvWish", "Degrees of freedom", min=4, max=100, value=8),
                        sliderInput("sampleSizeInvWish", "Sample size", min=1000, max=20000, value=5000)),
       conditionalPanel(condition="input.distType=='Multivariate'&&input.dist2=='Dirichlet'",
+                       sliderInput("dimensionsDirichlet","Dimensions",min=2,max=4,value=2,step=1),
+                       sliderInput("sampleSizeDirichlet", "Sample size", min=10, max=20000, value=1000),
                        sliderInput("alphaDirichlet1","alpha 1",min=0.1,max=10,value=2),
                        sliderInput("alphaDirichlet2","alpha 2",min=0.1,max=10,value=2),
-                       sliderInput("alphaDirichlet3","alpha 3",min=0.1,max=10,value=2),
-                       sliderInput("sampleSizeDirichlet", "Sample size", min=10, max=20000, value=1000)),
+                       conditionalPanel(condition="input.dimensionsDirichlet>'2'",
+                        sliderInput("alphaDirichlet3","alpha 3",min=0.1,max=10,value=2),
+                        conditionalPanel(condition="input.dimensionsDirichlet>'3'",
+                                         sliderInput("alphaDirichlet4","alpha 4",min=0.1,max=10,value=2)))),
       conditionalPanel(condition="input.distType=='Multivariate'&&input.dist2=='Multinomial'",
                        sliderInput("angleMultinomial","Viewpoint angle",min=0,max=360,value=100),
                        sliderInput("sizeMultinomial","size",min=2,max=100,value=6),
                        sliderInput("probMultinomial1","probability 1",min=0,max=1,value=0.5),
                        sliderInput("probMultinomial2","probability 2",min=0,max=1,value=0.5),
                        sliderInput("probMultinomial3","probability 3",min=0,max=1,value=0.5)),
+      conditionalPanel(condition="input.distType=='Multivariate'&&input.dist2=='LKJ'",
+                       sliderInput("dimensionLKJ", "Dimensions", min=4, max=20, value=4),
+                       sliderInput("etaLKJ", "Degrees of freedom", min=0, max=40, value=1,step=0.25),
+                       sliderInput("sampleSizeLKJ", "Sample size", min=1000, max=20000, value=2000)),
       br()
     ),
     # Show a tabset that includes a plot, summary, and table view
     # of the generated distribution
     mainPanel(
       tabsetPanel(type = "tabs", 
-                  tabPanel("Plot of PDF", plotOutput("plot")), 
-                  tabPanel("Plot of CDF", plotOutput("plotCDF")),
-                  tabPanel("Summary", verbatimTextOutput("summary")), 
-                  tabPanel("Table", tableOutput("table"))
+                  tabPanel("Plot of PDF", plotOutput("plot"),
+                           uiOutput("runningQuantities")), 
+                  tabPanel("Plot of CDF", plotOutput("plotCDF"),
+                           uiOutput("runningQuantities1")),
+                  tabPanel("Formulae", 
+                           uiOutput("formulae"))
       )
     )
   )

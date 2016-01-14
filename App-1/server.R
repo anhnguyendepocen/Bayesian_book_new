@@ -1,3 +1,4 @@
+# Load necessary packages ----------
 library(shiny)
 library(LaplacesDemon)
 library(ggplot2)
@@ -27,6 +28,44 @@ dCustomHalfCauchy <- function(x,location,scale){
 pCustomHalfCauchy <- function(x,location,scale){
   aInt <- integrate(function(x) dcauchy(x,location,scale),0,Inf)
   return((1/aInt)*pcauchy(x,location,scale))
+}
+
+rcoronion<-function(d,eta=1){ 
+  d<-as.integer(d)
+  if(d<=0 || !is.integer(d))
+  { stop("The dimension 'd' should be a positive integer!\n") }
+  if(eta<=0)
+  { stop("'eta' should be positive!\n") }
+  
+  #handling of d=1 and d=2
+  if(d==1) 
+  { rr<-matrix(1,1,1); return(rr) }
+  if(d==2) 
+  { rho<-2*rbeta(1,eta,eta)-1
+  rr<-matrix(c(1,rho,rho,1),2,2); return(rr) 
+  }
+  rr<-matrix(0,d,d)
+  beta<-eta+(d-2)/2
+  # step 1
+  r12<-2*rbeta(1,beta,beta)-1
+  rr<-matrix(c(1,r12,r12,1),2,2)
+  # iterative steps
+  for(m in 2:(d-1))
+  { beta<-beta-0.5
+  y<-rbeta(1,m/2,beta)
+  z<-rnorm(m,0,1)
+  znorm<-sqrt(sum(z^2))
+  # random on surface of unit sphere
+  z<-z/znorm
+  w=sqrt(y)*z
+  # can spped up by programming incremental Cholesky?
+  rhalf<-chol(rr)
+  qq<-w%*%rhalf
+  rr<-cbind(rr,t(qq))
+  rr<-rbind(rr,c(qq,1))
+  }
+  # return rr
+  rr
 }
 
 # Define server logic for random distribution application
@@ -185,6 +224,12 @@ shinyServer(function(input, output) {
     }
   })
   
+  fCalculateVariance <- reactive({
+    aVar <- switch(input$dist,
+             Normal=input$sigma,
+              1)
+    return(aVar)
+  })
   # Generate a plot of the data. Also uses the inputs to build
   # the plot label. Note that the dependencies on both the inputs
   # and the data reactive expression are both tracked, and
@@ -303,7 +348,16 @@ shinyServer(function(input, output) {
       p1<-ggExtra::ggMarginal(p,type = "histogram",fill=I("blue"))
       grid.arrange(h1,p1,ncol = 2)
     } else if (input$dist2=='Dirichlet'){
-        plot(DR_data(rdirichlet(input$sampleSizeDirichlet, c(input$alphaDirichlet1,input$alphaDirichlet2,input$alphaDirichlet3))), a2d = list(colored = TRUE),dim.labels=c(expression(p[1]),expression(p[2]),expression(p[3])))
+      if(input$dimensionsDirichlet==2){
+             lSamples <- rdirichlet(input$sampleSizeDirichlet, c(input$alphaDirichlet1,input$alphaDirichlet2))
+             qplot(lSamples[,1],fill=I("blue")) + xlab(expression(p[1]))
+             
+      } else if (input$dimensionsDirichlet==3){     
+             plot(DR_data(rdirichlet(input$sampleSizeDirichlet, c(input$alphaDirichlet1,input$alphaDirichlet2,input$alphaDirichlet3))), a2d = list(colored = TRUE),dim.labels=c(expression(p[1]),expression(p[2]),expression(p[3])))
+      } else {     
+             plot(DR_data(rdirichlet(input$sampleSizeDirichlet, c(input$alphaDirichlet1,input$alphaDirichlet2,input$alphaDirichlet3,input$alphaDirichlet4))), a3d = list(colored = TRUE,rgl=FALSE),dim.labels=c(expression(p[1]),expression(p[2]),expression(p[3]),expression(p[4])))
+      }
+      
     } else if(input$dist2=='Multinomial'){
       X <- t(as.matrix(expand.grid(0:input$sizeMultinomial, 0:input$sizeMultinomial)))
       X <- X[ , colSums(X) <= input$sizeMultinomial]; X <- rbind(X, input$sizeMultinomial - colSums(X))
@@ -311,7 +365,18 @@ shinyServer(function(input, output) {
       A <- data.frame(x = X[1, ], y = X[2, ], probability = Z)
       scatterplot3d(A, type = "h", lwd = 3,highlight.3d=TRUE, 
                     box = FALSE,angle=input$angleMultinomial)
-      
+    
+    } else if(input$dist2=='LKJ'){
+      lSamples <- lapply(seq(1,input$sampleSizeLKJ,1), function(x) rcoronion(input$dimensionLKJ,
+                                                               input$etaLKJ))
+      lSample12 <- unlist(lapply(lSamples,function(x) x[1,2]))
+      lSample23 <- unlist(lapply(lSamples,function(x) x[2,3]))
+      aDataF <- data.frame(x=lSample12,y=lSample23)
+      m <- ggplot(aDataF, aes(x = x, y = y)) +
+        geom_point() + xlab(expression(rho[12])) + ylab(expression(rho[23]))
+      p <- m + geom_density2d(size=1)
+      p1<-ggExtra::ggMarginal(p,type = "histogram",fill=I("blue"))
+      p1
     }
   })
   
@@ -394,5 +459,40 @@ shinyServer(function(input, output) {
     }
   })
   
+  output$formulae <- renderUI({
+    if (input$distType=='Continuous'){
+      if (input$dist=='Normal'){
+        
+        withMathJax(h2("Moments"),h3("$$\\mathrm{E}(X) = \\mu$$"),
+                    h3("$$var(X) = \\sigma^2$$"),
+                    h2("PDF"),
+                    h3("$$f(x|\\mu,\\sigma) = \\frac{1}{2\\pi\\sigma^2} 
+                             e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}$$"),
+                    h2("CDF"),
+                    h3("$$F(x|\\mu,\\sigma) = \\frac{1}{2}\\left[1+erf\\left(\\frac{x-\\mu}{\\sigma\\sqrt{2}}\\right)\\right]$$"),
+                    helpText(a("Click here for further information on the normal distribution.",
+                               target="_blank",
+                               href="https://en.wikipedia.org/wiki/Normal_distribution")))
+      }
+    }
+  })
   
-})
+  output$runningQuantities <- renderUI({
+    aMean <- fCalculateMean()
+    aVar <- fCalculateVariance()
+    if (input$distType=='Continuous'){
+      withMathJax(h2(paste("mean = ",aMean),align="center"),
+      h2(paste("variance = ",aVar),align="center") )
+    }
+  })
+  
+  output$runningQuantities1 <- renderUI({
+    aMean <- fCalculateMean()
+    aVar <- fCalculateVariance()
+    if (input$distType=='Continuous'){
+      withMathJax(h2(paste("median = ",aMean),align="center"),
+                  h2(paste("25% = ",aVar),align="center") )
+    }
+  })
+
+  })
