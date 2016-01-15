@@ -6069,15 +6069,41 @@ The idea is that we essentially do a type of random walk through posterior space
 
 The key to the success of this new sampling technique is that it forgets about the \textit{global} structure of the posterior density, something which is for most problems, far too complex to contemplate, and instead focusses on \textit{local} steps. These local steps are easy enough for us to handle, since they only require us to evaluate the unnormalised posterior at our point, and compare it with a point to which we consider stepping. Whilst we haven't yet formalised exactly how we select the next point in parameter space to which we consider stepping (see chapter X), it suffices for now to say that we do it in a randomised fashion, meriting the use of `Monte Carlo' - an ode to the randomness of dice in casino games - in our sampler name. 
 
-The random walk through parameter space that we have described represents the most simple type of dependent sampler, where the decision as to whether to step to the point depends on two things: the unnormalised posterior value at the current point, and the value at the proposed step point. However, we can imagine more complex samplers, where the stepping probability depends also on the history of all places we've stepped thus far. To capture this memoryless of the algorithm we term these samplers `Markov Chains', where the run of consecutive samples we generate forms the chain. Specifically the `Markov' part designates the amnesia of the stepping routine, and refers to the Russian statistician Andrey Markov, born in the 19th century. Strictly, our Markov Chain should be called `1st order', since it is possible to have chains that remember the previous $m$ states, but otherwise are memoryless, however this term is usually left out. Overall this means that our sampler method is categorised as a type of Markov Chain Monte Carlo (MCMC for short).
+The random walk through parameter space that we have described represents the most simple type of dependent sampler, where the decision as to where and whether to step is determined solely by the current parameter value. However, we can imagine more complex samplers, where the decision as to where to step, as well as the stepping probability depends on the history of all places we've stepped thus far. To capture this memoryless of the algorithm we term these samplers `Markov Chains', where the run of consecutive samples we generate forms the chain. Specifically the `Markov' part designates the amnesia of the stepping routine, and refers to the Russian statistician Andrey Markov, born in the 19th century. Strictly, our Markov Chain should be called `1st order', since its behaviour only depends on the current parameter value. It is possible however to have chains that remember the previous $m$ states, but otherwise are memoryless, but these are usually less useful for Bayesian inference. Overall this means that our sampler method is categorised as a type of Markov Chain Monte Carlo (MCMC for short).
 
 There is a slight catch with using dependent samplers, which we discuss in section \ref{sec:MCMC_correlationInDependentSamplers}, but before we rein-in the elation you are without-doubt feeling, we want to use an analogy to help with the intuition behind 
 
 \subsection{An analogy to MCMC: mapping mountains}
 As an analogy suppose that you are an explorer tasked with creating a contour map of a hitherto unknown mountainous area. The catch is that the area is perpetually covered in fog, and you can only see as far as your feet. You 
 
+Compare with a purely independent sampler, e.g. satellite techniques.
+
 \section{What's the catch with dependent samplers?}\label{sec:MCMC_correlationInDependentSamplers}
 In section \ref{sec:MCMC_integratingUsingIndependentSampling} we used the analogy of a die in a black box to represent our posterior, and the shaking of the box to represent the act of sampling. This, in turn, was used to motivate the use of sampling in general, as a way of understanding a distribution - both its overall aesthetics, as well as its properties. However, the analogy no longer appears perfect for our eventual MCMC sampling algorithm, since each time we shake the `box' the result we get should depend on the current value of the die; it isn't an independent realisation. We should expect that the dependency structure of our sampling algorithm detrimentally affects its ability to approximate the posterior. Intuitively, this is because of informational value of each incremental sample is less than it would be for a purely independent sampler.
+
+This dependent sampling manifests in the chain of samples being autocorrelated. In other words, the value of the sampler is correlated with the value it was in the previous step. This correlation means that, in practice, an MCMC algorithm takes many more samples to reach a reasonable approximation of the posterior, than would an equivalent sampler producing independent samples.
+
+As an example, consider a method of throwing a die, we call `tilting', where the current face-up number increases the probability that the next number will follow in sequence. Concretely, we suppose that tilting causes a directional weighting in the next value of the die, such that following a 3, the numbers 2 or 4 are most likely. For a current value of 5, the most likely next number is 4 or 6, and so on. The tilting methodology is illustrated for a six-faced die in the network graph of figure \ref{fig:MCMC_dieDependentMCMC}, where the edges represent possible transitions, and the edge-width represents the probability of such a transition. We allow the relative width of the edges, and hence transition probabilities, to be determined by a parameter $0\leq \epsilon \leq 1$, where a value of 0 indicates independent sampling (where all transitions are equally likely), and a value of 1 indicates the circumstance where only consecutive transitions are allowed; meaning that there is significant dependence/correlation in the Markov Chains. 
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{MCMC_dieDependentMCMC.pdf}}
+\caption{\textbf{Visualising the \textit{tilting} sampling methodology for a six-faced die, across three values of transition bias.} The edges represent possible transitions, with thicker edges representing more probable transitions.}\label{fig:MCMC_dieDependentMCMC}
+\end{figure}
+
+Figure \ref{fig:MCMC_dependentCorrelationDie} shows the errors from throwing the die with 6 or 8 faces respectively, using either independent sampling ($\epsilon=0$, blue) or a heavily-dependent sampling algorithm ($\epsilon=1$, orange). Across all cases, we see that higher levels of dependence leads to a higher error, at a given sample size, with the discrepancy between the two sampler types increasing as the number of faces increases.
+
+The figure also illustrates the concept of \textit{effective sample size}\index{effective sample size}, which is calculated by finding the equivalent independent sample size which results in the same error rate as the dependent algorithm at a particular sample size. We see that to generate a sample size of 20 for independent sampling, we are required to generate approximately 42, or 78 samples from the dependent sampling algorithm!
+
+In general, the issue of low effective sample sizes becomes more important the more complex a model. So a model with a high number of parameters vs one with a lower number applied to the same data, will usually require higher sample sizes to achieve an equivalent convergence to a posterior. This rule isn't absolute, but as a rule of thumb it's something to bear in mind when considering different models. We won't go into the way we go about estimating effective sample size in a given model just yet, as this is better tackled after a little more theory (see section \ref{sec:MH_effectiveSampleSizeRevisited}).
+
+\begin{figure}
+\centering
+\scalebox{0.3} 
+{\includegraphics{MCMC_dependentCorrelationDie.pdf}}
+\caption{Left and Middle: Average errors in estimating the mean of a fair die, with 6, or 8 faces respectively, across a range of sample sizes, and sampler dependencies (blue represents independent samples, and orange represents the case where only consecutive transitions are allowed). Right: dependent sample size vs effective sample size, for a 6-faced (black) or 8-faced (grey) fair die. A further black-dashed line is added to the right-hand plot to indicate the $y=x$ line for an independent sampler. The coloured dashed lines across all plots indicate the calculation of effective sample sizes for a six-faced (red) or eight-faced (green) die.\textbf{Add legends.}}\label{fig:MCMC_dependentCorrelationDie}
+\end{figure}
 
 \section{Chapter summary}
 
@@ -6098,6 +6124,8 @@ Show exactly integrated vs sampled.
 The annoyance of having to pick a step length.
 
 \section{Judging convergence}\label{sec:MCMC_convergence}
+
+\section{Effective sample size revisited}\label{sec:MH_effectiveSampleSizeRevisited}\index{effective sample size}
 
 \section{As a subset of Gibbs and vice versa}
 
