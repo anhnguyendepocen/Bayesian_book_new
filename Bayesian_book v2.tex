@@ -5339,7 +5339,7 @@ k_{DIC} = 2 var_{posterior}\left(log[p(\boldsymbol{y}|\theta)]\right)
 \end{equation}
 
 The intuition in this is that the lower the variance in the log predictive score across the posterior, the lower our uncertainty in the our predictions, and hence we need to correct less for overfitting bias. This can happen if there is low variance in the posterior, and/or if the log-likelihood surface is not particularly peaked. Both suggest we are uncertain in our parameter values, and we have probably fit a degree of noise in our estimates, meaning we need to correct for this overstatement of predictive accuracy. 
-DIC, like AIC, is again defined as -2 times $\widehat{elpd_{DIC}}$, meaning that we ideally wish to minimise this quantity. We usually use computational sampling to approximate the integrals over the posterior density presented in this section (see section \ref{sec:MCMC_evaluationAccuracy}), since for all but the most simple examples, these are analytically-intractable.
+DIC, like AIC, is again defined as -2 times $\widehat{elpd_{DIC}}$, meaning that we ideally wish to minimise this quantity. We usually use computational sampling to approximate the integrals over the posterior density presented in this section (see chapter \ref{chap:MCMC}), since for all but the most simple examples, these are analytically-intractable.
 
 \begin{figure}
 \centering
@@ -5758,7 +5758,7 @@ This means that in order to conduct Bayesian analysis in practice, we need to ch
 
 Whilst we are able to sample from a posterior, it is worth noting that the sampling is somewhat different to that of the dice example. Whereas it is possible to independently sample dice (supposing that sufficiently random initial throw conditions are chosen), we are unable to generate independent samples for posteriors; the experimental ideal. Instead we have to make-do with dependent samples: where the next sample depends on the value of the current sample. Monte Carlo Markov Chains are one such type of dependent sampling algorithm, which we introduce in section \ref{sec:MCMC_independentToDependent}. As one might expect, this strategy results in a correlation of consecutive samples, reducing the effective sample size. This means that we need to take many more dependent samples to fully represent our posterior, than we would need to if we were able to take independent samples. Since our samples are dependent, we also need to start a number of such samplers across wide portions of the posterior landscape, in order to ensure that we traverse a majority of the parameter space.
 
-In all sampling types we also need to make sure that we take sufficient samples, such that we feel confident in their representation of the posterior. This is actually quite a difficult problem, since for the vast majority of cases we do not know the thing from which we're trying to sample - hence the reason for doing the sampling in the first place! However, as we shall see in section \ref{sec:MCMC_convergence}, that by using independent samplers, and comparing the samples across all of these, that we can judge convergence by monitoring their convergence to one another. Whilst this method isn't foolproof, it is currently the best available method for judging whether we our samples are sufficiently representative of the posterior.
+In all sampling types we also need to make sure that we take sufficient samples, such that we feel confident in their representation of the posterior. This is actually quite a difficult problem, since for the vast majority of cases we do not know the thing from which we're trying to sample - hence the reason for doing the sampling in the first place! However, as we shall see in section \ref{sec:MetropolisHastings_convergence}, that by using independent samplers, and comparing the samples across all of these, that we can judge convergence by monitoring their convergence to one another. Whilst this method isn't foolproof, it is currently the best available method for judging whether we our samples are sufficiently representative of the posterior.
 
 Finally the last part of this chapter explains some important practical considerations, and tips for undertaking Bayesian analysis in practice.
 
@@ -6147,36 +6147,102 @@ The reader should now be familiar with the following concepts:
 \subsection{Computationally investigate the die example}
 
 
-\chapter{Metropolis-Hastings}\label{chap:metropolisHastings}
-\section{Intuition behind Metropolis}
-The analogy of walking around a landscape. Moving to a new spot probabilistically if it is lower, and moving to a higher spot definitely. The idea is that you will visit positions at a rate proportional to their height. Rain analogy: absolute height is unimportant, only the relative difference between parts of the landscape.
+\chapter{Metropolis}\label{chap:metropolisHastings}
+\section{Chapter mission statement}
+This chapter introduces the reader to one of the most common algorithms used in MCMC sampling, that of the \textit{Metropolis} algorithm. Furthermore, after reading this chapter the reader should understand the methods used to judge convergence of such an algorithm.
 
-Show exactly integrated vs sampled.
+\section{Chapter goals}
+We now know that independent sampling from a posterior is generally impossible, but that we can still generate dependent samples from this distribution. The idea is that whilst we are unable to survey the global structure of the posterior, we are nevertheless able to build a picture of it, from doing local exploration; where the next sample value depends on the current value. Whilst not as efficient as independent sampling, dependent sampling has the benefit that it is easily implemented, and that we can use the unnormalised posterior, meaning that we are not required to calculate the troublesome denominator term.
+
+We also know that Monte Carlo Markov Chains are typically used to do this type of dependent sampling. They are called `Monte Carlo' because the decision as to where to step next involves a random component. However, thus far, we have been necessarily vague about how these chains choose their path through posterior space. In this chapter we shall see that there are essentially two components to their path selection: the first chooses \textit{where} to consider stepping next relative to the current position; the second chooses \textit{whether} to make this step, with the alternative being that they stay put. 
+
+On first glances, it might appear that whatever we select for these two components, we will eventually survey the whole of posterior space. This is not quite correct, and also not the focus of doing the sampling. The idea of sampling from the posterior is that we generate samples \textit{in proportion} to the value of the posterior density at each point in parameter space. If we selected a next step that was always higher than the current point, then we would only explore up until the closest mode of the distribution. If instead we chose to next step to a point completely randomly - not taking into account its height - then we would generate samples from the posterior that were not in proportion to its value. 
+
+Clearly we need to design our stepping routine so that it is just right; sampling more from the peaks of the distribution, and less from the low steppes. One of the most commonly-used routines that satisfies these conditions is known as the \textit{Metropolis} algorithm, and is the focus of this chapter. We will spend the majority of time developing an intuition as to why this algorithm works, and only a small portion of time on its mathematical underpinnings.
+
+An important consideration for practical MCMC is how to know when the sampling has converged to the posterior distribution. You may ask, why do we need to wait any time at all? Isn't the point of the MCMC that it \textit{will} generate samples from the posterior? Well, under a wide range of conditions, it will, \textit{eventually}. Remember that we need to generate sufficient samples such that our sample-reconstructed surface looks exactly like the posterior. This takes time. We also have to decide where to start our chains. If we were seeking efficiency, the best way to start them would be to have the starting point be a random variable whose value is an independent sample from the posterior. However, we generally don't know the posterior, nor how to generate an independent sample from it. This is why we started doing MCMC sampling in the first place! So, because we can't achieve this optimality, we instead usually choose a random starting point; unlikely to be representative of an independent sample in practice. However, the good news is that, whilst our early sampling may not represent samples from the posterior, if we run our chains for long enough, they will eventually get there. But, just how long do we need to wait to reach this goal? This is a difficult question, which we will address in section \ref{sec:MetropolisHastings_convergence}.
+
+\section{Sustainable fishing}
+Suppose that David Robinson (a more fortunate cousin of Robinson Crusoe), marooned on his island, has access to four freshwater lakes of different sizes, each of which has a supply of fish. Furthermore, we suppose that the amount of fish in each lake is proportional to its size. Robinson knows this, and being a sensible person would like to ensure that he doesn't overfish each resource, by fishing each lake in proportion to the amount of fish it contains. Importantly, for this analogy to work, we need to assume that, Robinson's activities do not affect the fish populations, so long as he doesn't massively overfish any of the lakes. 
+
+We suppose that on a given day Robinson fishes, then camps next to a particular lake, which are connected by a series of pathways to the other lakes in a ring-like way, as shown in figure \ref{fig:metropolisHastings_fishInPonds}. This means that he can travel from lake A to B, from B to C, from C to D, D to A, as well as in the anticlockwise direction. The total number of fish in each of the ponds is shown in the right-hand panel of figure \ref{fig:metropolisHastings_fishInPonds}.
+
+\begin{figure}
+\centering
+\scalebox{0.2} 
+{\includegraphics{metropolisHastings_fishInPonds.pdf}}
+\caption{Left: The connectivity of the four lakes for the Robinson fishing example. Note that Robinson cannot actually see the fish, only the size of the lakes. Right: the total number of fish in each pond.}\label{fig:metropolisHastings_fishInPonds}
+\end{figure}
 
 
+How can Robinson achieve his goal of fishing each lake in proportion to its fish stocks? One way, is at the end of each day, he flips a coin: if it is heads he proposes a move in a clockwise direction (so from A to B, for example), if it is tails he moves in an anticlockwise direction (from B to A, for example). He then calculates the following ratio using the proposed lake size, $S_{proposed}$, and the current lake size, $S_{current}$:
+%
+\begin{equation}
+r =
+\begin{cases}
+1 & , If\; S_{proposed} > S_{current}\\
+ \frac{S_{proposed}}{S_{current}}& , If\; S_{proposed} \leq S_{current}
+\end{cases}
+\end{equation}
+%
+Luckily for Robinson, he also has a solar-powered watch, which can generate a single (pseudo-)random uniform number at the end of each day, $p\sim U(0,1)$. He thus compares the ratio $r$ with $p$, and uses this as a way of deciding whether he should move to a new location (if $p<r$), or fish the same lake tomorrow as he did today (otherwise).
 
-\subsection{The burn-in/warm-up phase}
+Using this method, we computationally simulate Robinson's journey (left-hand panes of figure \ref{fig:metropolisHastings_MetropolisFish}), and assuming he catches one fish per day (he retires to eat his catch after his first success), we can graph the total number of fishes (right-hand panes of figure \ref{fig:metropolisHastings_MetropolisFish}). We see that after 50 days, the number of fish he has caught from each pond is already starting to look in proportion to the actual numbers of fish in each pond, shown in figure \ref{fig:metropolisHastings_fishInPonds}. After 500 days, it is difficult to differentiate between the sampled and actual distributions. 
 
-\section{The importance of the proposal distribution}
-The annoyance of having to pick a step length.
+Our algorithm appears to have worked! Robinson has fished each pond in rough proportion to the number of fish in each pond. Without knowing it, we have actually used the Metropolis algorithm to produce a Monte Carlo Markov Chain that samples from a desired distribution. Before we more rigorously define what is meant by this algorithm, let us consider another example, this time in continuous space.
 
-\section{Judging convergence}\label{sec:MCMC_convergence}
+\begin{figure}
+\centering
+\scalebox{0.4} 
+{\includegraphics{metropolisHastings_metropolisFish.pdf}}
+\caption{\textbf{The Metropolis algorithm in action.} Left: The sequence of lakes in which Robinson fishes (A,B,C,D) over time. Right: the total number of fish he catches. Top: for 50 days, and bottom for 500 days.}\label{fig:metropolisHastings_MetropolisFish}
+\end{figure}
+
+\section{Prospecting for gold}
+You are employed as a contractor for a mining company, looking to map the amount of subterranean gold in the ground across a vast, lifeless desert. The desert is flat, and uninformative about the amount of gold present underneath (see figure \ref{fig:metropolisHastings_goldMineSimple}). However, fortunately you have a machine that is able to measure the magnetic field directly underneath, which varies in proportion to the total amount of gold below. Suppose the gold company has already determined that the area is rich with gold deposits, and is interested only in mapping the relative abundance of gold over the desert. Furthermore, they want to map areas with accuracy dependent on the total amount of gold present.
+
+\begin{figure}
+\centering
+\scalebox{0.8} 
+{\includegraphics{metropolisHastings_goldMineSimple.png}}
+\caption{The desert above, with the gold deposits underneath. The red path shows a possible sampling path that could be taken by our intrepid worker. \textbf{Add better palm trees, and illustrate that the worker has a device which allows them to survey underneath.}}\label{fig:metropolisHastings_goldMineSimple}
+\end{figure}
+
+How could we go about carrying out this mapping? One way would be simply to survey at say, 1km intervals, the level of magnetic field below. However, even at this modest resolution, we would be required to sample a million points. If instead we increased the precision to 100m, we would then be required to do 100 million samples. We'll die of thirst! There must be a quicker way to build an accurate map.
+
+Suppose we choose to start in a random location in the desert, and measure the magnetic field beneath. We then use a multivariate normal distribution centred on our current location, to pick a new spot on which to sample. We then measure the magnetic field there, and if it exceeds the value at the old site, we always move to the new location. If by contrast, the value is less than the current value, then we only move \textit{probabilistically} there, with probability given by the ratio of the new value to the old. To do this in practice, we compare the ratio with a randomly generated uniform value $p\sim U(0,1)$. If our ratio exceeds this value, then we move there, and we add the new sample to our current list. If it doesn't, then we move back to where we were, and add another sample at the old location.
+
+If we carry out this routine a large number of times, and look at the concentration of samples across the desert, we can obtain a map of the underground gold deposits, which is most detailed at those locations where gold deposits are greatest (see figure \ref{fig:metropolisHastings_miningGoldMetropolis}). Note in particular the increasing correspondence between the actual and sampled landscapes as the sample size increases. However, even after only 1,000 samples we are starting to build up a rough, yet usable map of the gold deposits below. Time to go relax in an oasis!
+
+We have now illustrated in two settings - one discrete, the other continuous - how we can use a Metropolis algorithm to sample from an unnormalised density. Now we need to spend a little time defining this sampling scheme mathematically, as well as understanding under which conditions we achieve convergence. 
+
+
+\begin{figure}
+\centerline{\includegraphics[width=1.5\textwidth]{metropolisHastings_miningGoldMetropolis.png}}
+\caption{\textbf{Searching for gold, using the Metropolis algorithm.} Left panels represent actual gold deposits. All other panels represent MCMC sampling results using Metropolis algorithm. Top panel shows path taken through the desert (red).}\label{fig:metropolisHastings_miningGoldMetropolis}
+\end{figure}
+
+\section{Defining the Metropolis algorithm}\label{sec:metropolisHastings_definingMetropolis}
+\section{When does Metropolis work?}
+Michael Betancourt shifting of distributions over time. 
+
+1. Ergodicity
+2. Detailed Balance
+
+Distinction between ergodicity and geometric ergodicity. Standard ergodicity is simply the asymptotic condition, but places no guarantees on the rate. 
+
+\section{Efficiency of convergence: the importance of the proposal distribution}
+Man walking in a desert looking for mountains continued.
+
+The annoyance of having to pick a step length. Bob's too far too near vs dependence.
+
+\section{Judging convergence}\label{sec:MetropolisHastings_convergence}
 
 \section{Effective sample size revisited}\label{sec:MH_effectiveSampleSizeRevisited}\index{effective sample size}
+Central Limit Theorem accuracy proportional to 1/sqrt(n). Choose neff so that mcmc central limit accuracy proportional to 1/sqrt(neff). cf Bob's video. Also fast fourier transforms to do this.
 
 \section{As a subset of Gibbs and vice versa}
 
-
-\section{Practical computational inference}
-\subsection{The importance of pre-simulation MLE}
-\subsection{Fake data simulation}
-Check coding ok.
-
-\section{Posterior predictive checks}
-Check model is ok.
-
-\section{Evaluating a models' accuracy}\label{sec:MCMC_evaluationAccuracy}
-This section details how sampling is used to approximate the integrals in section \ref{sec:Evaluation_idealAccuracy}.
 
 \section{Chapter summary}
 \section{Chapter outcomes}
@@ -6282,7 +6348,13 @@ Include model averaging for
 
 \chapter{Generalised linear models}
 \section{Malarial example of complex meta-analysis}
+\section{Practical computational inference}
+\subsection{The importance of pre-simulation MLE}
+\subsection{Fake data simulation}
+Check coding ok.
 
+\section{Posterior predictive checks}
+Check model is ok.
 
 
 

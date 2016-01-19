@@ -1,0 +1,1670 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     73577,       1661]
+NotebookOptionsPosition[     72705,       1627]
+NotebookOutlinePosition[     73052,       1642]
+CellTagsIndexPosition[     73009,       1639]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vChoices", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", "4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lSize", "=", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "1", ",", "6", ",", "2"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fSelect", "[", 
+   RowBox[{"aNumber_Integer", ",", "lChoices__"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"aNext", "=", 
+      RowBox[{"RandomInteger", "[", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", "2"}], "}"}], "]"}]}], "}"}], ",", 
+    RowBox[{"lChoices", "[", 
+     RowBox[{"[", 
+      RowBox[{"aNumber", ",", "aNext"}], "]"}], "]"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"fSelectAndMove", "[", 
+   RowBox[{"aNumber_Integer", ",", "lChoices__", ",", "lWts__"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"aNext", "=", 
+       RowBox[{"fSelect", "[", 
+        RowBox[{"aNumber", ",", "lChoices"}], "]"}]}], ",", 
+      RowBox[{"p", "=", 
+       RowBox[{"RandomReal", "[", "]"}]}], ",", "r"}], "}"}], ",", 
+    RowBox[{
+     RowBox[{"r", "=", 
+      RowBox[{
+       RowBox[{"lWts", "[", 
+        RowBox[{"[", "aNext", "]"}], "]"}], "/", 
+       RowBox[{"lWts", "[", 
+        RowBox[{"[", "aNumber", "]"}], "]"}]}]}], ";", " ", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"p", "<", "r"}], ",", "aNext", ",", "aNumber"}], "]"}]}]}], 
+   "]"}]}]}], "Input",
+ CellChangeTimes->{{3.6622149030376406`*^9, 3.662214935583502*^9}, {
+  3.6622149899556117`*^9, 3.6622150336401105`*^9}, {3.662215124420303*^9, 
+  3.662215147382616*^9}, {3.6622169844326897`*^9, 3.66221699528731*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"n", "=", "50"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lSeq", "=", 
+   RowBox[{"NestList", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"fSelectAndMove", "[", 
+       RowBox[{"#", ",", "vChoices", ",", "lSize"}], "]"}], "&"}], ",", "1", 
+     ",", "n"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lTime", "=", 
+   RowBox[{"Range", "@", 
+    RowBox[{"(", 
+     RowBox[{"n", "+", "1"}], ")"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"yTicks", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "\"\<A\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "\"\<B\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "\"\<C\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "\"\<D\>\""}], "}"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"xTicks", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"-", "10"}], "i"}], ",", 
+       RowBox[{"10", "i"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "10", ",", "1"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"aFish", "=", 
+   RowBox[{"Import", "[", "\"\<fish.pdf\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"g1", "=", 
+  RowBox[{"Show", "[", 
+   RowBox[{
+    RowBox[{"GraphicsRow", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"ListLinePlot", "[", 
+        RowBox[{
+         RowBox[{"Thread", "[", 
+          RowBox[{"{", 
+           RowBox[{"lTime", ",", "lSeq"}], "}"}], "]"}], ",", 
+         RowBox[{"PlotRange", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"0", ",", "n"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"0.8", ",", "4.2"}], "}"}]}], "}"}]}], ",", 
+         RowBox[{"Frame", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"True", ",", "True", ",", "False", ",", "False"}], "}"}]}],
+          ",", 
+         RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+         RowBox[{"FrameTicks", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"True", ",", "yTicks"}], "}"}]}], ",", 
+         RowBox[{"FrameLabel", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"\"\<time, days\>\"", ",", "\"\<lake\>\""}], "}"}]}], ",", 
+         RowBox[{"BaseStyle", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"FontSize", "\[Rule]", "Medium"}], "}"}]}]}], "]"}], ",", 
+       RowBox[{"BarChart", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Sort", "[", 
+           RowBox[{"Tally", "[", "lSeq", "]"}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "2"}], "]"}], "]"}], ",", 
+         RowBox[{"BarOrigin", "\[Rule]", "Right"}], ",", 
+         RowBox[{"ChartElements", "\[Rule]", "aFish"}], ",", 
+         RowBox[{"BarSpacing", "\[Rule]", "1"}], ",", 
+         RowBox[{"Frame", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"True", ",", "False", ",", "False", ",", "True"}], "}"}]}],
+          ",", 
+         RowBox[{"FrameTicks", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"xTicks", ",", "yTicks"}], "}"}]}], ",", 
+         RowBox[{"FrameLabel", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"\"\<lake\>\"", ",", "\"\<fish caught\>\""}], "}"}]}], ",", 
+         RowBox[{"BaseStyle", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"FontSize", "\[Rule]", "Medium"}], "}"}]}]}], "]"}]}], 
+      "}"}], "]"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "800"}]}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.662215832990831*^9, 3.6622161015641923`*^9}, {
+  3.662216321720784*^9, 3.662216634317664*^9}, {3.6622167370595407`*^9, 
+  3.6622168245345435`*^9}, {3.662218384488768*^9, 3.662218384624776*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {InsetBox[
+     GraphicsBox[{{}, {{}, {}, 
+        {RGBColor[0, 0, 1], PointSize[0.016666666666666666`], 
+         AbsoluteThickness[1.6], 
+         StyleBox[LineBox[CompressedData["
+1:eJxd0DkKAkEQheGHkaGBgYHBKCIiIqPjvk2Pu6lHEIy9Qh/ZI6hoIfUPDM3H
+q6ouunF7XO8lSdn7/5zf75n7U8G7DFeCr6sGX1eD63CC/ibyFtyGO3A3+L16
+2LcPp/AAHmJehnyEfIx8gnyKfWfw/Hfaeywwb4l5K/Sv4Q2cw8HfF812X+Ed
+C1+vrZ8XzbbfDv2w9sjN1n/AfFhH5LBOyGGdkcO6IP/7Bb8HOus=
+           "]],
+          FontSize->Medium]}}, {}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0.8170000000000001},
+      BaseStyle->{FontSize -> Medium},
+      DisplayFunction->Identity,
+      Frame->{{True, False}, {True, False}},
+      FrameLabel->{{
+         FormBox["\"lake\"", TraditionalForm], None}, {
+         FormBox["\"time, days\"", TraditionalForm], None}},
+      FrameTicks->{{{{1, 
+           FormBox["\"A\"", TraditionalForm]}, {2, 
+           FormBox["\"B\"", TraditionalForm]}, {3, 
+           FormBox["\"C\"", TraditionalForm]}, {4, 
+           FormBox["\"D\"", TraditionalForm]}}, {{1, 
+           FormBox["\"A\"", TraditionalForm]}, {2, 
+           FormBox["\"B\"", TraditionalForm]}, {3, 
+           FormBox["\"C\"", TraditionalForm]}, {4, 
+           FormBox["\"D\"", TraditionalForm]}}}, {True, True}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{},
+      PlotRange->{{0, 50}, {0.8, 4.2}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{0, 0}, {0, 0}},
+      Ticks->{Automatic, Automatic}], {192., -116.80842387373012`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}], InsetBox[
+     GraphicsBox[{
+       {Opacity[0], PointBox[{0., 0.6799999999999999}]}, {{}, 
+        {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+         0.6719999999999999], Thickness[Small]}], 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+          0.6719999999999999], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], {
+                InsetBox[
+                 GraphicsBox[
+                  GeometricTransformationBox[
+                   InsetBox[
+                    GraphicsBox[{
+                    Thickness[0.013849513184071773`], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                    Thickness[0.004069125468612129], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                    EdgeForm[
+                    CapForm["Butt"]], 
+                    EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                    EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                    FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                    DisplayFunction -> Identity, 
+                    DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                    ImageSize -> {73., 31.}, 
+                    PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}},
+                     AspectRatio -> Automatic}], {0, 0}, {
+                    Right, Bottom}, {-4.989841236358599, 0.5}], {{{0., 
+                   0.}}, {{-4.989841236358599, 0.}}, {{-9.979682472717197, 
+                   0.}}, {{-14.969523709075796`, 0.}}}], 
+                  PlotRange -> {{0, -15.}, {0, 0.5}}, AspectRatio -> Full, 
+                  ImagePadding -> None], {-15., 0.75}, {Left, Bottom}, {15., 
+                 0.5}, {{1, 0}, {0, 1}}], {
+                 Opacity[0], 
+                 PointBox[{0., 1.25}]}}},
+              
+              ImageSizeCache->{{142.73223646961566`, 
+               332.3614551032002}, {-75.94522011347853, \
+-46.104721647406436`}}],
+             StatusArea[#, 15]& ,
+             TagBoxNote->"15"],
+            StyleBox["15", {}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[15, {}], "Tooltip"]& ]}, 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+          0.6719999999999999], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], {
+                InsetBox[
+                 GraphicsBox[
+                  GeometricTransformationBox[
+                   InsetBox[
+                    GraphicsBox[{
+                    Thickness[0.013849513184071773`], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                    Thickness[0.004069125468612129], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                    EdgeForm[
+                    CapForm["Butt"]], 
+                    EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                    EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                    FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                    DisplayFunction -> Identity, 
+                    DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                    ImageSize -> {73., 31.}, 
+                    PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}},
+                     AspectRatio -> Automatic}], {0, 0}, {
+                    Right, Bottom}, {-4.989841236358599, 0.5}], {{{0., 
+                   0.}}, {{-4.989841236358599, 0.}}}], 
+                  PlotRange -> {{0, -5.}, {0, 0.5}}, AspectRatio -> Full, 
+                  ImagePadding -> None], {-5., 1.75}, {Left, Bottom}, {5., 
+                 0.5}, {{1, 0}, {0, 1}}], {
+                 Opacity[0], 
+                 PointBox[{0., 2.25}]}}},
+              
+              ImageSizeCache->{{266.8614551032002, 
+               332.17606441999243`}, {-129.30721397776688`, \
+-99.46671551169479}}],
+             StatusArea[#, 5]& ,
+             TagBoxNote->"5"],
+            StyleBox["5", {}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[5, {}], "Tooltip"]& ]}, 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+          0.6719999999999999], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], {
+                InsetBox[
+                 GraphicsBox[
+                  GeometricTransformationBox[
+                   InsetBox[
+                    GraphicsBox[{
+                    Thickness[0.013849513184071773`], 
+                    StyleBox[{
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                    Thickness[0.004069125468612129], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                    EdgeForm[
+                    CapForm["Butt"]], 
+                    EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                    EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                    FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                    DisplayFunction -> Identity, 
+                    DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                    ImageSize -> {73., 31.}, 
+                    PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}},
+                     AspectRatio -> Automatic}], {0, 0}, {
+                    Right, Bottom}, {-4.989841236358599, 0.5}], {{{0., 
+                   0.}}, {{-4.989841236358599, 0.}}, {{-9.979682472717197, 
+                   0.}}, {{-14.969523709075796`, 0.}}, {{-19.959364945434395`,
+                    0.}}}], PlotRange -> {{0, -24.}, {0, 0.5}}, AspectRatio -> 
+                  Full, ImagePadding -> None], {-24., 2.75}, {Left, Bottom}, {
+                 24., 0.5}, {{1, 0}, {0, 1}}], {
+                 Opacity[0], 
+                 PointBox[{0., 3.25}]}}},
+              
+              ImageSizeCache->{{30.76593969938949, 
+               332.3726895131248}, {-182.66920784205521`, \
+-152.82870937598315`}}],
+             StatusArea[#, 24]& ,
+             TagBoxNote->"24"],
+            StyleBox["24", {}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[24, {}], "Tooltip"]& ]}, 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+          0.6719999999999999], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], {
+                InsetBox[
+                 GraphicsBox[
+                  GeometricTransformationBox[
+                   InsetBox[
+                    GraphicsBox[{
+                    Thickness[0.013849513184071773`], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                    Thickness[0.004069125468612129], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                    EdgeForm[
+                    CapForm["Butt"]], 
+                    EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                    EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                    FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                    DisplayFunction -> Identity, 
+                    DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                    ImageSize -> {73., 31.}, 
+                    PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}},
+                     AspectRatio -> Automatic}], {0, 0}, {
+                    Right, Bottom}, {-4.989841236358599, 0.5}], {{{0., 
+                   0.}}, {{-4.989841236358599, 0.}}}], 
+                  PlotRange -> {{0, -7.}, {0, 0.5}}, AspectRatio -> Full, 
+                  ImagePadding -> None], {-7., 3.75}, {Left, Bottom}, {7., 
+                 0.5}, {{1, 0}, {0, 1}}], {
+                 Opacity[0], 
+                 PointBox[{0., 4.25}]}}},
+              
+              ImageSizeCache->{{242.03561137648325`, 
+               332.17606441999243`}, {-236.03120170634358`, \
+-206.1907032402715}}],
+             StatusArea[#, 7]& ,
+             TagBoxNote->"7"],
+            StyleBox["7", {}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[7, {}], "Tooltip"]& ]}}, {}, {}}, {}, {}, {}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{False, False},
+      AxesLabel->{None, None},
+      AxesOrigin->{0., 0.6799999999999999},
+      BaseStyle->{FontSize -> Medium},
+      CoordinatesToolOptions:>{"DisplayFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& )},
+      Frame->{True, False, False, True},
+      FrameLabel->{{None, 
+         FormBox["\"lake\"", TraditionalForm]}, {
+         FormBox["\"fish caught\"", TraditionalForm], None}},
+      FrameTicks->{{{{1, 
+           FormBox["\"A\"", TraditionalForm]}, {2, 
+           FormBox["\"B\"", TraditionalForm]}, {3, 
+           FormBox["\"C\"", TraditionalForm]}, {4, 
+           FormBox["\"D\"", TraditionalForm]}}, {{1, 
+           FormBox["\"A\"", TraditionalForm]}, {2, 
+           FormBox["\"B\"", TraditionalForm]}, {3, 
+           FormBox["\"C\"", TraditionalForm]}, {4, 
+           FormBox["\"D\"", TraditionalForm]}}}, {{{-10, 
+           FormBox["10", TraditionalForm]}, {-20, 
+           FormBox["20", TraditionalForm]}, {-30, 
+           FormBox["30", TraditionalForm]}, {-40, 
+           FormBox["40", TraditionalForm]}, {-50, 
+           FormBox["50", TraditionalForm]}, {-60, 
+           FormBox["60", TraditionalForm]}, {-70, 
+           FormBox["70", TraditionalForm]}, {-80, 
+           FormBox["80", TraditionalForm]}, {-90, 
+           FormBox["90", TraditionalForm]}, {-100, 
+           FormBox["100", TraditionalForm]}}, {{-10, 
+           FormBox["10", TraditionalForm]}, {-20, 
+           FormBox["20", TraditionalForm]}, {-30, 
+           FormBox["30", TraditionalForm]}, {-40, 
+           FormBox["40", TraditionalForm]}, {-50, 
+           FormBox["50", TraditionalForm]}, {-60, 
+           FormBox["60", TraditionalForm]}, {-70, 
+           FormBox["70", TraditionalForm]}, {-80, 
+           FormBox["80", TraditionalForm]}, {-90, 
+           FormBox["90", TraditionalForm]}, {-100, 
+           FormBox["100", TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      PlotRange->{{All, All}, {All, All}},
+      PlotRangePadding->{{
+         Scaled[0.05], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.02]}},
+      Ticks->{
+        Charting`FindScaledTicks[
+         Charting`FindTicks[{-1, 0}, {1, 0}], {Identity, Identity}], None}], {576., -116.80842387373012`},
+      ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}]}, {}},
+  ContentSelectable->True,
+  ImageSize->800,
+  PlotRangePadding->{6, 5}]], "Output",
+ CellChangeTimes->{{3.6622159211208715`*^9, 3.6622159656814203`*^9}, {
+   3.662216010836003*^9, 3.6622160226836805`*^9}, {3.6622160593507776`*^9, 
+   3.6622161020662208`*^9}, 3.6622163237379*^9, {3.662216358033861*^9, 
+   3.6622166349667015`*^9}, {3.6622167708524733`*^9, 3.662216827862734*^9}, {
+   3.662216880834764*^9, 3.6622168903203063`*^9}, {3.662218188223542*^9, 
+   3.6622181992241716`*^9}, 3.66221838522281*^9, {3.662233983124959*^9, 
+   3.6622339944806085`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"n", "=", "500"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lSeq", "=", 
+   RowBox[{"NestList", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"fSelectAndMove", "[", 
+       RowBox[{"#", ",", "vChoices", ",", "lSize"}], "]"}], "&"}], ",", "1", 
+     ",", "n"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lTime", "=", 
+   RowBox[{"Range", "@", 
+    RowBox[{"(", 
+     RowBox[{"n", "+", "1"}], ")"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"yTicks", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "\"\<A\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "\"\<B\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "\"\<C\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "\"\<D\>\""}], "}"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"xTicks", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"-", "100"}], "i"}], ",", 
+       RowBox[{"100", "i"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", "1", ",", "10", ",", "1"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"aFish", "=", 
+   RowBox[{"Import", "[", "\"\<fish.pdf\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"g2", "=", 
+  RowBox[{"Show", "[", 
+   RowBox[{
+    RowBox[{"GraphicsRow", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"ListLinePlot", "[", 
+        RowBox[{
+         RowBox[{"Thread", "[", 
+          RowBox[{"{", 
+           RowBox[{"lTime", ",", "lSeq"}], "}"}], "]"}], ",", 
+         RowBox[{"PlotRange", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"0", ",", "n"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"0.8", ",", "4.2"}], "}"}]}], "}"}]}], ",", 
+         RowBox[{"Frame", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"True", ",", "True", ",", "False", ",", "False"}], "}"}]}],
+          ",", 
+         RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+         RowBox[{"FrameTicks", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"True", ",", "yTicks"}], "}"}]}], ",", 
+         RowBox[{"FrameLabel", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"\"\<time, days\>\"", ",", "\"\<lake\>\""}], "}"}]}], ",", 
+         RowBox[{"BaseStyle", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"FontSize", "\[Rule]", "Medium"}], "}"}]}]}], "]"}], ",", 
+       RowBox[{"BarChart", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Sort", "[", 
+           RowBox[{"Tally", "[", "lSeq", "]"}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", "2"}], "]"}], "]"}], ",", 
+         RowBox[{"BarOrigin", "\[Rule]", "Right"}], ",", 
+         RowBox[{"ChartElements", "\[Rule]", "aFish"}], ",", 
+         RowBox[{"BarSpacing", "\[Rule]", "1"}], ",", 
+         RowBox[{"Frame", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"True", ",", "False", ",", "False", ",", "True"}], "}"}]}],
+          ",", 
+         RowBox[{"FrameTicks", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"xTicks", ",", "yTicks"}], "}"}]}], ",", 
+         RowBox[{"FrameLabel", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"\"\<lake\>\"", ",", "\"\<fish caught\>\""}], "}"}]}], ",", 
+         RowBox[{"BaseStyle", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"FontSize", "\[Rule]", "Medium"}], "}"}]}]}], "]"}]}], 
+      "}"}], "]"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "800"}]}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.6622168360842047`*^9, 3.662216874541404*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {InsetBox[
+     GraphicsBox[{{}, {{}, {}, 
+        {RGBColor[0, 0, 1], PointSize[0.008333333333333333], 
+         AbsoluteThickness[1.6], 
+         StyleBox[LineBox[CompressedData["
+1:eJxd10nO3UQUhuEDI4YeMGDAoEAIIYQi0/ekQg8hYELfpgiEACHEAUIXEmoJ
+XkItwUs4S/ASagmeMEcIf0Ln/SfW838+darxte696/yVsxduNbO/bzH79/rf
+334yXi3H62055gN8e47/vwP5ncgTxr0b+T3I74Xvg++HH4BPwCP8IPwQ5vMw
+8kfgR+HH4MfhJzD+k8dV+/UU8qeRP3NY5/Ms8ufgk3CO41dZ8zsVXWF7Hjls
+LyCH7UXksL2EHLaXkcP2CnLYXkUua79fQw7b68hhOx3Hq6eRv4F62M6g/gzy
+N1EP21vIYZuiM1xhh+1t1MuaL3KH7SzqZdXLx/Pqsp73d1APV9hhexf1cIUd
+tvdQD1fYYXsf9XCFHbYPUA9X+dhPl/X5/zA6w1VWvaz+H6E/XGGH7WPUwxV2
+2D5BPVxhh+1T1MMVdtg+Q72s5xe5I7fPUQ9X2GE7F8fL52Je5ePz4sitRCc4
+y0d9kfV8IG+od7jD9gX6w1k+1ldk9ZfVH/UOd9jOoz+c4QJXuMn6vCDvsH2J
+/nCGC1zlo19D7nDH/fYV+sMZLrKeb+QNdtzfZb1/LsQ8yeqPvMg6f1nnj9yR
+d4xvX0cnOMMFrrL2X1Z/uON+uxjzdDHmGXlBXmXtP+xwh+2b6ARnuMjqLx/z
+a7Dj/o7cvo15ktUfLnCFG8Zz5B2276KTrP2Xtf/IK/KG3JF3Wd9fLsU8XYp5
+lrV+Wf1R32CHO8a37+P4Cc5wgSvcYJd1/rLO/3KcT7oc8yzr8y+rP9xgR31H
+bj9EJzjDBa5wgx3usF1BfzjDRT72qyJvsp4/5B22OXqAEzzCWT76TcgLPMMV
+XuCG8VdZzzfyDXmXj/3akdvVWD9cjXlCPiLPyCfkBfmMvMrH/BZZ64dX2DH+
+hrzDO2w/Rg9wgkc4wxNcZK0feYUXuMEr7Bh/k3X+ss4f9fZT9AAneIQzPMn6
+viwf85llvb9Rv8ANXmGHN7jDO2w/Rw9wgkc4wxNcZJ2/rOcfXnB/Q77K+j2D
+fEPeMZ8dtmux33At5gke4QxPGK8gn+EKL3DDeKus9x/yDfUd3mH7JXqAEzzC
+GZ7gAs9whRe4ycd5rrLWj3xDfZeP/dlRb7/G+kHW+pGPyDM8yTp/5DNc4QVu
+8Ao7vMEd89+R22/RA5zgEc7wBBd4hiu8yPo9J+vzDzvu3zBeh3fYfo8e4ASP
+cIYnWecv6/0v6/sb8gVuGG9FP4c3uMM7bH9ED3CCR1m/T+RjvpOs9SOfUV8x
+/gI3eIUd3uAO75ifXY/zG67HPMlaP/KMfIILPMMVXuAm6/2H+TrmsyHv8I77
+7c/Yb4ATPMIZnuACz3CFF7jBK+zwBnd4l7X+G8dV538j5gn5CGf5OJ9J1vrh
+Ga7wAjfMZ0Xu8Ib5dOQ7bDfj/cPNmCd4hDM8wQWe4QovcMP8VuQOb3CHd9j+
+ih5knb+s85f1/kM+/e9/ACki3wg=
+           "]],
+          FontSize->Medium]}}, {}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{True, True},
+      AxesLabel->{None, None},
+      AxesOrigin->{0, 0.8170000000000001},
+      BaseStyle->{FontSize -> Medium},
+      DisplayFunction->Identity,
+      Frame->{{True, False}, {True, False}},
+      FrameLabel->{{
+         FormBox["\"lake\"", TraditionalForm], None}, {
+         FormBox["\"time, days\"", TraditionalForm], None}},
+      FrameTicks->{{{{1, 
+           FormBox["\"A\"", TraditionalForm]}, {2, 
+           FormBox["\"B\"", TraditionalForm]}, {3, 
+           FormBox["\"C\"", TraditionalForm]}, {4, 
+           FormBox["\"D\"", TraditionalForm]}}, {{1, 
+           FormBox["\"A\"", TraditionalForm]}, {2, 
+           FormBox["\"B\"", TraditionalForm]}, {3, 
+           FormBox["\"C\"", TraditionalForm]}, {4, 
+           FormBox["\"D\"", TraditionalForm]}}}, {True, True}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      Method->{},
+      PlotRange->{{0, 500}, {0.8, 4.2}},
+      PlotRangeClipping->True,
+      PlotRangePadding->{{0, 0}, {0, 0}},
+      Ticks->{Automatic, Automatic}], {192., -116.80842387373012`}, 
+     ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}], InsetBox[
+     GraphicsBox[{
+       {Opacity[0], PointBox[{0., 0.6799999999999999}]}, {{}, 
+        {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+         0.6719999999999999], Thickness[Small]}], 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+          0.6719999999999999], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], {
+                InsetBox[
+                 GraphicsBox[
+                  GeometricTransformationBox[
+                   InsetBox[
+                    GraphicsBox[{
+                    Thickness[0.013849513184071773`], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                    Thickness[0.004069125468612129], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                    EdgeForm[
+                    CapForm["Butt"]], 
+                    EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                    EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                    FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                    DisplayFunction -> Identity, 
+                    DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                    ImageSize -> {73., 31.}, 
+                    PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}},
+                     AspectRatio -> Automatic}], {0, 0}, {
+                    Right, Bottom}, {-67.77867679387094, 0.5}], {{{0., 0.}}}],
+                   PlotRange -> {{0, -67.}, {0, 0.5}}, AspectRatio -> Full, 
+                  ImagePadding -> None], {-67., 0.75}, {Left, Bottom}, {67., 
+                 0.5}, {{1, 0}, {0, 1}}], {
+                 Opacity[0], 
+                 PointBox[{0., 1.25}]}}},
+              
+              ImageSizeCache->{{267.620916087844, 
+               332.17606441999243`}, {-75.94522011347851, \
+-46.10472164740643}}],
+             StatusArea[#, 67]& ,
+             TagBoxNote->"67"],
+            StyleBox["67", {}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[67, {}], "Tooltip"]& ]}, 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+          0.6719999999999999], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], {
+                InsetBox[
+                 GraphicsBox[
+                  GeometricTransformationBox[
+                   InsetBox[
+                    GraphicsBox[{
+                    Thickness[0.013849513184071773`], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                    Thickness[0.004069125468612129], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                    EdgeForm[
+                    CapForm["Butt"]], 
+                    EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                    EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                    FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                    DisplayFunction -> Identity, 
+                    DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                    ImageSize -> {73., 31.}, 
+                    PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}},
+                     AspectRatio -> Automatic}], {0, 0}, {
+                    Right, Bottom}, {-67.77867679387094, 0.5}], {{{0., 0.}}}],
+                   PlotRange -> {{0, -36.}, {0, 0.5}}, AspectRatio -> Full, 
+                  ImagePadding -> None], {-36., 1.75}, {Left, Bottom}, {36., 
+                 0.5}, {{1, 0}, {0, 1}}], {
+                 Opacity[0], 
+                 PointBox[{0., 2.25}]}}},
+              
+              ImageSizeCache->{{296.21359665943504`, 
+               332.1885751664733}, {-129.30721397776688`, \
+-99.46671551169477}}],
+             StatusArea[#, 36]& ,
+             TagBoxNote->"36"],
+            StyleBox["36", {}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[36, {}], "Tooltip"]& ]}, 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+          0.6719999999999999], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], {
+                InsetBox[
+                 GraphicsBox[
+                  GeometricTransformationBox[
+                   InsetBox[
+                    GraphicsBox[{
+                    Thickness[0.013849513184071773`], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                    Thickness[0.004069125468612129], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                    EdgeForm[
+                    CapForm["Butt"]], 
+                    EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                    EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                    FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                    DisplayFunction -> Identity, 
+                    DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                    ImageSize -> {73., 31.}, 
+                    PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}},
+                     AspectRatio -> Automatic}], {0, 0}, {
+                    Right, Bottom}, {-67.77867679387094, 0.5}], {{{0., 
+                   0.}}, {{-67.77867679387094, 0.}}, {{-135.5573535877419, 
+                   0.}}, {{-203.33603038161283`, 0.}}, {{-271.1147071754838, 
+                   0.}}}], PlotRange -> {{0, -326.}, {0, 0.5}}, AspectRatio -> 
+                  Full, ImagePadding -> None], {-326., 2.75}, {
+                 Left, Bottom}, {326., 0.5}, {{1, 0}, {0, 1}}], {
+                 Opacity[0], 
+                 PointBox[{0., 3.25}]}}},
+              
+              ImageSizeCache->{{30.76593969938949, 
+               332.3726895131248}, {-182.66920784205521`, \
+-152.82870937598312`}}],
+             StatusArea[#, 326]& ,
+             TagBoxNote->"326"],
+            StyleBox["326", {}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[326, {}], "Tooltip"]& ]}, 
+         {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+          0.6719999999999999], Thickness[Small]}], 
+          TagBox[
+           TooltipBox[
+            TagBox[
+             DynamicBox[{
+               FEPrivate`If[
+                CurrentValue["MouseOver"], 
+                EdgeForm[{
+                  GrayLevel[0.5], 
+                  AbsoluteThickness[1.5], 
+                  Opacity[0.66]}], {}, {}], {
+                InsetBox[
+                 GraphicsBox[
+                  GeometricTransformationBox[
+                   InsetBox[
+                    GraphicsBox[{
+                    Thickness[0.013849513184071773`], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                    Thickness[0.004069125468612129], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                    EdgeForm[
+                    CapForm["Butt"]], 
+                    EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                    EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                    StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                    FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                    DisplayFunction -> Identity, 
+                    DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                    ImageSize -> {73., 31.}, 
+                    PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}},
+                     AspectRatio -> Automatic}], {0, 0}, {
+                    Right, Bottom}, {-67.77867679387094, 0.5}], {{{0., 
+                   0.}}, {{-67.77867679387094, 0.}}}], 
+                  PlotRange -> {{0, -72.}, {0, 0.5}}, AspectRatio -> Full, 
+                  ImagePadding -> None], {-72., 3.75}, {Left, Bottom}, {72., 
+                 0.5}, {{1, 0}, {0, 1}}], {
+                 Opacity[0], 
+                 PointBox[{0., 4.25}]}}},
+              
+              ImageSizeCache->{{263.25112889887765`, 
+               332.20108591295417`}, {-236.03120170634355`, \
+-206.19070324027146`}}],
+             StatusArea[#, 72]& ,
+             TagBoxNote->"72"],
+            StyleBox["72", {}, StripOnInput -> False]],
+           Annotation[#, 
+            Style[72, {}], "Tooltip"]& ]}}, {}, {}}, {}, {}, {}},
+      AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+      Axes->{False, False},
+      AxesLabel->{None, None},
+      AxesOrigin->{0., 0.6799999999999999},
+      BaseStyle->{FontSize -> Medium},
+      CoordinatesToolOptions:>{"DisplayFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+          Identity[
+           Part[#, 1]], 
+          Identity[
+           Part[#, 2]]}& )},
+      Frame->{True, False, False, True},
+      FrameLabel->{{None, 
+         FormBox["\"lake\"", TraditionalForm]}, {
+         FormBox["\"fish caught\"", TraditionalForm], None}},
+      FrameTicks->{{{{1, 
+           FormBox["\"A\"", TraditionalForm]}, {2, 
+           FormBox["\"B\"", TraditionalForm]}, {3, 
+           FormBox["\"C\"", TraditionalForm]}, {4, 
+           FormBox["\"D\"", TraditionalForm]}}, {{1, 
+           FormBox["\"A\"", TraditionalForm]}, {2, 
+           FormBox["\"B\"", TraditionalForm]}, {3, 
+           FormBox["\"C\"", TraditionalForm]}, {4, 
+           FormBox["\"D\"", TraditionalForm]}}}, {{{-100, 
+           FormBox["100", TraditionalForm]}, {-200, 
+           FormBox["200", TraditionalForm]}, {-300, 
+           FormBox["300", TraditionalForm]}, {-400, 
+           FormBox["400", TraditionalForm]}, {-500, 
+           FormBox["500", TraditionalForm]}, {-600, 
+           FormBox["600", TraditionalForm]}, {-700, 
+           FormBox["700", TraditionalForm]}, {-800, 
+           FormBox["800", TraditionalForm]}, {-900, 
+           FormBox["900", TraditionalForm]}, {-1000, 
+           FormBox["1000", TraditionalForm]}}, {{-100, 
+           FormBox["100", TraditionalForm]}, {-200, 
+           FormBox["200", TraditionalForm]}, {-300, 
+           FormBox["300", TraditionalForm]}, {-400, 
+           FormBox["400", TraditionalForm]}, {-500, 
+           FormBox["500", TraditionalForm]}, {-600, 
+           FormBox["600", TraditionalForm]}, {-700, 
+           FormBox["700", TraditionalForm]}, {-800, 
+           FormBox["800", TraditionalForm]}, {-900, 
+           FormBox["900", TraditionalForm]}, {-1000, 
+           FormBox["1000", TraditionalForm]}}}},
+      GridLines->{None, None},
+      GridLinesStyle->Directive[
+        GrayLevel[0.5, 0.4]],
+      PlotRange->{{All, All}, {All, All}},
+      PlotRangePadding->{{
+         Scaled[0.05], 
+         Scaled[0.02]}, {
+         Scaled[0.02], 
+         Scaled[0.02]}},
+      Ticks->{
+        Charting`FindScaledTicks[
+         Charting`FindTicks[{-1, 0}, {1, 0}], {Identity, Identity}], None}], {576., -116.80842387373012`},
+      ImageScaled[{0.5, 0.5}], {360., 222.49223594996212`}]}, {}},
+  ContentSelectable->True,
+  ImageSize->800,
+  PlotRangePadding->{6, 5}]], "Output",
+ CellChangeTimes->{{3.6622168366892385`*^9, 3.6622168759484844`*^9}, 
+   3.6622340004969525`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"gFinal", "=", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"GraphicsColumn", "[", 
+      RowBox[{"{", 
+       RowBox[{"g1", ",", "g2"}], "}"}], "]"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "800"}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6622168999638577`*^9, 3.6622169731390433`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<metropolisHastings_metropolisFish.pdf\>\"", ",", "gFinal"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.662217006973979*^9, 3.662217026036069*^9}, {
+  3.662218208313691*^9, 3.6622182085607057`*^9}}],
+
+Cell[BoxData["\<\"metropolisHastings_metropolisFish.pdf\"\>"], "Output",
+ CellChangeTimes->{
+  3.662217026891118*^9, 3.662218209704771*^9, {3.662218398777585*^9, 
+   3.66221840568198*^9}, 3.662234016676878*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"gOther", "=", 
+  RowBox[{"BarChart", "[", 
+   RowBox[{"lSize", ",", 
+    RowBox[{"BarOrigin", "\[Rule]", "Right"}], ",", 
+    RowBox[{"BarOrigin", "\[Rule]", "Right"}], ",", 
+    RowBox[{"ChartElements", "\[Rule]", "aFish"}], ",", 
+    RowBox[{"BarSpacing", "\[Rule]", "1"}], ",", 
+    RowBox[{"Frame", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"True", ",", "False", ",", "False", ",", "True"}], "}"}]}], ",", 
+    RowBox[{"FrameTicks", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"xTicks", ",", "yTicks"}], "}"}]}], ",", 
+    RowBox[{"FrameLabel", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"\"\<lake\>\"", ",", "\"\<total fish\>\""}], "}"}]}], ",", 
+    RowBox[{"BaseStyle", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"FontSize", "\[Rule]", "Medium"}], "}"}]}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.6622175730733576`*^9, 3.662217627959497*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{
+   {Opacity[0], PointBox[{0., 0.6799999999999999}]}, {{}, 
+    {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+     0.6719999999999999], Thickness[Small]}], 
+     {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+      0.6719999999999999], Thickness[Small]}], 
+      TagBox[
+       TooltipBox[
+        TagBox[
+         DynamicBox[{
+           FEPrivate`If[
+            CurrentValue["MouseOver"], 
+            EdgeForm[{
+              GrayLevel[0.5], 
+              AbsoluteThickness[1.5], 
+              Opacity[0.66]}], {}, {}], {
+            InsetBox[
+             GraphicsBox[
+              GeometricTransformationBox[
+               InsetBox[
+                GraphicsBox[{
+                  Thickness[0.013849513184071773`], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                   Thickness[0.004069125468612129], StripOnInput -> False], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                   EdgeForm[
+                    CapForm["Butt"]], 
+                   EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                   EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                   FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                 DisplayFunction -> Identity, DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                  ImageSize -> {73., 31.}, 
+                  PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}}, 
+                  AspectRatio -> Automatic}], {0, 0}, {
+                Right, Bottom}, {-1.2474603090896497`, 0.5}], {{{0., 
+               0.}}, {{-1.2474603090896497`, 0.}}}], 
+              PlotRange -> {{0, -2.}, {0, 0.5}}, AspectRatio -> Full, 
+              ImagePadding -> None], {-2., 0.75}, {Left, Bottom}, {2., 
+             0.5}, {{1, 0}, {0, 1}}], {
+             Opacity[0], 
+             PointBox[{0., 1.25}]}}},
+          
+          ImageSizeCache->{{217.1325, 321.0375}, {50.31185572438126, 
+           80.38396933878612}}],
+         StatusArea[#, 2]& ,
+         TagBoxNote->"2"],
+        StyleBox["2", {}, StripOnInput -> False]],
+       Annotation[#, 
+        Style[2, {}], "Tooltip"]& ]}, 
+     {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+      0.6719999999999999], Thickness[Small]}], 
+      TagBox[
+       TooltipBox[
+        TagBox[
+         DynamicBox[{
+           FEPrivate`If[
+            CurrentValue["MouseOver"], 
+            EdgeForm[{
+              GrayLevel[0.5], 
+              AbsoluteThickness[1.5], 
+              Opacity[0.66]}], {}, {}], {
+            InsetBox[
+             GraphicsBox[
+              GeometricTransformationBox[
+               InsetBox[
+                GraphicsBox[{
+                  Thickness[0.013849513184071773`], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                   Thickness[0.004069125468612129], StripOnInput -> False], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                   EdgeForm[
+                    CapForm["Butt"]], 
+                   EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                   EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                   FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                 DisplayFunction -> Identity, DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                  ImageSize -> {73., 31.}, 
+                  PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}}, 
+                  AspectRatio -> Automatic}], {0, 0}, {
+                Right, Bottom}, {-1.2474603090896497`, 0.5}], {{{0., 0.}}}], 
+              PlotRange -> {{0, -1.}, {0, 0.5}}, AspectRatio -> Full, 
+              ImagePadding -> None], {-1., 1.75}, {Left, Bottom}, {1., 
+             0.5}, {{1, 0}, {0, 1}}], {
+             Opacity[0], 
+             PointBox[{0., 2.25}]}}},
+          
+          ImageSizeCache->{{267.31125000000003`, 320.99}, {-3.784295761491876,
+            26.287817852912973`}}],
+         StatusArea[#, 1]& ,
+         TagBoxNote->"1"],
+        StyleBox["1", {}, StripOnInput -> False]],
+       Annotation[#, 
+        Style[1, {}], "Tooltip"]& ]}, 
+     {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+      0.6719999999999999], Thickness[Small]}], 
+      TagBox[
+       TooltipBox[
+        TagBox[
+         DynamicBox[{
+           FEPrivate`If[
+            CurrentValue["MouseOver"], 
+            EdgeForm[{
+              GrayLevel[0.5], 
+              AbsoluteThickness[1.5], 
+              Opacity[0.66]}], {}, {}], {
+            InsetBox[
+             GraphicsBox[
+              GeometricTransformationBox[
+               InsetBox[
+                GraphicsBox[{
+                  Thickness[0.013849513184071773`], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                   Thickness[0.004069125468612129], StripOnInput -> False], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                   EdgeForm[
+                    CapForm["Butt"]], 
+                   EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                   EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                   FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                 DisplayFunction -> Identity, DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                  ImageSize -> {73., 31.}, 
+                  PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}}, 
+                  AspectRatio -> Automatic}], {0, 0}, {
+                Right, Bottom}, {-1.2474603090896497`, 0.5}], {{{0., 
+               0.}}, {{-1.2474603090896497`, 0.}}, {{-2.4949206181792993`, 
+               0.}}, {{-3.742380927268949, 0.}}, {{-4.989841236358599, 0.}}}],
+               PlotRange -> {{0, -6.}, {0, 0.5}}, AspectRatio -> Full, 
+              ImagePadding -> None], {-6., 2.75}, {Left, Bottom}, {6., 
+             0.5}, {{1, 0}, {0, 1}}], {
+             Opacity[0], 
+             PointBox[{0., 3.25}]}}},
+          
+          ImageSizeCache->{{15.417499999999961`, 
+           321.1325}, {-57.880447247365026`, -27.808333632960178`}}],
+         StatusArea[#, 6]& ,
+         TagBoxNote->"6"],
+        StyleBox["6", {}, StripOnInput -> False]],
+       Annotation[#, 
+        Style[6, {}], "Tooltip"]& ]}, 
+     {RGBColor[0.982864, 0.7431472, 0.3262672], EdgeForm[{Opacity[
+      0.6719999999999999], Thickness[Small]}], 
+      TagBox[
+       TooltipBox[
+        TagBox[
+         DynamicBox[{
+           FEPrivate`If[
+            CurrentValue["MouseOver"], 
+            EdgeForm[{
+              GrayLevel[0.5], 
+              AbsoluteThickness[1.5], 
+              Opacity[0.66]}], {}, {}], {
+            InsetBox[
+             GraphicsBox[
+              GeometricTransformationBox[
+               InsetBox[
+                GraphicsBox[{
+                  Thickness[0.013849513184071773`], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{72.203, 15.367}, {72.203, 9.206}, {59.965, 
+                    4.21}, {44.870999999999995`, 4.21}, {29.773, 4.21}, {
+                    17.535, 9.206}, {17.535, 15.367}, {17.535, 21.527}, {
+                    29.773, 26.523}, {44.870999999999995`, 26.523}, {59.965, 
+                    26.523}, {72.203, 21.527}, {72.203, 15.367}}}]}, 
+                   Thickness[0.004069125468612129], StripOnInput -> False], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}}}, {{{
+                    0.14800000000000002`, 30.475558999999997`}, {
+                    0.14800000000000002`, 0.25755900000000054`}, {
+                    30.081999999999997`, 17.538559}}}]}, 
+                   EdgeForm[
+                    CapForm["Butt"]], 
+                   EdgeForm[
+                    JoinForm[{"Miter", 4.}]], 
+                   EdgeForm[
+                    Thickness[0.004069125468612129]], StripOnInput -> False], 
+                  StyleBox[{
+                    
+                    FilledCurveBox[{{{1, 4, 3}, {1, 3, 3}, {1, 3, 3}, {1, 3, 
+                    3}}}, {{{65.512, 16.483999999999998`}, {65.512, 13.093}, {
+                    62.76200000000001, 10.347}, {59.375, 10.347}, {
+                    55.983999999999995`, 10.347}, {53.23800000000001, 
+                    13.093}, {53.23800000000001, 16.483999999999998`}, {
+                    53.23800000000001, 19.871000000000002`}, {
+                    55.983999999999995`, 22.621000000000002`}, {59.375, 
+                    22.621000000000002`}, {62.76200000000001, 
+                    22.621000000000002`}, {65.512, 19.871000000000002`}, {
+                    65.512, 16.483999999999998`}}}]}, 
+                   FaceForm[
+                    RGBColor[1., 1., 1., 1.]], StripOnInput -> False]}, {
+                 DisplayFunction -> Identity, DefaultBaseStyle -> {"Graphics", 
+                    Directive[
+                    EdgeForm[
+                    Directive[
+                    Thickness[Small], 
+                    Opacity[0.6719999999999999]]], 
+                    RGBColor[0.982864, 0.7431472, 0.3262672]]}, 
+                  ImageSize -> {73., 31.}, 
+                  PlotRange -> {{0., 72.204704}, {0., 30.702558999999997`}}, 
+                  AspectRatio -> Automatic}], {0, 0}, {
+                Right, Bottom}, {-1.2474603090896497`, 0.5}], {{{0., 
+               0.}}, {{-1.2474603090896497`, 0.}}}], 
+              PlotRange -> {{0, -2.}, {0, 0.5}}, AspectRatio -> Full, 
+              ImagePadding -> None], {-2., 3.75}, {Left, Bottom}, {2., 
+             0.5}, {{1, 0}, {0, 1}}], {
+             Opacity[0], 
+             PointBox[{0., 4.25}]}}},
+          
+          ImageSizeCache->{{217.1325, 
+           321.0375}, {-111.97659873323818`, -81.9044851188333}}],
+         StatusArea[#, 2]& ,
+         TagBoxNote->"2"],
+        StyleBox["2", {}, StripOnInput -> False]],
+       Annotation[#, 
+        Style[2, {}], "Tooltip"]& ]}}, {}, {}}, {}, {}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{False, False},
+  AxesLabel->{None, None},
+  AxesOrigin->{0., 0.6799999999999999},
+  BaseStyle->{FontSize -> Medium},
+  CoordinatesToolOptions:>{"DisplayFunction" -> ({
+      Identity[
+       Part[#, 1]], 
+      Identity[
+       Part[#, 2]]}& ), "CopiedValueFunction" -> ({
+      Identity[
+       Part[#, 1]], 
+      Identity[
+       Part[#, 2]]}& )},
+  Frame->{True, False, False, True},
+  FrameLabel->{{None, 
+     FormBox["\"lake\"", TraditionalForm]}, {
+     FormBox["\"total fish\"", TraditionalForm], None}},
+  FrameTicks->{{{{1, 
+       FormBox["\"A\"", TraditionalForm]}, {2, 
+       FormBox["\"B\"", TraditionalForm]}, {3, 
+       FormBox["\"C\"", TraditionalForm]}, {4, 
+       FormBox["\"D\"", TraditionalForm]}}, {{1, 
+       FormBox["\"A\"", TraditionalForm]}, {2, 
+       FormBox["\"B\"", TraditionalForm]}, {3, 
+       FormBox["\"C\"", TraditionalForm]}, {4, 
+       FormBox["\"D\"", TraditionalForm]}}}, {{{-10, 
+       FormBox["10", TraditionalForm]}, {-20, 
+       FormBox["20", TraditionalForm]}, {-30, 
+       FormBox["30", TraditionalForm]}, {-40, 
+       FormBox["40", TraditionalForm]}, {-50, 
+       FormBox["50", TraditionalForm]}, {-60, 
+       FormBox["60", TraditionalForm]}, {-70, 
+       FormBox["70", TraditionalForm]}, {-80, 
+       FormBox["80", TraditionalForm]}, {-90, 
+       FormBox["90", TraditionalForm]}, {-100, 
+       FormBox["100", TraditionalForm]}}, {{-10, 
+       FormBox["10", TraditionalForm]}, {-20, 
+       FormBox["20", TraditionalForm]}, {-30, 
+       FormBox["30", TraditionalForm]}, {-40, 
+       FormBox["40", TraditionalForm]}, {-50, 
+       FormBox["50", TraditionalForm]}, {-60, 
+       FormBox["60", TraditionalForm]}, {-70, 
+       FormBox["70", TraditionalForm]}, {-80, 
+       FormBox["80", TraditionalForm]}, {-90, 
+       FormBox["90", TraditionalForm]}, {-100, 
+       FormBox["100", TraditionalForm]}}}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  PlotRange->{{All, All}, {All, All}},
+  PlotRangePadding->{{
+     Scaled[0.05], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.02]}},
+  Ticks->{
+    Charting`FindScaledTicks[
+     Charting`FindTicks[{-1, 0}, {1, 0}], {Identity, Identity}], 
+    None}]], "Output",
+ CellChangeTimes->{{3.662217573955408*^9, 3.662217628605534*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<metropolisHastings_totalfish.pdf\>\"", ",", "gOther"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.6622176128906355`*^9, 3.662217643737399*^9}}],
+
+Cell[BoxData["\<\"metropolisHastings_totalfish.pdf\"\>"], "Output",
+ CellChangeTimes->{3.662217644203426*^9}]
+}, Open  ]]
+},
+WindowSize->{1366, 686},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (September 9, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 2076, 61, 132, "Input"],
+Cell[CellGroupData[{
+Cell[2659, 85, 3826, 104, 252, "Input"],
+Cell[6488, 191, 21000, 434, 278, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[27525, 630, 3681, 102, 252, "Input"],
+Cell[31209, 734, 21787, 448, 278, "Output"]
+}, Open  ]],
+Cell[53011, 1185, 342, 9, 31, "Input"],
+Cell[CellGroupData[{
+Cell[53378, 1198, 251, 5, 31, "Input"],
+Cell[53632, 1205, 210, 3, 31, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[53879, 1213, 884, 20, 52, "Input"],
+Cell[54766, 1235, 17577, 377, 239, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[72380, 1617, 197, 4, 31, "Input"],
+Cell[72580, 1623, 109, 1, 31, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
