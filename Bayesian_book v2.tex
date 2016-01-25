@@ -6037,7 +6037,7 @@ Where we have used Bayes' rule to get the first expression on the right-hand sid
 
 However, how can we do this in practice? Doesn't this mean that we need now to carry out an infinite number of calculations for each parameter value, in order to work out the ratio vs all other points? A suggestion might be to partition parameter space into a finite number of points, then only work out the ratio for those points. However, we have already seen in section \ref{sec:MCMC_discreteApproximation}, that as the complexity of our problem - indexed by the number of parameters - grows, we soon run into the issue that we have too many calculations to carry out. Clearly, we need a different way of carrying out this type of procedure, which we discuss in the next section.
 
-\subsection{The unnormalised posterior - a window onto the real deal}
+\subsection{The unnormalised posterior - a window onto the real deal}\label{sec:MCMC_unnormalisedPosteriorSampling}
 Before we proceed however, let's have a brief think about why the unnormalised posterior tells us everything we need to know about the posterior. Revisiting Bayes' rule we see that we can write:
 %
 \begin{equation}
@@ -6145,7 +6145,7 @@ The reader should now be familiar with the following concepts:
 \section{Problem set}
 \subsection{Prove that the inverse-transform sampler works!}\label{prob:MCMC_inverseSamplerProof}
 \subsection{Computationally investigate the die example}
-
+\subsection{Evaluate the mean and variance of the posterior for the BSE example}\label{sec:MCMC_problemBSE}
 
 \chapter{Metropolis}\label{chap:metropolisHastings}
 \section{Chapter mission statement}
@@ -6180,8 +6180,8 @@ How can Robinson achieve his goal of fishing each lake in proportion to its fish
 \begin{equation}
 r =
 \begin{cases}
-1 & , If\; S_{proposed} > S_{current}\\
- \frac{S_{proposed}}{S_{current}}& , If\; S_{proposed} \leq S_{current}
+1 & , If\; S_{proposed} \geq S_{current}\\
+ \frac{S_{proposed}}{S_{current}}& , If\; S_{proposed} < S_{current}
 \end{cases}
 \end{equation}
 %
@@ -6199,7 +6199,7 @@ Our algorithm appears to have worked! Robinson has fished each pond in rough pro
 \end{figure}
 
 \section{Prospecting for gold}
-You are employed as a contractor for a mining company, looking to map the amount of subterranean gold in the ground across a vast, lifeless desert. The desert is flat, and uninformative about the amount of gold present underneath (see figure \ref{fig:metropolisHastings_goldMineSimple}). However, fortunately you have a machine that is able to measure the magnetic field directly underneath, which varies in proportion to the total amount of gold below. Suppose the gold company has already determined that the area is rich with gold deposits, and is interested only in mapping the relative abundance of gold over the desert. Furthermore, they want to map areas with accuracy dependent on the total amount of gold present.
+You are employed as a contractor for a mining company, looking to map the amount of subterranean gold in the ground across a vast, lifeless desert. The desert is flat, and uninformative of the treasures that lie underneath (see figure \ref{fig:metropolisHastings_goldMineSimple}). However, fortunately you have a machine that is able to measure the magnetic field directly underneath, which varies in proportion to the total amount of gold below. Suppose the gold company has already determined that the area is rich with gold deposits, and is interested only in mapping the relative abundance of deposits over the desert. Furthermore, they want to map areas with accuracy dependent on the total amount of gold present.
 
 \begin{figure}
 \centering
@@ -6210,9 +6210,11 @@ You are employed as a contractor for a mining company, looking to map the amount
 
 How could we go about carrying out this mapping? One way would be simply to survey at say, 1km intervals, the level of magnetic field below. However, even at this modest resolution, we would be required to sample a million points. If instead we increased the precision to 100m, we would then be required to do 100 million samples. We'll die of thirst! There must be a quicker way to build an accurate map.
 
-Suppose we choose to start in a random location in the desert, and measure the magnetic field beneath. We then use a multivariate normal distribution centred on our current location, to pick a new spot on which to sample. We then measure the magnetic field there, and if it exceeds the value at the old site, we always move to the new location. If by contrast, the value is less than the current value, then we only move \textit{probabilistically} there, with probability given by the ratio of the new value to the old. To do this in practice, we compare the ratio with a randomly generated uniform value $p\sim U(0,1)$. If our ratio exceeds this value, then we move there, and we add the new sample to our current list. If it doesn't, then we move back to where we were, and add another sample at the old location.
+Suppose we choose to start in a random location in the desert, and measure the magnetic field beneath. We then use a multivariate normal distribution centred on our current location, to pick a new spot on which to sample. We then measure the magnetic field there, and if it exceeds the value at the old site, we always move to the new location, and we add the new (east,west) location to our list. If by contrast, the value is less than the current value, then we only move \textit{probabilistically} there, with probability given by the ratio of the new value to the old. To do this in practice, we compare the ratio with a randomly generated uniform value $p\sim U(0,1)$. If our ratio exceeds this value, then we move there, and we add the new (east,west) to our current list. If it doesn't, then we move back to where we were, and add our previous location to our list again.
 
-If we carry out this routine a large number of times, and look at the concentration of samples across the desert, we can obtain a map of the underground gold deposits, which is most detailed at those locations where gold deposits are greatest (see figure \ref{fig:metropolisHastings_miningGoldMetropolis}). Note in particular the increasing correspondence between the actual and sampled landscapes as the sample size increases. However, even after only 1,000 samples we are starting to build up a rough, yet usable map of the gold deposits below. Time to go relax in an oasis!
+If we carry out this routine a large number of times, and look at the concentration of sample points across the desert, we can obtain a map of the underground gold deposits. Note the somewhat indirect way that we have built this map, only using the measurements of magnetic field to determine our next (east,west) location. The density of above ground, (east,west), samples at a particular point determines the amount of gold below. This is different to the survey technique we mention above where we directly use the measured magnetic field below to build up the underground map, where the amount of gold below a particular above ground point is proportional to the field strength. 
+
+The constructed map through our sampling routine has an added benefit, which is that it most detailed at those locations where gold deposits are greatest (see figure \ref{fig:metropolisHastings_miningGoldMetropolis}). Note in particular the increasing correspondence between the actual and sampled landscapes as the sample size increases. However, even after only 1,000 samples we are starting to build up a rough, yet usable map of the gold deposits below. Time to go relax in an oasis!
 
 We have now illustrated in two settings - one discrete, the other continuous - how we can use a Metropolis algorithm to sample from an unnormalised density. Now we need to spend a little time defining this sampling scheme mathematically, as well as understanding under which conditions we achieve convergence. 
 
@@ -6223,32 +6225,224 @@ We have now illustrated in two settings - one discrete, the other continuous - h
 \end{figure}
 
 \section{Defining the Metropolis algorithm}\label{sec:metropolisHastings_definingMetropolis}
-\section{When does Metropolis work?}
-Michael Betancourt shifting of distributions over time. 
+We've illustrated the mechanism of the Metropolis algorithm via two (silly) practical examples, but now we need to spend a little time defining it fully. It shouldn't take too long, so bear with us; you'll be all the better for understanding its details!
 
-1. Ergodicity
-2. Detailed Balance
+Essentially, we imagine that we have some sort of posterior, which is known up to a proportion:
+%
+\begin{equation}
+p(\theta|data) \propto p(data|\theta \times p(\theta))
+\end{equation}
+%
+We would like to sample from this posterior, in order to build up an approximate map of its shape, and properties. For this example, we can imagine that $\theta$ is 1-dimensional, but note that the method outlined below is also applicable for a parameter space of \textit{any} number of dimensions.
 
-Distinction between ergodicity and geometric ergodicity. Standard ergodicity is simply the asymptotic condition, but places no guarantees on the rate. 
+\begin{figure}
+\centerline{\includegraphics[width=1.5\textwidth]{metropolisHastings_definingMetropolis.pdf}}
+\caption{\textbf{Comparing step accept/reject mechanisms, with top corresponding to $p_{accept}=1$, (a drunkard's random walk), middle has $p_{accept}=min(1,\frac{p(\theta_{new}|data)}{p(\theta_{current}|data)})$ corresponding to a Metropolis stepping algorithm, and bottom shows a Hillary stepper, which has $p_{accept}=1$ if and only if $p(\theta_{new}|data)>p(\theta_{current}|data)$}. Left hand plots blue lines are the path taken by each stepping algorithm over time, the histograms (left-middle) then show the binned samples, and the dashed-blue lines show the reconstructed posterior for each set of samples. The right-hand orange plot show the actual posterior, assumed to be the same in each case. \textbf{Align axes, add labels and titles.}}\label{fig:metropolisHastings_definingMetropolis}
+\end{figure}
+
+We imagine that we are able to do a random walk is posterior space, where each step we randomly propose a new location to which to step next, which is dependent on our current location. If we take this new location to be a sample from our posterior, we hope that if we take enough steps we will build up an approximate picture of the shape of our posterior from the local \textit{density} of samples around each point. However, if our random walk does not take account of the shape of the posterior - it is a simple random walk, we call a `drunkard's random walk' where we always move to our next proposed location - then we simply sample uniformly across parameter space (see top panels of figure \ref{fig:metropolisHastings_definingMetropolis}). The drunkard, in their stupor, pays no attention to the posterior shape, and hence returns samples that are not indicative of the posterior terrain.
+
+Clearly, if we want to generate more samples from higher density locations, then we need to take into account the shape/height of the posterior. So instead we choose a less random stepper, that \textit{only} steps to a proposed location if its height is greater than the current one. In memory of the mountaineer Edmund Hilary we call this one, a `Hillary random walk'. We see from the bottom panel of figure \ref{fig:metropolisHastings_definingMetropolis}, that a Hillary algorithm has the opposite problem to the drunkard, since they quickly ascend the posterior landscape, until they reach its peak. They then stay here forever, resulting in a reconstructed posterior that is increasingly biased towards this mode.
+
+Taking stock of the situation, we realise that what we would ideally want is an algorithm that pays \textit{just} the right amount of attention to the posterior shape: too little attention like the drunkard, and we get uniform sampling; too much, like Hillary, and we just get stuck on a mode forever more. It turns out that if we use the following decision making rule, then we get the perfect recipe:
+%
+\begin{equation}
+r =
+\begin{cases}
+1 & , If\; p(\theta|data)_{proposed} \geq p(\theta|data)_{current}\\
+ \frac{p(\theta|data)_{proposed}}{p(\theta|data)_{current}}& , If\; p(\theta|data)_{proposed} < p(\theta|data)_{current}
+\end{cases}
+\end{equation}
+%
+where $r$ represents the probability that we \textit{accept} the proposed point as our next sample value. This type of schema allows us to move both upwards and downwards in posterior space (see figure \ref{fig:metropolisHastings_walker} for a cartoon depiction of this algorithm), and ensures that we sample from a parameter set in relation to its \textit{relative} height. Note here, as we discussed in chapter \ref{chap:metropolisHastings}, this rule only requires the relative height of the posterior at each step, meaning that we can use the unnormalised posterior, composed only of the numerator of Bayes' rule (see section \ref{sec:MCMC_unnormalisedPosteriorSampling} for a more thorough explanation). This means that we can avoid the complication of calculating the denominator, and instead approximate all quantities of interest from our samples.
+
+As we can see in the middle panel of figure \ref{fig:metropolisHastings_definingMetropolis}, this sampling is midway between the extremes of the drunkard, and Hillary; resulting in some correlation in the values traced out over time, and leading to a reconstructed posterior that is much more similar to the real thing. 
+
+We have now described the basic Metropolis recipe, but have omitted an important element; we have not yet described how we should generate the proposal location! Don't worry however, as this element will be fully explained in section \ref{sec:metropolisHastings_conditionsForMetropolis}.
+
+\begin{figure}
+\centerline{\includegraphics[width=1.5\textwidth]{metropolisHastings_walker.pdf}}
+\caption{\textbf{Exploring a landscape using a Metropolis algorithm.} Note the time here is computational runtime, and two of the plots are within the same computational time step ($t=2,t=4$). Blue arrows indicate the current proposed step; grey figures illustrate a proposed step which is probabilistic, black are deterministic.}\label{fig:metropolisHastings_walker}
+\end{figure}
+
+\section{When does Metropolis work?}\label{sec:metropolisHastings_conditionsForMetropolis}
+We now turn to describing the conditions under which the Metropolis algorithm produces samples that are representative of the posterior. One of the main issues here is that, we would ideally like to initialise our Markov Chain by selecting a start point by independently sampling from the posterior density. This way we could be sure that we would instantly start to generate samples that would be representative of the posterior. However, we can't generate independent samples from the posterior; if we could then we wouldn't need to do MCMC in the first place! (See section \ref{sec:MCMC_independentSamplingDifficult} for a refresher of this theory, if you need it.) 
+
+What this means is that in practical MCMC, we have to start our Markov Chains, at some random points in parameter space, which \textit{won't} generally be equivalent to an independent sample from the posterior. Often we may choose to start our chains in areas of higher density, so that they don't meander around in flat stretches of posterior space for too long. We then hope, by repeatedly doing Metropolis steps, that our distribution of sample values converges to the posterior (see figure \ref{fig:metropolisHastings_convergenceToPosterior}).
+
+\begin{figure}
+\centerline{\includegraphics[width=1.5\textwidth]{metropolisHastings_convergenceToPosterior.pdf}}
+\caption{\textbf{Convergence to a posterior in MCMC.} We start here with a uniform distribution over possible starting values of each Markov Chain (top-left), and as we repeatedly apply the transition operator, we eventually converge to a stationary distribution that is the posterior\footnote{This figure was inspired by the excellent lectures of Michael Betancourt here: \url{https://www.youtube.com/watch?v=pHsuIaPbNbY}.}.}\label{fig:metropolisHastings_convergenceToPosterior}
+\end{figure}
+
+Mathematically, we can firm-up what exactly we mean by this convergence to the posterior. If you want, you can skip section \ref{sec:metropolisHastings_mathematicalMCMC}, since it will be quite mathematical, and conceptual. We are essentially just going to describe how Metropolis works mathematically, and the rest of the material in this book can be read without any contingency on this material. 
+
+\subsection{Mathematical underpinnings of MCMC}\label{sec:metropolisHastings_mathematicalMCMC}
+Essentially, we suppose that we start with a given distribution of possible starting values of the chains, $\pi(\theta)$, and in each step we apply a transition operator\index{transition operator} $T(\theta,\theta')$, which represents the two steps - proposal then acceptance/rejection - of the Metropolis algorithm, but can also be used to represent whatever type of algorithm we choose for our Markov Chain transitions\cite{chib1995understanding}. It is a conditional probability distribution itself, often called the transition kernel, which specifies the probability of a chain transitioning from a parameter value $\theta$, to another value $\theta'$. We need to apply this operator across all possible parameter values, which means we are required to do an integral:
+%
+\begin{equation}
+\pi(\theta') = \int\limits_{\theta\in\Theta} \mathrm{d}\theta \; T(\theta,\theta') \pi(\theta) 
+\end{equation}
+%
+where $\pi(\theta')$ is the distribution of the Markov chain values, after one step. The differential $\mathrm{d}\theta$ is put first to make the following integrals easier to read. The idea is that, we hope to design this transition operator such that, if we repeatedly apply it, we eventually end up with the posterior:
+%
+\begin{equation}
+\begin{align}
+\pi(\theta'') &= \int\limits_{\theta'\in\Theta}\mathrm{d}\theta' T(\theta',\theta'') \int\limits_{\theta\in\Theta}\mathrm{d}\theta\; T(\theta,\theta') \pi(\theta)\\
+\pi(\theta''') &=  \int\limits_{\theta''\in\Theta}\mathrm{d}\theta'' T(\theta'',\theta''') \int\limits_{\theta'\in\Theta}\mathrm{d}\theta' T(\theta',\theta'') \int\limits_{\theta\in\Theta}\mathrm{d}\theta \; T(\theta,\theta') \pi(\theta)\\ 
+&.\\
+&.\\
+&.\\
+p(\theta|data) &\approx  \int\limits_{\theta'^n\in\Theta}\mathrm{d}\theta'^n T(\theta'^n,\theta'^{n-1})\;... \int\limits_{\theta\in\Theta} \mathrm{d}\theta \; T(\theta,\theta') \pi(\theta)
+\end{align}
+\end{equation}
+%
+where $\theta'^n$ represents the parameter space for the nth step of the Markov Chain stepping algorithm, and is assumed to be a pretty big number! This repeated application of the transition operator is illustrated graphically in figure \ref{fig:metropolisHastings_convergenceToPosterior}, by a shifting of distributions of our chain over time, converging towards the desired posterior distribution. We say that the limiting distribution here is the stationary \index{stationary distribution}, or invariant \index{invariant distribution} distribution.
+
+
+\subsection{Desirable qualities of a Markov Chain}
+It turns out that, so long as we design our Markov Chains such that they satisfy certain properties, then we can be assured that (at least in the limit of an infinitely-long Markov Chain; see section \ref{sec:metropolisHastings_geometricConvergenceMarkovChain}), the eventual distribution of our Markov Chain will converge to the posterior. But, what are those properties?
+
+To mathematically prove that a Markov Chain converges to the posterior is normally done in two steps \cite{gelman2013bayesian}: the first step proves that the chain converges to a unique stationary distribution; the second proves that this stationary distribution is the posterior. The first of these conditions is usually, at least for continuous parameter models, trivial, and requires us to design our Markov Chain such that it has the following properties:
+%
+\begin{itemize}
+\item Irreducible/ergodic\index{irreducible markov chain}\index{ergodic markov chain} - this means that all parts of posterior parameter space can eventually be reached from all others by the chain (see the left hand panel of figure \ref{fig:metropolisHastings_reduciblePeriodic} for a counter-example).
+\item Aperiodic\index{aperiodic markov chain} - this just means that the chain does not perfectly cycle (see the right hand panel of figure \ref{fig:metropolisHastings_reduciblePeriodic} for a counter-example). 
+\end{itemize}
+%
+The above two conditions tend to be trivially satisfied by majority of Markov Chains that we consider in Bayesian statistics, meaning that we don't need to think of these when we design our sampler. However, in order to assure that the stationary distribution of a given Markov Chain corresponds to the posterior, we need to take care, since it would be easy to fall foul here. This design decision is the subject of section \ref{sec:metropolisHastings_detailedBalance}.
+
+
+\begin{figure}
+\centerline{\includegraphics[width=1.5\textwidth]{metropolisHastings_reduciblePeriodic.pdf}}
+\caption{\textit{Examples of reducible\index{reducible markov chain} (left) and periodic chains\index{reducible markov chain} (right).} Left: the fish once they enter the net cannot escape, and visit other parts of the ocean \cite{gebali2008}. Right: a rollercoaster is constrained to (hopefully!) cycle forever more on its track.}\label{fig:metropolisHastings_reduciblePeriodic}
+\end{figure}
+
+
+\subsection{Detailed balance}\label{sec:metropolisHastings_detailedBalance}
+We suppose that we can think of our choice of where to consider next, as coming from a conditional probability distribution, $J(\theta^{t+1}|\theta^t)$, which we call the \textit{jumping} or \textit{proposal} distribution\cite{gelman2013bayesian}.\index{jumping distribution}\index{proposal distribution} Here $\theta^t$ corresponds to the sampled value of our parameter at time $t$, in other words, the current value of our Markov Chain. (We can relate the proposal distribution back to the transition distribution we introduced in section \ref{sec:metropolisHastings_mathematicalMCMC} by summing the probability we reject the proposal, and stay where we are currently, vs accepting the proposal and moving to the new spot.)
+
+The idea is that what we would like to do is design our Markov Chain, which is characterised by this proposal distribution such that, if it reaches a distribution corresponding to the posterior, it stays there. In other words, the stationary distribution (the limiting distribution of the Markov Chain) \textit{is} the posterior.
+
+The Metropolis algorithm is characterised by a \textit{symmetric} proposal distribution, meaning that we are as likely to propose $\theta_b$ from $\theta_a$, as we are going in the reverse direction; to $\theta_a$ from $\theta_b$. Mathematically, this means that $J(\theta_a|\theta_b)=J(\theta_b|\theta_a)$. In what follows, we show that this assumption is sufficient to prove that the Metropolis algorithm converges (for infinite sample sizes) to the posterior distribution.
+
+To do this, we follow the derivation in \cite{gelman2013bayesian}, in imagining that we were able to generate two samples from our posterior, $\theta_a\sim p(\theta|data)$, and $\theta_b\sim p(\theta|data)$, where $p(\theta_b|data)\geq p(\theta_a|data)$. We can then determine the unconditional probability density of a transition in either direction; from $\theta_a\rightarrow\theta_b$:
+%
+\begin{equation}
+p(\theta^{t}=\theta_a,\theta^{t+1}=\theta_b) = p(\theta_a|data)\times J(\theta_b|\theta_a)
+\end{equation}
+%
+and since we assume the posterior density is higher at $\theta_b$ than $\theta_a$, we use the Metropolis rule that we \textit{deterministically} (ie with probability 1) move to $\theta_b$. Now considering a movement in the opposite direction:
+%
+\begin{equation}
+\begin{align}
+p(\theta^{t} = \theta_b,\theta^{t+1}=\theta_a) &= p(\theta_b|data)\times J(\theta_a|\theta_b)\\
+&= p(\theta_b|data) \times J(\theta_a|\theta_b) \frac{p(\theta_a|data)}{p(\theta_b|data)}\\
+&= p(\theta_a|data)\times J(\theta_a|\theta_b)\\
+&= p(\theta_a|data)\times J(\theta_b|\theta_a)=p(\theta^{t}=\theta_a,\theta^{t+1}=\theta_b)
+\end{align}
+\end{equation}
+%
+where we obtained the second line from the first by using the Metropolis acceptance rule, where we accept a lower value of the posterior in relation to its ratio to the current value. The final line is obtained by assuming the symmetry of the proposal distribution, in line with the Metropolis algorithm. Thus we have proved that the joint density of a transition from $\theta_a\rightarrow\theta_b$ is the same as that for $\theta_b\rightarrow\theta_a$. This means that our Markov Chain satisfies a principle called \textit{detailed balance}\index{detailed balance}, meaning that at equilibrium our each transition should have a probability equal to its inverse process. 
+
+But how does this help us? Well, since we know that (repeating what we have above, but in longhand notation):
+%
+\begin{equation}
+\begin{align}
+p(\theta^{t} = \theta_b,\theta^{t+1}=\theta_a) &=  p(\theta^t=\theta_b|data)\times J(\theta_a|\theta_b)\\
+&= p(\theta^t=\theta_a|data)\times J(\theta_b|\theta_a)
+\end{align}
+\end{equation}
+%
+we can determine the marginal distribution of our the next value of our algorithm $\theta^{t+1}$, by integrating out $\theta^t=\theta_a$ in the above:
+%
+\begin{equation}
+\begin{align}
+p(\theta^{t+1}=\theta_a) &=  \int\limits_{\theta_b\in\Theta} p(\theta^t=\theta_a|data)\times J(\theta_b|\theta_a) \mathrm{d}\theta_b\\
+&= p(\theta^t=\theta_a|data)\int\limits_{\theta_b\in\Theta}J(\theta_b|\theta_a) \mathrm{d}\theta_b\\
+&= p(\theta^t=\theta_a|data)
+\end{align}
+\end{equation}
+%
+where we have obtained the last line from the penultimate by remembering that the jumping distribution \textit{is} a proper probability distribution, and hence must integrate to 1. What the above expression tells us is that the probability density for the next step of the Markov Chain is the same as the current density, which equals the posterior. Thus if we reach the posterior density (which we will do asymptotically since our change is ergodic and aperiodic), then our Markov Chain will stay there!  Essentially, this amounts to requiring that for our Markov Chain at equilibrium are \textit{reversible}. This means that if we run our chain backwards, we would have the same probability densities. This will prove to be useful in practical implementations of Hamiltonian Monte Carlo, which we discuss in chapter \ref{chap:HMC}.
+
+\subsection{The intuition behind the acceptance/rejection rule of Metropolis, and detailed balance}\index{detailed balance}
+Only one acceptance/rejection rule works with the symmetric proposal distribution of the Metropolis algorithm. This is the rule which states that we \textit{always} move to a new parameter value if the posterior there is higher, and that we move \textit{probabilistically} if its value is lower, in exact accordance with the relative height of the proposed location's posterior density to the current value. Any other rule will not work!
+
+We can think about all (reasonable) rules as existing as a spectrum between, at one extreme, the case where we \textit{always} accept; according the drunkard's walk we discussed in section \ref{sec:metropolisHastings_definingMetropolis}. At the other extreme, we have the Hillary walk, that \textit{only} accepts a new parameter value if its posterior is higher. Whilst these are the extremes, we can think about rules where the probability of acceptance is given by:
+%
+\begin{equation}
+r =
+\begin{cases}
+1 & , If\; p(\theta|data)_{proposed} \geq p(\theta|data)_{current}\\
+ \frac{p(\theta|data)_{proposed}}{p(\theta|data)_{current}}\pm \epsilon & , If\; p(\theta|data)_{proposed} < p(\theta|data)_{current}
+\end{cases}
+\end{equation}
+%
+where $\epsilon>0$ is a small number. If we consider the `+' case, this will mean that we are towards the drunkard's walk end of the spectrum, and our sampler will give a little too much weight to lower posterior values. By contrast, the `-' case does the opposite, and gives a little too much weight to the peaks of the posterior. As figure \ref{fig:metropolisHastings_knifeEdge} illustrates, we can view the `just-right' Metropolis rule as being the knife-edge case on the spectrum of rules, where some measure of distance between our sampling approximation vs the actual posterior goes to zero (at least for infinitely long Markov Chains).
+
+\begin{figure}
+\centerline{\includegraphics[width=0.5\textwidth]{metropolisHastings_knifeEdge.pdf}}
+\caption{\textbf{How the choice of acceptance/rejection rule determines the distance of our sampler's distribution from the posterior.} Note this is a conceptual representation, and hence should not be interpreted quantitatively!}\label{fig:metropolisHastings_knifeEdge}
+\end{figure}
+
+When we get this rule just-right, we have seen in section \ref{sec:metropolisHastings_detailedBalance} that our Markov Chain satisfies the principle of \textit{detailed balance} when it reaches equilibrium. This means that for any two points in the stationary distribution, the probability of transition from one location to the other is the same,\textit{both} ways. 
+
+What is the intuition behind this seemingly innocuous result? Imagine that you work as a conservationist for a national park, where unfortunately a chemical spill has just released a load of toxic waste into a lake (see figure \ref{fig:metropolisHastings_swimmingDetailedBalance}). To begin with the chemical is relatively localised to the site where the spill occurred in the portion of the lake not used for swimming. At this point in time, there is net flux of the chemical from this side \textit{into} the swimming side. This diffusion process continues until the chemical is evenly distributed throughout the whole body of water (equilibrium). At this point, the flux of chemical from non-swimming into the swimming zone are the same; in other words the net flux is \textit{zero}. This maintains roughly the same number of chemical particles on either side of the barrier.
+
+\begin{figure}
+\centerline{\includegraphics[width=1.0\textwidth]{metropolisHastings_swimmingDetailedBalance.pdf}}
+\caption{\textbf{The principle of detailed balance explained through swimming.} Immediately after a chemical spill (left), the chemical particles are relatively localised in the non-swimming zone, and there is a net flux of particles from this area into the swimming area. After some time, the chemical particles reach equilibrium, with roughly similar numbers of them in each zone, and a \textit{net} flux of zero from one zone into the other. Hint: we can think of the chemical particles as representing probability mass. \textbf{Add detail to this cartoon, with people swimming, fish etc.}}\label{fig:metropolisHastings_swimmingDetailedBalance}
+\end{figure}
+
+We can think of the chemical as representing probability mass. In the beginning there is considerable flow of probability from place to place, as our Markov Chains traverse posterior space; uncovering new peaks, and crossing undiscovered deep valleys. In order to reach equilibrium, meaning that we have a stationary distribution, we require that the flux of probability from one place to another - like that of the swimming/non-swimming areas above - is exactly balanced. Luckily enough for us as statisticians (not swimmers), this is what the principle of detailed balance exactly stipulates; ensuring that our stationary distribution stays that way!
+
+\subsection{Proving things we know to be true: Mathematics revisited}
+We couldn't resist using our mathematical notation that we discussed in section \ref{sec:metropolisHastings_mathematicalMCMC}, to illustrate the process of design for Markov Chains aimed at sampling from the posterior density. You can skip this section if you like, since its material is not new, however if you can hold on to your lunch, and stomach this interlude, then we believe you'll find it worth it!
+
+One way of looking at MCMC, is that we are seeking a transition operator (which characterises our Markov Chains), which when applied to the posterior distribution, results in the posterior distribution\cite{chib1995understanding}. Otherwise, if we our chain by chance manages to find the posterior, its next step will move it away again! Once we've found the posterior we want to stay there, so we want to choose a Markov Chain with a transition operator that satisfies:
+%
+\begin{equation}
+p(\theta_{t+1}=\theta|data)= \int\limits_{\theta'\in\Theta} \mathrm{d}\theta' p(\theta_t=\theta'|data) T(\theta',\theta)
+\end{equation} 
+%
+However, if our chain satisfies the principle of detailed balance for a stationary distribution equal to the posterior, then the probability flux from $\theta'\rightarrow\theta$ must be exactly matched by a flux in the opposite direction, meaning that $p(\theta_t=\theta') T(\theta,\theta') = p(\theta_t=\theta) T(\theta',\theta)$. Using this we find that:
+%
+\begin{equation}
+\begin{align}
+p(\theta_{t+1}=\theta|data) &= \int\limits_{\theta'\in\Theta} \mathrm{d}\theta' p(\theta_t=\theta'|data) T(\theta',\theta)\\
+&=\int\limits_{\theta'\in\Theta} \mathrm{d}\theta' p(\theta_t=\theta|data) T(\theta,\theta')\\
+&=p(\theta_t=\theta|data) \int\limits_{\theta'\in\Theta} \mathrm{d}\theta' T(\theta,\theta')\\
+&= p(\theta_t=\theta|data)
+\end{align}
+\end{equation}
+%
+In other words, the distribution remains the same as it was before we applied the transition operator - at the posterior!
 
 \section{Efficiency of convergence: the importance of the proposal distribution}
 Man walking in a desert looking for mountains continued.
 
+Jumping distribution that changes over time.
+
 The annoyance of having to pick a step length. Bob's too far too near vs dependence.
+
+\subsection{Geometric convergence of Markov Chains}\label{sec:metropolisHastings_geometricConvergenceMarkovChain}
+
+Distinction between ergodicity and geometric ergodicity. Standard ergodicity is simply the asymptotic condition, but places no guarantees on the rate. 
 
 \section{Judging convergence}\label{sec:MetropolisHastings_convergence}
 
+Bob's bees example.
+
 \section{Effective sample size revisited}\label{sec:MH_effectiveSampleSizeRevisited}\index{effective sample size}
 Central Limit Theorem accuracy proportional to 1/sqrt(n). Choose neff so that mcmc central limit accuracy proportional to 1/sqrt(neff). cf Bob's video. Also fast fourier transforms to do this.
-
-\section{As a subset of Gibbs and vice versa}
-
 
 \section{Chapter summary}
 \section{Chapter outcomes}
 
 \section{Problem set}
-\subsection{Evaluate the mean and variance of the posterior for the BSE example}\label{sec:MCMC_problemBSE}
+\subsection{Metropolis-Hastings example}
+Prove that it works. Is detailed balance satisfied?
 
 \chapter{Gibbs sampling}\label{chap:Gibbs}
 \section{The intuition behind the Gibbs algorithm}
@@ -6257,6 +6451,8 @@ Imagine wanting to sample the heights of all the points on earth as a posterior 
 \section{Simple examples}
 \section{DAG models}
 \section{The benefits and difficulties with Gibbs}
+\section{Metropolis as a subset of Gibbs and vice versa}
+Also include discussion of the fact that many samplers use a combination of both Gibbs and Metropolis.
 
 
 \chapter{Hamiltonian Monte Carlo}\label{chap:HMC}
