@@ -1039,104 +1039,120 @@
 \newlabel{fig:metropolisHastings_swimmingDetailedBalance}{{13.10}{434}}
 \citation{chib1995understanding}
 \@writefile{toc}{\contentsline {subsection}{\numberline {13.6.5}Proving things we know to be true: Mathematics revisited}{435}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.7}Efficiency of convergence: the importance of the proposal distribution}{436}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {13.7.1}Geometric convergence of Markov Chains}{436}}
-\newlabel{sec:metropolisHastings_geometricConvergenceMarkovChain}{{13.7.1}{436}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.8}Judging convergence}{436}}
-\newlabel{sec:MetropolisHastings_convergence}{{13.8}{436}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.9}Effective sample size revisited}{436}}
-\newlabel{sec:MH_effectiveSampleSizeRevisited}{{13.9}{436}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.10}Chapter summary}{437}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.11}Chapter outcomes}{437}}
-\@writefile{toc}{\contentsline {section}{\numberline {13.12}Problem set}{437}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {13.12.1}Metropolis-Hastings example}{437}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {14}Gibbs sampling}{439}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13.11}{\ignorespaces The symmetry of a normal distribution as a proposal makes it an attractive choice.\relax }}{436}}
+\newlabel{fig:metropolisHastings_normalProposal}{{13.11}{436}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.7}Efficiency of convergence: the importance of choosing the right proposal scale}{436}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13.12}{\ignorespaces \textbf  {The effect of proposal step size on sampling, for a too-small step length (top), too large a step length (bottom), and just-right (middle).} The left plot illustrates the path of the sampler over time, the left-middle histogram plot shows the distribution of binned samples, with the right-middle plot showing the reconstructed posterior. The right plot (orange) shows the actual posterior. The samplers were all started at the same point, away from the bulk of probability mass.\relax }}{437}}
+\newlabel{fig:metropolisHastings_rateOfConvergence}{{13.12}{437}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13.13}{\ignorespaces \textbf  {Comparing the performance of different step sizes for the Metropolis sampler: too-small (red), just-right (green), and too-large (blue), against independent samples from the posterior (grey)}. Where available the theoretical optimal independent sampling strategy is shown as a dashed grey line.\relax }}{438}}
+\newlabel{fig:metropolisHastings_rateOfConvergence1}{{13.13}{438}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.7.1}MCMC as finding and exploring the typical set}{439}}
+\citation{roberts1997weak}
+\citation{rosenthal2011optimal}
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.7.2}Speeding up convergence: tuning the proposal distribution}{440}}
+\citation{saidi2006stationarity}
+\@writefile{lof}{\contentsline {figure}{\numberline {13.14}{\ignorespaces \textbf  {Illustrating an adaptive Metropolis Markov Chain in action.} The step size is adjusted at regular intervals; subtracting a fixed amount off the proposal distribution (a normal distribution) $\sigma $, if the acceptance rate is below optimum at 0.44, conversely adding the amount if the acceptance rate is above this threshold. The left/right panels pertain to a sampler that begins with a too-small/too-large step size.\relax }}{441}}
+\newlabel{fig:metropolisHastings_acceptanceRate}{{13.14}{441}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.7.3}Geometric convergence of Markov Chains}{441}}
+\newlabel{sec:metropolisHastings_geometricConvergenceMarkovChain}{{13.7.3}{441}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.8}Judging convergence}{442}}
+\newlabel{sec:MetropolisHastings_convergence}{{13.8}{442}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.9}Effective sample size revisited}{442}}
+\newlabel{sec:MH_effectiveSampleSizeRevisited}{{13.9}{442}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.10}Chapter summary}{442}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.11}Chapter outcomes}{442}}
+\@writefile{toc}{\contentsline {section}{\numberline {13.12}Problem set}{442}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.12.1}Metropolis-Hastings example}{442}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.12.2}Find the optimal rejection probability = Gelman says 0.44 for unimodal}{443}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {13.12.3}Adaptive MCMC}{443}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {14}Gibbs sampling}{445}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:Gibbs}{{14}{439}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.1}The intuition behind the Gibbs algorithm}{439}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.2}Simple examples}{440}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.3}DAG models}{440}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.4}The benefits and difficulties with Gibbs}{440}}
-\@writefile{toc}{\contentsline {section}{\numberline {14.5}Metropolis as a subset of Gibbs and vice versa}{440}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {15}Hamiltonian Monte Carlo}{441}}
+\newlabel{chap:Gibbs}{{14}{445}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.1}The intuition behind the Gibbs algorithm}{445}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.2}Simple examples}{446}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.3}DAG models}{446}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.4}The benefits and difficulties with Gibbs}{446}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.5}Metropolis as a subset of Gibbs and vice versa}{446}}
+\@writefile{toc}{\contentsline {section}{\numberline {14.6}Multimodality}{446}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {15}Hamiltonian Monte Carlo}{447}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:HMC}{{15}{441}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.1}Introduction to Hamiltonian Monte Carlo}{441}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.2}Avoiding manual labour: the No-U-turn sampler}{441}}
-\@writefile{toc}{\contentsline {section}{\numberline {15.3}Riemannian MCMC}{441}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {16}Stan and JAGS}{443}}
+\newlabel{chap:HMC}{{15}{447}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.1}Introduction to Hamiltonian Monte Carlo}{447}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.2}Avoiding manual labour: the No-U-turn sampler}{447}}
+\@writefile{toc}{\contentsline {section}{\numberline {15.3}Riemannian MCMC}{447}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {16}Stan and JAGS}{449}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:StanJAGS}{{16}{443}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.1}Motivation for Stan and JAGS}{443}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.1}Their similarities and differences}{443}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.2}The future}{443}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.3}The nuts and bolts of Stan and JAGS: access through R}{443}}
-\@writefile{toc}{\contentsline {subsubsection}{How to get packages}{443}}
-\@writefile{toc}{\contentsline {subsubsection}{How to package data}{443}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.2}Stan}{443}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.1}How to download, and install}{443}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.2}A first program in Stan}{443}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.3}The building blocks of a Stan program}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{Parameters}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{Model}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{Transformed parameters}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{Transformed data}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{Generated quantities}{444}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.4}A simple model with data}{444}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.5}Diagnostics}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{$\mathaccentV {hat}05E{R}$ and effective sample size}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{Divergent iterations}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{Tree depth exceeding maximum}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{Leapfrog steps}{444}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.6}More complex models with array indexing}{444}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.7}Essential Stan reading}{444}}
-\@writefile{toc}{\contentsline {subsubsection}{The importance of log probability incrementing}{445}}
-\@writefile{toc}{\contentsline {subsubsection}{Marginalising of discrete parameters}{445}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.8}Calculating LOO-CV and WAIC}{445}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.3}JAGS}{445}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.1}How to download, and install}{445}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.2}A first program in JAGS}{445}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.3}The literal meaning of a for loop}{446}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.4}A simple model}{446}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.5}Diagnosis}{446}}
-\@writefile{toc}{\contentsline {subsubsection}{In-built using vanilla R}{446}}
-\@writefile{toc}{\contentsline {subsubsection}{coda}{446}}
-\@writefile{toc}{\contentsline {subsubsection}{More complex model}{446}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.6}Essential JAGS reading}{446}}
-\@writefile{toc}{\contentsline {subsubsection}{Controlling the flow without if conditions}{446}}
-\@writefile{toc}{\contentsline {subsubsection}{Storing values in matrices}{446}}
-\@writefile{toc}{\contentsline {part}{V\hspace  {1em}Regression analysis and hierarchical models}{447}}
-\newlabel{part:regressionHierarchical}{{V}{449}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.4}Part mission statement}{449}}
-\@writefile{toc}{\contentsline {section}{\numberline {16.5}Part goals}{449}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {17}Hierarchical models}{451}}
+\newlabel{chap:StanJAGS}{{16}{449}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.1}Motivation for Stan and JAGS}{449}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.1}Their similarities and differences}{449}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.2}The future}{449}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.1.3}The nuts and bolts of Stan and JAGS: access through R}{449}}
+\@writefile{toc}{\contentsline {subsubsection}{How to get packages}{449}}
+\@writefile{toc}{\contentsline {subsubsection}{How to package data}{449}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.2}Stan}{449}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.1}How to download, and install}{449}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.2}A first program in Stan}{449}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.3}The building blocks of a Stan program}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{Parameters}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{Model}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{Transformed parameters}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{Transformed data}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{Generated quantities}{450}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.4}A simple model with data}{450}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.5}Diagnostics}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{$\mathaccentV {hat}05E{R}$ and effective sample size}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{Divergent iterations}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{Tree depth exceeding maximum}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{Leapfrog steps}{450}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.6}More complex models with array indexing}{450}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.7}Essential Stan reading}{450}}
+\@writefile{toc}{\contentsline {subsubsection}{The importance of log probability incrementing}{451}}
+\@writefile{toc}{\contentsline {subsubsection}{Marginalising of discrete parameters}{451}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.2.8}Calculating LOO-CV and WAIC}{451}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.3}JAGS}{451}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.1}How to download, and install}{451}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.2}A first program in JAGS}{451}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.3}The literal meaning of a for loop}{452}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.4}A simple model}{452}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.5}Diagnosis}{452}}
+\@writefile{toc}{\contentsline {subsubsection}{In-built using vanilla R}{452}}
+\@writefile{toc}{\contentsline {subsubsection}{coda}{452}}
+\@writefile{toc}{\contentsline {subsubsection}{More complex model}{452}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {16.3.6}Essential JAGS reading}{452}}
+\@writefile{toc}{\contentsline {subsubsection}{Controlling the flow without if conditions}{452}}
+\@writefile{toc}{\contentsline {subsubsection}{Storing values in matrices}{452}}
+\@writefile{toc}{\contentsline {part}{V\hspace  {1em}Regression analysis and hierarchical models}{453}}
+\newlabel{part:regressionHierarchical}{{V}{455}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.4}Part mission statement}{455}}
+\@writefile{toc}{\contentsline {section}{\numberline {16.5}Part goals}{455}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {17}Hierarchical models}{457}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:hierarchicalModels}{{17}{451}}
-\@writefile{toc}{\contentsline {section}{\numberline {17.1}The spectrum from pooled to heterogeneous}{451}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.1}The logic and benefits of partial pooling}{451}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.2}Shrinkage towards the mean}{451}}
-\@writefile{toc}{\contentsline {section}{\numberline {17.2}Meta analysis example: simple}{451}}
-\@writefile{toc}{\contentsline {section}{\numberline {17.3}The importance of fake data simulation for complex models}{451}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.1}The importance of making 'good' fake data}{451}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {18}Linear regression models}{453}}
+\newlabel{chap:hierarchicalModels}{{17}{457}}
+\@writefile{toc}{\contentsline {section}{\numberline {17.1}The spectrum from pooled to heterogeneous}{457}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.1}The logic and benefits of partial pooling}{457}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.1.2}Shrinkage towards the mean}{457}}
+\@writefile{toc}{\contentsline {section}{\numberline {17.2}Meta analysis example: simple}{457}}
+\@writefile{toc}{\contentsline {section}{\numberline {17.3}The importance of fake data simulation for complex models}{457}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {17.3.1}The importance of making 'good' fake data}{457}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {18}Linear regression models}{459}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {18.1}Choosing covariates: model averaging}{453}}
-\newlabel{sec:Regression_modelAveraging}{{18.1}{453}}
+\@writefile{toc}{\contentsline {section}{\numberline {18.1}Choosing covariates: model averaging}{459}}
+\newlabel{sec:Regression_modelAveraging}{{18.1}{459}}
 \bibstyle{plain}
 \bibdata{Bayes}
-\@writefile{toc}{\contentsline {chapter}{\numberline {19}Generalised linear models}{455}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {19}Generalised linear models}{461}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {19.1}Malarial example of complex meta-analysis}{455}}
-\@writefile{toc}{\contentsline {section}{\numberline {19.2}Practical computational inference}{455}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {19.2.1}The importance of pre-simulation MLE}{455}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {19.2.2}Fake data simulation}{455}}
-\@writefile{toc}{\contentsline {section}{\numberline {19.3}Posterior predictive checks}{455}}
+\@writefile{toc}{\contentsline {section}{\numberline {19.1}Malarial example of complex meta-analysis}{461}}
+\@writefile{toc}{\contentsline {section}{\numberline {19.2}Practical computational inference}{461}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {19.2.1}The importance of pre-simulation MLE}{461}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {19.2.2}Fake data simulation}{461}}
+\@writefile{toc}{\contentsline {section}{\numberline {19.3}Posterior predictive checks}{461}}
 \bibcite{stan-manual:2015}{{1}{}{{}}{{}}}
 \bibcite{angrist1990lifetime}{{2}{}{{}}{{}}}
 \bibcite{bernardo1979reference}{{3}{}{{}}{{}}}
@@ -1159,12 +1175,14 @@
 \bibcite{plummer2003jags}{{20}{}{{}}{{}}}
 \bibcite{RLanguage}{{21}{}{{}}{{}}}
 \bibcite{robert2007bayesian}{{22}{}{{}}{{}}}
-\bibcite{silver2012signal}{{23}{}{{}}{{}}}
-\bibcite{spiegelhalter2002bayesian}{{24}{}{{}}{{}}}
-\bibcite{stan-software:2014}{{25}{}{{}}{{}}}
-\bibcite{stewart2014teaching}{{26}{}{{}}{{}}}
-\bibcite{taleb2010black}{{27}{}{{}}{{}}}
-\bibcite{tegmark2014our}{{28}{}{{}}{{}}}
-\bibcite{tokuda2011visualizing}{{29}{}{{}}{{}}}
-\bibcite{vehtari2015efficient}{{30}{}{{}}{{}}}
+\bibcite{roberts1997weak}{{23}{}{{}}{{}}}
+\bibcite{rosenthal2011optimal}{{24}{}{{}}{{}}}
+\bibcite{silver2012signal}{{25}{}{{}}{{}}}
+\bibcite{spiegelhalter2002bayesian}{{26}{}{{}}{{}}}
+\bibcite{stan-software:2014}{{27}{}{{}}{{}}}
+\bibcite{stewart2014teaching}{{28}{}{{}}{{}}}
+\bibcite{taleb2010black}{{29}{}{{}}{{}}}
+\bibcite{tegmark2014our}{{30}{}{{}}{{}}}
+\bibcite{tokuda2011visualizing}{{31}{}{{}}{{}}}
+\bibcite{vehtari2015efficient}{{32}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
