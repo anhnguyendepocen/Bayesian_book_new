@@ -6147,7 +6147,7 @@ The reader should now be familiar with the following concepts:
 \subsection{Computationally investigate the die example}
 \subsection{Evaluate the mean and variance of the posterior for the BSE example}\label{sec:MCMC_problemBSE}
 
-\chapter{Metropolis}\label{chap:metropolisHastings}
+\chapter{The Metropolis algorithm}\label{chap:metropolisHastings}
 \section{Chapter mission statement}
 This chapter introduces the reader to one of the most common algorithms used in MCMC sampling, that of the \textit{Metropolis} algorithm. Furthermore, after reading this chapter the reader should understand the methods used to judge convergence of such an algorithm.
 
@@ -6533,19 +6533,97 @@ Ok, maybe not all students of Bayes go through the entire last step, but we've a
 
 So after we have decided on the number of chains to run, how do we monitor their convergence? As we tried to explain in the bee analogy, the idea is that we can be fairly confident that the chains have converged on the posterior distribution when it is impossible to - from just looking at the samples of one chain - tell it apart from the others. 
 
-Another way of expressing this idea is to say that, imagine we start with bits of coloured string, pull them taught, then let them go, and watch them crumple up (see figure \ref{fig:metropolisHastings_chainMixing}). If our strings remain separate, then we can easily tell one apart from the others, just based on the sum of the path it takes. Suppose we were then to take these bits of string, then colour parts of each string, so that it matches one of the others; repeating this process until each string consists of two or more colours. If the strings were originally separate, then it is obvious, by looking at the sum of the paths taken by each string, that we have done some fiddling. We can tell this because now there is mixing between the resultant paths; we can no longer resolve between the distributions of each string. By contrast, if the strings were originally well-mixed, then it is much harder to notice that we have been a-colourin'. Moving now back to Markov Chains, this latter case, where the chains cross over one another's paths time-and-time again, is a much better candidate for convergence than for the case where there is no mixing. It is important to note that this analogy isn't quite correct - in most types of MCMC the chains do not actually interact with one another, unlike our ball of string. However, we still believe this metaphor has its merits!
+Another way of expressing this idea is to say that, imagine we start with bits of elastic coloured string, pull them taught, then let them go, and watch them crumple up (see figure \ref{fig:metropolisHastings_chainMixing}). We assume here that our strings do not actually interact with one another, so the crumpling of one string is independent of those around it. If our strings remain separate, then we can easily tell one apart from the others, just based on the sum of the path it takes. Suppose we were then to take these bits of string, then colour parts of each string, so that it matches one of the others; repeating this process until each string consists of two or more colours. If the strings were originally separate, then it is obvious, by looking at the sum of the paths taken by each string, that we have done some fiddling. We can tell this because now there is mixing between the resultant paths; we can no longer resolve between the distributions of each string. By contrast, if the strings were originally well-mixed, then it is much harder to notice that we have been a-colourin'. Moving now back to Markov Chains, this latter case, where the chains cross over one another's paths time-and-time again, is a much better candidate for convergence than for the case where there is no mixing. It is important to note that this analogy isn't quite correct - in most types of MCMC the chains do not actually interact with one another, unlike our ball of string. However, we still believe this metaphor has its merits!
 
 \begin{figure}
 \centerline{\includegraphics[width=1\textwidth]{metropolisHastings_chainMixing.pdf}}
-\caption{\textbf{Balls of string, both before (left) and after we re-colour them: an analogy to convergence monitoring in MCMC.}}\label{fig:metropolisHastings_chainMixing}
+\caption{\textbf{Non-mixing (top) and better-mixing (bottom) of strings, before they are recoloured (left) and after (right).} In both cases the histogram corresponds to the count of the variable at that particular distance along the axis.}\label{fig:metropolisHastings_chainMixing}
 \end{figure}
 
-Now that we understand qualitatively know how we can tell whether our chains have converged, we need to think about how to do it quantitatively; through a bit of simple maths.
 
-Gelman's need to use within-chain information. Fig 11.3b.
+Now that we understand qualitatively how we can tell whether our chains have converged, we need to think about how to do it quantitatively; through a bit of simple maths.
+
+\subsection{Using within- and between-chain variation to estimate convergence}
+How can we assess whether our chains have sufficiently mixed with one another? Going back to our string example - how can we create a mathematical rule that allows us to differentiate between the top and bottom panels of figure \ref{fig:metropolisHastings_chainMixing}? The most common method, due to Rubin and Gelman, is to examine the variance of samples within each chain, and compare it to the between-chain variance. Intuitively, if these are about the same, then it indicates that we would have a hard time, on the basis of the sampling distribution alone, differentiating between samples from one chain vs all others (see figure \ref{fig:metropolisHastings_betweenWithinVarianceString}).
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{metropolisHastings_betweenWithinVarianceString.pdf}}
+\caption{\textbf{The within variation for the blue string (W), vs the between-all-strings variation (B), for the case of non-mixing (left), and mixing strings (right).}}\label{fig:metropolisHastings_betweenWithinVarianceString}
+\end{figure}
+
+So how do we calculate the within- and between-chain variances? If we imagine that our parameter space is 1-dimensional, in other words, our model only has a single free parameter $\theta$, then we could calculate the within variance, $W$, by \cite{gelman2013bayesian}:
+%
+\begin{equation}
+W = \frac{1}{m}\sum\limits_{j=1}^{m} s_j^2
+\end{equation}
+%
+where $s_j^2=\frac{1}{n-1}\sum\limits_{i=1}^{n} (\theta_{ij} - \bar{\theta_j})^2$, is the typical estimator for the sample variance. Note that here we index $\theta$ by both $i$ and $j$, so that $\theta_{ij}$ corresponds to the ith sample from the jth chain; $\bar{\theta_j}$ is the mean sample of the jth chain. $m$ indicates the number of chains, so that by the above formula, we are just averaging over the sample variances across all chains. 
+
+To calculate the between-chain variability, we essentially want to compare the mean of each chain with that of the \textit{overall} mean (see figure ). We want again to average this over all the chains, and so we calculate: 
+%
+\begin{equation}
+B = \frac{n}{m-1}\sum\limits_{i=1}^{m}(\bar{\theta_j} - \bar{\theta})^2
+\end{equation}
+%
+where $\bar{\theta_j}$ and $\bar{\theta}$ are the jth and overall chain's sample means respectively. The factor of $n$ at the front is to account for the fact that our estimator is based on the jth chain's sample mean, each of which is calculated using $n$ samples. The $m-1$ on the denominator is analogous to the $n-1$ in the sample variance formula above, and is to ensure this estimator is unbiased.
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{metropolisHastings_withinBetweenExplicit.pdf}}
+\caption{\textbf{Illustrating the calculation of within- and between-chain variance.}}\label{fig:metropolisHastings_withinBetweenExplicit}
+\end{figure}
+
+This process is exactly the same method that is used in ANOVA modelling, where the idea is to try to explain variation in data by apportioning it into within-group, and between-group variability. The idea of Gelman and Rubin was that if we take estimators of the posterior variance - one accounting for variance from both the within and between chains, and another due to solely the within - and take the ratio of these, then if our chains have converged, it should be close to 1. Explicitly, they first calculate an estimator of the posterior variance by a weighted average of W and B \cite{gelman2013bayesian}:
+%
+\begin{equation}
+\begin{align}
+\widehat{var(\theta|data)} &= \frac{n-1}{n} W + \frac{1}{n} B\\
+&= W + \frac{1}{n} \left(B - W\right)
+\end{align}
+\end{equation}
+%
+when written this way, it is apparent that if $B\rightarrow W$, or $n\rightarrow\infty$, then the above estimator $\widehat{var(\theta|data)}\rightarrow W$. However, when we first start the chains, it will be the case that $B>>W$ since we aim to start the chains in an \textit{overdispersed} position. Therefore, Gelman and Rubin suggest that we calculate the ratio:
+%
+\begin{equation}\label{eq:metropolisHastings_Rhat}\index{R hat}
+\hat{R} = \sqrt{\frac{W + \frac{1}{n} \left(B - W\right)}{W}}
+\end{equation}
+%
+where initially $\hat{R}>>1$, since our chains begin in an overdispersed position. The idea is that, if this ratio continues to exceed a relatively high value (in practice a rule of thumb is to use $\hat{R}\sim 1.1$ as a cut-off), then our chains have not mixed well, and we hence cannot have any confidence in the assertion that convergence has occurred. However, as $B\rightarrow $, then $\hat{R}\rightarrow 1$, and we are more confident that our chains are mixing well.
+
+In practice, we estimate $\hat{R}$ across all of our parameters, and we continue to run our chains until \textit{all} of our parameters satisfy $\hat{R} < 1.1$. 
+
+\subsection{Two types of non-convergence}
+In this chapter we have said that a chain converges if it has reached its stationary distribution. However, we need to be careful to make-sure that our chain has reached its true stationary distribution, opposed to becoming stuck in one area of parameter space. In order to increase the odds of detecting this latter type of non-convergence, we have discussed the use of using multiple non-interacting chains, each of which is started in some dispersed part of parameter space. 
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{metropolisHastings_twoTypesNonConvergence.pdf}}
+\caption{\textbf{Non-convergence due to left: no mixing between chains, and right: poor within-chain mixing.}}\label{fig:metropolisHastings_twoTypesNonConvergence}
+\end{figure}
+
+On this basis, we have two different types of non-convergence about which we need concern ourselves. The first, and more simple, case of non-convergence is where the individual chains do not mix with one-another; this amounts to some of our bees becoming stuck in parts of the house. We call this first type of non-convergence poor \textit{inter-chain} mixing. The second scenario is where our individual chains do not mix well with themselves, which we call poor \textit{intra-chain} mixing (see figure \ref{fig:metropolisHastings_twoTypesNonConvergence}). 
+
+How do we mean by `mix with itself', and why do we care? Well, what we mean is that a chain is not stationary; in other words, it has not converged to a stationary distribution. This lack of convergence means that we cannot have any confidence that our chains have converged on the posterior. This is characterised by a chain that - if you split it in half, and considered each of the halves as a separate chain - would fail to show good mixing by the $\hat{R}$ measure we considered before (see figure \ref{fig:metropolisHastings_splitChains}). In fact, this is exactly the way that Stan calculates $\hat{R}$ \cite{stan-manual:2015}! It splits all chains in two, then - considering the resultant half-chains as independent - calculates $\hat{R}$ through eqn. (\ref{eq:metropolisHastings_Rhat}).
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{metropolisHastings_splitChains.pdf}}
+\caption{\textbf{Diagnosing intra-chain non-convergence by chain splitting}.}\label{fig:metropolisHastings_splitChains}
+\end{figure}
+
+\subsection{Warm-up}\index{warm-up}
+The previous sections of this chapter illustrate that we cannot have any confidence in our chains' convergence if we find that $\hat{R}$ for \textit{any} of our parameters are significantly above 1. If we find that this is the case, either we need to run the chains for longer, change our algorithm, or often change our model to speed up the rate of convergence (see section \ref{sec:GLM_poorConvergence}). Once we find our chain exhibits good convergence characteristics, we then, and only then, think about its samples as being representative of the posterior.
+
+However, we need to ultimately use a (large) number of samples, so how much of our chain should we use to represent samples from our posterior? Clearly, the first part of the chain is likely to be dictated much by its starting position - which we usually determine in a fairly-haphazard fashion - and hence is unlikely to be representative of the posterior. So, we shouldn't necessarily include our first samples in our final posterior sampling, but where do we draw the line? Sometimes it is obvious from examining the path of a chains over time, that they have reached convergence (see figure \ref{fig:metropolisHastings_warmUp}), but usually things are less clear-cut. Following the advise of Gelman et al. (2013), we recommend as a default discarding the first \textit{half} of chains which exhibit good convergence. The authors call this methodology Markov Chain \textit{warm-up}, where we are waiting for the chains to reach some level of convergence before we start to sample from them. 
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{metropolisHastings_warmUp.pdf}}
+\caption{\textbf{Measuring convergence as chains (left) run}. Middle panel shows the two components of the numerator of eqn. (\ref{eq:metropolisHastings_Rhat}; black is due to within-chain variation, and grey is due to between. Right shows $\hat{R}$ computed as chain runs. In this case we would discard the first 400-500 samples, since from the left graph, we see that our chains have yet to converge. }\label{fig:metropolisHastings_warmUp}
+\end{figure}
+
+It should be noted that this methodology really is only a rule of thumb. There will be circumstances where we can almost straight-away assume our samples are representative of the posterior, (for example, for the Gibbs sampler - see chapter \ref{chap:Gibbs}), and hence our method is quite conservative. However, there will also be those when discarding the first-half of chains may not be conservative enough (for example, sometimes when sampling from multimodal distributions).
 
 \section{Effective sample size revisited}\label{sec:MH_effectiveSampleSizeRevisited}\index{effective sample size}
-Central Limit Theorem accuracy proportional to 1/sqrt(n). Choose neff so that mcmc central limit accuracy proportional to 1/sqrt(neff). cf Bob's video. Also fast fourier transforms to do this.
+
+p446 Stan manual. p 6-7 in Monte Carlo book.
+Central Limit Theorem accuracy proportional to 1/sqrt(n). Choose neff so that mcmc central limit accuracy proportional to 1/sqrt(neff). cf Bob's video. Also fast fourier transforms to do this. Thinning samples.
 
 \section{Chapter summary}
 \section{Chapter outcomes}
@@ -6662,7 +6740,7 @@ Include model averaging for
 \subsection{The importance of pre-simulation MLE}\label{sec:GLM_preSimMLE}
 \subsection{Fake data simulation}
 Check coding ok.
-
+\subsection{Poor convergence}\label{sec:GLM_poorConvergence}
 \section{Posterior predictive checks}
 Check model is ok.
 
