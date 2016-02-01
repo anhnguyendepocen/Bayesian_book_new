@@ -6621,12 +6621,92 @@ However, we need to ultimately use a (large) number of samples, so how much of o
 It should be noted that this methodology really is only a rule of thumb. There will be circumstances where we can almost straight-away assume our samples are representative of the posterior, (for example, for the Gibbs sampler - see chapter \ref{chap:Gibbs}), and hence our method is quite conservative. However, there will also be those when discarding the first-half of chains may not be conservative enough (for example, sometimes when sampling from multimodal distributions).
 
 \section{Effective sample size revisited}\label{sec:MH_effectiveSampleSizeRevisited}\index{effective sample size}
+In section \ref{sec:MCMC_correlationInDependentSamplers} we introduced the concept of an \textit{effective sample size} for a dependent sampling algorithm. The idea is that our ideal algorithm would independently sample from the posterior, but in most cases this is not realisable; instead we have to make-do with dependent samples - where the next sample value depends on the current value. In these circumstances, the incremental benefit of one extra sample is less than that of an equivalent sample from an independent sampling algorithm; intuitively, there is less `new' information in each further sample, since it each sample is partly determined by the previous value. This idea is crystallised in the concept of effective sample size, which illustrates - fairly crudely - the number of independent samples which are equivalent to a given \textit{dependent} sample size. Therefore, one way of viewing designing a sampling algorithm is an attempt to develop a framework which generates the maximum number of effective samples per second. 
 
-p446 Stan manual. p 6-7 in Monte Carlo book.
-Central Limit Theorem accuracy proportional to 1/sqrt(n). Choose neff so that mcmc central limit accuracy proportional to 1/sqrt(neff). cf Bob's video. Also fast fourier transforms to do this. Thinning samples.
+In our previous description of this concept, we illustrated that the effective sample size negatively depends on the autocorrelation of our Markov Chains. Intuitively, the less autocorrelation exists in our chain, the closer our Markov Chain is to generating independent samples. However, whilst we empirically, through the die example, described how we could generate an effective sample size, our methodology was specific to the particular case. Here we seek a more general method for calculating effective sample size, which we can apply to MCMC algorithms. The method will be slightly more mathematical than our previous discussion, but we will aim to keep the intuition central to our explanation. If you don't feel like wading through all this maths, then you can skip ahead to the end of chapter summaries, since the concept is not entirely new, and it is not essential to know exactly how we can calculate effective sample sizes in practice; an understanding of the concept of effective sample size is what matters!
+
+Firstly, let's imagine that we \textit{did} have access to truly independent samples of our posterior. In this case, we might be interested in the accuracy of estimating a particular aspect of the posterior, for example its mean: $\mathrm{E}(\theta|data) = \mu$. Since our samples are independent, (and identically-distributed), we are able to use the Central Limit Theorem (see section \ref{sec:Probability_CLT} for a refresher), to derive an approximate sampling distribution for our estimator:
+%
+\begin{equation}
+\hat{\mu} \approx N(\mu,\frac{\sigma^2}{n})
+\end{equation}
+%
+where we have assumed we are using $\hat{\mu}=\frac{1}{n}\sum\limits_{i=1}^{n} \theta_i$, and that $n$ - the sample size - is large. From the above, we see that the error rate scales as $\sim\frac{1}{\sqrt{n}}$, since we care about the standard deviation = $\sqrt{variance}$. Therefore we note that convergence rate is the ideal to which we aspire with our dependent sampler. 
+
+One way of defining an effective sample size, $n_{eff}$ for our dependent sampler, is such that the error rate on estimating the posterior mean, or similar quantity, is given by $\frac{1}{\sqrt{n_{eff}}}$. In other words, in terms of effective sample size, the rate of convergence to the true quantity is the \textit{same} rate as that for an independent sampler, in terms of its sample size. Note that we could have chosen another quantity, other than the posterior mean, as a baseline here, particularly if we were interested in behaviour of some other aspect of the distribution; meaning that the definition used here is somewhat irrelevant. However, in many circumstances, the posterior mean is the desired quantity of interest, and so we continue with this definition of effective sample size. 
+
+Imagine that we are using a single chain, with $T$ samples in our MCMC algorithm. In this circumstance our estimator of the posterior mean is given by: $\hat{\mu}=\frac{1}{T}\sum\limits_{t=1}^{T} \theta_t$. In particular, we are interested in estimating the variance of our estimator, since this determines its rate of convergence. As such we take the variance of the quantity:
+%
+\begin{equation}
+\begin{align}
+T var(\hat{\mu}) &= var(\sum\limits_{t=1}^{T} \theta_t)\\
+&= \sum\limits_{t=1}^{T} var(\theta|data) + \sum\limits_{t=1}^{T} \sum\limits_{\tau\geq 1} cov(\theta_t,\theta_{t-\tau})
+\end{align}
+\end{equation}
+%
+where we have taken the $T$ over to the left-hand side of our expression. If our sampler produced independent samples, then the covariance terms on the second line would disappear. However, our sampler produces autocorrelated samples, therefore: $cov(\theta_t,\theta_{t-\tau}) = \rho_\tau var(\theta|data)$, where $\rho_\tau$ is the autocorrelation at lag $\tau$. Using this we obtain:
+%
+\begin{equation}
+\begin{align}
+T var(\hat{\mu}) &= \left(1+ 2 \sum\limits_{\tau=1}^{T}\right) var(\theta|data)
+\end{align}
+\end{equation}
+%
+If we then consider the case where we have $m$ chains, and imagine that we take the limit as our sample size becomes infinite (this corresponds to the theoretical optimum of our dependent sampler), we get:
+%
+\begin{equation}
+\begin{align}
+\lim\limits_{T\rightarrow\infty} m T var(\hat{\mu}) = \left(1 + 2 \sum\limits_{\tau=1}^{\infty}\rho_\tau\right)var(\theta|data)
+\end{align}
+\end{equation}
+%
+Now comparing this with an equivalent independent sampler where $n_{eff} = m T$, we would obtain:
+%
+\begin{equation}
+\lim\limits_{T\rightarrow\infty} n_{eff} var(\hat{\mu}) = var(\theta|data)
+\end{equation}
+%
+Rearranging the expression for our dependent sampler into equivalent form, we find the following expression for our effective sample size \cite{gelman2013bayesian}:
+%
+\begin{equation}
+n_{eff} = \frac{m T}{1 + 2 \sum\limits_{\tau=1}^{\infty}\rho_\tau}
+\end{equation}
+%
+The above expression shows the theoretical effective sample size of a given Markov Chain, and illustrates that as the autocorrelation increases, the number of effective samples declines towards the zero limit. However, how can we actually calculate the above expression, since in reality we do not have an \textit{infinite} sample size, and do not know $\rho_\tau$?
+
+For practical purposes, there are a number of ways to do this, but all of them amount to estimating $\rho_\tau$ using some measure of the sample autocorrelation, $\hat{\rho_\tau}$. This is then plugged in for $\rho_\tau$ in the above formula, and we only sum over the first $T'$ terms, where $T'$ is the first odd positive integer for which $\hat{\rho_{T'+1}} + \hat{\rho_{T'+2}}$ is negative \cite{stan-manual:2015}. The reason for this latter step is that, due to sampling error, the higher order estimates of sampler autocorrelation are very noisy, and often become negative. Stan actually uses fast fourier transforms to calculate the sample autocorrelation simultaneously for all lags very efficiently, (see \cite{bergland1969guided}). 
+
+\subsection{Thinning samples to increase effective sample size}\index{thinning samples}
+Once convergence is reached, we notice that we may be able to `trick' our sampling algorithm into thinking that it is capable of emitting independent samples, if we choose to only keep only every tenth, or hundredth sample. These will naturally be less correlated than a consecutive samples, meaning that they are \textit{more} similar to the theoretical independence ideal. This process, where we take only every nth sample is known as \textit{thinning} a dependent sampler. 
+
+However, we notice that this really is just a trick - our sampler does not produce independent samples - and we would actually be discarding valuable information if we remove these samples from our final sample set. The only circumstance where this may make sense, is if we are dealing with a highly-dimensional model, where convergence may be slow, and computational space is limited \cite{gelman2013bayesian}. 
 
 \section{Chapter summary}
+Woah, that was a lot of information! We started out by considering the mechanics of the Metropolis algorithm - one of the most important, and fundamental methods in MCMC. We saw that using its particular accept/reject rule for determining where next to step, results in just the right balance of samples across the posterior landscape, where we sample in proportion to the height of the posterior at each point. Any deviations from this rule, either mean we give too much weight to parameter sets at lower/higher values of the posterior. We learned that this acceptance rule satisfies the principle of detailed balance, which ensures that our sampling algorithm converges to a unique stationary distribution that is the posterior distribution. 
+
+We next saw that the decision as to where to consider stepping next, through the proposal distribution, is \textit{crucial} to the sampling efficiency of a Metropolis Markov Chain. Too small a step size, then our samplers will take \textit{forever} to explore the posterior space. If by contrast the steps are too large, then we hardly accept any suggested next steps, and our sampler gets stuck in areas of high density. We described the ideal behaviour of an MCMC algorithm as first \textit{finding} the typical set (an area where almost all of probability mass is found), then \textit{exploring} it. The case where the steps are too small takes too long to find the typical set. The larger step case finds the typical set quick enough, but is terrible at exploring it in any detail, resulting in a rather coarse map of the posterior in this high-mass region.
+
+We described how judging the convergence of a given MCMC algorithm is full of potential pitfalls, and needs to be done with care. There are no perfect ways to fully ensure that our algorithm has converged, but by using a number of independently-running chains initialised at overdispersed locations in the landscape, we are much able to better guard against the type of faux-convergence characteristic of running a single chain. However, this method is \textit{not} foolproof, and we should always favour running as many chains as is feasible to try to minimise this risk. The idea with many chains is that we can compare the within-chain variation with that between the chains, and assume convergence has occurred when these two measures are of similar magnitude. Gelman and Rubin's $\hat{R}$ embodies this maxim, and is the most widely-used rule to determine whether chains have converged. This quantity should be calculated for \textit{all} parameters in our model, and we should only have any confidence in convergence if $\hat{R}<\sim 1.1$ across all these dimensions. 
+
+Once convergence has been obtained, we aim to minimise the effect of a starting distribution on the resultant posterior samples by only taking samples after a so-called `warm-up' period. This period is not fixed, and varies dependent on the algorithm/problem at hand. The main purpose of doing this discarding is to find a good starting point for our chains, reflective of the posterior shape, rather than the arbitrary starting point we often pluck out of the air at the beginning of the warm-up period. There are many competing methods for determining how to select the first post-warm-up sample, each with their merits. However, here we favour conservatively discarding the first half of a Markov Chain, once convergence has been reached. This method will work under some circumstances, and not for others. Failing any other logic we like to assume a start point of the algorithm following the advise of Charles Geyer \cite{brooks2011handbook} that, `Any point you don't mind having in a sample is a good starting point.'
+
+Finally, we saw that by explicitly taking account of the autocorrelation of our sampler, we are able to generate an effective sample size, representing an equivalent independent sample size to our dependent sampler's sample size. Here we obtained the equation representing the effective sample size by assuming that our goal was to best estimate the posterior mean. This equation also provided some mathematical-rigour to our previously-stated rule, that as the autocorrelation of our Markov Chains increases, we produce a smaller sample size.
+
+It is hard to overstate the importance of understanding this chapter's content. Knowledge of the Metropolis algorithm, together with methods of determining convergence of Markov Chains, are essential to avoid getting lost in the world of MCMC samplers. Equipped with this knowledge, you should also be able to critique the research of others. The Metropolis algorithm also provides \textit{terra firma}, from which to attack other, usually faster, algorithms; in particular the Gibbs sampler in chapter \ref{chap:Gibbs}, and Hamiltonian Monte Carlo in chapter \ref{chap:HMC}. We shall see that these algorithms really are just modified versions of Metropolis, and that luckily, much of what we have learned here will also be applicable there. Let's get to it!
+
 \section{Chapter outcomes}
+The reader should now be familiar with the following concepts:
+
+\begin{enumerate}
+\item The intuition behind the Metropolis algorithm.
+\item The importance of the particular accept/reject rule that is used in Metropolis, and how it helps us to ensure detailed balance. 
+\item The fact that detailed balance, together with a symmetric proposal distribution, results in a sampler that will converge asymptotically (infinite sample size) to the posterior.
+\item The importance of tuning the proposal distribution characteristic step distance to ensure optimal exploration of the posterior density.
+\item That judging whether an MCMC algorithm is in general \textit{hard}, and full of potential for misuse.
+\item How monitoring the within- and between-chain variation, across multiple chains, initialised at wide starting locations, can be used to help us minimise the risk of non-convergence. 
+\item The importance of a warm-up phase of MCMC to ensure that we don't produce posterior samples too-skewed towards the starting positions.
+\item How increased Markov Chain autocorrelation leads to smaller effective sample sizes.
+\end{enumerate}
 
 \section{Problem set}
 \subsection{Metropolis-Hastings example}
