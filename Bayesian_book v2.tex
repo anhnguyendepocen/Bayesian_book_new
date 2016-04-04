@@ -6198,14 +6198,14 @@ Our algorithm appears to have worked! Robinson has fished each pond in rough pro
 \caption{\textbf{The Metropolis algorithm in action.} Left: The sequence of lakes in which Robinson fishes (A,B,C,D) over time. Right: the total number of fish he catches. Top: for 50 days, and bottom for 500 days.}\label{fig:metropolisHastings_MetropolisFish}
 \end{figure}
 
-\section{Prospecting for gold}
+\section{Prospecting for gold}\label{sec:metropolisHastings_gold}
 You are employed as a contractor for a mining company, looking to map the amount of subterranean gold in the ground across a vast, lifeless desert. The desert is flat, and uninformative of the treasures that lie underneath (see figure \ref{fig:metropolisHastings_goldMineSimple}). However, fortunately you have a machine that is able to measure the magnetic field directly underneath, which varies in proportion to the total amount of gold below. Suppose the gold company has already determined that the area is rich with gold deposits, and is interested only in mapping the relative abundance of deposits over the desert. Furthermore, they want to map areas with accuracy dependent on the total amount of gold present.
 
 \begin{figure}
 \centering
 \scalebox{0.8} 
 {\includegraphics{metropolisHastings_goldMineSimple.png}}
-\caption{The desert above, with the gold deposits underneath. The red path shows a possible sampling path that could be taken by our intrepid worker. \textbf{Add better palm trees, and illustrate that the worker has a device which allows them to survey underneath.}}\label{fig:metropolisHastings_goldMineSimple}
+\caption{The desert above, with the gold deposits underneath. The red path shows a possible sampling path that could be taken by our intrepid worker. \textbf{Add better palm trees, and illustrate that the worker has a device which allows them to survey underneath. REPLACE NORTH FOR WEST!}}\label{fig:metropolisHastings_goldMineSimple}
 \end{figure}
 
 How could we go about carrying out this mapping? One way would be simply to survey at say, 1km intervals, the level of magnetic field below. However, even at this modest resolution, we would be required to sample a million points. If instead we increased the precision to 100m, we would then be required to do 100 million samples. We'll die of thirst! There must be a quicker way to build an accurate map.
@@ -6221,7 +6221,7 @@ We have now illustrated in two settings - one discrete, the other continuous - h
 
 \begin{figure}
 \centerline{\includegraphics[width=1.5\textwidth]{metropolisHastings_miningGoldMetropolis.png}}
-\caption{\textbf{Searching for gold, using the Metropolis algorithm.} Left panels represent actual gold deposits. All other panels represent MCMC sampling results using Metropolis algorithm. Top panel shows path taken through the desert (red).}\label{fig:metropolisHastings_miningGoldMetropolis}
+\caption{\textbf{Searching for gold, using the Metropolis algorithm.} Left panels represent actual gold deposits. All other panels represent MCMC sampling results using Metropolis algorithm. Top panel shows path taken through the desert (red). REPLACE NORTH FOR WEST!}\label{fig:metropolisHastings_miningGoldMetropolis}
 \end{figure}
 
 \section{Defining the Metropolis algorithm}\label{sec:metropolisHastings_definingMetropolis}
@@ -6230,14 +6230,14 @@ We've illustrated the mechanism of the Metropolis algorithm via two (silly) prac
 Essentially, we imagine that we have some sort of posterior, which is known up to a proportion:
 %
 \begin{equation}
-p(\theta|data) \propto p(data|\theta \times p(\theta))
+p(\theta|data) \propto p(data|\theta) \times p(\theta)
 \end{equation}
 %
 We would like to sample from this posterior, in order to build up an approximate map of its shape, and properties. For this example, we can imagine that $\theta$ is 1-dimensional, but note that the method outlined below is also applicable for a parameter space of \textit{any} number of dimensions.
 
 \begin{figure}
 \centerline{\includegraphics[width=1.5\textwidth]{metropolisHastings_definingMetropolis.pdf}}
-\caption{\textbf{Comparing step accept/reject mechanisms, with top corresponding to $p_{accept}=1$, (a drunkard's random walk), middle has $p_{accept}=min(1,\frac{p(\theta_{new}|data)}{p(\theta_{current}|data)})$ corresponding to a Metropolis stepping algorithm, and bottom shows a Hillary stepper, which has $p_{accept}=1$ if and only if $p(\theta_{new}|data)>p(\theta_{current}|data)$}. Left hand plots blue lines are the path taken by each stepping algorithm over time, the histograms (left-middle) then show the binned samples, and the dashed-blue lines show the reconstructed posterior for each set of samples. The right-hand orange plot show the actual posterior, assumed to be the same in each case. \textbf{Align axes, add labels and titles.}}\label{fig:metropolisHastings_definingMetropolis}
+\caption{\textbf{Comparing step accept/reject mechanisms, with top corresponding to $p_{accept}=1$, (a drunkard's random walk), middle has $p_{accept}=min(1,\frac{p(\theta_{new}|data)}{p(\theta_{current}|data)})$ corresponding to a Metropolis stepping algorithm, and bottom shows a Hillary stepper, which has $p_{accept}=1$ if and only if $p(\theta_{new}|data)>p(\theta_{current}|data)$}. Left hand plots blue lines are the path taken by each stepping algorithm over time, the histograms (left-middle) then show the binned samples, and the dashed-blue lines show the reconstructed posterior for each set of samples. The right-hand orange plot show the actual posterior, assumed to be the same in each case. \textbf{Align axes, add labels and titles. REPLACE NORTH FOR WEST!}}\label{fig:metropolisHastings_definingMetropolis}
 \end{figure}
 
 We imagine that we are able to do a random walk is posterior space, where each step we randomly propose a new location to which to step next, which is dependent on our current location. If we take this new location to be a sample from our posterior, we hope that if we take enough steps we will build up an approximate picture of the shape of our posterior from the local \textit{density} of samples around each point. However, if our random walk does not take account of the shape of the posterior - it is a simple random walk, we call a `drunkard's random walk' where we always move to our next proposed location - then we simply sample uniformly across parameter space (see top panels of figure \ref{fig:metropolisHastings_definingMetropolis}). The drunkard, in their stupor, pays no attention to the posterior shape, and hence returns samples that are not indicative of the posterior terrain.
@@ -6336,14 +6336,13 @@ and since we assume the posterior density is higher at $\theta_b$ than $\theta_a
 %
 \begin{equation}
 \begin{align}
-p(\theta^{t} = \theta_b,\theta^{t+1}=\theta_a) &= p(\theta_b|data)\times J(\theta_a|\theta_b)\\
-&= p(\theta_b|data) \times J(\theta_a|\theta_b) \frac{p(\theta_a|data)}{p(\theta_b|data)}\\
+p(\theta^{t} = \theta_b,\theta^{t+1}=\theta_a) &= p(\theta_b|data) \times J(\theta_a|\theta_b) \frac{p(\theta_a|data)}{p(\theta_b|data)}\\
 &= p(\theta_a|data)\times J(\theta_a|\theta_b)\\
 &= p(\theta_a|data)\times J(\theta_b|\theta_a)=p(\theta^{t}=\theta_a,\theta^{t+1}=\theta_b)
 \end{align}
 \end{equation}
 %
-where we obtained the second line from the first by using the Metropolis acceptance rule, where we accept a lower value of the posterior in relation to its ratio to the current value. The final line is obtained by assuming the symmetry of the proposal distribution, in line with the Metropolis algorithm. Thus we have proved that the joint density of a transition from $\theta_a\rightarrow\theta_b$ is the same as that for $\theta_b\rightarrow\theta_a$. This means that our Markov Chain satisfies a principle called \textit{detailed balance}\index{detailed balance}, meaning that at equilibrium our each transition should have a probability equal to its inverse process. 
+where we obtained the right hand side of the first line by using the Metropolis acceptance rule, where we accept a lower value of the posterior in relation to its ratio to the current value. The final line is obtained by assuming the symmetry of the proposal distribution, in line with the Metropolis algorithm. Thus we have proved that the joint density of a transition from $\theta_a\rightarrow\theta_b$ is the same as that for $\theta_b\rightarrow\theta_a$. This means that our Markov Chain satisfies a principle called \textit{detailed balance}\index{detailed balance}, meaning that at equilibrium our each transition should have a probability equal to its inverse process. 
 
 But how does this help us? Well, since we know that (repeating what we have above, but in longhand notation):
 %
@@ -6386,7 +6385,7 @@ where $\epsilon>0$ is a small number. If we consider the `+' case, this will mea
 \caption{\textbf{How the choice of acceptance/rejection rule determines the distance of our sampler's distribution from the posterior.} Note this is a conceptual representation, and hence should not be interpreted quantitatively!}\label{fig:metropolisHastings_knifeEdge}
 \end{figure}
 
-When we get this rule just-right, we have seen in section \ref{sec:metropolisHastings_detailedBalance} that our Markov Chain satisfies the principle of \textit{detailed balance} when it reaches equilibrium. This means that for any two points in the stationary distribution, the probability of transition from one location to the other is the same,\textit{both} ways. 
+When we get this rule just-right, we have seen in section \ref{sec:metropolisHastings_detailedBalance} that our Markov Chain satisfies the principle of \textit{detailed balance} when it reaches equilibrium. This means that for any two points in the stationary distribution, the probability of transition from one location to the other is the same, \textit{both} ways. 
 
 What is the intuition behind this seemingly innocuous result? Imagine that you work as a conservationist for a national park, where unfortunately a chemical spill has just released a load of toxic waste into a lake (see figure \ref{fig:metropolisHastings_swimmingDetailedBalance}). To begin with the chemical is relatively localised to the site where the spill occurred in the portion of the lake not used for swimming. At this point in time, there is net flux of the chemical from this side \textit{into} the swimming side. This diffusion process continues until the chemical is evenly distributed throughout the whole body of water (equilibrium). At this point, the flux of chemical from non-swimming into the swimming zone are the same; in other words the net flux is \textit{zero}. This maintains roughly the same number of chemical particles on either side of the barrier.
 
@@ -6447,10 +6446,10 @@ The Kolmogorov-Smirnov test statistic against the posterior density is displayed
 
 \boxed{Interactive:} allow the user to explore how changing the step size influences the effective sample size, and minimises the distance between the sampling distribution and the actul
 
-\subsection{MCMC as finding and exploring the typical set}\index{typical set}\footnote{The idea to think of MCMC this way came from an excellent lecture by Michael Betancourt here: \url{https://www.youtube.com/watch?v=pHsuIaPbNbY}.}
+\subsection{MCMC as finding and exploring the typical set\footnote{The idea to think of MCMC this way came from an excellent lecture by Michael Betancourt here: \url{https://www.youtube.com/watch?v=pHsuIaPbNbY}.}}\index{typical set}
 A nice intuition for the ideal functioning of an MCMC algorithm comes from \textit{information theory}\index{information theory}. If we imagine a common occurrence in Bayesian inference, the majority of the posterior probability is confined to a relatively small area of parameter space; particularly for more complex problems that have a higher number of parameters. The rest of the parameter space terrain is low, and flat; meaning that if we were to draw independent samples from our posterior, it would be very unlikely that we would end up here. We call this set of most likely outcomes rather loosely, the \textit{typical set}.
 
-We can think of an ideal MCMC algorithm as being composed of two steps: firstly \textit{finding} the typical set; secondly \textit{exploring} it. We want to find the typical set since this is where the majority of the posterior probability mass sits, don't want to concern ourselves with sampling from outside of this region, since it is highly unlikely that the parameters actually sit in this range. We need to explore the typical set, because we want to build up an accurate map of the actual posterior density, in these areas that have the highest probability mass. 
+We can think of an ideal MCMC algorithm as being composed of two steps: firstly \textit{finding} the typical set; secondly \textit{exploring} it. We want to find the typical set since this is where the majority of the posterior probability mass sits. We don't want to concern ourselves with sampling from outside of this region, since it is highly unlikely that the parameters actually sit in this range. We need to explore the typical set, because we want to build up an accurate map of the actual posterior density, in these areas that have the highest probability mass. 
 
 We can use these principles to explain further the behaviour of the Metropolis samplers with either too-small or too-large step sizes. The one that does not step far enough spends a long time finding the typical set; too long! The sampler that steps too far can find the typical set easy enough, but is not very good at exploring it, since most of its proposed steps are rejected. This results in a rather coarse fit of the distribution reconstructed from its samples to the actual posterior (see the bottom right panels of figure \ref{fig:metropolisHastings_rateOfConvergence}). The just-right step-size sampler does reasonably well in both finding, then exploring the typical set (however we shall see in chapter \ref{chap:HMC} how we can do better!)
 
@@ -6487,21 +6486,21 @@ Ultimately, there are no quick fixes, no simple ways to correct a problematic Ma
 However, we are yet to adequately describe how we measure convergence in practice. This is the topic of section \ref{sec:metropolisHastings_convergence}.
 
 \section{Judging convergence}\label{sec:metropolisHastings_convergence}\index{MCMC convergence}
-We have talked about what it means for a Markov Chain to converge the posterior distribution. In figure \ref{fig:metropolisHastings_rateOfConvergence1} we even measured it! If we knew the posterior distribution, then we know some of the ways we could measure the degree of correspondence between the sampling distribution and the actual; we the Kolmogorov-Smirnov test statistic as an approximate measure; a better attempt might use the Kullback-Leibler\index{kullback-leibler} measure (see section \ref{sec:Evaluation_idealAccuracy} for an explanation), although there are an array of choices here dependent on the goals of an analysis. 
+We have talked about what it means for a Markov Chain to converge the posterior distribution. In figure \ref{fig:metropolisHastings_rateOfConvergence1} we even measured it! If we knew the posterior distribution, then we know some of the ways we could measure the degree of correspondence between the sampling distribution and the actual; we previously used the Kolmogorov-Smirnov test statistic as an approximate measure; a better attempt might use the Kullback-Leibler\index{kullback-leibler} measure (see section \ref{sec:Evaluation_idealAccuracy} for an explanation), although there are an array of choices here dependent on the goals of an analysis. 
 
 However, in pretty much all applied examples of Bayesian inference, we do \textit{not} know the posterior distribution, and hence measuring convergence is difficult. Note that we could actually use the K-L divergence, but with an unnormalised posterior; recognising that a distribution that minimises this will also minimise the K-L from the actual posterior. However, this is in practice can be difficult to calculate, as it involves a nasty high-dimensional integral, although this forms the basis of some approximate methods, such as \textit{variational Bayes}\index{variational bayes}. It's a bit of a Catch-22. In order to tell whether our sampling algorithm converges to the posterior, we need the posterior. However, to get the posterior we need to do sampling!
 
 So, how can we proceed? One of the nicest ways to approach convergence is by the methods first suggested by Andrew Gelman and Donald Rubin in 1992 \cite{gelman1992inference}. Like much of this book, we will explain this methodology by way of an analogy, and then describe the approach more properly.
 
-\subsection{Bob's bees in a house}\footnote{We first heard this example in a lecture by Bob Carpenter - see \url{https://www.youtube.com/watch?v=qQFF4tPgeWI}, and thought it very nicely analogises the approach that Gelman and Rubin suggested for measuring convergence, so we describe a version of it here.}
+\subsection{Bob's bees in a house\footnote{We first heard this example in a lecture by Bob Carpenter - see \url{https://www.youtube.com/watch?v=qQFF4tPgeWI}, and thought it very nicely analogises the approach that Gelman and Rubin suggested for measuring convergence, so we describe a version of it here.}}
 
-Imagine that there is a dark house, of unknown size, and shape, that we would like to determine. We luckily have at our disposal a number of Bumble Bees, that are each fitted with a tracker that charts their location as they move. We hope that by releasing these bees and tracking their location at discrete time intervals (produces samples), we will eventually be able to reconstruct an accurate 3D image of the house. Imagine that at first, we only release a single bee. A question that occurs to us is,`How long do we have to wait before we can be confident that our bee has moved thoroughly throughout the whole house?' We think for a second, then answer (ourselves) that we can use its tracker, to look at its path over time - if we have been monitoring it for some period, and its distribution of locations does not appear to be changing, then doesn't this mean that we are done? 
+Imagine that there is a dark house, of unknown size, and shape, that we would like to determine. We luckily have at our disposal a number of Bumble Bees, that are each fitted with a tracker that charts their location as they move. We hope that by releasing these bees and tracking their location at discrete time intervals (these locations represent samples), we will eventually be able to reconstruct an accurate 3D image of the house. Imagine that at first, we only release a single bee. A question that occurs to us is,`How long do we have to wait before we can be confident that our bee has moved thoroughly throughout the whole house?' We think for a second, then answer (ourselves) that we can use its tracker, to look at its path over time - if we have been monitoring it for some period, and its distribution of locations does not appear to be changing, then doesn't this mean that we are done? 
 
 No, it doesn't. Imagine that some of the doors in the house are very small, making it less likely that the bee - which we assume moves randomly throughout the building - will pass through. It could be(e) that this sort of situation has occurred, and our bee is temporarily stuck within a single room of the house (see figure \ref{fig:metropolisHastings_bobBees}). When we look at the bee's path, we have the illusion that it has converged on the distribution of the whole house, because its distribution of locations does not appear to change over time. However, this is a statistical mirage; if we waited a bit longer, our bee would eventually go through the door, and move around the rest of the house.
 
 So if we wait a bit longer we may (now) in hindsight think that the bee's location is representative of the layout of the entire house. However, just as we are about to call our bees in for nectar, our tracker shows that the bee has moved into a completely new area which on first glances appears to be the same size as our original estimations of the house size! Damn. It seems that, however long we wait, we are destined to always face this type of issue; particularly because we are assuming we have no idea of the actual house size and shape.
 
-Fortunately, we have read Gelman and Rubin's 1992 article, and this gives us an idea. Suppose we are able to, by some mechanism, release a \textit{number} of bees in random, and hopefully, diverse locations throughout the house. For this example to work, we assume that the bees do not interact with one another; they are loner bees. We then monitor the paths of all the bees over time. Now looking at our bees, we are able to see that some of the insects have remained in parts of the house; they haven't yet passed through the small doors in order to mix with the other bees. This is now obvious to us because we can actually \textit{see} that the distribution of some bees is different to others (see figure \ref{fig:metropolisHastings_bobBees}).
+Fortunately, we have read Gelman and Rubin's 1992 article, and this gives us an idea. Suppose we are able to, by some mechanism, release a \textit{number} of bees in random, at hopefully, diverse locations throughout the house. For this example to work, we assume that the bees do not interact with one another; they are loner bees. We then monitor the paths of all the bees over time. Now looking at our bees, we are able to see that some of the insects have remained in parts of the house; they haven't yet passed through the small doors in order to mix with the other bees. This is now obvious to us because we can actually \textit{see} that the distribution of some bees is different to others (see figure \ref{fig:metropolisHastings_bobBees}).
 
 The idea is that, if we release a sufficiently large number of such bees, and monitor their paths over time; then a way to see if the total sampling distribution of the bees has converged on the actual shape of the house, is to see whether we can actually differentiate between the samples from one bee vs all others in turn. By samples here, we are imagining that we take the entire list of locations that bee A has visited, and use these to draw a histogram. We then look at the histograms of each of the other bees, and compare it to that bee. If we can't see (or calculate) a difference between all these histograms, then this is probably a pretty good indicator that our insects have visited the entire house!
 
@@ -6559,7 +6558,7 @@ W = \frac{1}{m}\sum\limits_{j=1}^{m} s_j^2
 %
 where $s_j^2=\frac{1}{n-1}\sum\limits_{i=1}^{n} (\theta_{ij} - \bar{\theta_j})^2$, is the typical estimator for the sample variance. Note that here we index $\theta$ by both $i$ and $j$, so that $\theta_{ij}$ corresponds to the ith sample from the jth chain; $\bar{\theta_j}$ is the mean sample of the jth chain. $m$ indicates the number of chains, so that by the above formula, we are just averaging over the sample variances across all chains. 
 
-To calculate the between-chain variability, we essentially want to compare the mean of each chain with that of the \textit{overall} mean (see figure ). We want again to average this over all the chains, and so we calculate: 
+To calculate the between-chain variability, we essentially want to compare the mean of each chain with that of the \textit{overall} mean (see figure \ref{fig:metropolisHastings_withinBetweenExplicit}). We want again to average this over all the chains, and so we calculate: 
 %
 \begin{equation}
 B = \frac{n}{m-1}\sum\limits_{i=1}^{m}(\bar{\theta_j} - \bar{\theta})^2
@@ -6587,7 +6586,7 @@ when written this way, it is apparent that if $B\rightarrow W$, or $n\rightarrow
 \hat{R} = \sqrt{\frac{W + \frac{1}{n} \left(B - W\right)}{W}}
 \end{equation}
 %
-where initially $\hat{R}>>1$, since our chains begin in an overdispersed position. The idea is that, if this ratio continues to exceed a relatively high value (in practice a rule of thumb is to use $\hat{R}\sim 1.1$ as a cut-off), then our chains have not mixed well, and we hence cannot have any confidence in the assertion that convergence has occurred. However, as $B\rightarrow $, then $\hat{R}\rightarrow 1$, and we are more confident that our chains are mixing well.
+where initially $\hat{R}>>1$, since our chains begin in an overdispersed position. The idea is that, if this ratio continues to exceed a relatively high value (in practice a rule of thumb is to use $\hat{R}\sim 1.1$ as a cut-off), then our chains have not mixed well, and we hence cannot have any confidence in the assertion that convergence has occurred. However, as $B\rightarrow W$, then $\hat{R}\rightarrow 1$, and we are more confident that our chains are mixing well.
 
 In practice, we estimate $\hat{R}$ across all of our parameters, and we continue to run our chains until \textit{all} of our parameters satisfy $\hat{R} < 1.1$. 
 
@@ -6716,16 +6715,82 @@ Prove that it works. Is detailed balance satisfied? When is it better to use MH?
 Design an algorithm that beats the simple adaptive MCMC example we used in this chapter.
 
 \chapter{Gibbs sampling}\label{chap:Gibbs}
+\section{Chapter mission statement}
+This chapter will introduce the reader to another powerful MCMC algorithm, known as the \textit{Gibbs sampler}, and will explain its similarities, and differences with the Metropolis algorithm, introduced in chapter \ref{chap:metropolisHastings}.
+
+\section{Chapter goals}
+The Metropolis algorithm introduced in chapter \ref{chap:metropolisHastings} provides a powerful tool for doing the MCMC needed in applied Bayesian inference. The generality of the Metropolis algorithm is one of its greatest assets; it can be applied to a large swathe of problems, encompassing both simple (low parameter dimensionality), as well as more complex problems (high parameter dimensionality). However, there is a cost to its generality - it can be slow to converge to the posterior distribution for some types of models. Furthermore, as we saw in chapter \ref{chap:metropolisHastings}, to ensure speedy convergence to the posterior, we are actually required to tune the proposal distribution for the Metropolis sampler. This tuning needs to be carried out for each new problem to which the algorithm is applied, meaning that it can be cumbersome to apply in practice. 
+
+The Metropolis algorithm is a type of rejection algorithm for generating samples from the posterior distribution. By its very nature therefore, we will reject a large proportion of potential steps. This high rate of rejection can limit the algorithm's ability to explore posterior space. Wouldn't it be better if instead, we could choose a sampler that \textit{always} accepted a proposed step in posterior space? Whilst in general this is not possible, it turns out for a reasonably-sized subclass of problems, it is; if we use the \textit{Gibbs sampler.}  
+
+But how can we do such sampling? Wouldn't this require us to be able to sample directly from the posterior density, you ask? Well, it turns out that whilst we often cannot simply calculate the posterior distribution itself, we may be able to calculate the posterior density for one (or more) parameter(s) \textit{conditional} on the others. Furthermore, if we can sample exactly from this conditional density, then we can accept \textit{all} of the proposed samples as being from the posterior! Finally, if we can do this conditional sampling along all the dimensions of our posterior space, then this would provide a way of speedily sampling from our posterior. 
+
+Gibbs sampling works by exploiting such coincidences of conditionality in our posterior space. Whilst these coincidences may not exist for all problems, they were sufficiently prevalent to motivate the creation of the BUGS and JAGS languages for MCMC. In many problems it may not be possible to find, and sample from, these conditional distributions for all parameters in the posterior. However, we can often do so for a subset of them. We can then use Gibbs sampling for these parameters, and an algorithm like Metropolis for the remaining ones. These combination samplers are in fact what BUGS and JAGS actually implement, in order to allow them to be applied in quite general settings. 
+
+Finally before we proceed with Gibbs, a note of caution - whilst it may seem obvious that this algorithm should be preferred relative to Metropolis, this needn't necessarily be the case. Firstly it requires us to be able to analytically calculate conditional densities, which is not possible for many problems. Secondly, Gibbs sampling may result in slow exploration of posterior space in settings where the parameters are highly correlated in posterior space. Furthermore, when we modify basic Metropolis as in chapter \ref{chap:HMC}, we shall see that this type of sampler is frequently much faster than Gibbs. 
+
+With these caveats in mind, let's get to Gibbs!
+
+\section{Back to prospecting for gold}\label{sec:Gibbs_gold}
+Again cast your mind back to the problem described in section \ref{sec:metropolisHastings_gold}, where you are employed by a company wanting to map the amount of gold underneath a desert. As before, you are equipped with a machine which allows you to measure the magnitude of the magnetic field beneath, where the magnetic field varies in proportion to the amount of gold. This time, we have a slightly different desert to before (see figure \ref{fig:Gibbs_goldMiningAgain1}), however the problem is still the same; your employers want you to produce a detailed map of the deposits underneath. 
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{Gibbs_goldMiningAgain1.png}}
+\caption{\textbf{A map of the underground gold deposits for described in section \ref{sec:Gibbs_gold}.} The blue lines show the directions that the satellite can scan along.}\label{fig:Gibbs_goldMiningAgain1}
+\end{figure}
+
+However, this time you are equipped with a computer than links to a satellite that is able to scan the magnetic field under the desert along a given north-south or east-west direction from where we stand. Unfortunately, the satellite is faulty, and is unable to return a direct map of the magnetic field below. However, based on what it records, it can return a random point along this line, where the likelihood of a given distance is in exact relation to the amount of gold beneath. The question is, how can we use this device in order to help us map the underground gold most efficiently?
+
+One way is to ignore the faulty satellite, and use a similar method as we did in chapter \ref{chap:metropolisHastings}. Here we decided to pick a random location in the desert to begin with, and measure the magnetic field underneath. We then used a bivariate normal distribution to pick a new (north,east) spot from which to measure the magnetic field. Then if the magnetic field is higher at our new spot, we move there. If however, the magnetic field is lower, we only move there \textit{probabilistically}, where the probability of moving is given by the ratio of the new to old magnetic fields. If we use a list of our (north,east) locations over time as samples, then we can build up a map of the gold underneath by considering their spatial density. This method amounts to using the Metropolis sampler (see the middle panel of figure \ref{fig:Gibbs_goldMiningAgain2}).
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{Gibbs_goldMiningAgain2.png}}
+\caption{\textbf{A contour map of the actual gold deposits(left), and a reconstructed map of deposits produced via the Metropolis sampler (middle), and Gibbs sampler (right).} The red lines show the paths through the desert for a person using either method.}\label{fig:Gibbs_goldMiningAgain2}
+\end{figure}
+
+A better way is to use the information from satellite. If we start in a random location in the desert we can then use the satellite determine our next sampling point in the west-east direction. We then move to the new point, as use our satellite device to determine a random point in the north-south direction, and move there. We then continue this process; alternating between moving to a random location in the west-east then north-south direction. This method amounts to us using a Gibbs sampler (see right panel of figure \ref{fig:Gibbs_goldMiningAgain2}).
+
+We notice two differences between our moves dictated by these samplers. First when using the Metropolis sampler we often find ourselves not moving on a given iteration. This contrasts with the Gibbs sampler where we always move to a new spot in each iteration. Second, we note that for the Metropolis sampler we change both our north and east coordinates simultaneously (see diagonal movement lines in figure X), whereas in the Gibbs case we only move along one direction at a time (see horizontal and vertical lines in figure \ref{fig:Gibbs_goldMiningAgain3}).
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{Gibbs_goldMiningAgain3.png}}
+\caption{\textbf{Histograms of samples produced via the Metropolis (left), and Gibbs (right) samplers, across a range of iterations.}}\label{fig:Gibbs_goldMiningAgain3}
+\end{figure}
+
+We can ask, which of the two methods - Metropolis or Gibbs - is fastest? Reconstructions of the underground gold deposits for 1,000, 10,000 and 100,000 iterations of each method are shown in figure X. We can see that after only 1,000 iterations the map produced via Gibbs sampling is considerably closer to reality than Metropolis. After 10,000, some differences still persist although Gibbs is less noisy. Finally, after 100,000 iterations it is difficult to make out much of a difference; both methods produce a fairly crisp map of the underground gold. 
+
+\section{Defining the Gibbs algorithm}
+Now that we have a bit of intuition as to how this method works, we need to properly define it. By contrast with Metropolis, Gibbs sampling is only really valid for $p=2+$ dimensional models. So we start by defining a three dimensional parameter vector $\boldsymbol{\theta}=(\theta_1,\theta_2,\theta_3)$ for a particular statistical model with data $\boldsymbol{y}$. We assume that we are unable to calculate the posterior distribution, but are able to exactly compute the three conditional distributions: $p(\theta_1|\theta_2,\theta_3,\boldsymbol{y})$, $p(\theta_2|\theta_1,\theta_3,\boldsymbol{y})$, and $p(\theta_3|\theta_1,\theta_2,\boldsymbol{y})$. Furthermore, these distributions are simple enough that we can generate independent samples from each of them. 
+
+For our example, the Gibbs algorithm consists of the following steps \cite{gelman2013bayesian}: first choose a random starting $(\theta_1^0,\theta_2^0,\theta_3^0)$, along the same lines as for Metropolis. Then in each subsequent iteration:
+
+\begin{enumerate}
+\item \textbf{Choose a random parameter update ordering.} In our example, in the first iteration we might have an order of $(\theta_3,\theta_2,\theta_1)$, then in the second we have $(\theta_1,\theta_3,\theta_2)$ etc.
+\item \textbf{Sample from the conditional posterior for each parameter in order using the most up-to-date parameters.} So for an ordering $(\theta_3,\theta_3,\theta_1)$ in our first iteration, we would first independently sample from $p(\theta_3^1|\theta_1^0,\theta_2^0,\boldsymbol{y})$, then $p(\theta_2^1|\theta_1^0,\theta_3^1,\boldsymbol{y})$, and finally $p(\theta_1^1|\theta_2^1,\theta_3^1,\boldsymbol{y})$.
+\end{enumerate}
+
+Notice how in the second step we use the most recent parameters (including those changed in the current iteration) to create the conditionals we then sample from. This process is then repeated until we determine our algorithm has converged, using the same multiple chain $\hat{R}$ methodology we discussed in section \ref{sec:metropolisHastings_convergence}. Also note that there is no accept/reject step as for the Metropolis algorithm - we accept all steps! 
+
+A subtlety of this method is that it can actually be used in a slightly different way. Suppose that instead we are able to generate independent samples for the following alternative conditionals: $p(\theta_1,\theta_2|\theta_3,\boldsymbol{y})$, $p(\theta_1,\theta_3|\theta_3,\boldsymbol{y})$ and $p(\theta_2,\theta_3|\theta_1,\boldsymbol{y})$. Well we could repeat the exact methodology above, except replacing the old univariate conditionals, by these jointly bivariate ones. Which of these methods should we prefer? Well, we would like the one that is closest to independent sampling from the unconditional posterior. The first method samples from univariate conditionals, and thus updates just one parameter per step. However, the second method uses bivariate conditionals, and hence updates two parameters per step. The second is thus preferred, since it is closer to the ideal of independently sampling from the three dimensional unconditional posterior. Intuitively, there will be less correlation between consecutive samples for the second sampler since we are changing two parameters in each step. This decreased correlation means the effective sample size is higher for the second method.
+
+So why don't we always use a Gibbs sampler that samples from 2+ dimensional conditionals? Well for the same reason we can't just always sample directly (and independently) from the posterior - constructing such a sampler may not be possible! In most applied settings we are constrained by the maths of the problem, which means that block sampling of a number of parameters may just not be possible. However, for circumstances that allow it, we should always prefer such a block updating Gibbs sampler to one that only updates a single parameter at a time.
+
+\subsection{2D example}
+
+Show performance vs Metropolis vs independent. Also show that we are able to essentially independently sample from the model if we discard half the samples. 
+
 \section{The intuition behind the Gibbs algorithm}
-Imagine wanting to sample the heights of all the points on earth as a posterior distribution. One could do a random walk a la MH, but if the proposal distribution is too narrow, then the sampler could get stuck on a mountain range or desert; alternatively large swathes of landscape may be ignored if the step size is too large. This means it can take require a long burn-in, and may or may not be representative of the underlying landscape. The Gibbs algorithm works by cutting through the earth along lines of latitude or longitude, and allowing all steps along this conditional distribution. Since arbitrary step lengths are allowed, the algorithm is quicker, and there is no need to fine tune it to the degree of MH.
+Imagine wanting to sample the heights of all the points on earth as a posterior distribution. One could do a random walk a la Metropolis, but if the proposal distribution is too narrow, then the sampler could get stuck on a mountain range or desert; alternatively large swathes of landscape may be ignored if the step size is too large. This means it can take a long time for Metropolis sampler to explore the whole of posterior space, and converge on the posterior density. 
+
+The Gibbs algorithm works by cutting through the earth along lines of latitude or longitude, and allowing all steps along this conditional distribution. Since arbitrary step lengths are allowed, the algorithm is quicker, and there is no need to fine tune it to the degree of MH.
 
 \section{Simple examples}
 \section{DAG models}
 \section{The benefits and difficulties with Gibbs}
+Show how Metropolis and Gibbs struggle when the posterior is very correlated. A motivation for moving to HMC. Prefer to move diagonally opposed to horizontally and vertically. 
+
 \section{Metropolis as a subset of Gibbs and vice versa}
 Also include discussion of the fact that many samplers use a combination of both Gibbs and Metropolis.
-\section{Multimodality}
-Show how chains get stuck. Potential solutions are parallel tempering, adiabatic Monte Carlo.
 
 \chapter{Hamiltonian Monte Carlo}\label{chap:HMC}
 \section{Introduction to Hamiltonian Monte Carlo}
@@ -6734,6 +6799,10 @@ Reference Hoffman and Gelman 2014 paper.
 \section{Riemannian MCMC}
 Reference downloaded Girolami article.
 Remember the comment from Ben Goodrich here: \url{https://groups.google.com/forum/?fromgroups=#!topic/stan-users/0F0O4hfHA8g} - in other words, using the second derivative is not free computationally! Ideal to design programs that don't need to use RMHMC.
+
+\section{Multimodality}
+Show how chains get stuck. Potential solutions are parallel tempering, adiabatic Monte Carlo.
+
 
 \chapter{Stan and JAGS}\label{chap:StanJAGS}
 \section{Motivation for Stan and JAGS}
