@@ -6775,22 +6775,81 @@ A subtlety of this method is that it can actually be used in a slightly differen
 
 So why don't we always use a Gibbs sampler that samples from 2+ dimensional conditionals? Well for the same reason we can't just always sample directly (and independently) from the posterior - constructing such a sampler may not be possible! In most applied settings we are constrained by the maths of the problem, which means that block sampling of a number of parameters may just not be possible. However, for circumstances that allow it, we should always prefer such a block updating Gibbs sampler to one that only updates a single parameter at a time.
 
-\subsection{2D example}
+\subsection{Crime and punishment/unemployment}\label{sec:Gibbs_crimeUnemployment}
+Let's imagine that the unemployment (u) and crime level (c) in a town are estimated to follow a multivariate normal distribution, of the form:
+%
+\begin{align*}
+\begin{pmatrix}u\\
+c
+\end{pmatrix} &\sim  N
+\begin{bmatrix}
+\begin{pmatrix}
+a\\
+b
+\end{pmatrix}\!\!,&
+\begin{pmatrix}
+1 & \rho\\
+\rho & 1
+\end{pmatrix}
+\end{bmatrix}
+\end{align*}
+%
+where all parameters are estimated from data, and $\rho>0$. In this example we have been lucky in that we could estimate the posterior distribution analytically. So in reality there wouldn't be any need to do MCMC, but nevertheless we can use this example to illustrate the workings of Gibbs. Handily, the multivariate normal has simple conditional densities, which are each themselves normal (see the left hand plot of figure \ref{fig:Gibbs_crimeMultivariateNormalSlice}). We don't want to get weighed down with the mathematical derivation of these (see the chapter appendix), but they can be found to be:
+%
+\begin{align}
+u|c \sim N(a+\rho(c-b),1-\rho^2)\\
+c|u \sim N(b+\rho(u-a),1-\rho^2)
+\end{align}
+%
+Furthermore, since the above expressions represent normal distributions, we can easily directly sample from them using statistical software's inbuilt random number generators. By alternating between sampling from each of these above expressions, we can therefore sample from the posterior distribution. So the idea is that we start at some random location in parameter space, say $(u^0,c^0)$, then first update $u^0$, by sampling from:
+%
+\begin{equation}
+u^1|c^0 \sim N(a+\rho(c^0-b),1-\rho^2)
+\end{equation}
+%
+This gives us $u^1$, which we then use to sample $c^1$ from:
+%
+\begin{equation}
+c^1|u^1 \sim N(b+\rho(u^1-a),1-\rho^2)
+\end{equation}
+%
+We then repeat this process over, and over, and we are thus able to generate samples that give the impression of the true posterior after some time (see figure \ref{fig:Gibbs_crimeMultivariateNormalSlice}).
 
-Show performance vs Metropolis vs independent. Also show that we are able to essentially independently sample from the model if we discard half the samples. 
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{Gibbs_crimeMultivariateNormalSlice.png}}
+\caption{\textbf{Actual posterior (left), with two distributions reconstructed from Gibbs' sampling, for a sample size of 100 (middle), and 1,000 (right).} In the left hand plot the lines illustrate the shape of the conditional densities here. \textbf{Rotate two line plots, and position so that they are slanted over the relevant reconstructed plots. In other words, I want this plot to be a 3x1 plot.}}\label{fig:Gibbs_crimeMultivariateNormalSlice}
+\end{figure}
 
 \section{The intuition behind the Gibbs algorithm}
 Imagine wanting to sample the heights of all the points on earth as a posterior distribution. One could do a random walk a la Metropolis, but if the proposal distribution is too narrow, then the sampler could get stuck on a mountain range or desert; alternatively large swathes of landscape may be ignored if the step size is too large. This means it can take a long time for Metropolis sampler to explore the whole of posterior space, and converge on the posterior density. 
 
 The Gibbs algorithm works by cutting through the earth along lines of latitude or longitude, and allowing all steps along this conditional distribution. Since arbitrary step lengths are allowed, the algorithm is quicker, and there is no need to fine tune it to the degree of MH.
 
-\section{Simple examples}
-\section{DAG models}
-\section{The benefits and difficulties with Gibbs}
-Show how Metropolis and Gibbs struggle when the posterior is very correlated. A motivation for moving to HMC. Prefer to move diagonally opposed to horizontally and vertically. 
-
 \section{Metropolis as a subset of Gibbs and vice versa}
 Also include discussion of the fact that many samplers use a combination of both Gibbs and Metropolis.
+
+\section{The benefits and problems with Gibbs and Random Walk Metropolis}
+Gibbs sampling can be great. If we can derive the conditional densities, and if these are relatively well behaved then the rate of convergence to the posterior density can be faster than random walk Metropolis. Consider the crime and unemployment example we described in section \ref{sec:Gibbs_crimeUnemployment}. If we set a Gibbs sampler and Metropolis algorithm going at the same time, then we see that the rate of convergence to the posterior is faster for Gibbs (see figure \ref{fig:Gibbs_correlationProblemCrime}). This is because Gibbs sampling - by taking account of the mathematical description of the entities involved - can generate more effective samples per iteration than Random Walk Metropolis does. However, in any case after only a few hundred iterations, both sampling methods have fairly well converged on the posterior. 
+
+Let us suppose that we increase the correlation between our crime and unemployment variables, so that our posterior is composed of a sharper diagonal ridge (bottom panes of figure \ref{fig:Gibbs_correlationProblemCrime}). Now we see a problem. After the same number of iterations, the reconstructed distributions look quite different from the actual distribution. In particular, in both cases the width of the ridge is far overstated for both the Metropolis and Gibbs samplers! 
+
+So what's going on here? Well, the problem here is that the underlying distribution's geometry - in other words, the sharpness of the ridge - is causing us to take far longer to explore the posterior space. For the Metropolis sampler, this is characterised by a high rejection rate, meaning that we rarely move around the typical set\index{Typical set}. Whereas, for the Gibbs sampler, being forced to move in horizontal and vertical jumps makes it really hard to explore the diagonally-orientated distribution.
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{Gibbs_correlationProblemCrime.png}}
+\caption{\textbf{Metropolis (middle) and Gibbs' (right) reconstructed densities for two different distributions (left panels).}}\label{fig:Gibbs_correlationProblemCrime}
+\end{figure}
+
+This poor performance of the two samplers increases along with the degree of correlation between our variables. Both of these methods fails to work efficiently for highly correlated distributions because the distribution's geometry is maligned with the mechanisms behind each sampler. This malalignment induces a high degree of autocorrelation in samples, resulting in a low effective sample size per iteration.
+
+What we would prefer would be a sampler that moves in accordance with the underlying distribution's shape. In this case, this would correspond to a sampler that moves mostly diagonally, in contrast to Gibbs' horizontal and vertical movements. Furthermore, by moving in this manner, we hope to avoid the high rate of rejection that we see for Random Walk Metropolis. Fear not! In chapter \ref{chap:HMC}, we come across such a sampler in the form of Hamiltonian Monte Carlo. 
+
+\section{Chapter summary}
+Add quote from book about Gibbs being source of many problems.
+\section{Chapter outcomes}
+
+\section{Appendix}
+\subsection{Derivation of conditional distributions for multivariate normal}
 
 \chapter{Hamiltonian Monte Carlo}\label{chap:HMC}
 \section{Introduction to Hamiltonian Monte Carlo}
