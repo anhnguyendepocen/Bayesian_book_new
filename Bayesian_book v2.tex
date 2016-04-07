@@ -6727,7 +6727,7 @@ But how can we do such sampling? Wouldn't this require us to be able to sample d
 
 Gibbs sampling works by exploiting such coincidences of conditionality in our posterior space. Whilst these coincidences may not exist for all problems, they were sufficiently prevalent to motivate the creation of the BUGS and JAGS languages for MCMC. In many problems it may not be possible to find, and sample from, these conditional distributions for all parameters in the posterior. However, we can often do so for a subset of them. We can then use Gibbs sampling for these parameters, and an algorithm like Metropolis for the remaining ones. These combination samplers are in fact what BUGS and JAGS actually implement, in order to allow them to be applied in quite general settings. 
 
-Finally before we proceed with Gibbs, a note of caution - whilst it may seem obvious that this algorithm should be preferred relative to Metropolis, this needn't necessarily be the case. Firstly it requires us to be able to analytically calculate conditional densities, which is not possible for many problems. Secondly, Gibbs sampling may result in slow exploration of posterior space in settings where the parameters are highly correlated in posterior space. Furthermore, when we modify basic Metropolis as in chapter \ref{chap:HMC}, we shall see that this type of sampler is frequently much faster than Gibbs. 
+Finally before we proceed with Gibbs, a note of caution - whilst it may seem obvious that this algorithm should be preferred relative to Metropolis, this needn't necessarily be the case. Firstly it requires us to be able to analytically calculate conditional densities, which is not possible for many problems. Secondly, Gibbs sampling may result in slow exploration of posterior space in settings where the parameters are highly correlated. Furthermore, when we modify basic Metropolis as in chapter \ref{chap:HMC}, we shall see that this type of sampler is frequently much faster than Gibbs. 
 
 With these caveats in mind, let's get to Gibbs!
 
@@ -6739,7 +6739,7 @@ Again cast your mind back to the problem described in section \ref{sec:metropoli
 \caption{\textbf{A map of the underground gold deposits for described in section \ref{sec:Gibbs_gold}.} The blue lines show the directions that the satellite can scan along.}\label{fig:Gibbs_goldMiningAgain1}
 \end{figure}
 
-However, this time you are equipped with a computer than links to a satellite that is able to scan the magnetic field under the desert along a given north-south or east-west direction from where we stand. Unfortunately, the satellite is faulty, and is unable to return a direct map of the magnetic field below. However, based on what it records, it can return a random point along this line, where the likelihood of a given distance is in exact relation to the amount of gold beneath. The question is, how can we use this device in order to help us map the underground gold most efficiently?
+However, this time you are equipped with a computer that links to a satellite that is able to scan the magnetic field under the desert along a given north-south or east-west direction from where we stand. Unfortunately, the satellite is faulty, and is unable to return a direct map of the magnetic field below. However, based on what it records, it can return a random point along this line, where the likelihood of a spatial location is in exact relation to the amount of gold beneath. The question is, how can we use this device in order to help us map the underground gold most efficiently?
 
 One way is to ignore the faulty satellite, and use a similar method as we did in chapter \ref{chap:metropolisHastings}. Here we decided to pick a random location in the desert to begin with, and measure the magnetic field underneath. We then used a bivariate normal distribution to pick a new (north,east) spot from which to measure the magnetic field. Then if the magnetic field is higher at our new spot, we move there. If however, the magnetic field is lower, we only move there \textit{probabilistically}, where the probability of moving is given by the ratio of the new to old magnetic fields. If we use a list of our (north,east) locations over time as samples, then we can build up a map of the gold underneath by considering their spatial density. This method amounts to using the Metropolis sampler (see the middle panel of figure \ref{fig:Gibbs_goldMiningAgain2}).
 
@@ -6748,16 +6748,16 @@ One way is to ignore the faulty satellite, and use a similar method as we did in
 \caption{\textbf{A contour map of the actual gold deposits(left), and a reconstructed map of deposits produced via the Metropolis sampler (middle), and Gibbs sampler (right).} The red lines show the paths through the desert for a person using either method.}\label{fig:Gibbs_goldMiningAgain2}
 \end{figure}
 
-A better way is to use the information from satellite. If we start in a random location in the desert we can then use the satellite determine our next sampling point in the west-east direction. We then move to the new point, as use our satellite device to determine a random point in the north-south direction, and move there. We then continue this process; alternating between moving to a random location in the west-east then north-south direction. This method amounts to us using a Gibbs sampler (see right panel of figure \ref{fig:Gibbs_goldMiningAgain2}).
+A better way is to use the information from satellite. If we start in a random location in the desert we can then use the satellite determine our next sampling point in the west-east direction. We then move to the new point, and use our satellite device to determine a random point in the north-south direction, and move there. We then continue this process; alternating between moving to a random location in the west-east then north-south direction. This method amounts to us using a Gibbs sampler (see right panel of figure \ref{fig:Gibbs_goldMiningAgain2}).
 
-We notice two differences between our moves dictated by these samplers. First when using the Metropolis sampler we often find ourselves not moving on a given iteration. This contrasts with the Gibbs sampler where we always move to a new spot in each iteration. Second, we note that for the Metropolis sampler we change both our north and east coordinates simultaneously (see diagonal movement lines in figure X), whereas in the Gibbs case we only move along one direction at a time (see horizontal and vertical lines in figure \ref{fig:Gibbs_goldMiningAgain3}).
+We notice two differences between our moves dictated by these samplers. First when using the Metropolis sampler we often find ourselves not moving on a given iteration. This contrasts with the Gibbs sampler where we always move to a new spot in each iteration. Second, we note that for the Metropolis sampler we change both our north and east coordinates simultaneously (see diagonal movement lines in figure \ref{fig:Gibbs_goldMiningAgain3}), whereas in the Gibbs case we only move along one direction at a time (see horizontal and vertical lines in figure \ref{fig:Gibbs_goldMiningAgain3}).
 
 \begin{figure}
 \centerline{\includegraphics[width=1\textwidth]{Gibbs_goldMiningAgain3.png}}
 \caption{\textbf{Histograms of samples produced via the Metropolis (left), and Gibbs (right) samplers, across a range of iterations.}}\label{fig:Gibbs_goldMiningAgain3}
 \end{figure}
 
-We can ask, which of the two methods - Metropolis or Gibbs - is fastest? Reconstructions of the underground gold deposits for 1,000, 10,000 and 100,000 iterations of each method are shown in figure X. We can see that after only 1,000 iterations the map produced via Gibbs sampling is considerably closer to reality than Metropolis. After 10,000, some differences still persist although Gibbs is less noisy. Finally, after 100,000 iterations it is difficult to make out much of a difference; both methods produce a fairly crisp map of the underground gold. 
+We can ask, which of the two methods - Metropolis or Gibbs - is fastest? Reconstructions of the underground gold deposits for 1,000, 10,000 and 100,000 iterations of each method are shown in figure \ref{fig:Gibbs_goldMiningAgain3}. We can see that after only 1,000 iterations the map produced via Gibbs sampling is considerably closer to reality than Metropolis. After 10,000, some differences still persist although Gibbs is less noisy. Finally, after 100,000 iterations it is difficult to make out much of a difference; both methods produce a fairly crisp map of the underground gold. 
 
 \section{Defining the Gibbs algorithm}
 Now that we have a bit of intuition as to how this method works, we need to properly define it. By contrast with Metropolis, Gibbs sampling is only really valid for $p=2+$ dimensional models. So we start by defining a three dimensional parameter vector $\boldsymbol{\theta}=(\theta_1,\theta_2,\theta_3)$ for a particular statistical model with data $\boldsymbol{y}$. We assume that we are unable to calculate the posterior distribution, but are able to exactly compute the three conditional distributions: $p(\theta_1|\theta_2,\theta_3,\boldsymbol{y})$, $p(\theta_2|\theta_1,\theta_3,\boldsymbol{y})$, and $p(\theta_3|\theta_1,\theta_2,\boldsymbol{y})$. Furthermore, these distributions are simple enough that we can generate independent samples from each of them. 
@@ -6820,36 +6820,92 @@ We then repeat this process over, and over, and we are thus able to generate sam
 \caption{\textbf{Actual posterior (left), with two distributions reconstructed from Gibbs' sampling, for a sample size of 100 (middle), and 1,000 (right).} In the left hand plot the lines illustrate the shape of the conditional densities here. \textbf{Rotate two line plots, and position so that they are slanted over the relevant reconstructed plots. In other words, I want this plot to be a 3x1 plot.}}\label{fig:Gibbs_crimeMultivariateNormalSlice}
 \end{figure}
 
-\section{The intuition behind the Gibbs algorithm}
+\section{Gibbs' earth: the intuition behind the Gibbs algorithm}
 Imagine wanting to sample the heights of all the points on earth as a posterior distribution. One could do a random walk a la Metropolis, but if the proposal distribution is too narrow, then the sampler could get stuck on a mountain range or desert; alternatively large swathes of landscape may be ignored if the step size is too large. This means it can take a long time for Metropolis sampler to explore the whole of posterior space, and converge on the posterior density. 
 
-The Gibbs algorithm works by cutting through the earth along lines of latitude or longitude, and allowing all steps along this conditional distribution. Since arbitrary step lengths are allowed, the algorithm is quicker, and there is no need to fine tune it to the degree of MH.
+The Gibbs algorithm works by walking along the earth's surface along lines of latitude or longitude. If we suppose that we know what each of these transects looks like, then we can imagine reconstructing a picture of the earth using only these 1 dimensional slices. Essentially this is what Gibbs sampling does. By taking samples from a load of different north-south or east-west slices, eventually the algorithm is able to reconstruct a picture of the whole.
 
-\section{Metropolis as a subset of Gibbs and vice versa}
-Also include discussion of the fact that many samplers use a combination of both Gibbs and Metropolis.
+Notice that the Gibbs sampling methodology requires us to know beforehand what these slices along the earth's surface look like. This extra information that we impart on our sampler allows us to more speedily explore posterior space, but it is not without a cost. The cost is that for most problems we do not have much of an idea of what these slices look like, and hence cannot implement Gibbs. 
 
-\section{The benefits and problems with Gibbs and Random Walk Metropolis}
+INSERT A CARTOON PICTURE OF AN EARTH RECONSTRUCTED VIA HORIZONTAL AND VERTICAL LINES (PERHAPS TWO PICTURES.)
+
+\section{The benefits and problems with Gibbs and Random Walk Metropolis}\label{sec:Gibbs_benefitsProblemsGibbs}
 Gibbs sampling can be great. If we can derive the conditional densities, and if these are relatively well behaved then the rate of convergence to the posterior density can be faster than random walk Metropolis. Consider the crime and unemployment example we described in section \ref{sec:Gibbs_crimeUnemployment}. If we set a Gibbs sampler and Metropolis algorithm going at the same time, then we see that the rate of convergence to the posterior is faster for Gibbs (see figure \ref{fig:Gibbs_correlationProblemCrime}). This is because Gibbs sampling - by taking account of the mathematical description of the entities involved - can generate more effective samples per iteration than Random Walk Metropolis does. However, in any case after only a few hundred iterations, both sampling methods have fairly well converged on the posterior. 
 
-Let us suppose that we increase the correlation between our crime and unemployment variables, so that our posterior is composed of a sharper diagonal ridge (bottom panes of figure \ref{fig:Gibbs_correlationProblemCrime}). Now we see a problem. After the same number of iterations, the reconstructed distributions look quite different from the actual distribution. In particular, in both cases the width of the ridge is far overstated for both the Metropolis and Gibbs samplers! 
+Let us suppose that we increase the correlation between our crime and unemployment variables, so that our posterior is composed of a sharper diagonal ridge (bottom panes of figure \ref{fig:Gibbs_correlationProblemCrime}). Now we see a problem. After the same number of iterations, the reconstructed distributions look quite different from the actual distribution. In this case, it looks like the Random Walk Metropolis sampler has actually fared better than the Gibbs!
 
-So what's going on here? Well, the problem here is that the underlying distribution's geometry - in other words, the sharpness of the ridge - is causing us to take far longer to explore the posterior space. For the Metropolis sampler, this is characterised by a high rejection rate, meaning that we rarely move around the typical set\index{Typical set}. Whereas, for the Gibbs sampler, being forced to move in horizontal and vertical jumps makes it really hard to explore the diagonally-orientated distribution.
+So what's going on here? Well, the problem here is that the underlying distribution's geometry - in other words, the sharpness of the ridge - is causing us to take far longer to explore the posterior space. For the Metropolis sampler, this is characterised by a high rejection rate, meaning that we rarely move around the typical set\index{Typical set}. Whereas, for the Gibbs sampler, being forced to move in horizontal and vertical jumps means we take a long time to explore the diagonally-orientated distribution.
 
 \begin{figure}
 \centerline{\includegraphics[width=1\textwidth]{Gibbs_correlationProblemCrime.png}}
-\caption{\textbf{Metropolis (middle) and Gibbs' (right) reconstructed densities for two different distributions (left panels).}}\label{fig:Gibbs_correlationProblemCrime}
+\caption{\textbf{Metropolis (middle) and Gibbs' (right) reconstructed densities for two different distributions (low correlation, top left, high correlation, bottom left panels).}}\label{fig:Gibbs_correlationProblemCrime}
 \end{figure}
 
 This poor performance of the two samplers increases along with the degree of correlation between our variables. Both of these methods fails to work efficiently for highly correlated distributions because the distribution's geometry is maligned with the mechanisms behind each sampler. This malalignment induces a high degree of autocorrelation in samples, resulting in a low effective sample size per iteration.
 
 What we would prefer would be a sampler that moves in accordance with the underlying distribution's shape. In this case, this would correspond to a sampler that moves mostly diagonally, in contrast to Gibbs' horizontal and vertical movements. Furthermore, by moving in this manner, we hope to avoid the high rate of rejection that we see for Random Walk Metropolis. Fear not! In chapter \ref{chap:HMC}, we come across such a sampler in the form of Hamiltonian Monte Carlo. 
 
+
+\section{A change of parameters to speed up exploration}\label{sec:Gibbs_reparameters}
+An alternative method to changing sampler is a change of variables for the underlying distribution so that the components are uncorrelated. In our crime and unemployment example we can do this if we change variables to $C$ and $U$, satisfying:
+%
+\begin{align}
+C &= c - u\\
+U &= c + u
+\end{align}
+%
+This is equivalent to a rotation of axes by 45 degrees clockwise (see figure \ref{fig:Gibbs_reparametersCrime}). So $C$ here represents the difference between the crime level and unemployment, and $U$ is their sum. It turns out the new variables are still jointly normally distributed, although they are now uncorrelated (see chapter appendix for a full derivation). Since these variables are now uncorrelated, a Gibbs sampler in the $(C,U)$ parameter space fares much better (see figure \ref{fig:Gibbs_reparametersCrime}).
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{Gibbs_reparametersCrime.png}}
+\caption{\textbf{Gibbs sampling on two different parameter spaces.} \textbf{Add rotated axes to the left hand figure.}}\label{fig:Gibbs_reparametersCrime}
+\end{figure}
+
+Whilst we have mentioned a change of parameters to speed up Gibbs sampling, it is also relevant more generally. In particular, we shall see that HMC can have issues when parameters are highly correlated. Intuitively, this high correlation means that it is difficult to disentangle one variable's effects from another's. In this case any type of inference, be it based on exactly calculating the posterior, or on approximation via sampling, is going to struggle to give separate meaning to each parameter. This difficulty manifests itself in that parameters have high uncertainties associated with them. Again, Gelman's `Folk Theorem'\index{Folk Theorem} comes in here. If you are finding that your sampler is struggling to converge, then this is 99\% of the time not due to computational issues, but your statistical model. In this circumstance, it really pays to think if there's a way you can reduce correlation is your parameters. Sometimes this may be difficult, but more often there is a way round this situation.
+
 \section{Chapter summary}
-Add quote from book about Gibbs being source of many problems.
+In this chapter we have introduced the concept of Gibbs sampling. Gibbs sampling is a type of dependent sampling that takes account of the particular mathematical structure of each problem. By using this information it allows us to build up a picture of the unconditional posterior, by iteratively drawing independent samples from conditional distributions for all the parameters.
+
+But Gibbs sampling isn't the solution to all our problems. First it requires that we can calculate, and draw independent samples from, the conditional distributions of parameters. In most situations this won't be the case. Second we have seen that particular posterior geometries can make Gibbs sampling highly inefficient. To quote Charles Greyer \cite{brooks2011handbook}: "If I had a nickel for every time someone had asked for help with slowly converging MCMC and the answer had been to stop using Gibbs, I would be rich." Following this Greyer's advice, which we echo here, is to use Gibbs sampling only if it works well. If it doesn't switch to another method. This is partly because another issue with the Gibbs is that it forces us down a path where there can be little remedy of the situation. This contrasts with the freedom of Metropolis (and Metropolis-Hastings) where at least we get to control the proposal distribution. 
+
+A problem with all the sampling algorithms we have thus far considered is that they do not take account of the geometry of the posterior distribution. We saw in section \ref{sec:Gibbs_reparameters} that a reparameterised problem that uses our knowledge of posterior geometry can be used to more efficiently sample from it. The question we now turn to is, "Can we use posterior geometry to speed up MCMC more generally?" The answer is a resounding "Yes - just use Hamiltonian Monte Carlo." 
+
+So now we turn to a discussion of Hamiltonian Monte Carlo; the engine which powers \textit{Stan}.
+
 \section{Chapter outcomes}
+After reading this chapter the student should be familiar with the following concepts:
+%
+\begin{enumerate}
+\item How Gibbs sampling works.
+\item The benefits and costs of Gibbs sampling.
+\item How highly-correlated parameters can make it difficult for us to do inference.
+\end{enumerate}
+
+\section{Problem set}
+\subsection{Prove that the Gibbs sampler can be viewed as a case of Metropolis-Hastings}
+\subsection{Prove that a Gibbs sampler on bivariate normal has an effective sample size of half its true sample size}
+
 
 \section{Appendix}
 \subsection{Derivation of conditional distributions for multivariate normal}
+\subsection{Derive uncorrelated normals from bivariate normal}
+%
+\begin{align*}
+\begin{pmatrix}C\\
+U
+\end{pmatrix} &\sim  N
+\begin{bmatrix}
+\begin{pmatrix}
+0\\
+a+b
+\end{pmatrix}\!\!,&
+\begin{pmatrix}
+2(1-\rho) & 0\\
+0 & 2(1+\rho)
+\end{pmatrix}
+\end{bmatrix}
+\end{align*}
+%
 
 \chapter{Hamiltonian Monte Carlo}\label{chap:HMC}
 \section{Introduction to Hamiltonian Monte Carlo}
