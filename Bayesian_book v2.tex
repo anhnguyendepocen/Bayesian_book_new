@@ -6817,7 +6817,7 @@ We then repeat this process over, and over, and we are thus able to generate sam
 
 \begin{figure}
 \centerline{\includegraphics[width=1\textwidth]{Gibbs_crimeMultivariateNormalSlice.png}}
-\caption{\textbf{Actual posterior (left), with two distributions reconstructed from Gibbs' sampling, for a sample size of 100 (middle), and 1,000 (right).} In the left hand plot the lines illustrate the shape of the conditional densities here. \textbf{Rotate two line plots, and position so that they are slanted over the relevant reconstructed plots. In other words, I want this plot to be a 3x1 plot.}}\label{fig:Gibbs_crimeMultivariateNormalSlice}
+\caption{\textbf{Actual posterior (left), with two distributions reconstructed from Gibbs' sampling, for a sample size of 100 (middle), and 1,000 (right).} In the left hand plot the lines illustrate the shape of the conditional densities here.}\label{fig:Gibbs_crimeMultivariateNormalSlice}
 \end{figure}
 
 \section{Gibbs' earth: the intuition behind the Gibbs algorithm}
@@ -6914,7 +6914,7 @@ At the end of this chapter the reader will understand how Hamiltonian Monte Carl
 \section{Chapter goals}
 In chapter \ref{chap:metropolisHastings} met the Random Walk Metropolis algorithm, which allows for the generation of dependent samples from the posterior. Random Walk Metropolis works by starting at a random location in parameter space. In each step we randomly choose a new direction and distance with which to step, by sampling from a proposal distribution centred on our current location. We then move to the new location if the value of the posterior is greater there. If it's not, then we only move there \textit{probabilistically}, with a probability given by the ratio of the new to old densities.
 
-Notice that this Metropolis algorithm is, as its name suggests, a kind of random walk through posterior space. In particular it's random because we take no account of the underlying shape of the posterior when deciding where next to try stepping. We saw in section \ref{sec:Gibbs_crimeUnemployment} that this type of posterior-agnostic stepping can lead to a sampler that is inefficient in its exploration of the posterior. If we imagine that we are the ones doing this stepping through parameter space, then Random Walk Metropolis amounts to us doing this blindfolded. This blind stepping in the dark is scary, and because we are stepping without any knowledge of the landscape, it can takes us a long time to explore it.	
+Notice that this Metropolis algorithm is, as its name suggests, a kind of random walk through posterior space. In particular it's random because we take no account of the underlying shape of the posterior when deciding where next to try stepping. We saw in section \ref{sec:Gibbs_crimeUnemployment} that this type of posterior-agnostic stepping can lead to a sampler that is inefficient in its exploration of the posterior. If we imagine that we are the ones doing this stepping through parameter space, then Random Walk Metropolis amounts to us doing this blindfolded. This blind stepping in the dark is scary, and inevitably it will takes us a long time to explore the landscape.	
 
 A better approach is to remove the blindfold. Removing the blindfold does not however yield perfect vistas of the landscape in front of us; the air is thick with fog. However, we imagine we are still able to see a few meters in each direction. This limited visibility nonetheless allows us to direct our stepping, and we choose to step more preferentially towards higher locations. Here we choose to step more often towards higher locations because we want to sample from a region in proportion to its height. By using the local posterior geometry to determine where we next step, we can much more efficiently explore the posterior density. This is exactly what \textit{Hamiltonian Monte Carlo} (HMC) does, and is accountable for the considerable success of this method over the past decade. 
 
@@ -6925,7 +6925,7 @@ The inefficiency of U-turns, motivated the development of a so-called `No U-turn
 We finish up this chapter with a short description of two more advanced algorithms that may power MCMC engines of the future: first Riemannian Monte Carlo, and later, Adiabatic Monte Carlo. 
 
 \section{Hamiltonian Monte Carlo as a sledge}
-Again imagine that you are walking through posterior space. With perfect sight you could see the huge peaks, and low-lying deserts stretching out to infinity. However, we do not have perfect sight; f we did, there would be no need to do sampling in the first place. Instead imagine there is a dense fog that limits your vision almost completely. In this case, you could be forgiven for just stepping in a random direction, and distance, away from your current position. This random stepping is exactly what we do in Random Walk Metropolis, which we discussed in chapter \ref{chap:metropolisHastings}. However, as discussed previously (see section \ref{sec:Gibbs_crimeUnemployment}), this directionless walking comes at a cost. The cost is that it can take us a large amount of time to explore posterior space. In particular, it takes us ages to find those areas of high density, and explore them efficiently. Clearly Random Walk Metropolis is missing something - it does not take account of the posterior distribution's geometry when deciding where next to try stepping. For clarity, this does not mean that Random Walk Metropolis completely ignores the posterior geometry completely - if it did, then the sampling would be uniform over all parameter space. In particular, we know that Random Walk Metropolis uses an accept/reject rule that depends on the posterior density. As we saw in section \ref{sec:metropolisHastings_correctAcceptRejectRuleDetailedBalance}, this rule is tuned to perfection, to allow us to accurately reproduce the posterior via sampling. However, what we posit here is that how we propose where to step next is inefficient in Random Walk Metropolis, since it does not take account of the posterior geometry.
+Again imagine that you are walking through posterior space. With perfect sight you could see the huge peaks, and low-lying deserts stretching out to infinity. However, we do not have perfect sight; if we did, there would be no need to do sampling in the first place. Instead imagine there is a dense fog that limits your vision almost completely. In attempting to step towards heights in exact proportion to their height you could be forgiven for just stepping in a random direction, and distance, away from your current position. This random stepping is exactly what we do in Random Walk Metropolis, which we discussed in chapter \ref{chap:metropolisHastings}. However, as discussed previously (see section \ref{sec:Gibbs_crimeUnemployment}), this directionless walking comes at a cost. The cost is that it can take us a large amount of time to explore posterior space. In particular, it takes us a long time to find those areas of high density, and explore them efficiently. Clearly Random Walk Metropolis is missing something - it does not take account of the posterior distribution's geometry when deciding where next to try stepping. For clarity, this does not mean that Random Walk Metropolis completely ignores the posterior geometry - if it did, then the sampling would be uniform over all parameter space. In particular, we know that Random Walk Metropolis uses an accept/reject rule that depends on the posterior density. As we saw in section \ref{sec:metropolisHastings_correctAcceptRejectRuleDetailedBalance}, this rule is tuned to perfection, to allow us to accurately reproduce the posterior via sampling. However, what we posit here is that how we propose where to step next is inefficient in Random Walk Metropolis, since it does not take account of the posterior geometry.
 
 As such, we want to produce a sampler which uses local geometric information to determine where next to propose stepping. To do this we are going to move away from this vision of us stepping through posterior space, and instead we imagine we are passengers on a vehicle that moves through a related landscape. Specifically, this new landscape is similar to the posterior space, although everything is inverted: peaks become troughs, and troughs are now peaks. Specifically, this space is the negative log of the posterior (NLP), although don't worry about what this means for the time being. We imagine we are gliding over the frictionless surface of NLP space on a type of sledge. At any time, where we next move not only depends on our location; it also depends on our momentum. Our momentum is, in turn, determined partly by the gradient of NLP where we currently find ourselves. Dragged by gravity, if we had no momentum, we would always tend to descend in NLP space (ascend in posterior space). However, our momentum also gives us enough forward motion to potentially be able to climb upwards through the NLP landscape. Therefore the presence of this second variable - momentum - allows us to explore areas of low NLP (high posterior density), as well as high NLP (low posterior density). However, the effect of gravity should hopefully mean that we spend more time in low areas, and less in high NLP regions; in good correspondence with what we want for our ideal sampler.
 
@@ -6935,59 +6935,135 @@ However, the picture is not quite complete. As we have explained things, our ini
 
 Don't worry if all of the algorithm's details just flew right over your head! In contrast to our previous MCMC samplers, HMC is a little bit more involved. However, as we shall hopefully demonstrate over the next few sections, it is no more difficult to understand. Let's get to it!
 
-\subsection{Rewriting our problem in the language of Statistical Mechanics\footnote{The following follows a derivation by Neal in \cite{brooks2011handbook}.}}
-Ready for a crash course in Statistical Mechanics? No. Well don't worry, there hopefully won't be too much crashing in this course. Our purposes here aren't to try to explain the whole premise behind statistical mechanics, just a couple of its key ideas. Once we have these ideas in mind, it is a bit simpler to understand what is going on in the HMC algorithm.
+\subsection{Rewriting our problem in the language of Statistical Mechanics\footnote{Here we follow a derivation similar to that by Neal in \cite{brooks2011handbook}.}}
+Ready for a crash course in Statistical Mechanics? No. Well don't worry, there hopefully won't be too much crashing in this course. Our purposes here aren't to try to explain the whole premise behind statistical mechanics, just a couple of its key ideas. Once we have these ideas in mind, it is a bit simpler to understand what is going on in the HMC algorithm. Bear in mind that the analogy we make between our system and a physical one is \textit{just} an analogy; a frame of reference that makes it easier for us to understand things.
 
-In Statistical Mechanics, we are interested in deriving a probability distribution for the possible state of a system that is in thermal equilibrium with its surroundings. As an example, imagine that there is a ladder of possible states for our system (see figure X), and each of these states has a different energy associated with it (if you remember chemistry you could imagine that we might be looking at the set of discrete energy levels for an element like hydrogen.) To describe the probability of the system being in any one of these energy levels (states), we need to imagine a hypothetical ensemble of an infinity of repeated systems (see figure X). \footnote{Forgive the frequentist feel to the previous statement, but it is easiest to phrase in this way.} If our system has a low temperature, most of our ensemble of systems will be in low energy states (see figure Y). However, random thermal fluctuations (transfer of heat from surroundings) can cause a few of our systems to be in slightly higher states. As we increase the temperature of our system, these random thermal fluctuations become more common, and more vigorous, meaning that a higher percentage of our systems will find themselves in higher states. 
+In Statistical Mechanics, we are interested in deriving a probability distribution for the possible state of a system that is in thermal equilibrium with its surroundings. As an example, imagine that there is a ladder of possible states for our system (see figure \ref{fig:HMC_canonicalEnergyLevels}), and each of these states has a different energy associated with it (if you remember chemistry you could imagine that we might be looking at the set of discrete energy levels for an element like hydrogen.) To describe the probability of the system being in any one of these energy levels (states), we need to imagine a hypothetical ensemble of an infinity of repeated systems\footnote{Forgive the frequentist feel to the previous statement, but it is easiest to phrase in this way.} (see the right hand pane of figure \ref{fig:HMC_canonicalEnergyLevels}).  If our system has a low temperature, most of our ensemble of systems will be in low energy states (see figure \ref{fig:HMC_temperatureEnsemble}). However, random thermal fluctuations (transfer of heat from surroundings) can cause a few of our systems to be in slightly higher states. As we increase the temperature of our system, these random thermal fluctuations become more common, and more vigorous, meaning that a higher percentage of our systems will find themselves in higher states. 
 
-We work out the probability that our system is in one particular state by averaging across all of our systems. This means that frequencies shown in figure Y can be thought of as probabilities. Therefore, we note that in all cases it is more probable that we find our system in a lower energy state. In fact, in thermodynamics we can derive the exact form of this relationship:
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{HMC_canonicalEnergyLevels.pdf}}
+\caption{\textbf{(a) energy levels of discrete state system, and (b) how a canonical ensemble represents a summation over the states of a number of identical copies of our system.}}\label{fig:HMC_canonicalEnergyLevels}
+\end{figure}
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{HMC_temperatureEnsemble.pdf}}
+\caption{\textbf{How the distribution over energy states of our system changes with temperature.}}\label{fig:HMC_temperatureEnsemble}
+\end{figure}
+
+We work out the probability that our system is in one particular state by averaging across all of our systems. This means that frequencies shown in figure \ref{fig:HMC_temperatureEnsemble} can be thought of as probabilities. Therefore, we note that in all cases it is more probable that we find our system in a lower energy state. In fact, using thermodynamics we can derive the exact form of this relationship:
 %
 \begin{equation}
 P_i \propto exp(-\frac{E_i}{T})
 \end{equation}
 %
-In other words, the probability of being in a state $i$ is exponentially decreasing in its energy $E_i$. Figure Y also shows us that as the temperature of our system increases, the probability of finding our system in a higher energy state increases. In other words, the average energy of our system increases. This is why our formula has the $T$ for temperature in it. The above expression has the rather ominous-sounding name of the \textit{canonical ensemble}. 
+In other words, the probability of being in a state $i$ is exponentially decreasing in its energy $E_i$. Figure \ref{fig:HMC_temperatureEnsemble} also shows us that as the temperature of our system increases, the probability of finding our system in a higher energy state increases. In other words, the average energy of our system increases. This is why our formula has the $T$ for temperature in it. The above expression has the rather ominous-sounding name of the \textit{canonical ensemble}. 
 
-So why do we bother to divert attention to considering the \textit{canonical ensemble} of a fairly abstract system? Well it turns out that this is the right way to think about the probabilities in HMC. Here, we imagine that the total energy of our current state is determined by two factors: our location $\boldsymbol{l}$ and our momentum $\boldsymbol{m}$. Since both location and momentum are continuous variables, our state is now continuous, in contrast to the hypothetical situation we just considered. However, this doesn't change anything except now we interpret the $p$ in the following as representing a probability density:
+So why do we bother to divert attention to considering the \textit{canonical ensemble} of a fairly abstract system? Well it turns out that this is the right way to think about the probabilities in HMC. Here, we imagine that the total energy of our current state is determined by two factors: our location $\boldsymbol{l}$ and our momentum $\boldsymbol{m}$. Since both location and momentum are continuous variables, our state is now continuous, in contrast to the discrete hypothetical situation we just considered. However, this doesn't change anything except now we interpret the $p$ in the following as representing a probability density:
 %
-\begin{equation}\label{eq:Gibbs_HMCCanonical}
+\begin{equation}\label{eq:HMC_HMCCanonical}
 p(\boldsymbol{l},\boldsymbol{m}) \propto exp(-\frac{E(\boldsymbol{l},\boldsymbol{m})}{T})
 \end{equation}
 %
-For simplicity, we now set $T=1$, but we shall see that in our later discussion of \textit{Adiabatic Monte Carlo} in section X, that we need it again. Further, we imagine that our total energy is composed of a sum of potential energy $U(\boldsymbol{l})$, and kinetic energy $K(\boldsymbol{m})$:
+For simplicity, we now set $T=1$, but we shall see that in our later discussion of \textit{Adiabatic Monte Carlo} in section X, that we need it again. Of course temperature here, like our discussion of the system in general does not actually represent some sort of physical reality; the abstraction to physical systems just makes it easier to understand things. Continuing with this abstraction, we imagine that our total energy is composed of a sum of potential energy $U(\boldsymbol{\theta})$, and kinetic energy $K(\boldsymbol{m})$:
 %
 \begin{equation}
-E(\boldsymbol{l},\boldsymbol{m}) = U(\boldsymbol{l}) + K(\boldsymbol{m})
+E(\boldsymbol{\theta},\boldsymbol{m}) = U(\boldsymbol{l}) + K(\boldsymbol{m})
 \end{equation}
 %
-Remember that our location $\boldsymbol{l} = (\theta_1,\theta_2,...,\theta_n)$ is a p-dimensional vector of our statistical model's parameter values. Likewise $\boldsymbol{m} = (m_1,m_2,...,m_n)$ is actually a n-dimensional vector representing our momentum, where each component represents the momentum along the corresponding dimension of parameter space. Don't worry if you find these n-dimensional entities hard to envisage - everyone does because we only have three spatial dimensions! If it makes it easier, imagine a 2-dimensional system (see figure XX).
+Remember that our location $\boldsymbol{\theta} = (\theta_1,\theta_2,...,\theta_n)$ is a p-dimensional vector of our statistical model's parameter values. Likewise $\boldsymbol{m} = (m_1,m_2,...,m_n)$ is actually a n-dimensional vector representing our momentum, where each component represents the momentum along the corresponding dimension of parameter space. Don't worry if you find these n-dimensional entities hard to envisage - everyone does because we only have three spatial dimensions! If it makes it easier, imagine a 2-dimensional system (see figure \ref{fig:HMC_idealised2DSystem}).
 
-Essentially HMC samples from the probability distribution defined by eqn. (\ref{eq:Gibbs_HMCCanonical}) above. It will turn out that if we choose $U(\boldsymbol{l})$ correctly, that we will essentially be sampling from the posterior, albeit augmented by a new independent distribution corresponding to momentum. However, since momentum is our artificially-introduced variable, we do not normally hold onto it in our samples.
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{HMC_idealised2DSystem.png}}
+\caption{\textbf{The location (top) and momentum (arrows) of our sledge at a point in NLP space.} \textbf{Replace point with sledge.}}\label{fig:HMC_idealised2DSystem}
+\end{figure}
+
+Essentially HMC samples from the probability distribution defined by eqn. (\ref{eq:HMC_HMCCanonical}) above. It will turn out that if we choose $U(\boldsymbol{\theta})$ correctly, that we will essentially be sampling from the posterior, albeit augmented by a new independent distribution corresponding to momentum. However, since momentum is our artificially-introduced variable, we do not normally hold onto it in our final samples.
 
 \subsection{Choosing the potential and kinetic energy terms}
 For our potential energy  we choose:
 %
 \begin{equation}
-U(\boldsymbol{l}) = - log[p(data|\boldsymbol{\theta})p(\boldsymbol{\theta})]
+U(\boldsymbol{\theta}) = - log[p(data|\boldsymbol{\theta})p(\boldsymbol{\theta})]
 \end{equation}
 %
-where $p(data|\boldsymbol{\theta})$ is the likelihood, and $p(\boldsymbol{\theta})$ is our prior. So in words we consider the negative log of the unnormalised poster - what we called the NLP before. On inverting this expression we get $p(data|\boldsymbol{\theta})p(\boldsymbol{\theta})=exp(-U(\boldsymbol{l}))$, in similar vein to the canonical ensemble above.
+where $p(data|\boldsymbol{\theta})$ is the likelihood, and $p(\boldsymbol{\theta})$ is our prior. So in words we consider the negative log of the unnormalised poster - what we called the NLP before. On inverting this expression we get $p(data|\boldsymbol{\theta})p(\boldsymbol{\theta})=exp(-U(\boldsymbol{\theta}))$, in similar vein to the canonical ensemble above.
 
-Choosing the potential energy of this form means that the location state with the highest probability density corresponds to the highest value of the posterior. Put another way - the most likely potential energy state is the one with lowest energy, which corresponds to the lowest value of NLP, but the highest posterior probability density. That is why in our original analogy we thought about gravity as acting on us on the sledge, always pulling us downwards in NLP space, towards lower energy states. 
+Choosing the potential energy of this form means that the location state with the highest probability density corresponds to the highest value of the posterior. Put another way - the energy state with the highest density is the one with lowest energy, which corresponds to the lowest value of NLP, but the highest posterior probability density. That is why in our original analogy we thought about gravity as acting on us on the sledge, always pulling us downwards in NLP space, towards lower energy states. 
 
 Our kinetic energy is simpler. If you remember from high school physics, the kinetic energy is given by $\frac{1}{2} mass \times speed^2$. By remembering that $momentum=mass \times speed$, and considering each dimension separately this allows us to derive:
 %
-\begin{equation}
+\begin{equation}\label{eq:HMC_KE}
 K(\boldsymbol{m}) =\sum\limits_{i=1}^{n}\frac{m_i^2}{mass}
 \end{equation}
 %
 In the rest of what follows we set $mass=1$.
 
-\subsection{Simulating our movement in NLP space using the Leapfrog algorithm}
+\subsection{Simulating sledge movement in NLP space using the Leapfrog algorithm}
+As discussed previously, in order to explore posterior space efficiently, at the beginning of each step we select a random starting momentum. What sort of distribution does this correspond to, you ask? Well we have already determined its functional form in eqn. (\ref{eq:HMC_KE}) above. Using the same form as the canonical ensemble, we can determine its probability density, as:
+%
+\begin{equation}
+p(\boldsymbol{m}) \propto exp(-\sum\limits_{i=1}^{n} m_i^2)
+\end{equation}
+%
+which has the same functional form as a normal density! In other words, in each step we determine our initial momentum, by independently sampling from a normal distribution.
+
+After we have determined our initial momentum, we need to simulate our movement in NLP space. How can we do this? Again, we need to borrow from physics a bit here. It turns out that an area of physics called `Hamiltonian dynamics'\index{Hamiltonian dynamics} is useful here (hence the H in HMC!) The idea is simple: to determine how our position evolves, we consider the derivative of total energy with respect to momentum; to determine how momentum changes, we consider the derivative of the total energy with respect to position. Specifically, we solve the following coupled differential equations:
+%
+\begin{align}
+\frac{d \theta_i}{d t} &= \; \frac{\partial E(\boldsymbol{\theta},\boldsymbol{m})}{\partial m_i}\\
+\frac{d m_i}{d t} &= - \frac{\partial E(\boldsymbol{\theta},\boldsymbol{m})}{\partial \theta_i}
+\end{align}
+%
+Where we assume the initial momentum $\boldsymbol{m(t_0)} \sim N(\boldsymbol{0},I)$, and our initial position is $\boldsymbol{\theta(t_0)}$, and $E(\boldsymbol{\theta(t_0)},\boldsymbol{m(t_0)})=U(\boldsymbol{\theta(t_0)}) + K(\boldsymbol{m(t_0)})$. This means that our system actually can be written as:
+%
+\begin{align}
+\frac{d \theta_i}{d t} &= m_i\\
+\frac{d m_i}{d t} &= - \frac{\partial U(\boldsymbol{\theta})}{\partial \theta_i}
+\end{align}
+%
+In general, these equations cannot be exactly solved. The usual way of doing this is to either analytically (or algorithmically as Stan does) evaluate $\frac{\partial U(\boldsymbol{\theta})}{\partial \theta_i}$. From there, the simplest way is to approximate the left hand side using the following (see figure \ref{fig:HMC_differential}):
+%
+\begin{equation}
+\frac{d y}{d x}|_{x=x_0} \approx \frac{y(x_0+\epsilon) - y(x_0)}{\epsilon}
+\end{equation}
+%
+Using this equation to approximate our derivatives, we now have:
+%
+\begin{align}
+\frac{\theta_i(t_0+\epsilon) - \theta_i(t_0)}{\epsilon} &= m_i(t_0)\\
+\frac{m_i(t_0+\epsilon) - m_i(t_0)}{\epsilon} &= - \frac{\partial U(\boldsymbol{\theta(t_0)})}{\partial \theta_i}
+\end{align}
+%
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{HMC_differential.pdf}}
+\caption{\textbf{Approximating the true gradient (blue), by a difference method (shown in red).}}\label{fig:HMC_differential}
+\end{figure}
+
+Meaning that we are left with the following update formulae for our position and momentum respectively:
+%
+\begin{align}
+\theta_i(t_0+\epsilon) &=  \theta_i(t_0) +  \epsilon m_i(t_0)\\
+m_i(t_0+\epsilon) &=  m_i(t_0) - \epsilon\frac{\partial U(\boldsymbol{\theta(t_0)})}{\partial \theta_i}
+\end{align}
+%
+This rule allows us to update the components of components of our position and momentum incrementally, by doing it by a small amount $\epsilon$ in each iteration. We repeat this until we have simulated the path for a total period of $T=L\epsilon$. This position and momentum state at this time point then becomes our proposal location. 
+
+Figure \ref{fig:HMC_pathOverTime} shows how this iterative algorithm, known as \textit{Euler's method}\index{Euler's method}, allows us to solve for the path of the sledge in NLP space over time. 
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{HMC_pathOverTime.png}}
+\caption{\textbf{Using the Euler method to numerically solve for our path over time.} The arrows here indicate the overall momentum at each iteration.}\label{fig:HMC_pathOverTime}
+\end{figure}
+
+\subsection{Approximating our path in a way that conserves volume}
+Whilst the Euler method of solving for the path of the sledge is attractively simple, it is unfortunately not useful in practice. The reason for this is that it diverges. 
+
+Insert a reproduction of figure 5.1 from Neal.
+
+\subsection{Revising our acceptance rule}
 
 
-
-\subsection{The full HMC algorithm}\label{sec:HMC_fullHMCalgorithm}
+\subsection{Putting it all together: the full HMC algorithm}\label{sec:HMC_fullHMCalgorithm}
 
 \subsection{Competing with Random Walk Metropolis and Gibbs}
 
