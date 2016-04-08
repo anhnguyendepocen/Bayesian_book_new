@@ -6365,7 +6365,7 @@ p(\theta^{t+1}=\theta_a) &=  \int\limits_{\theta_b\in\Theta} p(\theta^t=\theta_a
 %
 where we have obtained the last line from the penultimate by remembering that the jumping distribution \textit{is} a proper probability distribution, and hence must integrate to 1. What the above expression tells us is that the probability density for the next step of the Markov Chain is the same as the current density, which equals the posterior. Thus if we reach the posterior density (which we will do asymptotically since our change is ergodic and aperiodic), then our Markov Chain will stay there!  Essentially, this amounts to requiring that for our Markov Chain at equilibrium are \textit{reversible}. This means that if we run our chain backwards, we would have the same probability densities. This will prove to be useful in practical implementations of Hamiltonian Monte Carlo, which we discuss in chapter \ref{chap:HMC}.
 
-\subsection{The intuition behind the acceptance/rejection rule of Metropolis, and detailed balance}\index{detailed balance}
+\subsection{The intuition behind the acceptance/rejection rule of Metropolis, and detailed balance}\label{sec:metropolisHastings_correctAcceptRejectRuleDetailedBalance}\index{detailed balance}
 Only one acceptance/rejection rule works with the symmetric proposal distribution of the Metropolis algorithm. This is the rule which states that we \textit{always} move to a new parameter value if the posterior there is higher, and that we move \textit{probabilistically} if its value is lower, in exact accordance with the relative height of the proposed location's posterior density to the current value. Any other rule will not work!
 
 We can think about all (reasonable) rules as existing as a spectrum between, at one extreme, the case where we \textit{always} accept; according the drunkard's walk we discussed in section \ref{sec:metropolisHastings_definingMetropolis}. At the other extreme, we have the Hillary walk, that \textit{only} accepts a new parameter value if its posterior is higher. Whilst these are the extremes, we can think about rules where the probability of acceptance is given by:
@@ -6453,7 +6453,7 @@ We can think of an ideal MCMC algorithm as being composed of two steps: firstly 
 
 We can use these principles to explain further the behaviour of the Metropolis samplers with either too-small or too-large step sizes. The one that does not step far enough spends a long time finding the typical set; too long! The sampler that steps too far can find the typical set easy enough, but is not very good at exploring it, since most of its proposed steps are rejected. This results in a rather coarse fit of the distribution reconstructed from its samples to the actual posterior (see the bottom right panels of figure \ref{fig:metropolisHastings_rateOfConvergence}). The just-right step-size sampler does reasonably well in both finding, then exploring the typical set (however we shall see in chapter \ref{chap:HMC} how we can do better!)
 
-\subsection{Speeding up convergence: tuning the proposal distribution}
+\subsection{Speeding up convergence: tuning the proposal distribution}\label{sec:metropolisHastings_tuneAcceptRejectRule}
 We can ask what is the optimal rate of acceptance in order for our MCMC sampler to converge on the posterior at the fastest rate? It turns out this depends a lot on the type of algorithm we are implementing, but that an acceptance rate of 0.44 for 1-dimensional cases, and 0.23 for higher dimensions, leads to a fast convergence as measured by a number of criteria, across a range of target densities, for the Metropolis algorithm \cite{roberts1997weak},\cite{rosenthal2011optimal}. Can we use this knowledge to help tune our Metropolis sampler dynamically, as it runs? It turns out the answer to this is, `Yes', but that significant care is needed to ensure that we still converge to the posterior distribution. 
 
 In reality, it is easier to often split the algorithm into two stages:
@@ -6908,9 +6908,93 @@ a+b
 %
 
 \chapter{Hamiltonian Monte Carlo}\label{chap:HMC}
-\section{Introduction to Hamiltonian Monte Carlo}
+\section{Chapter mission statement}
+At the end of this chapter the reader will understand how Hamiltonian Monte Carlo works, and how it can be used to effectively sample from the posterior.
+
+\section{Chapter goals}
+In chapter \ref{chap:metropolisHastings} met the Random Walk Metropolis algorithm, which allows for the generation of dependent samples from the posterior. Random Walk Metropolis works by starting at a random location in parameter space. In each step we randomly choose a new direction and distance with which to step, by sampling from a proposal distribution centred on our current location. We then move to the new location if the value of the posterior is greater there. If it's not, then we only move there \textit{probabilistically}, with a probability given by the ratio of the new to old densities.
+
+Notice that this Metropolis algorithm is, as its name suggests, a kind of random walk through posterior space. In particular it's random because we take no account of the underlying shape of the posterior when deciding where next to try stepping. We saw in section \ref{sec:Gibbs_crimeUnemployment} that this type of posterior-agnostic stepping can lead to a sampler that is inefficient in its exploration of the posterior. If we imagine that we are the ones doing this stepping through parameter space, then Random Walk Metropolis amounts to us doing this blindfolded. This blind stepping in the dark is scary, and because we are stepping without any knowledge of the landscape, it can takes us a long time to explore it.	
+
+A better approach is to remove the blindfold. Removing the blindfold does not however yield perfect vistas of the landscape in front of us; the air is thick with fog. However, we imagine we are still able to see a few meters in each direction. This limited visibility nonetheless allows us to direct our stepping, and we choose to step more preferentially towards higher locations. Here we choose to step more often towards higher locations because we want to sample from a region in proportion to its height. By using the local posterior geometry to determine where we next step, we can much more efficiently explore the posterior density. This is exactly what \textit{Hamiltonian Monte Carlo} (HMC) does, and is accountable for the considerable success of this method over the past decade. 
+
+However, note that HMC still requires us to set a typical distance with which to step, in similar vein to Random Walk Metropolis. Determining this step length is crucial. Remember that we can only see a very limited distance around us at any point in time. It is this - localised - information that we choose to guide our stepping. Whilst it might appear that one direction is upwards, we might find that if we step too far, we actually overshoot a peak. In this case, based on our intuition we would be best turning on our heels and walking back the way we came; in effect doing a `U-turn'. As you might expect, these about-face turns are inefficient - we don't want to take two steps forward, and one step back! 
+
+The inefficiency of U-turns, motivated the development of a so-called `No U-turn' sampler \cite{homan2014no}, which powers \textit{Stan}. In this chapter we discuss this magical device, and how it is able to determine the right step length for any position in posterior space.
+
+We finish up this chapter with a short description of two more advanced algorithms that may power MCMC engines of the future: first Riemannian Monte Carlo, and later, Adiabatic Monte Carlo. 
+
+\section{Hamiltonian Monte Carlo as a sledge}
+Again imagine that you are walking through posterior space. With perfect sight you could see the huge peaks, and low-lying deserts stretching out to infinity. However, we do not have perfect sight; f we did, there would be no need to do sampling in the first place. Instead imagine there is a dense fog that limits your vision almost completely. In this case, you could be forgiven for just stepping in a random direction, and distance, away from your current position. This random stepping is exactly what we do in Random Walk Metropolis, which we discussed in chapter \ref{chap:metropolisHastings}. However, as discussed previously (see section \ref{sec:Gibbs_crimeUnemployment}), this directionless walking comes at a cost. The cost is that it can take us a large amount of time to explore posterior space. In particular, it takes us ages to find those areas of high density, and explore them efficiently. Clearly Random Walk Metropolis is missing something - it does not take account of the posterior distribution's geometry when deciding where next to try stepping. For clarity, this does not mean that Random Walk Metropolis completely ignores the posterior geometry completely - if it did, then the sampling would be uniform over all parameter space. In particular, we know that Random Walk Metropolis uses an accept/reject rule that depends on the posterior density. As we saw in section \ref{sec:metropolisHastings_correctAcceptRejectRuleDetailedBalance}, this rule is tuned to perfection, to allow us to accurately reproduce the posterior via sampling. However, what we posit here is that how we propose where to step next is inefficient in Random Walk Metropolis, since it does not take account of the posterior geometry.
+
+As such, we want to produce a sampler which uses local geometric information to determine where next to propose stepping. To do this we are going to move away from this vision of us stepping through posterior space, and instead we imagine we are passengers on a vehicle that moves through a related landscape. Specifically, this new landscape is similar to the posterior space, although everything is inverted: peaks become troughs, and troughs are now peaks. Specifically, this space is the negative log of the posterior (NLP), although don't worry about what this means for the time being. We imagine we are gliding over the frictionless surface of NLP space on a type of sledge. At any time, where we next move not only depends on our location; it also depends on our momentum. Our momentum is, in turn, determined partly by the gradient of NLP where we currently find ourselves. Dragged by gravity, if we had no momentum, we would always tend to descend in NLP space (ascend in posterior space). However, our momentum also gives us enough forward motion to potentially be able to climb upwards through the NLP landscape. Therefore the presence of this second variable - momentum - allows us to explore areas of low NLP (high posterior density), as well as high NLP (low posterior density). However, the effect of gravity should hopefully mean that we spend more time in low areas, and less in high NLP regions; in good correspondence with what we want for our ideal sampler.
+
+INSERT CARTOON IMAGE OF A BLINDFOLDED MAN WALKING IN A LANDSCAPE (REPRESENTING RANDOM WALK METROPOLIS), AND ANOTHER MAN, THIS TIME NOT-BLINDFOLDED, RIDING THE SLEDGE DOWN A PEAK (REPRESENTING HAMILTONIAN MONTE CARLO).
+
+However, the picture is not quite complete. As we have explained things, our initial state - location and momentum - would completely determine our future path. However, how should we select our initial state so that we are able to visit all of posterior space, in accordance with its density? Furthermore, without knowing what posterior space looks like, how can we ever hope to do this? The solution to these issues is to, at each step, select a random momentum from some proposal distribution. We then use this random momentum to determine the initial direction we move off in. In accordance with the laws of physics in NLP space, we then move in this direction for a specified distance, then abruptly stop. The equivalent posterior value to our final resting position in NLP space, then plays the role of a proposal location in the Metropolis algorithm. To determine whether we accept this step, or whether we return to our previous location, we use a accept/reject rule much like for Random Walk Metropolis. The only difference here is that we also need to make a slight correction to this rule to account for our current and previous momenta (we delay going into these details until section \ref{sec:HMC_fullHMCalgorithm} however).
+
+Don't worry if all of the algorithm's details just flew right over your head! In contrast to our previous MCMC samplers, HMC is a little bit more involved. However, as we shall hopefully demonstrate over the next few sections, it is no more difficult to understand. Let's get to it!
+
+\subsection{Rewriting our problem in the language of Statistical Mechanics\footnote{The following follows a derivation by Neal in \cite{brooks2011handbook}.}}
+Ready for a crash course in Statistical Mechanics? No. Well don't worry, there hopefully won't be too much crashing in this course. Our purposes here aren't to try to explain the whole premise behind statistical mechanics, just a couple of its key ideas. Once we have these ideas in mind, it is a bit simpler to understand what is going on in the HMC algorithm.
+
+In Statistical Mechanics, we are interested in deriving a probability distribution for the possible state of a system that is in thermal equilibrium with its surroundings. As an example, imagine that there is a ladder of possible states for our system (see figure X), and each of these states has a different energy associated with it (if you remember chemistry you could imagine that we might be looking at the set of discrete energy levels for an element like hydrogen.) To describe the probability of the system being in any one of these energy levels (states), we need to imagine a hypothetical ensemble of an infinity of repeated systems (see figure X). \footnote{Forgive the frequentist feel to the previous statement, but it is easiest to phrase in this way.} If our system has a low temperature, most of our ensemble of systems will be in low energy states (see figure Y). However, random thermal fluctuations (transfer of heat from surroundings) can cause a few of our systems to be in slightly higher states. As we increase the temperature of our system, these random thermal fluctuations become more common, and more vigorous, meaning that a higher percentage of our systems will find themselves in higher states. 
+
+We work out the probability that our system is in one particular state by averaging across all of our systems. This means that frequencies shown in figure Y can be thought of as probabilities. Therefore, we note that in all cases it is more probable that we find our system in a lower energy state. In fact, in thermodynamics we can derive the exact form of this relationship:
+%
+\begin{equation}
+P_i \propto exp(-\frac{E_i}{T})
+\end{equation}
+%
+In other words, the probability of being in a state $i$ is exponentially decreasing in its energy $E_i$. Figure Y also shows us that as the temperature of our system increases, the probability of finding our system in a higher energy state increases. In other words, the average energy of our system increases. This is why our formula has the $T$ for temperature in it. The above expression has the rather ominous-sounding name of the \textit{canonical ensemble}. 
+
+So why do we bother to divert attention to considering the \textit{canonical ensemble} of a fairly abstract system? Well it turns out that this is the right way to think about the probabilities in HMC. Here, we imagine that the total energy of our current state is determined by two factors: our location $\boldsymbol{l}$ and our momentum $\boldsymbol{m}$. Since both location and momentum are continuous variables, our state is now continuous, in contrast to the hypothetical situation we just considered. However, this doesn't change anything except now we interpret the $p$ in the following as representing a probability density:
+%
+\begin{equation}\label{eq:Gibbs_HMCCanonical}
+p(\boldsymbol{l},\boldsymbol{m}) \propto exp(-\frac{E(\boldsymbol{l},\boldsymbol{m})}{T})
+\end{equation}
+%
+For simplicity, we now set $T=1$, but we shall see that in our later discussion of \textit{Adiabatic Monte Carlo} in section X, that we need it again. Further, we imagine that our total energy is composed of a sum of potential energy $U(\boldsymbol{l})$, and kinetic energy $K(\boldsymbol{m})$:
+%
+\begin{equation}
+E(\boldsymbol{l},\boldsymbol{m}) = U(\boldsymbol{l}) + K(\boldsymbol{m})
+\end{equation}
+%
+Remember that our location $\boldsymbol{l} = (\theta_1,\theta_2,...,\theta_n)$ is a p-dimensional vector of our statistical model's parameter values. Likewise $\boldsymbol{m} = (m_1,m_2,...,m_n)$ is actually a n-dimensional vector representing our momentum, where each component represents the momentum along the corresponding dimension of parameter space. Don't worry if you find these n-dimensional entities hard to envisage - everyone does because we only have three spatial dimensions! If it makes it easier, imagine a 2-dimensional system (see figure XX).
+
+Essentially HMC samples from the probability distribution defined by eqn. (\ref{eq:Gibbs_HMCCanonical}) above. It will turn out that if we choose $U(\boldsymbol{l})$ correctly, that we will essentially be sampling from the posterior, albeit augmented by a new independent distribution corresponding to momentum. However, since momentum is our artificially-introduced variable, we do not normally hold onto it in our samples.
+
+\subsection{Choosing the potential and kinetic energy terms}
+For our potential energy  we choose:
+%
+\begin{equation}
+U(\boldsymbol{l}) = - log[p(data|\boldsymbol{\theta})p(\boldsymbol{\theta})]
+\end{equation}
+%
+where $p(data|\boldsymbol{\theta})$ is the likelihood, and $p(\boldsymbol{\theta})$ is our prior. So in words we consider the negative log of the unnormalised poster - what we called the NLP before. On inverting this expression we get $p(data|\boldsymbol{\theta})p(\boldsymbol{\theta})=exp(-U(\boldsymbol{l}))$, in similar vein to the canonical ensemble above.
+
+Choosing the potential energy of this form means that the location state with the highest probability density corresponds to the highest value of the posterior. Put another way - the most likely potential energy state is the one with lowest energy, which corresponds to the lowest value of NLP, but the highest posterior probability density. That is why in our original analogy we thought about gravity as acting on us on the sledge, always pulling us downwards in NLP space, towards lower energy states. 
+
+Our kinetic energy is simpler. If you remember from high school physics, the kinetic energy is given by $\frac{1}{2} mass \times speed^2$. By remembering that $momentum=mass \times speed$, and considering each dimension separately this allows us to derive:
+%
+\begin{equation}
+K(\boldsymbol{m}) =\sum\limits_{i=1}^{n}\frac{m_i^2}{mass}
+\end{equation}
+%
+In the rest of what follows we set $mass=1$.
+
+\subsection{Simulating our movement in NLP space using the Leapfrog algorithm}
+
+
+
+\subsection{The full HMC algorithm}\label{sec:HMC_fullHMCalgorithm}
+
+\subsection{Competing with Random Walk Metropolis and Gibbs}
+
 \section{Avoiding manual labour: the No-U-turn sampler}
 Reference Hoffman and Gelman 2014 paper.
+
+
 \section{Riemannian MCMC}
 Reference downloaded Girolami article.
 Remember the comment from Ben Goodrich here: \url{https://groups.google.com/forum/?fromgroups=#!topic/stan-users/0F0O4hfHA8g} - in other words, using the second derivative is not free computationally! Ideal to design programs that don't need to use RMHMC.
