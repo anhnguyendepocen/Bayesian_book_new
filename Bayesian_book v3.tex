@@ -22,6 +22,8 @@
 \usepackage{pst-math}
 \usepackage{empheq}
 \usepackage{makeidx}
+\usepackage{listings}
+\usepackage{minted}
 \newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
 \newcommand*\widefbox[1]{\fbox{\hspace{2em}#1\hspace{2em}}}
 \interfootnotelinepenalty=10000
@@ -7131,13 +7133,63 @@ There are a multitude of MCMC packages out there, so why do we advocate using St
 
 Overall Stan makes our life easier. Not a convert yet? Well, that's what this chapter is for. Let's get to it!
 
-\subsection{The nuts and bolts of Stan: access through R}
-\subsubsection{How to get packages}
-\subsubsection{How to package data}
+\section{Getting setup with Stan using RStan}
+This section describes briefly how to get Stan setup on a computer. The reason for its brevity is mainly because there are detailed resources on this on the Stan website (\url{http://mc-stan.org/}). However, here we detail the basic steps for getting up and running using ``RStan'' - the R interface to the Stan language. 
+
+\paragraph{R}
+To begin with, since we are going to use R to call Stan, we need a newish version of it installed. To get this go to: \url{https://www.r-project.org/} and download the latest version for your particular system. 
+
+\paragraph{R Studio}
+Whilst not essential we would strongly suggest using ``RStudio'' to write, edit and run R code. It's great even if you don't use Stan. However, if you do a particularly nice feature of this development environment is its capability to highlight Stan syntax as you write. To get RStudio go here: \url{https://www.rstudio.com/}.
+
+\paragraph{Toolchain}
+The Stan package relies on your computer having a few necessary tools for handling C++ files. Amongst other reasons this is because Stan code is, under the hood, actually translated into C++ code, and compiled. The best way to get the requisite software for a Windows or Mac computer is to install ``RTools''. The Stan website walks the user through this for both cases. If you are on a Linux computer, then you will need to install ``build-essential'' and a recent version of either g++ or clang++ compilers.
+
+\paragraph{RStan}
+The only remaining thing we need is the ``RStan'' package itself. This can be done from within R/RStudio, using the following commands:
+
+\begin{lstlisting}[language=R]
+install.packages('rstan', repos = 'https://cloud.r-project.org/',
+dependencies=TRUE)
+\end{lstlisting}
+
+You can speed up the installation by preceding the above with the optional command:
+\begin{lstlisting}[language=R]
+Sys.setenv(MAKEFLAGS = "-j4") 
+\end{lstlisting}
+
+where you replace `4' in the above with the number of processors available on your computer.
 
 \section{Our first words in Stan}
 \subsection{The building blocks of a Stan program}
-Include table showing when, and how often each block of the program is called.
+In order to explain the importance of each element of a typical Stan programme, we choose to use a simple example. Suppose that we are interested in inferring the mean height, $\mu$, in a population of interest. To carry out this inference we need some data, so we suppose we have recorded the height, $Y_i$, of 10 individuals drawn from that population. Further we suppose that the normal sampling model is appropriate given the multitude of different factors that affect the height of a person (see section \ref{sec:Probability_CLT}):
+%
+\begin{equation}
+Y_i \sim N(\mu,\sigma)
+\end{equation} 
+%
+where $\sigma$ is the standard deviation of the sampling distribution. To complete our specification of a Bayesian model we need priors, which we choose as:
+\begin{align}
+\mu &\sim N(0,1)\\
+\sigma &\sim gamma(1,1)
+\end{align}
+The completed Stan programme is shown below.
+
+\begin{minted}[mathescape,
+               linenos,
+               numbersep=5pt,
+               gobble=2,
+               frame=lines,
+               framesep=2mm]{csharp}
+  string title = "This is a Unicode π in the sky"
+  /*
+  Defined as $\pi=\lim_{n\to\infty}\frac{P_n}{d}$ where $P$ is the perimeter
+  of an $n$-sided regular polygon circumscribing a
+  circle of diameter $d$.
+  */
+  const double pi = 3.1415926535
+\end{minted}
+
 \subsubsection{Parameters}
 \subsubsection{Model}
 \subsubsection{Transformed parameters}
@@ -7145,7 +7197,8 @@ Include table showing when, and how often each block of the program is called.
 \subsubsection{Generated quantities}
 Sample from posteriors. Very useful to build in PPCs directly, rather than doing it post-hoc.
 
-\subsection{A simple model with data}
+\subsubsection{Writing and executing a Stan programme}
+
 
 \subsection{Diagnostics}
 \subsubsection{$\hat{R}$ and effective sample size}
@@ -7158,6 +7211,7 @@ Sample from posteriors. Very useful to build in PPCs directly, rather than doing
 \subsection{Essential Stan reading}
 The idea behind this section is to introduce the reader to a wide, and somewhat unconnected, range of tricks that I have found very useful in writing Stan programs. It also will contain some common error messages which I have come across; illustrating their meaning, and ways to alleviate the problem (if it \textit{really} is a problem).
 
+\subsubsection{Packaging data}
 \subsubsection{Marginalising out discrete parameters}
 If model has many discrete parameters consider moving to JAGS.
 
