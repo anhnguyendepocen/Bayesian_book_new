@@ -7398,10 +7398,10 @@ model {
         Y[i] ~ normal(covariateMean(X[i],beta),sigma);
     }
     beta ~ normal(0,1);
-    sigma ~ lognormal(0,1);
+    sigma ~ gamma(1,1);
 }
 \end{minted}
-where we have placed a $N(0,1)$ prior on the $\beta$ parameter. If you save this file in your working directory (again, making sure to save it as `.stan') we can take it for a test drive. To do so, generate some fake data in R, then call Stan,
+where we have placed a $N(0,1)$ prior on the $\beta$ parameter. Note that we have now chosen to pass the sample size $N$ as data to the Stan programme. This is good practice since it makes the model more easier to be generalised to bigger samples, and otherwise just neatens things up. Also, note that functions \textit{must} be declared at the top of a Stan programme, otherwise the other blocks can't find the requisite functions when they are executed. If you save this file in your working directory (again, making sure to save it as `.stan') we can take it for a test drive. To do so, generate some fake data in R, then call Stan,
 \begin{minted}{R}
 N <- 100
 X <- rnorm(N,60,10)
@@ -7411,26 +7411,317 @@ Y <- beta * log(X) + rnorm(N,0,sigma)
 
 ## Call Stan
 aModel <- stan_model('covariate.stan')
-fit2 <- sampling(aModel,iter=200,chains=4,
+fit <- sampling(aModel,iter=200,chains=4,
                  data=list(Y=Y,X=X,N=N))
 \end{minted}
+And hopefully you should get posterior samples whose mean is pretty close to that used to generate the fake data,
 
-And hopefully you should get posterior samples whose mean is pretty close to that used to generate the fake data!
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+				\hlcom{## Print summary statistics}
+				\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+##        mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
+## beta   0.30    0.00 0.01  0.28  0.29  0.30  0.30  0.31   400 1.00
+## sigma  0.31    0.00 0.02  0.27  0.30  0.31  0.33  0.36    33 1.08
+## lp__  65.78    0.09 0.96 63.15 65.37 66.02 66.46 66.79   113 1.03
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
 
 Apart from helping you to create more transparent and reliable code, functions also have another use - they can be used to allow sampling from any distribution whose log pdf you can write down. So even if Stan doesn't have built in functionality for a particular distribution, you can still use Stan to sample from it! See section \ref{sec:StanJags_customPDF} for the recipe of this magic potion.
 
 \subsubsection{transformed parameters}
+There are occasions when it makes more sense to set priors, and sample from, parameters that are transformations of parameters of interest. In our original heights example (no covariates) imagine that instead of setting priors on the standard deviation parameters - sigma - you wish to do so on the variance. One way to do this is to use the ``transformed parameters'' block,
+
+\begin{minted}{stan}
+data {
+    int N;
+    real Y[N]; // heights for 10 people
+}
+
+parameters {
+    real mu; // mean height in population
+    real<lower=0> sigmaSq; // var of height pop distribution
+}
+
+transformed parameters{
+  real sigma;
+  sigma = sqrt(sigmaSq);
+}
+
+model {
+    for(i in 1:N){
+        Y[i] ~ normal(mu,sigma); // likelihood
+    }
+    mu ~ normal(1.5,0.1); // prior for mu
+    sigmaSq ~ gamma(5,1); // prior for variance
+}
+\end{minted}
+where we have now declared a parameter ``sigmaSq'' in the \mintinline{stan}{parameters} block that represents the variance of the sampling distribution; ``sigma'' its standard deviation is now declared in the \mintinline{stan}{transformed parameters} block. Notice that we have set priors on ``sigmaSq'' in this programme. Our results now,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+				\hlcom{## Print summary statistics}
+				\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+##          mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
+## mu       1.50    0.00 0.03  1.43  1.48  1.50  1.51  1.55   400 1.00
+## sigmaSq  0.10    0.00 0.01  0.07  0.08  0.09  0.10  0.13    90 1.03
+## sigma    0.31    0.00 0.02  0.27  0.29  0.31  0.32  0.36    92 1.03
+## lp__    61.78    0.08 0.96 59.36 61.34 62.11 62.47 62.73   156 1.03
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+now contain posterior summaries for both of these parameters.
 
 \subsubsection{transformed data}
+The final code block is known as \mintinline{stan}{transformed data}, and as its name suggests can be used to make transformations to the data you pass to Stan. These transformations are carried out once at the beginning of the programme, so it usually does not significantly affect the efficiency of execution (see section \ref{sec:StanJags_efficiency}.) As a trivial example imagine that instead of fitting a model to the heights data itself, we wanted to make one to explain the squared deviation from the sample mean. One way to do this is to carry out the data transformation in Stan,
 
-Sample from posteriors. Very useful to build in PPCs directly, rather than doing it post-hoc.
+\begin{minted}{stan}
+transformed data{
+    vector[N] lSqDeviation;
+    
+    for(i in 1:N){
+	    lSqDeviation[i] = (Y[i] - mean(Y))^2;
+    }
+}
+\end{minted}
+Whilst data transforms can of course be carried out outside of Stan, sometimes it is convenient and neater to do these operations within the Stan script.
 
 \subsection{Efficiency and memory considerations for each block}\label{sec:StanJags_efficiency}
+When writing a Stan programme, like any other software, it is important to know where bottlenecks to efficiency are likely to occur. Further -- particularly if you are running Stan on a laptop -- it may also pay to be aware of the memory footprint of different parts of code. In this section we briefly discuss each of these issues.
+
+Different code blocks in Stan are executed a heterogeneous number of times in a typical Stan run,
+
+\begin{itemize}
+\item \mintinline{stan}{data} - once at the beginning.
+\item \mintinline{stan}{parameters} - each time the log probability is evaluated.
+\item \mintinline{stan}{model} - each time the log probability is evaluated.
+\item \mintinline{stan}{generated parameters} - once per sample.
+\item \mintinline{stan}{transformed data} - once after the \mintinline{stan}{data} block is executed.
+\item \mintinline{stan}{transformed parameters} - each time the log probability is evaluated.
+\end{itemize} 
+
+We have left out the \mintinline{stan}{functions} block out of the above since the frequency it is called depends on its use. 
+
+From the above we see that there is considerable heterogeneity in the importance of each block for ensuring efficient MCMC. The log probability is evaluated each time the HMC/NUTS takes a step (multiple times per sample) and so are the biggest bottlenecks for efficiency. Typically the \mintinline{stan}{model} block is the biggest drain on CPU time, and so it pays to try to optimise the running of this section.
+
+Whichever parameters you declare in either the \mintinline{stan}{parameters} or \mintinline{stan}{transformed parameters} blocks will be represented by one sample in each iteration. This can cause problems for memory, particularly if you use a large number of MCMC iterations and/or the parameters are multi-element objects like vectors, matrices or arrays. Similarly we have experienced memory issues arising from the \mintinline{stan}{transformed parameters} block when undertaking posterior predictive checks when the data itself is highly-dimensional (if you generate simulated data you will get one replicate per sample!) In these circumstances it can pay to define variables locally in blocks of $\{\}$ parentheses which ensures that you will not obtain samples for these. 
+
+As an example, consider our posterior predictive check of the original model where we compare the extremes of the simulated data with the actual maximum and minimum. We originally did this using,
+
+\begin{minted}{stan}
+generated quantities{
+    vector[10] lSimData;
+    int aMax_indicator;
+    int aMin_indicator;
+      
+    // generate posterior predictive samples
+    for(i in 1:10){
+      lSimData[i] = normal_rng(mu,sigma);
+    }
+     
+    // compare with real data 
+    aMax_indicator = max(lSimData) > max(Y);
+    aMin_indicator = min(lSimData) < min(Y);
+}
+\end{minted}
+
+which kept the values of 10-element simulated data for each MCMC sample. Whilst this might not be onerous for data for 10 individuals' heights, it will be if we have data for 1000 people. An alternative way is to declare the vector that will hold the data in curly parentheses (indicating a local block):
+
+\begin{minted}{stan}
+generated quantities{
+    int aMax_indicator;
+    int aMin_indicator;
+      
+    // in local block generate 
+    // posterior predictive samples
+    { vector[10] lSimData;
+      for(i in 1:10){
+        lSimData[i] = normal_rng(mu,sigma);
+      }
+      // compare with real data 
+      aMax_indicator = max(lSimData) > max(Y);
+      aMin_indicator = min(lSimData) < min(Y);
+    }
+}
+\end{minted}
+
+The output now should not contain the simulated data itself but will have the two indicator variables,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+				\hlcom{## Print summary statistics}
+				\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+##                 mean se_mean   sd 2.5%   25%   50%   75% 97.5% n_eff Rhat
+## mu              1.45    0.00 0.05 1.35  1.42  1.45  1.49  1.55   400 1.00
+## sigma           0.17    0.01 0.05 0.10  0.14  0.17  0.19  0.29    71 1.05
+## aMax_indicator  0.69    0.02 0.46 0.00  0.00  1.00  1.00  1.00   363 1.01
+## aMin_indicator  0.55    0.03 0.50 0.00  0.00  1.00  1.00  1.00   313 1.00
+## lp__           10.93    0.13 1.14 7.68 10.40 11.26 11.79 12.15    73 1.02
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+
+\subsection{Loops and conditional statements}
+Stan has the typical array of loops and conditional statements that most mathematical programming languages possess. This allows a large variety of models to be coded up in Stan. Here we illustrate two looping constructs that Stan allows: \mintinline{stan}{for} and \mintinline{stan}{while} loops.
+
+For loops just iterate through the elements as suggested in its argument,
+
+\begin{minted}{stan}
+for(i in 1:10){
+    do something;
+}
+\end{minted} 
+So the above executes 10 times, once per each value of $i$. While loops are slightly different in that they are \textit{conditional}; the number of times it executes depends on a condition being met. So,
+
+\begin{minted}{stan}
+int i = 0;
+while(i < 10){
+    i = i + 1;
+}
+\end{minted} 
+will execute once where at the start of the loop $i = 1,...,9$. The condition will fail to be met however when $i=10$, and the loop will terminate.
+
+Stan also allows conditional behaviour via \mintinline{stan}{if} and \mintinline{stan}{else} statements,
+\begin{minted}{stan}
+if(i < 2){
+    do something;
+} else if(i == 3){
+    do something else;
+} else{
+    do another thing;
+}
+\end{minted}
 
 \subsection{Essential Stan reading}
-The idea behind this section is to introduce the reader to a wide, and somewhat unconnected, range of tricks that I have found very useful in writing Stan programs. It also will contain some common error messages which I have come across; illustrating their meaning, and ways to alleviate the problem (if it \textit{really} is a problem).
+The idea behind this section is to introduce the reader to a wide, and somewhat unconnected, range of tricks that we have found very useful in writing Stan programs. Even if you don't have an immediate use for these ideas then we believe that nonetheless it helps to be aware of them.
 
-\subsubsection{Packaging data}
+\subsubsection{Accessing elements using indices}
+Often we need to access elements of a given data or parameter object. For a vector or array this is straightforward using the square brackets notation in Stan, for example.
+
+\begin{minted}{stan}
+vector[N] X;
+real aTemp;
+...
+// access first element of vector
+aTemp = X[1];
+\end{minted}
+This holds even for more complex arrays where each element is a structured object,
+
+\begin{minted}{stan}
+corr_matrix[K] X[N];
+corr_matrix[K] aTemp;
+...
+// access third element of array
+aTemp = X[3];
+\end{minted}
+For multi-index arrays and matrices the process is no more difficult except we now need to specify multiple indices within the square brackets,
+
+\begin{minted}{stan}
+simplex[K] X[N,L];
+simplex[K] aTemp;
+...
+aTemp = X[3,5];
+\end{minted}
+If you want to pull out several elements of multi-element objects this is also straightforward,
+\begin{minted}{stan}
+real X[4];
+int indices[3];
+real Y[3];
+
+X = (2,3,5,7);
+indices = (4,1,2);
+
+// yields Y = (7,2,3)
+Y = X[indices];
+\end{minted}
+
+\subsubsection{Passing ragged arrays to Stan}
+Suppose that you have individual data for 3 different studies of individuals' heights. In particular imagine that you have the following data in R:
+
+\begin{minted}{R}
+X.1 <- c(1.53,1.67,1.52)
+X.2 <- c(1.75,1.62,1.87,1.95)
+X.3 <- c(1.25,1.75)
+\end{minted}
+
+and you want to generate a separate estimate of the mean population height for each of the three cases, \textit{separately}. First what is the best way to pass this data to Stan? A nice trick we find is to combine all data into one long data vector. We then create ``helper'' arrays in R that indicate the size of each dataset, and its starting position in the long array. So here,
+
+\begin{minted}{R}
+Y <- c(1.53,1.67,1.52,1.75,1.62,1.87,1.95,1.25,1.75)
+S <- c(3,4,2)
+index <- c(1,4,8)
+\end{minted}
+
+Next we create a Stan programme that analyses each of the studies separately - allowing individual-study estimates of the mean and standard deviation,
+
+\begin{minted}{stan}
+data {
+    int N; // number of samples across all studies
+    int K; // number of studies
+    real Y[N]; // heights for N all people
+    int S[K]; // sample sizes of each study
+    int index[K]; // start position of each study
+}
+
+parameters {
+    real mu[K]; // mean height in population
+    real<lower=0> sigma[K]; //sd of height pop distribution
+}
+
+model {
+    // likelihood
+    for(i in 1:K){
+      // select relevant elements for each study
+      Y[index[i]:(index[i]+S[i]-1)] ~ normal(mu[i],sigma[i]);
+    }
+    mu ~ normal(1.5,0.1); // prior for each mu
+    sigma ~ gamma(1,1); // prior for each sigma
+}
+\end{minted}
+where the above code has used the vectorized nature of the ``sampling'' statements to write the likelihood and priors compactly. The above yields the following results,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+				\hlcom{## Print summary statistics}
+				\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+##          mean se_mean   sd  2.5%  25%  50%  75% 97.5% n_eff Rhat
+## mu[1]    1.54    0.00 0.06  1.42 1.51 1.55 1.58  1.65   308 1.01
+## mu[2]    1.62    0.01 0.10  1.41 1.55 1.62 1.69  1.80   331 1.00
+## mu[3]    1.50    0.00 0.10  1.31 1.44 1.50 1.57  1.67   400 1.00
+## sigma[1] 0.16    0.02 0.14  0.05 0.08 0.13 0.19  0.59    61 1.08
+## sigma[2] 0.33    0.02 0.21  0.12 0.19 0.27 0.38  0.99   110 1.02
+## sigma[3] 0.53    0.04 0.47  0.14 0.26 0.38 0.56  2.09   111 1.02
+## lp__     2.34    0.18 1.80 -2.14 1.41 2.65 3.67  4.99   100 1.03
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+
+You may notice when you run the above code that you get a warning of ``divergent iterations''. Whilst we will cover what this means in section \ref{sec:StanJags_divergentSolution}, we note briefly here that it can cause a bias in the results. Seeing as the problem here is quite minor because we only have a few divergent iterations, we can actually solve it by calling Stan as,
+
+\begin{minted}{R}
+fit <- sampling(iModel, data=list(Y=Y,N=N,K=K,S=S,
+                index=index),iter=200,chains=4,
+                control=list(adapt_delta=0.95,stepsize=0.01))
+\end{minted}
+
+See section \ref{sec:StanJags_divergentSolution} for further explanation of why this works.
+
 \subsubsection{Using Stan to generate independent samples}\label{sec:StanJags_independent}
 
 \subsubsection{Marginalising out discrete parameters}\label{sec:StanJags_discrete}
@@ -7443,8 +7734,11 @@ If model has many discrete parameters consider moving to JAGS.
 \subsubsection{Jacobians: when do we need these?}
 Illustrate the use of fake data here.
 
+\subsubsection{Non-centred parameterisations}
 
 \section{What to do when things go wrong}
+It also will contain some common error messages which I have come across; illustrating their meaning, and ways to alleviate the problem (if it \textit{really} is a problem).
+
 \subsection{Have things gone wrong?}
 \paragraph{$\hat{R} > 1.1$}
 \paragraph{Warning messages}
