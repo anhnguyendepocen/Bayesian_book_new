@@ -1,0 +1,168 @@
+\documentclass{book}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## smaller font size for chunks}
+\hlkwd{rm}\hlstd{(}\hlkwc{list}\hlstd{=}\hlkwd{ls}\hlstd{())}
+\hlkwd{setwd}\hlstd{(}\hlstr{"C:/Users/Ben/Dropbox/Bayesian book/StanCode"}\hlstd{)}
+\hlkwd{library}\hlstd{(rstan)}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: ggplot2}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: StanHeaders}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# rstan (Version 2.10.1, packaged: 2016-06-24 13:22:16 UTC, GitRev: 85f7a56811da)}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# For execution on a local, multicore CPU with excess RAM we recommend calling\\\#\# rstan\_options(auto\_write = TRUE)\\\#\# options(mc.cores = parallel::detectCores())}}\begin{alltt}
+\hlkwd{library}\hlstd{(ggplot2)}
+\hlkwd{options}\hlstd{(}\hlkwc{mc.cores}\hlstd{=parallel}\hlopt{::}\hlkwd{detectCores}\hlstd{())}
+
+\hlstd{Y} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{10}\hlstd{,}\hlnum{1.5}\hlstd{,}\hlnum{0.2}\hlstd{)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{stan}\hlstd{(}\hlstr{'StanJags_simpleNormal.stan'}\hlstd{,}\hlkwc{iter}\hlstd{=}\hlnum{200}\hlstd{,}\hlkwc{chains}\hlstd{=}\hlnum{4}\hlstd{,}\hlkwc{data}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{Y}\hlstd{=Y))}
+\end{alltt}
+\begin{verbatim}
+## In file included from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/prim/mat.hpp:36:0,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/rev/mat.hpp:8,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math.hpp:4,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/src/stan/model/model_header.hpp:4,
+##                  from file11181d3c7077.cpp:8:
+## C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/prim/mat/err/check_positive_ordered.hpp: In function 'bool stan::math::check_positive_ordered(const char*, const char*, const Eigen::Matrix<Scalar, -1, 1>&)':
+## C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/prim/mat/err/check_positive_ordered.hpp:39:67: warning: typedef 'size_type' locally defined but not used [-Wunused-local-typedefs]
+##        typedef typename index_type<Matrix<T_y, Dynamic, 1> >::type size_type;
+##                                                                    ^
+## In file included from C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/multi_array/base.hpp:28:0,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/multi_array.hpp:21,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/numeric/odeint/util/multi_array_adaption.hpp:29,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/numeric/odeint.hpp:61,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/prim/arr/functor/integrate_ode_rk45.hpp:13,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/prim/arr.hpp:33,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/prim/mat.hpp:232,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/rev/mat.hpp:8,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math.hpp:4,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/src/stan/model/model_header.hpp:4,
+##                  from file11181d3c7077.cpp:8:
+## C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/multi_array/concept_checks.hpp: In static member function 'static void boost::multi_array_concepts::detail::idgen_helper<N>::call(Array&, const IdxGen&, Call_Type)':
+## C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/multi_array/concept_checks.hpp:42:43: warning: typedef 'index_range' locally defined but not used [-Wunused-local-typedefs]
+##        typedef typename Array::index_range index_range;
+##                                            ^
+## C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/multi_array/concept_checks.hpp:43:37: warning: typedef 'index' locally defined but not used [-Wunused-local-typedefs]
+##        typedef typename Array::index index;
+##                                      ^
+## C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/multi_array/concept_checks.hpp: In static member function 'static void boost::multi_array_concepts::detail::idgen_helper<0ull>::call(Array&, const IdxGen&, Call_Type)':
+## C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/multi_array/concept_checks.hpp:53:43: warning: typedef 'index_range' locally defined but not used [-Wunused-local-typedefs]
+##        typedef typename Array::index_range index_range;
+##                                            ^
+## C:/Users/Ben/Documents/R/win-library/3.3/BH/include/boost/multi_array/concept_checks.hpp:54:37: warning: typedef 'index' locally defined but not used [-Wunused-local-typedefs]
+##        typedef typename Array::index index;
+##                                      ^
+## In file included from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/rev/core.hpp:42:0,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/rev/mat.hpp:4,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math.hpp:4,
+##                  from C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/src/stan/model/model_header.hpp:4,
+##                  from file11181d3c7077.cpp:8:
+## C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/rev/core/set_zero_all_adjoints.hpp: At global scope:
+## C:/Users/Ben/Documents/R/win-library/3.3/StanHeaders/include/stan/math/rev/core/set_zero_all_adjoints.hpp:14:17: warning: 'void stan::math::set_zero_all_adjoints()' defined but not used [-Wunused-function]
+##      static void set_zero_all_adjoints() {
+##                  ^
+\end{verbatim}
+\begin{alltt}
+\hlkwd{print}\hlstd{(fit,}\hlkwc{probs}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,}\hlnum{0.5}\hlstd{,}\hlnum{0.75}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+## Inference for Stan model: StanJags_simpleNormal.
+## 4 chains, each with iter=200; warmup=100; thin=1; 
+## post-warmup draws per chain=100, total post-warmup draws=400.
+## 
+##                mean se_mean   sd  25%  50%  75% n_eff Rhat
+## mu             1.52    0.00 0.08 1.47 1.53 1.56   400 1.00
+## sigma          0.34    0.02 0.09 0.28 0.32 0.38    31 1.09
+## lSimData[1]    1.51    0.02 0.35 1.32 1.49 1.73   400 0.99
+## lSimData[2]    1.56    0.02 0.37 1.32 1.54 1.81   400 0.99
+## lSimData[3]    1.53    0.02 0.35 1.31 1.55 1.76   377 1.00
+## lSimData[4]    1.53    0.02 0.33 1.31 1.54 1.76   400 1.02
+## lSimData[5]    1.52    0.02 0.38 1.27 1.50 1.75   400 0.99
+## lSimData[6]    1.52    0.02 0.36 1.30 1.53 1.77   400 1.00
+## lSimData[7]    1.50    0.02 0.36 1.27 1.50 1.73   383 1.00
+## lSimData[8]    1.54    0.02 0.35 1.33 1.53 1.76   337 0.99
+## lSimData[9]    1.49    0.02 0.38 1.29 1.50 1.75   275 1.01
+## lSimData[10]   1.51    0.02 0.36 1.30 1.52 1.73   400 1.03
+## aMax_indicator 0.50    0.03 0.50 0.00 0.00 1.00   282 1.01
+## aMin_indicator 0.40    0.04 0.49 0.00 0.00 1.00   196 1.01
+## lp__           4.87    0.09 1.15 4.51 5.18 5.66   167 1.03
+## 
+## Samples were drawn using NUTS(diag_e) at Wed Aug 17 00:31:27 2016.
+## For each parameter, n_eff is a crude measure of effective sample size,
+## and Rhat is the potential scale reduction factor on split chains (at 
+## convergence, Rhat=1).
+##  The estimated Bayesian Fraction of Missing Information is a measure of
+##  the efficiency of the sampler with values close to 1 being ideal.
+##  For each chain, these estimates are
+##  0.9 1.3 1 0.8
+\end{verbatim}
+\begin{alltt}
+\hlstd{mu} \hlkwb{<-} \hlkwd{extract}\hlstd{(fit,}\hlstr{'mu'}\hlstd{)[[}\hlnum{1}\hlstd{]]}
+
+\hlkwd{qplot}\hlstd{(mu)}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# `stat\_bin()` using `bins = 30`. Pick better value with `binwidth`.}}\end{kframe}
+\includegraphics[width=\maxwidth]{figure/test1-1} 
+
+\end{knitrout}
+
+\end{document}

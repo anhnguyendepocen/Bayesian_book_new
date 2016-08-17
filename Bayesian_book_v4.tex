@@ -28,6 +28,7 @@
 \usepackage{minted}
 \usepackage{framed}
 \usepackage{mdframed}
+\usepackage{alltt}
 \renewcommand\listingscaption{Stan code}
 \definecolor{apricot}{rgb}{0.984,0.81,0.69}
 \BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=apricot]}
@@ -36,6 +37,44 @@
 \newcommand*\widefbox[1]{\fbox{\hspace{2em}#1\hspace{2em}}}
 \interfootnotelinepenalty=10000
 
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+	\def\at@end@of@kframe{}%
+	\ifinner\ifhmode%
+	\def\at@end@of@kframe{\end{minipage}}%
+\begin{minipage}{\columnwidth}%
+	\fi\fi%
+	\def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+		\colorbox{shadecolor}{##1}\hskip-\fboxsep
+		% There is no \\@totalrightmargin, so:
+		\hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+	\MakeFramed {\advance\hsize-\width
+		\@totalleftmargin\z@ \linewidth\hsize
+		\@setminipage}}%
+{\par\unskip\endMakeFramed%
+	\at@end@of@kframe}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\definecolor{orangeBright}{RGB}{243,146,0}
+\definecolor{blueBright}{RGB}{54,169,225}
+\definecolor{pinkBright}{RGB}{214,11,82}
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
 
 \setlength{\parindent}{0.0in}
 \setlength{\parskip}{0.1in}
@@ -6450,7 +6489,7 @@ How do we mean by `mix with itself', and why do we care? Well, what we mean is t
 \caption{\textbf{Diagnosing intra-chain non-convergence by chain splitting}.}\label{fig:metropolisHastings_splitChains}
 \end{figure}
 
-\subsection{Warm-up}\index{warm-up}
+\subsection{Warm-up}\index{warm-up}\label{sec:metropolisHastings_warmup}
 The previous sections of this chapter illustrate that we cannot have any confidence in our chains' convergence if we find that $\hat{R}$ for \textit{any} of our parameters are significantly above 1. If we find that this is the case, either we need to run the chains for longer, change our algorithm, or often change our model to speed up the rate of convergence (see section \ref{sec:GLM_poorConvergence}). Once we find our chain exhibits good convergence characteristics, we then, and only then, think about its samples as being representative of the posterior.
 
 However, we need to ultimately use a (large) number of samples, so how much of our chain should we use to represent samples from our posterior? Clearly, the first part of the chain is likely to be dictated much by its starting position - which we usually determine in a fairly-haphazard fashion - and hence is unlikely to be representative of the posterior. So, we shouldn't necessarily include our first samples in our final posterior sampling, but where do we draw the line? Sometimes it is obvious from examining the path of a chains over time, that they have reached convergence (see figure \ref{fig:metropolisHastings_warmUp}), but usually things are less clear-cut. Following the advise of Gelman et al. (2013), we recommend as a default discarding the first \textit{half} of chains which exhibit good convergence. The authors call this methodology Markov Chain \textit{warm-up}, where we are waiting for the chains to reach some level of convergence before we start to sample from them. 
@@ -6968,7 +7007,7 @@ There are a multitude of MCMC packages out there, so why do we advocate using St
 
 Overall Stan makes our life easier. Not a convert yet? Well, that's what this chapter is for. Let's get to it!
 
-\section{Getting setup with Stan using RStan}
+\section{Getting setup with Stan using RStan}\label{sec:StanJags_installation}
 This section describes briefly how to get Stan setup on a computer. The reason for its brevity is mainly because there are detailed resources on this on the Stan website (\url{http://mc-stan.org/}). However, here we detail the basic steps for getting up and running using ``RStan'' - the R interface to the Stan language. 
 
 \paragraph{R}
@@ -7005,7 +7044,7 @@ Y_i \sim N(\mu,\sigma)
 %
 where $\sigma$ is the standard deviation of the sampling distribution. To complete our specification of a Bayesian model we need priors, which we choose as:
 \begin{align}
-\mu &\sim N(0,1)\\
+\mu &\sim N(1.5,0.1)\\
 \sigma &\sim gamma(1,1)
 \end{align}
 The completed Stan programme is shown in code block \ref{code:StanJags_fullSimple}. Before we describe the importance of each of these blocks we first take a moment to describe how best to write and save a Stan programme.
@@ -7013,7 +7052,7 @@ The completed Stan programme is shown in code block \ref{code:StanJags_fullSimpl
 \begin{listing}[H]
 	\begin{minted}{stan}
 data {
-    real Y[10]; // Heights for 10 people
+    real Y[10]; // heights for 10 people
 }
 
 parameters {
@@ -7022,18 +7061,18 @@ parameters {
 }
 
 model {
-    for(i in 1:N){
-        Y[i] ~ normal(mu,sigma); // Likelihood
+    for(i in 1:10){
+        Y[i] ~ normal(mu,sigma); // likelihood
     }
-    mu ~ normal(0,1); // Prior for mu
-    sigma ~ gamma(1,1); // Prior for sigma
+    mu ~ normal(1.5,0.1); // prior for mu
+    sigma ~ gamma(1,1); // prior for sigma
 }
 	\end{minted}
 	\caption{A simple Stan program.}
 	\label{code:StanJags_fullSimple}
 	\end{listing}
 
-\subsubsection{Writing and executing a Stan programme}
+\subsubsection{Writing a Stan programme}
 Stan programmes can be written in a text editor, and as long as they are saved with a ``.stan'' ending (for example, ``aModel.stan''), they can be executed. However this isn't best practice. Here we advocate that you either write your Stan models using ``R Studio'', or using ``emacs''. Both of these editors recognise Stan syntax, and hence help to minimise errors whilst writing your models. To write a model in R Studio you will need a fairly recent version of the software. You then must create a new text file, making sure to save it suffixed with ``.stan''. The other option ``emacs'' has a bit of a steeper learning curve, although has a great range of functionality that can speed up the model development process considerably.
 
 We now describe the three most important blocks of a typical Stan programme.
@@ -7041,7 +7080,7 @@ We now describe the three most important blocks of a typical Stan programme.
 \subsubsection{data}
 \begin{minted}{stan}
 data {
-    real Y[10]; // Heights for 10 people
+    real Y[10]; // heights for 10 people
 }
 \end{minted}
 
@@ -7061,6 +7100,8 @@ In the above we declare the variable $Y$ -- representing the heights of the 10 p
 Amongst others in the above we introduced arrays, vectors and matrices. You may be wondering what the difference is between these various types. Vectors and matrices contain only entities of type \mintinline{stan}{real}, that is continuous variables. Whereas arrays can contain data of any type. In the above we show how we can declare arrays of integers and arrays respectively. So why ever use the more limited \mintinline{stan}{vector} and \mintinline{stan}{matrix} types? First they can be used to do linear algebra whereas arrays cannot. Second some functions (for example, multivariate normal distributions) use these types as inputs, rather than arrays. Third there are a few minor memory and speed benefits to using a matrix rather than a 2D array due to the way data is stored in memory.
 
 You've probably also noticed that the Stan code has semi-colons ``;'' at the end of every statement where you assign something. So this happens for data declarations, and (as we'll see soon) for parameter declarations, and anywhere where you access an element of a data type, and assign it to something else. So one place they don't occur is at the start of any loops or conditional statements, where nothing is as yet assigned. However, to be honest it is usually pretty obvious when and where these statements should occur. Hopefully the rest of this example will illustrate this.
+
+You may also have noticed that we can use ``//'' to make comments that annotate the code, and make it easier to understand. Use of comments is a must for reproducible research -- both for yourself, in the future, and for anyone else you tries to make sense of your work. However, don't over-use comments. Only put them in places where it is non-obvious what your code does. Overly-commented code can be messy and hard to read. 
 
 \subsubsection{parameters}
 The next section of code we consider is the parameters block, where we declare all the parameters we will infer in our model.
@@ -7086,50 +7127,333 @@ You'll notice that discrete parameters are missing from the above description. T
 The next part of a Stan programme we discuss is the ``model'' code block which is used to specify the likelihood and priors for a model.
 	\begin{minted}{stan}
 model {
-    for(i in 1:N){
-        Y[i] ~ normal(mu,sigma); // Likelihood
+    for(i in 1:10){
+        Y[i] ~ normal(mu,sigma); // likelihood
     }
-    mu ~ normal(0,1); // Prior for mu
-    sigma ~ gamma(1,1); // Prior for sigma
+    mu ~ normal(1.5,0.1); // prior for mu
+    sigma ~ gamma(1,1); // prior for sigma
 }
 	\end{minted}
-One important thing to notice about the above is the use of so-called sampling statements written by ``~''. The term ``sampling statement'' is suggestive and not to be taken literally \cite{carpenter2016stan}. In the above we use a sampling statement for the individual elements of $Y$ because we assumed that the likelihood was normal: $Y\sim N(\mu,\sigma)$. Similarly, we assumed that the priors on the parameters were normal and gamma respectively, as suggested by the above code.
+\paragraph{Sampling statements.} One important thing to notice about the above is the use of so-called sampling statements written by ``$\tilde{~}$''. The term ``sampling statement'' is suggestive and not to be taken literally \cite{carpenter2016stan}. In the above we use a sampling statement for the individual elements of $Y$ because we assumed that the likelihood was normal: $Y\sim N(\mu,\sigma)$. Similarly, we assumed that the priors on the parameters were normal and gamma respectively, as suggested by the above code.
 
-However do not think that Stan actually does the independent sampling that these statements seem to suggest. 
+However do not think that Stan actually does the independent sampling that these statements seem to suggest. (If it could then we wouldn't need to do MCMC in the first place! See chapter \ref{chap:MCMC} if you can't remember why this is.) Remember that Stan essentially runs on HMC. HMC is an MCMC method that works in negative log posterior space. Because the overall posterior numerator is the product of a number of elements of the likelihood and prior this means the overall \textbf{log} posterior is the \textbf{sum} of the individual log probability of each element in the likelihood and prior.  Therefore in HMC all we need to do is evaluate the log probability of each of these elements and add them together. This is exactly what the sampling statements - the $\tilde{~}$ - help us to do. For each step in the HMC corresponding to a new value of $\mu$ and $\sigma$, we need to evaluate the (unnormalised, negative) log posterior density. So in each step Stan calculates a new log probability by starting with a value of zero and incrementing it each time a $\tilde{~}$ statement occurs. So
+	\begin{minted}{stan}
+for(i in 1:10){
+    Y[i] ~ normal(mu,sigma);
+}
+	\end{minted}
+increments the log-probability by: $log(p(Y[i])) \propto -\frac{1}{2} log(\sigma^2)- \frac{Y[i]^2}{2\sigma^2}$ for the heights of each $i=1,..,10$ individuals. This is the normal pdf not including any constant terms - sampling statements throw away the constants as they are usually not needed for the model and never for HMC. Another way to express the above sampling statement is via an alternative Stan notation:
+	\begin{minted}{stan}
+for(i in 1:10){
+    target += normal_lpdf(mu,sigma);
+}
+	\end{minted}
+which more transparently increments``target'' -- a container that holds the current value of the log posterior -- by a log probability corresponding to the log of the normal pdf. To be clear here ``target'' statements aren't actually the same as $\tilde{~}$ ones, because target statements keep any constants in the log density. Consequently Stan programmes with $\tilde{~}$ statements are generally quicker, however if you want the actual log probability of the model you may to use target statements.
 
-In other blocks to access an individual element in this data array we just use square parentheses, so Y[1]
+Why do we bring this distinction between what $\tilde{~}$ means statistically and what it means in the Stan language? Because you may get errors that you think are bugs in Stan, but are actually due to you interpreting $\tilde{~}$ statistically. Take the below excerpt from a Stan programme.
+	\begin{minted}{stan}
+parameters{
+    real theta;
+}
+model{
+    ....
+    theta ~ uniform(0,1);
+}
+	\end{minted}
+On first glances it appears that the parameter ``theta'' should be constrained to lie between 0 and 1 because it has a continuous prior with those bounds. However, this is not the case. All the above sampling statement does is increment the log probability by an amount given by the log uniform pdf ($log(1)=0$, in this case.) This means that it is possible for theta to stray outside of the 0 and 1 bounds, and if you run this programme you may actually see this for a few iterations (Stan will output a statement of the form: ``Log probability evaluates to log(0)...''.)
+
+\paragraph{Vectorisation.} There is actually a more efficient and compact way to write our original model that takes advantage of the inherent ``vectorised'' nature of sampling statements, 
+	\begin{minted}{stan}
+model {
+    Y ~ normal(mu,sigma); // likelihood
+    ....
+}
+	\end{minted}
+where we have replaced the for loop that accesses each element of $Y$ individually by the above where we use the array $Y$ on the left-hand side. For more complex models using vectorised code can amount to serious speed ups in the MCMC because the code is better able to leverage the benefits of $C++$ when it is translated.
+
+\paragraph{Probability distributions.} Stan comes equipped with a vast array of useful probability distributions to cover a range of situations. We do not include all of these below because they are easily found in the Stan manual, and are constantly being updated. However a few or the more popular distributions,
+
+\begin{itemize}
+\item \textbf{Discrete:} bernoulli, binomial,  normal, poisson, beta-binomial, negative-binomial, categorical, multinomial.
+\item \textbf{Continuous unbounded:} normal, skew-normal, student-t, cauchy, logistic.
+\item\textbf{Continuous bounded:} uniform, beta, log-normal, exponential, gamma, chi-squared, inverse-chi-squared, weibull, wiener diffusion, pareto. 
+\item \textbf{Multivariate continuous:} normal, student-t, gaussian process.
+\item \textbf{Exotics:} dirichlet, LKJ correlation distribution, wishart and its inverse, von-mises.
+\end{itemize}
+
+It is also worth noting that Stan also sometimes provides different parameterisations of the same probability distribution, which can make life easier. 
+
+\subsection{Executing a Stan programme in R}
+Now that we understand the aforementioned data, parameters and model elements of a Stan programme, let's discuss how we execute it in R, using ``RStan''. Note that this section assumes that you have installed R, RStudio and RStan as described in section \ref{sec:StanJags_installation}. To get up and running follow,
+
+\begin{enumerate}
+\item Create a new folder `simple' that will contain our `.stan' file along with an R file that we use to call Stan.
+\item In R Studio create a new text file, and paste the code in code block \ref{code:StanJags_fullSimple} into it. Save this file in the newly-created folder as `simple.stan' (when you do so, you should see that RStudio highlights code in line with Stan's syntax.)
+\item In R Studio create a new R Script file, and save it as `s\_simple'.
+\item In R Studio change the working directory to be the same as the newly-created folder. This can be done manually through the drop downs at the top of the window, or via a line of code that will look something like,
+\begin{minted}{R}
+setwd("~/simple")
+\end{minted}
+dependent on the folder structure on your computer.
+\item In the R script file load the RStan package using,
+\begin{minted}{R}
+library(rstan)
+\end{minted}
+\item (Optional) set up RStan to run in parallel on multiple processors (if your computer has them) with the following line in your R Script,
+\begin{minted}{R}
+options(mc.cores = parallel::detectCores())
+\end{minted}
+\item Create some fake height data in R using,
+\begin{minted}{R}
+Y <- rnorm(10,1.5,0.2)
+\end{minted}
+\item Compile and run the MCMC using your Stan programme, by the following line in your R Script,
+\begin{minted}{R}
+fit <- stan('simple.stan',iter=200,chains=4,
+            data=list(Y=Y))
+\end{minted}
+The above translates your Stan model into C++ code, then compiles it (this step may take up to a few minutes on older computers.) It then runs the MCMC using 200 iterations across 4 chains. Using RStan we supply our data as a \mintinline{R}{list}. So the overall R Script should look something like,
+\begin{minted}{R}
+library(rstan)
+options(mc.cores = parallel::detectCores())
+
+Y <- rnorm(10,1.5,0.2)
+fit <- stan('simple.stan',iter=200,chains=4,
+            data=list(Y=Y))
+\end{minted}
+\end{enumerate}
+
+\subsection{Interpreting the results of a Stan MCMC run}
+So (hopefully) we've successfully run our Stan model. How do we look at the results? There are a number of ways to do so, and here we begin with the simplest. We can look at summary statistics for our posterior samples using,
+\begin{minted}{R}
+print(fit,probs = c(0.25,0.5,0.75))
+\end{minted}
+where ``fit'' is the object in which we saved the result of our Stan run previously. This should output results that look something like the below. The exact numbers will differ because they depend on the exact fake data you created using \mintinline{R}{rnorm} before, however the below structure should look similar.
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+				\hlcom{## Print summary statistics}
+				\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+## Inference for Stan model: StanJags_simpleNormal.
+## 4 chains, each with iter=200; warmup=100; thin=1; 
+## post-warmup draws per chain=100, total post-warmup draws=400.
+## 
+##                mean se_mean   sd  25%  50%  75% n_eff Rhat
+## mu             1.52    0.00 0.08 1.47 1.53 1.56   400 1.00
+## sigma          0.34    0.02 0.09 0.28 0.32 0.38    31 1.09
+## lp__           4.87    0.09 1.15 4.51 5.18 5.66   167 1.03
+## 
+## Samples were drawn using NUTS(diag_e) at Wed Aug 17 00:31:27 2016.
+## For each parameter, n_eff is a crude measure of effective sample size,
+## and Rhat is the potential scale reduction factor on split chains (at 
+## convergence, Rhat=1).
+##  The estimated Bayesian Fraction of Missing Information is a measure of
+##  the efficiency of the sampler with values close to 1 being ideal.
+##  For each chain, these estimates are
+##  0.9 1.3 1 0.8
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+So what do all the parts of the above mean? Well, the top part just states that 4 chains were run for 200 iterations in total. However, the first half of these chains were discarded as ``warm-up'' (see section \ref{sec:metropolisHastings_warmup}) meaning that there are only 100 samples kept as posterior samples for each chain, resulting in $400=4\times 100$ ``total post-warmup draws.'' The table in the output contains summary statistics for the two parameters of our model $(\mu,\sigma)$, as well as for the log-probability of the model ``lp\_\_''. The last two columns of the table are convergence diagnostics for each parameter: $n\_eff$ is the number of effective samples, and $Rhat = \hat{R}$. In this case we see that in all cases $\hat{R}<1.1$ giving us some confidence that our posterior shape won't change too much if we collected more samples. The first 6 columns of the table show summary measures for the posterior samples, including the mean (and its  standard error), the standard deviation, and the 3 quantiles we specified in our \mintinline{R}{print(fit,probs=c(0.25,0.5,0.75))} statement. The last part of the output contains information on the sampling algorithm used (NUTS) and the estimated Bayesian Fraction of Missing Information (see section XX.)
+
+How do we extract the posterior samples, then graph them?
+
+\begin{minted}{R}
+library(ggplot2)
+mu <- extract(fit,'mu')[[[1]]
+qplot(mu)
+\end{minted}
+
+where \textit{extract} is a Stan function that pulls out any parameter we desire from a Stan fit object. We have chosen to use the ``ggplot2'' library to display a histogram of the data here.
+
+\begin{knitrout}
+\begin{alltt}
+\hlkwd{library}\hlstd{(ggplot2)}
+\hlstd{mu} \hlkwb{<-} \hlkwd{extract}\hlstd{(fit,}\hlstr{'mu'}\hlstd{)[[}\hlnum{1}\hlstd{]]}
+\hlkwd{qplot}\hlstd{(mu)}
+\end{alltt}
+\includegraphics[width=0.4\linewidth]{StanCode/figure/test1-1} 
+\end{knitrout}
+
+\paragraph{Shiny Stan.}\index{Shiny Stan} If you are using R there is another, more interactive (and hence fun!), way to view the results from a Stan run, using the Shiny Stan package. You can install this package from within R using,
+
+\begin{minted}{R}
+install.packages('shinystan')
+\end{minted}
+
+From there it is simple to create a Shiny Stan object, and launch the Shiny Stan application,
+
+\begin{minted}{R}
+aFit <- as.shinystan(fit)
+launch_shinystan(aFit)
+\end{minted}
+
+Upon executing the above your web browser should open up  in your web browser (you do not need to be connected to the internet), and you should see an intro screen with options including: DIAGNOSE, ESTIMATE and EXPLORE. DIAGNOSE allows you to view detailed MCMC diagnostic criteria by clicking through the various options, including convergence criteria such as $\hat{R}$, effective sample size, and divergent iterations. ESTIMATE provides tables and basic graphs of the parameters in your model. EXPLORE amongst other (fun) things this allows you to create scatter-plots of samples from each variable plotted against one another. This graph in particular can be very useful in diagnosing issues with your MCMC (see section \ref{sec:StanJags_divergentSolution}.) 
+
+\subsection{The other blocks}
+The three previous code blocks are typically essential in a Stan programme (see section \ref{sec:StanJags_independent} for a counterexample), however there are other code blocks that can help make life even easier. In this section we describe these.
 
 \subsubsection{generated quantities}
+The most widely useful of the ``other'' blocks is the ``generated quantities'' code block. One of the principle uses of this section is to do posterior predictive checks (see chapter \ref{chap:ModelFit}) of a model's fit. Once you know how this section works, we find that it is much easier to do posterior predictive checks here rather than do them afterwards in R, Python etc. This section of a Stan programme is executed once per sample, meaning that it does not typically pose a threat to efficiency (although it can significantly affect the memory used by Stan - see section \ref{sec:StanJags_efficiency}.)
+
+The use of this section is best illustrated by an example. Suppose again we are using our heights example in the preceding sections. Further suppose we want to test whether our model is capable of generating the extremes that we see in our data. In particular we choose to count the fraction of posterior predictive samples -- each of the same size as our original data -- where the maximum or minimum of the simulated data is more extreme than the actual data. Whilst we can't do all of these tests in Stan, we can do much of the legwork using,
+
+\begin{minted}{stan}
+generated quantities{
+    vector[10] lSimData;
+    int aMax_indicator;
+    int aMin_indicator;
+      
+    // Generate posterior predictive samples
+    for(i in 1:10){
+      lSimData[i] = normal_rng(mu,sigma);
+    }
+     
+    // Compare with real data 
+    aMax_indicator = max(lSimData) > max(Y);
+    aMin_indicator = min(lSimData) < min(Y);
+}
+\end{minted}
+
+The first part of the preceding code just declares the variables we intend to use in this block. We then use our posterior samples of mu and sigma to generate posterior predictive samples of the same length as the actual data. We then determine whether the maximum and minimum of the simulated data is more extreme than the real data; generating a variable equal to 1 if this is the case, and zero otherwise.
+
+If we run the whole programme, including the generated quantities section at the bottom, we obtain results that look something like the following,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+				\hlcom{## Print summary statistics}
+				\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+##                mean se_mean   sd  25%  50%  75% n_eff Rhat
+## mu             1.52    0.00 0.08 1.47 1.53 1.56   400 1.00
+## sigma          0.34    0.02 0.09 0.28 0.32 0.38    31 1.09
+## lSimData[1]    1.51    0.02 0.35 1.32 1.49 1.73   400 0.99
+## lSimData[2]    1.56    0.02 0.37 1.32 1.54 1.81   400 0.99
+## lSimData[3]    1.53    0.02 0.35 1.31 1.55 1.76   377 1.00
+## lSimData[4]    1.53    0.02 0.33 1.31 1.54 1.76   400 1.02
+## lSimData[5]    1.52    0.02 0.38 1.27 1.50 1.75   400 0.99
+## lSimData[6]    1.52    0.02 0.36 1.30 1.53 1.77   400 1.00
+## lSimData[7]    1.50    0.02 0.36 1.27 1.50 1.73   383 1.00
+## lSimData[8]    1.54    0.02 0.35 1.33 1.53 1.76   337 0.99
+## lSimData[9]    1.49    0.02 0.38 1.29 1.50 1.75   275 1.01
+## lSimData[10]   1.51    0.02 0.36 1.30 1.52 1.73   400 1.03
+## aMax_indicator 0.50    0.03 0.50 0.00 0.00 1.00   282 1.01
+## aMin_indicator 0.40    0.04 0.49 0.00 0.00 1.00   196 1.01
+## lp__           4.87    0.09 1.15 4.51 5.18 5.66   167 1.03
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+So we now have summary statistics for the posterior predictive data. In particular, we have the means of the two indicator variables which represent Bayesian p values (see chapter \ref{chap:ModelFit}.) Therefore using this posterior predictive check we conclude that our model is a reasonable fit to the data, since the p values are nowhere near 0 or 1.
+
+Another use of this code block is to generate the requisite data for measuring a model's predictive performance. However we leave a discussion of how to do this until section \ref{sec:StanJags_WAICLOO}.
+
+Finally another use we'll mention but not discuss now is that the generated quantities block can be useful in summarising hierarchical models. See chapter \ref{chap:hierarchicalModels} here.
+
 \subsubsection{functions}
+Code can be made more easily readable, and less error prone, if we define functions to carry out any frequently-used operations. As an example suppose that, together with the height of individuals in our sample, we also had their weight. Further we believe that a reasonable approximation for the relationship between these two variables could be described by,
+%
+\begin{equation}
+Y_i \sim N(\beta log(X_i),\sigma)
+\end{equation}
+%
+where $(X_i,Y_i)$ are the weight and height of individual $i$. Whilst this model doesn't have repetitions we might find it neater to use a function that calculates the mean of the normal,
+
+\begin{minted}{stan}
+functions{
+  real covariateMean(real aX, real aBeta){
+    return(aBeta * log(aX));
+  }
+}
+\end{minted}
+
+where the first \mintinline{stan}{real} before the function name declares that the function will return a continuous variable. The elements contained within parentheses tell the function that it will accept two reals - $aX$ and $aBeta$ - as input. The \mintinline{stan}{return} statement then directly returns the required value. Note that it is possible to declare variables in a Stan function; here because the function is simple we choose to return the value directly. The whole Stan program then has the form,
+
+\begin{minted}{stan}
+functions{
+  real covariateMean(real aX, real aBeta){
+    return(aBeta * log(aX));
+  }
+}
+
+data {
+    int N; // Number of people in sample
+    real Y[N]; // Heights for N people
+    real X[N]; // Weights for N people
+}
+
+parameters {
+    real beta;
+    real<lower=0> sigma; //sd of height pop distribution
+}
+
+model {
+    for(i in 1:N){
+        Y[i] ~ normal(covariateMean(X[i],beta),sigma);
+    }
+    beta ~ normal(0,1);
+    sigma ~ lognormal(0,1);
+}
+\end{minted}
+where we have placed a $N(0,1)$ prior on the $\beta$ parameter. If you save this file in your working directory (again, making sure to save it as `.stan') we can take it for a test drive. To do so, generate some fake data in R, then call Stan,
+\begin{minted}{R}
+N <- 100
+X <- rnorm(N,60,10)
+beta <- 0.3
+sigma <- 0.3
+Y <- beta * log(X) + rnorm(N,0,sigma)
+
+## Call Stan
+aModel <- stan_model('covariate.stan')
+fit2 <- sampling(aModel,iter=200,chains=4,
+                 data=list(Y=Y,X=X,N=N))
+\end{minted}
+
+And hopefully you should get posterior samples whose mean is pretty close to that used to generate the fake data!
+
+Apart from helping you to create more transparent and reliable code, functions also have another use - they can be used to allow sampling from any distribution whose log pdf you can write down. So even if Stan doesn't have built in functionality for a particular distribution, you can still use Stan to sample from it! See section \ref{sec:StanJags_customPDF} for the recipe of this magic potion.
 
 \subsubsection{transformed parameters}
+
 \subsubsection{transformed data}
 
 Sample from posteriors. Very useful to build in PPCs directly, rather than doing it post-hoc.
 
-\subsection{Diagnostics}
-\subsubsection{$\hat{R}$ and effective sample size}
-\subsubsection{Divergent iterations}
-\subsubsection{Tree depth exceeding maximum}
-\subsubsection{Leapfrog steps}
-
-\subsection{More complex models with array indexing}
+\subsection{Efficiency and memory considerations for each block}\label{sec:StanJags_efficiency}
 
 \subsection{Essential Stan reading}
 The idea behind this section is to introduce the reader to a wide, and somewhat unconnected, range of tricks that I have found very useful in writing Stan programs. It also will contain some common error messages which I have come across; illustrating their meaning, and ways to alleviate the problem (if it \textit{really} is a problem).
 
 \subsubsection{Packaging data}
+\subsubsection{Using Stan to generate independent samples}\label{sec:StanJags_independent}
+
 \subsubsection{Marginalising out discrete parameters}\label{sec:StanJags_discrete}
 If model has many discrete parameters consider moving to JAGS.
 
 \subsubsection{Custom PDFs: no problem with Stan}\label{sec:StanJags_customPDF}
 
-\subsubsection{Calculating LOO-CV and WAIC}
+\subsubsection{Calculating WAIC, LOO-CV and other measures}\label{sec:StanJags_WAICLOO}
 
+\subsubsection{Jacobians: when do we need these?}
+Illustrate the use of fake data here.
 
 
 \section{What to do when things go wrong}
+\subsection{Have things gone wrong?}
+\paragraph{$\hat{R} > 1.1$}
+\paragraph{Warning messages}
+\paragraph{Divergent iterations}
+\paragraph{Tree depth exceeding maximum}
+\paragraph{Leapfrog steps}
 
+\subsubsection{Dealing with divergent iterations}\label{sec:StanJags_divergentSolution}
+\subsubsection{Debug by print}
 
 \part{Regression analysis and hierarchical models}\label{part:regressionHierarchical}
 \section{Part mission statement}
