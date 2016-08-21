@@ -7123,7 +7123,7 @@ As per the data block there are a range of data types that are available to us h
 
 You'll notice that discrete parameters are missing from the above description. This isn't a mistake. Stan does not support integer-valued parameters, directly at least. This is because the theory of HMC for discrete parameters is not yet sufficiently developed. However the Stan development team are working on this, and hopefully at some point in the future this will be possible. Whilst this might seem like a serious issue since many models contain discrete parameters, it is possible to indirectly include discrete parameters by marginalising them out (see section \ref{sec:StanJags_discrete}.) This means that the majority of models that use discrete parameters, we can still use Stan!
 
-\subsubsection{model}
+\subsubsection{model}\label{sec:StanJags_model}
 The next part of a Stan programme we discuss is the ``model'' code block which is used to specify the likelihood and priors for a model.
 	\begin{minted}{stan}
 model {
@@ -7321,6 +7321,8 @@ generated quantities{
 
 The first part of the preceding code just declares the variables we intend to use in this block. We then use our posterior samples of mu and sigma to generate posterior predictive samples of the same length as the actual data. We then determine whether the maximum and minimum of the simulated data is more extreme than the real data; generating a variable equal to 1 if this is the case, and zero otherwise.
 
+You'll notice that to generate random samples from a given distribution, we use the ``\_rng'' suffix. So in the above \mintinline{stan}{Y=normal_rng(mu,sigma)} generates a single independent sample from a normal distribution with a mean of mu and a standard deviation of sigma. This is completely different to \mintinline{stan}{Y~normal(mu,sigma)} which remember means ``increment the overall log probability by an amount given by the log of a normal likelihood for a data point $Y$ with a mean of mu and standard deviation of sigma'' (see section \ref{sec:StanJags_model} if you need to remind yourself about this.) 
+
 If we run the whole programme, including the generated quantities section at the bottom, we obtain results that look something like the following,
 
 \begin{knitrout}\small
@@ -7410,8 +7412,7 @@ sigma <- 0.3
 Y <- beta * log(X) + rnorm(N,0,sigma)
 
 ## Call Stan
-aModel <- stan_model('covariate.stan')
-fit <- sampling(aModel,iter=200,chains=4,
+fit <- stan('covariate.stan',iter=200,chains=4,
                  data=list(Y=Y,X=X,N=N))
 \end{minted}
 And hopefully you should get posterior samples whose mean is pretty close to that used to generate the fake data,
@@ -7715,26 +7716,582 @@ where the above code has used the vectorized nature of the ``sampling'' statemen
 You may notice when you run the above code that you get a warning of ``divergent iterations''. Whilst we will cover what this means in section \ref{sec:StanJags_divergentSolution}, we note briefly here that it can cause a bias in the results. Seeing as the problem here is quite minor because we only have a few divergent iterations, we can actually solve it by calling Stan as,
 
 \begin{minted}{R}
-fit <- sampling(iModel, data=list(Y=Y,N=N,K=K,S=S,
-                index=index),iter=200,chains=4,
-                control=list(adapt_delta=0.95,stepsize=0.01))
+fit <- stan('multipleStudies.stan', 
+                data=list(Y=Y,N=N,K=K,S=S,index=index),
+                iter=200,chains=4,control=
+                list(adapt_delta=0.95,stepsize=0.01))
 \end{minted}
 
-See section \ref{sec:StanJags_divergentSolution} for further explanation of why this works.
+Hopefully this should sort the problem. See section \ref{sec:StanJags_divergentSolution} for further explanation of why this works.
 
 \subsubsection{Using Stan to generate independent samples}\label{sec:StanJags_independent}
+Sometimes it's useful to use Stan as a tool to generate independent samples from a distribution of interest. This may be useful in of itself, or can be because you wish to know how a given Stan distribution behaves. Suppose that we want to know what independent samples from the Stan \mintinline{stan}{neg_binomial_2} distribution look like. To do this we leverage the power of the \mintinline{stan}{generated quantities} block, and create a bare bones Stan program of the form,
 
-\subsubsection{Marginalising out discrete parameters}\label{sec:StanJags_discrete}
-If model has many discrete parameters consider moving to JAGS.
+\begin{minted}{stan}
+data{
+  real mu;
+  real kappa;
+}
+
+model{
+}
+
+generated quantities{
+    int Y;
+    Y = neg_binomial_2_rng(mu,kappa);
+}
+\end{minted}
+where we supply the desired mu and kappa of this distribution as data inputs. Notice that we have to suffix the distribution with ``\_rng'' because we want to generate independent samples from it. Also notice that the above model does not contain a \mintinline{stan}{parameters} block. Therefore to execute this program we need to slightly alter the way we call it from R,
+
+\begin{minted}{R}
+fit <- stan('bareBones.stan',data=list(mu=10,kappa=5),
+            algorithm='Fixed_param',iter=4000)
+\end{minted}
+
+where we have generated independent samples from this distribution with a mean of mu=10 and kappa=5. As before we can extract out the independent samples and graph them,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{Y} \hlkwb{<-} \hlkwd{extract}\hlstd{(fit,}\hlstr{'Y'}\hlstd{)[[}\hlnum{1}\hlstd{]]}
+\hlkwd{qplot}\hlstd{(Y)} \hlopt{+} \hlkwd{geom_histogram}\hlstd{(}\hlkwc{binwidth} \hlstd{=} \hlnum{2}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# `stat\_bin()` using `bins = 30`. Pick better value with `binwidth`.}}\end{kframe}
+\includegraphics[width=\linewidth]{StanCode/figure/normalCovariate-1} 
+	\end{knitrout}
+
+\subsubsection{Translate and compile a model for use later on}
+It would be good to avoid having to re-compile models each time you want to re-use them. Fortunately Stan has a number of ways of doing just this. The simplest is to use the option,
+
+\begin{minted}{R}
+rstan_options(auto_write = TRUE)
+\end{minted}
+
+which ensures a compiled version of the Stan model is written to the hard disk in the same directory as the ``.stan'' file. Alternative ways forward are to store your model as an instance of ``stanmodel'' which can be used later on for MCMC,
+
+\begin{minted}{R}
+aModel <- stan_model('example.stan')
+fit <- sampling(aModel,iter=400,data=list(Y=Y),chains=4)
+\end{minted}
 
 \subsubsection{Custom PDFs: no problem with Stan}\label{sec:StanJags_customPDF}
+Suppose that we have a variable $X$ that we believe follows the distribution,
+
+\begin{equation}
+\frac{\sqrt{2}}{\pi  \left((x-\mu )^4+1\right)}
+\end{equation}
+
+where $-\infty < x < \infty$ which for $\mu=2$ looks like,
+
+
+\begin{knitrout}\small
+\begin{kframe}
+\begin{alltt}
+\hlkwd{curve}\hlstd{((}\hlkwd{sqrt}\hlstd{(}\hlnum{2}\hlstd{)}\hlopt{/}\hlstd{pi)}\hlopt{*}\hlnum{1}\hlopt{/}\hlstd{(}\hlnum{1}\hlopt{+}\hlstd{(x}\hlopt{-}\hlnum{2}\hlstd{)}\hlopt{^}\hlnum{4}\hlstd{),}\hlopt{-}\hlnum{5}\hlstd{,}\hlnum{5}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=0.6\linewidth]{StanCode/figure/customPDF-1} 
+	\end{knitrout}
+
+Unfortunately this pdf is not available in Stan (which isn't really that surprising since we've just made it up!) So what can we do? Well it turns out we can still use Stan for inference by writing a function that returns the log pdf for each value of $\mu$ (just the log of the above). We then use this log pdf value to increment the overall log density,
+
+\begin{minted}{stan}
+functions{
+  real example_lpdf(real aX,real aMu){
+    return(log(sqrt(2)/( pi() * (1 + (aX - aMu)^4))));
+  }
+}
+
+data { 
+  int N; 
+  real X[N]; 
+} 
+
+parameters { 
+  real mu; 
+}
+
+model { 
+  for(i in 1:N){
+    X[i] ~ example(mu);
+  }
+  mu ~ normal(0,2);
+}
+\end{minted}
+
+where we have assigned a $\mu \sim N(0,2)$ prior. You'll notice in the above that we've suffixed our custom log pdf definion with ``\_lpdf''. This tells Stan to regard this function as a typical log pdf which we can use along with a `$\sim$' statement,
+
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+\hlstd{N} \hlkwb{<-} \hlnum{4}
+\hlstd{X} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1.5}\hlstd{,}\hlnum{2.2}\hlstd{,}\hlnum{0.1}\hlstd{,}\hlopt{-}\hlnum{0.4}\hlstd{)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{stan}\hlstd{(}\hlstr{'StanJags_customPDF.stan'}\hlstd{,}\hlkwc{iter}\hlstd{=}\hlnum{200}\hlstd{,}\hlkwc{chains}\hlstd{=}\hlnum{4}\hlstd{,}\hlkwc{data}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N}\hlstd{=N,}\hlkwc{X}\hlstd{=X))}
+			\end{alltt}
+			\begin{verbatim}
+##       mean se_mean   sd   25%   50%   75% n_eff Rhat
+## mu   -0.18    0.03 0.54 -0.57 -0.25  0.23   291    1
+## lp__ -8.47    0.04 0.67 -8.56 -8.23 -8.07   255    1
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+To use this functionality for any pdf we must define our data as the function's first input and all parameters after this so,
+
+\begin{minted}{stan}
+real normalCustom_lpdf(real aX,real aMu,real aSigma)
+\end{minted}
+
+would implement a log pdf function that we call using,
+\begin{minted}{stan}
+Y ~ normalCustom(mu,theta);
+\end{minted}
+or alternatively using,
+\begin{minted}{stan}
+target += normalCustom_lpdf(Y|theta,phi);
+\end{minted}
+
+Let's prove it works for a distribution that exists in R and Stan -- the normal. The Stan model can be written as,
+
+\begin{minted}{stan}
+functions{
+  real normalCustom_lpdf(real aX,real aMu,real aSigma){
+    return(-log(aSigma) - 1/(2*aSigma^2)*(aX-aMu)^2);
+  }
+}
+
+data { 
+  int N; 
+  real X[N]; 
+} 
+
+parameters { 
+  real mu;
+  real<lower=0> sigma;
+}
+
+model { 
+  for(i in 1:N){
+    X[i] ~ normalCustom(mu,sigma);
+  }
+  mu ~ normal(0,2);
+  sigma ~ lognormal(0,1);
+}
+\end{minted}
+where we have assigned normal and log-normal priors on mu and sigma respectively. Now generate some fake data with $X\sim N(3,5)$ and fit the model,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+\hlstd{N} \hlkwb{<-} \hlnum{1000}
+\hlstd{X} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(N,}\hlnum{3}\hlstd{,}\hlnum{5}\hlstd{)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{stan}\hlstd{(}\hlstr{'customNormal.stan'}\hlstd{,}\hlkwc{iter}\hlstd{=}\hlnum{200}\hlstd{,}\hlkwc{chains}\hlstd{=}\hlnum{4}\hlstd{,}
+             \hlkwc{data}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N}\hlstd{=N,}\hlkwc{X}\hlstd{=X))}
+\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,}\hlnum{0.5}\hlstd{,}\hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+##           mean se_mean   sd      25%      50%      75% n_eff Rhat
+## mu        2.82    0.02 0.17     2.71     2.80     2.94    87 1.03
+## sigma     4.88    0.01 0.11     4.81     4.88     4.95   400 1.00
+## lp__  -2088.85    0.12 1.06 -2089.39 -2088.50 -2088.08    81 1.05
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+
+
+So the moral here is that -- so long as you can write a function in Stan that returns the log pdf of a distribution -- you can use Stan to sample from it!
 
 \subsubsection{Calculating WAIC, LOO-CV and other measures}\label{sec:StanJags_WAICLOO}
 
 \subsubsection{Jacobians: when do we need these?}
-Illustrate the use of fake data here.
+Suppose we have a uniformly distributed variable, $\theta$ and draw samples for it,
 
-\subsubsection{Non-centred parameterisations}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(ggplot2)}
+
+\hlstd{theta} \hlkwb{<-} \hlkwd{runif}\hlstd{(}\hlnum{100000}\hlstd{)}
+\hlkwd{qplot}\hlstd{(theta)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=0.6\linewidth]{StanCode/figure/jacobians-1} 
+\end{knitrout}
+
+then we square the samples. What does the distribution of $\theta^2$ look like?
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{qplot}\hlstd{(theta}\hlopt{^}\hlnum{2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=0.6\linewidth]{StanCode/figure/jacobians1-1} 
+\end{knitrout}
+
+which is definitely \textit{not} uniform! Whenever we apply a non-linear transform a variables its probability distribution is stretched in some areas, and squashed in others. The correct way to mathematically calculate this stretching is known as the \textbf{Jacobian} transform. 
+
+In Stan we are required to manually specify this Jacobian if we ever sample from a transformed parameter. As an example \cite{carpenter2016stan}\footnote{Inspired by Bob Carpenter's example here: \url{http://mc-stan.org/documentation/case-studies/mle-params.html.}} imagine we have some binary data $X=(0,0,1,0)$ that represents the outcomes of some sort of test -- where individual data points can either be a success (1) or failure (0). We model each outcome as a bernoulli distribution (see \ref{sec:Distributions_bernoulli}) and choose to use the following Stan model,
+
+\begin{minted}{stan}
+data { 
+  int<lower=0> N; 
+  int<lower=0, upper=1> Y[N]; 
+} 
+
+parameters { 
+  real alpha; 
+} 
+
+transformed parameters{
+  real<lower=0,upper=1> theta;
+  theta = inv_logit(alpha);
+}
+
+model { 
+  for (n in 1:N){
+    Y[n] ~ bernoulli(theta); 
+  }
+  theta ~ uniform(0, 1);  
+} 
+\end{minted}
+which uses alpha -- which represents the log odds of success. If we run this model we get a warning from Stan,
+
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{verbatim}
+DIAGNOSTIC(S) FROM PARSER:
+Warning (non-fatal):
+Left-hand side of sampling statement (~) may contain a non-linear 
+transform of a parameter or local variable.
+If so, you need to call increment_log_prob() with the log absolute 
+determinant of the Jacobian of the transform.
+Left-hand-side of sampling statement:
+    theta ~ uniform(...)
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+
+
+which indicates that we are sampling from a transformation of the alpha parameter, and need to add a term that corresponds to a Jacobian term. Before we change our model, let's look at our posterior summaries,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+				\hlcom{## Print summary statistics}
+				\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+##        mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
+## alpha -1.57    0.10 1.49 -5.17 -2.45 -1.52 -0.55  0.98   222 1.00
+## theta  0.25    0.01 0.20  0.01  0.08  0.18  0.37  0.73   304 1.00
+## lp__  -2.90    0.06 0.83 -5.35 -3.12 -2.54 -2.34 -2.25   174 1.01
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+So here we have a posterior mean of theta -- the probability of success -- being 0.25. However we know that since the uniform prior is actually a beta(1,1) distribution, that the posterior is a beta(1+1,1+4-1)=beta(2,4) distribution (see chapter \ref{chap:conjugate}.) This has a mean of $\bar{\theta} =\frac{2}{2+4} \approx 0.33$, which is not what we obtained! 
+
+The reason we obtained this bias was because we failed to account for our change of variables. In particular, since we set a prior on a transformation of alpha we get a bias in our posterior samples. So how do we correct this? We first have to calculate the Jacobian. For $\alpha=\text{logit}(\theta)$ we have that,
+
+\begin{equation}
+p(\alpha) = p(\theta) | \frac{\mathrm{d}}{\mathrm{d}\alpha} \text{logit}^{-1}(\alpha)| 
+\end{equation}
+
+where the second term on the right hand side is the Jacobian. The inverse logit function is actually the sigmoid function yielding a Jacobian,
+
+\begin{align}
+|\frac{\mathrm{d}}{\mathrm{d}\alpha}  \text{logit}^{-1}(\alpha)| &= \frac{\mathrm{d}}{\mathrm{d}\alpha}\frac{1}{1+exp(-\alpha)}\\
+&=  \text{logit}^{-1}(\alpha) \times (1-\text{logit}^{-1}(\alpha))\\
+&= \theta \times (1-\theta)
+\end{align}
+
+Which we log then use to increment the log probability in a line in our model block,
+
+\begin{minted}{stan}
+model { 
+  for (n in 1:N){
+    Y[n] ~ bernoulli(theta); 
+  }
+  theta ~ uniform(0, 1);  
+  target += log(theta) + log(1-theta);
+} 
+\end{minted}
+
+which when we run the new Stan programme and look at the posterior summaries gives,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+				\hlcom{## Print summary statistics}
+				\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+##        mean se_mean   sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
+## alpha -0.90    0.06 1.07 -2.96 -1.59 -0.91 -0.26  1.29   373    1
+## theta  0.33    0.01 0.20  0.05  0.17  0.29  0.44  0.78   391    1
+## lp__  -4.50    0.06 0.93 -7.23 -4.77 -4.12 -3.90 -3.82   234    1
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+in accordance with the analytic mean.
+
+Knowing when you need to use a Jacobian can seem confusing, at first. However it's not if you know the following rule. 
+
+\begin{quote}
+Use a Jacobian when you transform a parameter then sample it, but not when you sample a parameter then transform it.
+\end{quote}
+
+So if instead we used the model,
+
+\begin{minted}{stan}
+data { 
+  int<lower=0> N; 
+  int<lower=0, upper=1> Y[N]; 
+} 
+
+parameters { 
+  real<lower=0,upper=1> theta; 
+} 
+
+transformed parameters{
+  real alpha;
+  alpha = logit(theta);
+}
+
+model { 
+  for (n in 1:N){
+    Y[n] ~ bernoulli(theta); 
+  }
+  theta ~ uniform(0, 1);  
+} 
+\end{minted}
+
+there is no need for a Jacobian term because we have defined theta as a parameter (which we sample from) and alpha the transformed. So here we get the correct posterior summaries,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+				\hlcom{## Print summary statistics}
+				\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
+			\end{alltt}
+			\begin{verbatim}
+##        mean se_mean  sd  2.5%   25%   50%   75% 97.5% n_eff Rhat
+## alpha -0.92    0.07 1.1 -3.22 -1.61 -0.84 -0.17  1.16   241 1.01
+## theta  0.33    0.01 0.2  0.04  0.17  0.30  0.46  0.76   230 1.01
+## lp__  -4.53    0.07 0.9 -6.83 -4.83 -4.21 -3.88 -3.82   191 1.02
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+
+\subsubsection{Marginalising out discrete parameters}\label{sec:StanJags_discrete}
+Stan doesn't directly allow discrete parameters. This is because currently the theory of how to extend HMC to these circumstances is not well developed. Whilst in the future it may be possible to directly include discrete parameters in Stan, fortunately it is still possible to \textit{indirectly} use them, by marginalising them out. This amounts to summing over all possible values of the discrete parameter $\theta$,
+
+\begin{equation}
+p(\beta) = \sum\limits_{i=1}^{K} p(\beta,\theta_i)
+\end{equation}
+
+However we must do so on the log probability scale because this is what Stan uses,
+
+\begin{align}
+\text{log} \; p(\beta) &= \text{log} \sum_{i=1}^{K} p(\beta,\theta_i)\\
+&= \text{log} \sum_{i=1}^{K} exp\left( log\; p(\beta,\theta_i)\right)\\
+&= \text{log}\_\text{sum}\_\text{exp}_{i=1}^{K}(\text{log}\; p(\beta,\theta_i))
+\end{align}
+
+where we have got to the second line from the first by using $exp(log(x)) = x$. To reiterate we need the second line because Stan uses $log \;p$ not $p$ itself. The last line uses the definition of a function of a function available in Stan,
+
+\begin{equation}
+\text{log}\_\text{sum}\_\text{exp}_{i=1}^{K} \alpha  = \text{log} \sum_{i=1}^{K} exp\left( \alpha \right)
+\end{equation}
+
+which makes life easier for us with discrete models.
+
+So how do we implement discrete models in Stan itself? Let's consider an example. Suppose we have two coins in our pocket. One is heavily-biased towards tails and another is heavily-biased towards heads. In each experiment we pull out a coin at random -- not observing which coin it is -- and throw it 10 times, recording the total number of heads, $X$. We run the same experiment 20 times, each time recording the total number of heads. Suppose we would like to infer the (unobserved) identity of the coin in each experiment as well as the probabilities of throwing a heads for each of the two coins.
+
+On first glances the above model seems problematic because the identity of the coin in each experiment can take on one of two values -- heads- or tails- biased -- and hence is discrete. We can write down this model in statistical form,
+
+\begin{align}
+s_n &\sim \text{discrete-uniform}(1,2)\\
+\text{if} \;\;\;&(s_n = 1)\\
+X_n &\sim \text{binomial}(10,\theta_1)\\
+\text{else} &\\
+X_n &\sim \text{binomial}(10,\theta_2)
+\end{align}
+
+The key to writing this model in Stan is finding a way to write the log posterior density, $lp$. If we can find the log density, then we can simply use,
+
+\begin{minted}{stan}
+target += logProb;
+\end{minted}
+
+and run Stan as per usual. We start by considering each of the studies individually and assume that both coins are equally likely \textit{a priori}. The probability of each coin type $s$ for a single experiment where we throw $X$ heads out of 10 throws is then,
+
+\begin{equation}
+0.5 \times \text{binomial}\_\text{pmf}(X|10,theta[s])
+\end{equation}
+%
+where $theta[s]$ is the probability of heads for coin type $s\in[1,2]$, and $\text{binomial}\_\text{pmf}$ is the binomial pmf. In Stan we want the log probability and hence use instead,
+
+\begin{minted}{stan}
+log(0.5) + binomial_lpmf(X|N,theta[s]);
+\end{minted}
+
+where \mintinline{stan}{binomial_lpmf} is the log probability mass for a binomial distribution. In our Stan programme we store the log probability for each coin type $s$ in a vector for each experiment. This amounts to storing all the results in a 20$\times$2 matrix, $lp$, where a single row corresponds to an individual experiment,
+
+\begin{minted}{stan}
+transformed parameters{
+  real<lower=0,upper=1> theta[2];
+  matrix[nStudy,2] lp;
+  
+  for(n in 1:nStudy){
+    for(s in 1:2){
+      lp[n,s] = log(0.5) + binomial_lpmf(X[n]|N,theta[s]);
+    }
+  }
+}
+\end{minted}
+
+where we have marginalised out the discrete coin type $s$ by summing over it. We actually find it easier to make use of Stan's logit formulation of the binomial, where we pass an unconstrained \mintinline{stan}{real} parameter to the distribution. Writing the entire programme now,
+
+\begin{minted}{stan}
+data { 
+  int<lower=1> nStudy; // num studies
+  int<lower=1> N; // samples per study
+  int<lower=0, upper=N> X[nStudy]; // number successes
+} 
+
+parameters { 
+  ordered[2] alpha; 
+}
+
+transformed parameters{
+  real<lower=0,upper=1> theta[2];
+  matrix[nStudy,2] lp;
+  
+  for(i in 1:2){
+    theta[i] = inv_logit(alpha[i]);
+  }
+  
+  for(n in 1:nStudy){
+    for(s in 1:2){
+      lp[n,s] = log(0.5) + 
+                binomial_logit_lpmf(X[n]|N,alpha[s]);
+    }
+  }
+}
+
+model { 
+  for(n in 1:nStudy){
+    target += log_sum_exp(lp[n]);
+  }
+  
+}
+
+generated quantities{
+  real pstate[nStudy];
+  for(n in 1:nStudy){
+    pstate[n] = exp(lp[n,1])/(exp(lp[n,1]) + exp(lp[n,2]));
+  }
+}
+\end{minted}
+
+where we have used the Stan type \mintinline{stan}{ordered} to ensure that one of the coin probabilities (obtained by transforming the alpha type above) is always larger than the other. In the model block we iterate through the individual studies and increment the log probability by an amount given by terms arising from each coin type. So the idea is that -- in each step of Stan -- we sample a value for alpha (then transformed to get theta), then use these values to calculate the log probability of each coin state $s$, and update the overall log probability accordingly.
+
+We use the \mintinline{stan}{generated quantities} block to estimate the probabilities of state $s=1$ in each different experiment by averaging over all $L$ posterior draws,
+
+\begin{equation}
+q(s=1|X) \approx \frac{1}{L} \sum_{i=1}^{L} q(s=1,alpha[s=1]|X)
+\end{equation}
+
+where $q(.)$ is the unnormalised posterior density. The averaging over all posterior draws is necessary to marginalize out the alpha parameter. To normalise the posterior density we therefore divide the above by the sum of the unnormalised probability across both states,
+
+\begin{equation}
+Pr(s=1|X) = \frac{q(s=1|X)}{q(s=1|X)+q(s=2|X)}
+\end{equation} 
+
+In the Stan code we keep track of the log density and so need to take the exponent of each term. 
+
+We now generate some fake data in R assuming that $\theta_1 = 0.1$ and $\theta_2 = 0.9$,
+
+\begin{minted}{R}
+nStudy <- 20
+N <- 10
+Z <- matrix(nrow = N,ncol = nStudy)
+theta <- c(0.1,0.9)
+state <- vector(length=nStudy)
+  
+for(i in 1:nStudy){
+  if(runif(1)<0.5){
+    Z[,i] <- rbinom(N,1,theta[1])
+    state[i] <- 1
+  } else{
+    Z[,i] <- rbinom(N,1,theta[2])
+    state[i] <- 0
+  }
+}
+X <- colSums(Z)
+\end{minted}
+
+and pass this data to our Stan program,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fit} \hlkwb{<-} \hlkwd{stan}\hlstd{(}\hlstr{'discreteCoins.stan'}\hlstd{,}\hlkwc{iter}\hlstd{=}\hlnum{200}\hlstd{,}\hlkwc{chains}\hlstd{=}\hlnum{4}\hlstd{,}
+            \hlkwc{data}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{X}\hlstd{=X,}\hlkwc{N}\hlstd{=N,}\hlkwc{nStudy}\hlstd{=nStudy))}
+\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.2}\hlstd{,}\hlnum{0.5}\hlstd{,}\hlnum{0.75}\hlstd{),}\hlkwd{c}\hlstd{(}\hlstr{'theta'}\hlstd{,}\hlstr{'pstate'}\hlstd{))}
+\end{alltt}
+			\begin{verbatim}
+##            mean se_mean   sd  20%  50%  75% n_eff Rhat
+## theta[1]   0.09    0.00 0.03 0.06 0.08 0.10    93 1.02
+## theta[2]   0.90    0.00 0.04 0.87 0.91 0.93   400 1.00
+## pstate[1]  0.00    0.00 0.00 0.00 0.00 0.00   151 1.01
+## pstate[2]  1.00    0.00 0.00 1.00 1.00 1.00   301 1.00
+## pstate[3]  1.00    0.00 0.00 1.00 1.00 1.00   391 1.00
+## pstate[4]  1.00    0.00 0.00 1.00 1.00 1.00   301 1.00
+## pstate[5]  1.00    0.00 0.00 1.00 1.00 1.00   391 1.00
+## pstate[6]  1.00    0.00 0.00 1.00 1.00 1.00   337 1.00
+## pstate[7]  0.00    0.00 0.00 0.00 0.00 0.00   135 1.01
+## pstate[8]  0.00    0.00 0.00 0.00 0.00 0.00   151 1.01
+## pstate[9]  1.00    0.00 0.00 1.00 1.00 1.00   301 1.00
+## pstate[10] 0.00    0.00 0.00 0.00 0.00 0.00   151 1.01
+## pstate[11] 0.00    0.00 0.00 0.00 0.00 0.00   151 1.01
+## pstate[12] 1.00    0.00 0.00 1.00 1.00 1.00   337 1.00
+## pstate[13] 1.00    0.00 0.00 1.00 1.00 1.00   301 1.00
+## pstate[14] 1.00    0.00 0.00 1.00 1.00 1.00   337 1.00
+## pstate[15] 0.00    0.00 0.00 0.00 0.00 0.00   135 1.01
+## pstate[16] 0.00    0.00 0.00 0.00 0.00 0.00   135 1.01
+## pstate[17] 0.04    0.01 0.10 0.00 0.00 0.02   272 1.01
+## pstate[18] 1.00    0.00 0.00 1.00 1.00 1.00   391 1.00
+## pstate[19] 1.00    0.00 0.00 1.00 1.00 1.00   337 1.00
+## pstate[20] 1.00    0.00 0.00 1.00 1.00 1.00   301 1.00
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+where we see the model has correctly inferred the probabilities of throwing heads for each coin, as well as the correct coin type in each experiment,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## predict state 1 if prob>0.5}
+\hlstd{state_est} \hlkwb{<-} \hlkwd{ifelse}\hlstd{(}\hlkwd{colMeans}\hlstd{(}\hlkwd{extract}\hlstd{(fit,}\hlstr{'pstate'}\hlstd{)[[}\hlnum{1}\hlstd{]])}\hlopt{>}\hlnum{0.5}\hlstd{,}\hlnum{1}\hlstd{,}\hlnum{0}\hlstd{)}
+\hlkwd{sum}\hlstd{(}\hlkwd{abs}\hlstd{(state_est} \hlopt{-} \hlstd{state))}
+\end{alltt}
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
 
 \section{What to do when things go wrong}
 It also will contain some common error messages which I have come across; illustrating their meaning, and ways to alleviate the problem (if it \textit{really} is a problem).
@@ -7763,6 +8320,9 @@ Increases robustness naturally, and prevents overfitting.
 
 \section{The importance of fake data simulation for complex models}
 \subsection{The importance of making 'good' fake data}
+
+\subsubsection{Non-centred parameterisations}
+
 
 \chapter{Linear regression models}
 Include Gelman recommendations here about standardising your data beforehand: \url{https://groups.google.com/forum/?fromgroups=#!topic/stan-users/RMgEEFwCsQk}
