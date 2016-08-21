@@ -7901,11 +7901,255 @@ where we have assigned normal and log-normal priors on mu and sigma respectively
 		\end{kframe}
 	\end{knitrout}
 
-
-
 So the moral here is that -- so long as you can write a function in Stan that returns the log pdf of a distribution -- you can use Stan to sample from it!
 
 \subsubsection{Calculating WAIC, LOO-CV and other measures}\label{sec:StanJags_WAICLOO}
+Often we want to evaluate the predictive performance of a model to compare it with others, in order to choose between competing hypotheses. In chapter \ref{chap:ModelFit} we discussed various alternative metrics and advocated, where possible, that researchers should repeatedly partition their data into training and test sets (i.e. use cross-validation). The training sets are used to fit the model, and the test are used to estimate the out-of-sample predictive capability of the model. However there are circumstances where repeated partitioning is not feasible due to the computational cost of estimating a model. However in these cases we can use WAIC and estimates of LOO-CV to estimate the out-of-sample predictive capability of a model. In this section we show how to estimate a model's predictive capability using cross-validation, WAIC and LOO-CV. In order to do so we consider an example. Suppose that we generate some fake data from a Student t distribution (see section \ref{sec:Distributions_tDist}),
+
+\begin{minted}{R}
+N <- 10000
+## Student t with nu=5
+X <- rt(N,5)
+\end{minted}
+
+We then fit two models to the data -- one is a normal sampling distribution and the other assumes a Student t sampling distribution. Whilst here we know the Student t distribution should perform better since we used it to generate our data, we use this toy problem to illustrate how cross-validation, WAIC and LOO-CV can be calculated.
+
+\paragraph{WAIC and LOO-CV.}
+We start by considering WAIC and LOO-CV since these are more easily handled than explicit cross-validation. These methods require that we calculate the log-likelihood for all data points across all posterior samples (see chapter \ref{chap:ModelFit}.) This is quite straightforward to handle using the generated quantities block. We illustrate this for the normal model first,
+
+\begin{minted}{stan}
+generated quantities{
+  vector[N] logLikelihood;
+  for(i in 1:N){
+    logLikelihood[i] = normal_lpdf(X[i]|mu,sigma);
+  }
+}
+\end{minted}
+where $N$ is the number of elements in our $X$ data vector. In the above we iterate across all elements in our data and record the log-likelihood for these. Furthermore this loop is undertaken for each posterior sample of (mu,sigma) and hence we get out a matrix of log-likelihoods.
+
+The Student t model is similar although we have an extra nu parameter in its log pdf,
+
+\begin{minted}{stan}
+generated quantities{
+  vector[N] logLikelihood;
+  for(i in 1:N){
+    logLikelihood[i] = student_t_lpdf(X[i]|nu,mu,sigma);
+  }
+}
+\end{minted}
+
+We set the following priors for both models, $mu\sim N(0,1)$, $sigma\sim lognormal(0,1)$, and $nu\sim lognormal(0,1)$ for the Student t model. 
+
+To calculate WAIC we use the excellent ``loo'' package \cite{vehtari2015efficient}. Since we have saved the log-likelihood for each model this is actually quite easy to do,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{stan}\hlstd{(}\hlstr{'normal.stan'}\hlstd{,}\hlkwc{iter}\hlstd{=}\hlnum{200}\hlstd{,}\hlkwc{chains}\hlstd{=}\hlnum{4}\hlstd{,}\hlkwc{data}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N}\hlstd{=N,}\hlkwc{X}\hlstd{=X))}
+\hlstd{logLikelihood1} \hlkwb{<-} \hlkwd{extract_log_lik}\hlstd{(fit1,}\hlstr{'logLikelihood'}\hlstd{)}
+\hlstd{WAIC1} \hlkwb{<-} \hlkwd{waic}\hlstd{(logLikelihood1)}
+\hlkwd{print}\hlstd{(WAIC1)}
+			\end{alltt}
+			\begin{verbatim}
+## Computed from 400 by 10000 log-likelihood matrix
+## 
+##           Estimate    SE
+## elpd_waic -17002.7 133.0
+## p_waic         4.0   0.7
+## waic       34005.4 266.0
+			\end{verbatim}
+			
+			\begin{alltt}
+			\hlstd{fit2} \hlkwb{<-} \hlkwd{stan}\hlstd{(}\hlstr{'StudentT.stan'}\hlstd{,}\hlkwc{iter}\hlstd{=}\hlnum{200}\hlstd{,}\hlkwc{chains}\hlstd{=}\hlnum{4}\hlstd{,}\hlkwc{data}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N}\hlstd{=N,}\hlkwc{X}\hlstd{=X))}
+			\end{alltt}
+			\begin{verbatim}
+## Computed from 400 by 10000 log-likelihood matrix
+## 
+##           Estimate    SE
+## elpd_waic -16467.8  94.3
+## p_waic         2.9   0.1
+## waic       32935.7 188.6
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+and we see that the Student t model has a higher estimated expected log pointwise predictive density (-16,467.8, which $\times -2$ corresponds to a lower WAIC.) However to determine whether this difference represents anything other than sampling error we compare these two models in the correct -- pairwise -- way using,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+			\begin{alltt}
+\hlkwd{compare}\hlstd{(WAIC1,WAIC2)}
+			\end{alltt}
+			\begin{verbatim}
+			## elpd_diff        se 
+			##     534.9      76.8
+			\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+from the same package and we see that the difference in elpd is much greater than the standard error. This suggests that there is a significant difference in performance between these two models, and we prefer the Student t model. But how do we determine if the difference is significant or not? One way is to calculate a z score and compare with a standard normal,
+
+\begin{equation}
+Pr(z\geq \frac{534.9}{76.8}) \approx 10^{-12}
+\end{equation}
+
+Whilst we aren't in general fond of classical hypothesis tests this is the current state of the art here. In this case it indicates that there is basically zero probability of this difference occurring if both models actually performed the same, in general. 
+
+The same package allows us to estimate elpd via LOO-CV without doing explicit cross-validation. This proceeds as before except we substitute $\text{loo}\rightarrow\text{waic}$,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{LOO1} \hlkwb{<-} \hlkwd{loo}\hlstd{(logLikelihood1)}
+\hlkwd{print}\hlstd{(LOO1)}
+\end{alltt}
+\begin{verbatim}
+## Computed from 400 by 10000 log-likelihood matrix
+## 
+##          Estimate    SE
+## elpd_loo -17002.7 133.0
+## p_loo         4.0   0.7
+## looic     34005.4 266.0
+## 
+## All Pareto k estimates OK (k < 0.5)
+\end{verbatim}
+
+\begin{alltt}
+\hlstd{LOO2} \hlkwb{<-} \hlkwd{loo}\hlstd{(logLikelihood2)}
+\hlkwd{print}\hlstd{(LOO2)}
+\end{alltt}
+\begin{verbatim}
+## Computed from 400 by 10000 log-likelihood matrix
+## 
+##          Estimate    SE
+## elpd_loo -16467.8  94.3
+## p_loo         2.9   0.1
+## looic     32935.6 188.6
+## 
+## All Pareto k estimates OK (k < 0.5)
+\end{verbatim}
+\begin{alltt}
+\hlkwd{compare}\hlstd{(LOO1,LOO2)}
+\end{alltt}
+\begin{verbatim}
+## elpd_diff        se 
+##     534.9      76.8
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+with a p value of the same magnitude as before when using the standard normal in a hypothesis test as above.
+
+In both cases we find that the difference between the estimated expected log pointwise predictive density is greater for the Student t model than for the normal, as expected. In general we prefer to use the LOO-CV measure, if possible since it represents a better approximation to the out-of-sample error. However it is important to note that it's not uncommon to get warnings about either the ``p\_waic exceeding ...'' or ``Pareto k estimates exceeding...''. Whilst we refer the interested reader to the details of the loo paper itself \cite{vehtari2015efficient} we mention here that it is important to take heed of these warnings! These warnings typically indicate that one or more of the approximations used to estimate these criteria are likely violated, and hence inferences about model performance cannot be trusted. In these cases it may be better to use explicit cross-validation, to which we turn our attentions now.
+
+\paragraph{Explicit cross-validation.} 
+We recommend that where possible the reader use explicit cross-validation to estimate a model's out-of-sample predictive performance. The reason for this recommendation is twofold: first the aforementioned WAIC and LOO-CV methods can fail to produce reasonable estimates of out-of-sample predictive error if one/more of a number of conditions aren't met; second it is always best to use a measure of out-of-sample predictive performance using a test set that mimic's the model's eventual use. 
+
+Using an poorly-chosen partitioning can lead to very inadequate measures of a model's performance, and so we recommend thinking carefully here. If the model will be used to estimate batches of new data, then perhaps a k-fold cross-validation scheme is best. Alternatively if the model will be re-estimated for each new data point, then perhaps a leave-one-out cross-validation scheme is best.
+
+Lacking any preference for an explicit cross-validation scheme we suggest using k-fold cross-validation, since it is less computationally onerous than leave-one-out cross-validation. In k-fold cross-validation the data is repeatedly partitioned into training and test sets. The process continues until each data point has been included once (and once only) in a test set.
+
+We continue the previous example but now show how to estimate model performance on a test set for the normal model, 
+
+
+\begin{minted}{stan}
+data { 
+  int NTest; 
+  int NTrain;
+  real XTrain[NTrain]; 
+  real XTest[NTest];
+} 
+
+parameters { 
+  real mu;
+  real<lower=0> sigma;
+}
+
+model { 
+  XTrain ~ normal(mu,sigma);
+  mu ~ normal(0,1);
+  sigma ~ lognormal(0,1);
+}
+
+generated quantities{
+  vector[NTest] logLikelihood;
+  for(i in 1:NTest){
+    logLikelihood[i] = normal_lpdf(XTest[i]|mu,sigma);
+  }
+}
+\end{minted}
+
+where we fit the model on the training set and calculate the log probability on the test set. To do K-Fold cross-validation we use the brilliant Caret R package (which is our favourite for machine learning) to generate equally-sized randomised test sets, where each data point features once and once only in each test set \cite{caret2012},
+
+\begin{minted}{R}
+library(caret)
+testIndices <- createFolds(X, k = 5, list = TRUE, 
+                           returnTrain = FALSE)
+\end{minted}
+
+where we have specified 5 folds. We then create a R function to handle the repeated training and testing of a given model, and then calculate the expected log pointwise predictive density on the test set,
+
+\begin{minted}{R}
+library(loo)
+kFold <- function(aModel,testIndices,X){
+  numFolds <- length(testIndices)
+  
+  ## calculate expected log pointwise predictive density 
+  lPointLogLikelihoodTotal <- vector()
+  
+  for(i in 1:numFolds){
+    XTest <- X[testIndices[[i]]]
+    XTrain <- X[-testIndices[[i]]]
+    fit <- sampling(aModel,iter=200,chains=4,
+                    data=list(NTest=2000,NTrain=8000,
+                    XTrain=XTrain,XTest=XTest))
+    logLikelihood1 <- extract_log_lik(fit,'logLikelihood')
+    lPointLogLikelihood1 <- colMeans(logLikelihood1)
+    lPointLogLikelihoodTotal <- c(lPointLogLikelihoodTotal,
+                                  lPointLogLikelihood1)
+  }
+  return(lPointLogLikelihoodTotal)
+}
+\end{minted}
+
+which we then use to compare the normal and Student t models,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{Model1} \hlkwb{<-} \hlkwd{stan_model}\hlstd{(}\hlstr{'Normal_kFolds.stan'}\hlstd{)}
+\hlstd{Model2} \hlkwb{<-} \hlkwd{stan_model}\hlstd{(}\hlstr{'StudentT_kFolds.stan'}\hlstd{)}
+
+\hlstd{lELPD1} \hlkwb{<-} \hlkwd{kFold}\hlstd{(Model1,testIndices,X)}
+\hlstd{lELPD2} \hlkwb{<-} \hlkwd{kFold}\hlstd{(Model2,testIndices,X)}
+\end{alltt}
+
+\begin{alltt}
+\hlkwd{sum}\hlstd{(lELPD1)}
+\end{alltt}
+\begin{verbatim}
+## [1] -16836.58
+\end{verbatim}
+\begin{alltt}
+\hlkwd{sum}\hlstd{(lELPD2)}
+\end{alltt}
+\begin{verbatim}
+## [1] -16431.44
+\end{verbatim}
+\begin{alltt}
+\hlstd{difference} \hlkwb{<-} \hlkwd{sum}\hlstd{(lELPD2)} \hlopt{-} \hlkwd{sum}\hlstd{(lELPD1)}
+\hlstd{sd} \hlkwb{<-} \hlkwd{sd}\hlstd{(lELPD2} \hlopt{-} \hlstd{lELPD1)}
+\hlstd{pvalue} \hlkwb{<-} 1- \hlkwd{pnorm}\hlstd{(difference}\hlopt{/}\hlstd{sd)}
+\hlkwd{print}\hlstd{(pvalue)}
+\end{alltt}
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+
+noting that again the Student t distribution performs worse than the normal (above we calculate the standard deviation on the difference in log pointwise predictive density, to calculate a z score.) We also note the similarity in estimates compared with the more approximate WAIC and LOO-CV methods described above.
 
 \subsubsection{Jacobians: when do we need these?}
 Suppose we have a uniformly distributed variable, $\theta$ and draw samples for it,
