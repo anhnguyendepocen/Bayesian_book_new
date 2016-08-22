@@ -8538,17 +8538,288 @@ where we see the model has correctly inferred the probabilities of throwing head
 	\end{knitrout}
 
 \section{What to do when things go wrong}
-It also will contain some common error messages which I have come across; illustrating their meaning, and ways to alleviate the problem (if it \textit{really} is a problem).
+Rarely in life do things run entirely smoothly. This is particularly true with statistical modelling. However this is only part of the problem in statistics. The other part of the problem is recognising that something is actually wrong. In this section we describe how to see and interpret the ample warning signs that Stan provides us with. There are broadly two categories of errors: coding errors and sampling issues. Coding errors are, in general, easier to diagnose and typically can be resolved fairly quickly. Sampling issues can be a bit trickier since their resolution is typically quite problem specific. Although once you've got a few models under your belt you should start to be able to understand the source of these issues. At the heart of sampling/model issues is the principle of Gelman's Folk Theorem, ``A problem with MCMC is usually a problem with the model, not the sampling algorithm.'' If you remember this dictum you'll save time fiddling with MCMC parameters and find yourself spending more time thinking about what really matters -- the statistical model. We divide the following sections into coding errors and sampling issues because diagnosis and solution differs quite considerably between the two. 
 
-\subsection{Have things gone wrong?}
-\paragraph{$\hat{R} > 1.1$}
-\paragraph{Warning messages}
-\paragraph{Divergent iterations}
-\paragraph{Tree depth exceeding maximum}
-\paragraph{Leapfrog steps}
+In the last sections of this chapter we consider how to get further help should you need it. Fortunately Stan has excellent resources here, and we explain how to make best use of them.
 
-\subsubsection{Dealing with divergent iterations}\label{sec:StanJags_divergentSolution}
-\subsubsection{Debug by print}
+ 
+
+\subsection{Coding errors}
+Stan is pretty good at telling you when you make a mistake with code. Suppose we are missing a semi-colon at the end of a statement,
+
+\begin{minted}{stan}
+data { 
+  int N;
+  real X[N]
+} 
+\end{minted}
+if we try to run this model we get the following message,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fit} \hlkwb{<-} \hlkwd{stan}\hlstd{(}\hlstr{'aModel.stan'}\hlstd{,}\hlkwc{data}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N}\hlstd{=N,}\hlkwc{X}\hlstd{=X),}\hlkwc{iter}\hlstd{=}\hlnum{200}\hlstd{,}\hlkwc{chains}\hlstd{=}\hlnum{4}\hlstd{)}
+\end{alltt}
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# SYNTAX ERROR, MESSAGE(S) FROM PARSER:}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# }}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# ERROR at line 4}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# }}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\#\ \  2:\ \ \ \ \ \ int N;}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\#\ \  3:\ \ \ \ \ \ real X[N]}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\#\ \  4:\ \ \ \ \}}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\#\ \ \ \ \ \ \ \  \textasciicircum{}}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\#\ \  5:}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# }}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# PARSER EXPECTED: "{};"{}}}
+		\end{kframe}
+	\end{knitrout}
+where we read at the end that our parser expected a semi-colon but didn't find one. 
+
+Another common error we find ourselves making is illustrated by the following,
+
+\begin{minted}{stan}
+generated quantities{
+  vector[N] XPred;
+  
+  for(i in 1:N){
+    XPred[i] <- normal(mu,sigma);
+  }
+}
+\end{minted}
+
+which looks ok on first glances but produces an error,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# SYNTAX ERROR, MESSAGE(S) FROM PARSER:}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# }}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# No matches for:}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\#\ \  normal(real, real)}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Function normal not found.}}
+
+		\end{kframe}
+	\end{knitrout}
+	
+
+which seems puzzling at first because we have actually defined sigma to be a \mintinline{stan}{real<lower=0>} variable. The issue here is that what we actually want is to replace \mintinline{stan}{normal} with \mintinline{stan}{normal_rng} as we want to generate an independent sample from this distribution for each sample of observations. 
+
+Debug by print example.
+
+\subsection{Sampling errors}
+\subsubsection{The real power of fake data}
+The following examples make clear the importance of fake data simulation for assessing a particular statistical model. In each of the cases we simulate data from a statistical process whose parameters we know for certain. In doing so we are able to test the limits of knowability using our models. If we didn't go through the exercise and instead began our analysis straight away on real data we wouldn't necessarily understand the reason for slow convergence, divergent iterations etc. Fake data simulation is thus a prerequisite for all data analyses. The exercise of generating fake data may seem annoying at times -- particularly for hierarchical models -- but there is \textit{always} a considerable improvement to your knowledge about the system at hand, if you do.
+
+Fake data generation can also be useful before we receive data, for example when designing a physical experiment. By simulating data from an entirely known process we learn how much data is necessary to achieve a given level of accuracy in parameter estimates and can adjust our experimental design accordingly.
+
+
+\subsubsection{Slow convergence indicated by $\hat{R} > 1.1$.} You may notice that one or more of your parameters has a value of $\hat{R}>1.1$. This is \textit{always} something to be concerned about. It means that there is some area of parameter space that has not been adequately explored. Further you cannot assume that since all of your ``important'' parameters have $\hat{R} < 1.1$ that you can forget about the few that are yet to converge. Parameters depend on one another and so it is entirely possible that exploring a new area of parameter space for one ``unimportant'' parameter may lead to exploration of new areas for an ``important'' one. These ``epistatic'' interactions\footnote{This term is borrowed from genetics where it means that one gene's effect can depend on whether other genes are present.} mean that we cannot forget about a lack of convergence in nuisance parameters.
+
+So why are some models slow to converge? Generally it means that there is a lack of strong posterior curvature in some areas of parameter space meaning that the posterior has long thin tails. These long tails mean that MCMC samplers take much longer to explore parameter space, and as a result convergence is slow. The lack of curvature can also make it difficult to separate the effect of one parameter from another one, i.e. there is an identification issue. Unfortunately poor identification can be caused by a wide variety of reasons: inadequate data, uninformative priors and ill-conceived models are common causes. However common to all of these causes is idea that the data provides insufficient information to tease apart the effect of one parameter from another.
+
+For example suppose we generate 10 data points from a Student t distribution with $\nu=3$, $\sigma=1$ and $\mu=2$,
+
+\begin{minted}{R}
+N <- 10
+X <- rt(N, df=3)*1 + 2
+\end{minted}
+
+and we choose to fit the same distribution to this data in Stan,
+
+\begin{minted}{stan}
+model { 
+  X ~ student_t(nu,mu,sigma);
+}
+\end{minted}
+
+where we have not specified priors on the three parameters, meaning that Stan will place (improper) uniform priors on all of these. If we pass the data to stan and run the full Stan model,
+
+
+\begin{knitrout}\footnotesize
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+##               mean      se_mean           sd          50% n_eff       Rhat
+## mu    2.690000e+00 6.000000e-02 8.000000e-02 2.670000e+00     2    2888.53
+## sigma 8.400000e-01 8.000000e-02 1.200000e-01 8.100000e-01     2    9678.73
+## nu    7.647104e+15 5.083569e+15 7.207292e+15 6.379618e+15     2  922459.78
+## lp__  2.676100e+02 1.563500e+02 2.216600e+02 2.731300e+02     2 1314147.11
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+where we see that the values of $\hat{R}$ are a long way from 1! 
+
+So what's the problem? The issue here is that the current data does not provide enough information to estimate the parameters of the Student t distribution. So if we generate more data -- say 1,000 data points -- we then get much faster convergence,
+
+\begin{knitrout}\footnotesize
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+##           mean se_mean   sd      50% n_eff Rhat
+## mu        1.96    0.00 0.03     1.96   400 1.00
+## sigma     0.97    0.00 0.03     0.97   256 1.00
+## nu        3.39    0.02 0.33     3.36   179 1.00
+## lp__  -1130.90    0.08 1.03 -1130.62   153 1.02
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+However in most real life examples we don't have the opportunity to simply collect more data -- at least as easily as we did here! So we need another way of putting more information into the system to allow our parameters to be identified. One way forward is to use weakly informative priors,
+
+\begin{minted}{stan}
+model { 
+  X ~ student_t(nu,mu,sigma);
+  mu ~ normal(0,10);
+  sigma ~ lognormal(0,1);
+  nu ~ lognormal(0,1);
+}
+\end{minted}
+
+Whilst these priors have quite a gentle curvature this is sufficient to identify the parameters,
+
+\begin{knitrout}\footnotesize
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.5}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+##           mean se_mean   sd      50% n_eff Rhat
+## mu        2.00    0.00 0.04     2.01   400 1.01
+## sigma     1.05    0.00 0.04     1.05   256 1.01
+## nu        3.14    0.02 0.27     3.12   145 1.01
+## lp__  -1237.91    0.09 1.08 -1237.54   153 1.03
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+Increasing the number of MCMC samples will facilitate convergence to the posterior. However in many circumstances the rate of convergence is so low that we have to run our samplers for an inordinate amount of time to adequately explore posterior space. Furthermore we argue that this isn't really addressing the cause of the problem; your time would be better spent trying to diagnose the reasons behind slow convergence! Remember Gelman's ``Folk Theorem'' states that problems with MCMC sampling is usually due to problems with the underlying model, not the sampling algorithm. As a rule of thumb we recommend that if, after a few thousand iterations (obviously this depends a bit on model complexity) there is not convergence, then we think about making changes to our model. 
+
+
+\subsubsection{Divergent iterations}\label{sec:StanJags_divergentSolution}
+Suppose that we work as economists for the government of a small country. Part of our job is to try to estimate the length of time that typical paper currency remains in domestic circulation before becoming lost, broken, or travelling abroad. Furthermore suppose that the governmental mint who print the note do not include the date of printing, making it hard to accurately estimate the age of a given note. However the mint can add a marking to the note that shows up under UV light. 
+
+To estimate the lifespan of currency we decide to create an experiment where we release 3000 marked notes into circulation. Like many countries the central bank has a physical bank where individuals can go and exchange coins for notes (or vice versa) or alternatively exchange foreign currency for domestic. The workers in the bank have a UV machine that will allow them to determine whether a given note is marked. The idea behind our experiment is to monitor the returns of marked bank notes over time, as a way of determining their lifespan in circulation. If notes leave circulation quickly there will be a corresponding rapid decline in the numbers collected in the central bank. If notes last a long time, then there shouldn't be too much change in note circulation over time.
+
+We choose to model the number of notes $Y_t$ collected in year $t$ as having a binomial sampling distribution, 
+
+\begin{equation}
+Y_t \sim \text{binomial}(3000,\psi exp(-\mu \times t^\beta))
+\end{equation}
+
+where $\psi$ is the probability that a single note is collected in a given year, $\mu$ is a parameter that -- along with $\beta$ -- determines the lifespan of notes. We expect that as notes age their probability of leaving circulation varies - a variability whose directionality and magnitude is captured by $\beta$.
+
+We code up the above model in Stan choosing to use Stan's default uniform priors on all parameters (which are improper for $\mu$ and $\beta$),
+
+\begin{minted}{stan}
+data { 
+  int N; 
+  int Y[N];
+  int numReleased;
+}
+
+parameters { 
+  real<lower=0,upper=1> psi;
+  real<lower=0> mu;
+  real<lower=0> beta;
+}
+
+model { 
+  for(t in 1:N)
+    Y[t] ~ binomial(numReleased,psi * exp(-mu*(t^beta)));
+}
+\end{minted}
+
+We suppose that we will collect 10 years worth of data. To determine how easily the parameters of our model can be estimated we generate fake data where we assume a constant rate of note ``mortality'', i.e. $\beta=1$,
+
+\begin{minted}{R}
+numReleased <- 3000
+psi <- 0.01
+mu <- 0.1
+N <- 10
+X <- vector(length=N)
+
+for(i in 1:N){
+  X[i] <- rbinom(1,numReleased,psi*exp(-mu*i))
+}
+\end{minted}
+
+We run Stan (with 2000 iterations across 8 chains) using the fake data we generated and get the following warning message,
+
+\begin{knitrout}\footnotesize
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## WARNING: Warning messages:
+## 1: There were 203 divergent transitions after warmup. 
+## Increasing adapt_delta above 0.8 may help. 
+## 2: Examine the pairs() plot to diagnose sampling problems
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+that indicates that the sampler experienced 203 divergent iterations (you may need to run the above Stan model a few times to generate a similar number of divergent iterations.) What does this mean, and is it something to worry about? 
+
+Divergent iterations occur when the methods used to approximate the path of our fictitious particle in parameter space result in paths that are poor approximations to the exact solution. The NUTS sampler is able to determine if these divergences likely occur and terminates the simulation of the particle -- for this particular iteration of the sampler -- early. The number of divergent iterations that is reported is then the total number of these divergent iterations (after warmup) that occur. So what causes divergent iterations? The most usual cause is step sizes that are too large relative to the posterior curvature in certain areas of parameter space. Taking steps that are too big results in a crude approximation to the exact path of our particle and we get a divergence (see chapter \ref{chap:HMC}.)  
+
+Divergent iterations are definitely something to worry about. Since NUTS terminates early for these iterations this causes a bias away from this area of parameter space. This bias means that we do not explore posterior space fully and our posterior summaries will not faithfully reproduce the exact posterior. 
+
+However why do some models/data produce divergent errors and others don't? Remember that NUTS self-tunes to find a step size that results in efficient \textit{global} exploration of posterior space. However for some models there may be areas of high posterior curvature that mean the globally-optimum step size is too large. So if a model has a wide variation in the amount of posterior curvature then it is ripe for divergent iterations. 
+
+So looking at our banknote example why do we get divergences? The best way to diagnose this is either through use of shiny stan or as we show below through the ``pairs'' function,
+
+\begin{knitrout}\footnotesize
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{pairs}\hlstd{(fit)}
+\end{alltt}
+\includegraphics[width=0.8\linewidth]{StanCode/figure/samplingIssuesDivergent-1} 
+		\end{kframe}
+	\end{knitrout}
+
+on the plot any samples with divergent iterations are shown in red. From this we see that there are quite distinct regions where divergent iterations occur. For example, in the plots of mu against beta we see that many divergent iterations occur in the ``neck'' region of the posterior samples. This makes sense because in this region small changes in either parameter can strongly affect the behaviour of the model -- the posterior is highly curved in this region, and small step sizes are warranted. By contrast in the tails of this scatter plot large changes in either mu or beta (mu in bottom-right, and beta in top-left) change fairly little about the model's behaviour. The resultant posterior density here is more gently-curved and large step sizes make most sense. Therefore a step size that is globally optimal may fail to be appropriate in these two regions. In the tails the exploration of posterior space is inefficient, in the neck the step sizes are too low and we get divergent iterations.
+
+How can we deal with these divergent iterations? As a first step we can try decreasing the step size and increasing the target acceptance rate of NUTS. Both of these have the effect of tuning down the global step size of the sampler which should help to mitigate against divergent iterations. To do this we make the following call to Stan in R,
+
+\begin{minted}{stan}
+fit <- stan('aModel.stan',data=list(N=N,Y=X,
+                numReleased=numReleased),iter=2000,chains=8,
+                control=list(adapt_delta=0.95,stepsize=0.01))
+\end{minted}
+
+and the resultant pairs plots should now be devoid of divergent iterations. 
+
+In more serious cases it may not be possible to entirely eliminate divergent iterations by modifying the target acceptance rate and step size of the sampler. As a rule of thumb we say that if changing a target acceptance rate to 0.99 does not remove divergent iterations then we need to think carefully about their cause. This is another example of Gelman's ``Folk Theorem'' in action. Often a reparameterised model may be available and avoid some of the identification issues that result in divergent iterations, or slow convergence (the two often go hand in hand.) In the above example we might choose to constrain beta=1 in our simulations if we believe that there isn't a strong effect of banknote age on whether a note leaves circulation. 
+
+\subsubsection{Tree depth exceeding maximum}
+In some circumstances the posterior may be complex resulting in NUTS using small step sizes. These small step sizes can mean that it takes the sampler a long time to explore posterior space. The small step size can cause the NUTS sampler to hit the maximum tree depth with resultant inefficiencies in the sampler (see chapter \ref{chap:HMC}.) These inefficiencies in themselves aren't problematic for inferences, but they often go hand in hand with slow convergence or divergent iterations. As before we suggest attempting to get to the bottom of the problems rather than side-stepping them by changing NUTS parameters manually. 
+
+\section{How to get further help, if you need it}
+It has been a challenge to write this chapter to include enough common Stan issues without the book becoming a more boring version of War and Peace. Inevitably we have had to leave off cases in order to save space. However it was never a goal of ours to write a fully-comprehensive guide to Stan. There are a few reasons for this: 1. Bayesian inference problems are usually quite problem-specific meaning that there are as many issues as there are problems! 2. The existing documentation -- both the Stan website case studies and the Stan manual -- contain thorough examples, and 3. the Stan user forum is a great place to troubleshoot.
+
+If you experience a problem with your model (as inevitably you will), we encourage you to first attempt to find the cause of your issues using similar methods to those contained in this chapter. In particular we advocate attempting to reproduce the issue using the simplest version of your model possible. This is often best done with fake data so that you can see how characteristics of the data can affect your issue. Reproducing issues with simpler models is often very informative in itself, and you may know how to proceed without outside help. However there will be circumstances when you fail to understand the causes, or potential solutions to, a particular issue. Fortunately the Stan documentation is quite extensive; the manual, case studies and user forum are three essential resources here.
+
+There will be times however when, despite your best efforts, you are unable to solve a given issue. In these cases you can consider asking a question on the Stan user forum. However before you do so, it pays to create a bare-bones example model that reproduces the same issues.
+
+\section{Chapter summary}
+\section{Chapter outcomes}
 
 \part{Regression analysis and hierarchical models}\label{part:regressionHierarchical}
 \section{Part mission statement}
