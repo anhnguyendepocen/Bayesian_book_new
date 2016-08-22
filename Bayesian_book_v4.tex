@@ -7648,7 +7648,7 @@ indices = (4,1,2);
 Y = X[indices];
 \end{minted}
 
-\subsubsection{Passing ragged arrays to Stan}
+\subsubsection{Passing ragged arrays to Stan}\label{sec:StanJags_ragged}
 Suppose that you have individual data for 3 different studies of individuals' heights. In particular imagine that you have the following data in R:
 
 \begin{minted}{R}
@@ -8618,9 +8618,109 @@ which looks ok on first glances but produces an error,
 
 which seems puzzling at first because we have actually defined sigma to be a \mintinline{stan}{real<lower=0>} variable. The issue here is that what we actually want is to replace \mintinline{stan}{normal} with \mintinline{stan}{normal_rng} as we want to generate an independent sample from this distribution for each sample of observations. 
 
-Debug by print example.
+For most coding errors Stan is quite informative about their root cause. However there will be circumstances when the warning messages produced may not necessarily shed too much light on a problem. In these cases we recommend consulting the Stan manual, and user forum. Finally if you still have trouble finding a solution then consider asking a question on the Stan user forum, although -- before you do -- try to recreate the simplest possible model that replicates the error. This process is highly informative in itself but also helps others to most rapidly find the source of any problems.
 
-\subsection{Sampling errors}
+\subsubsection{Debugging through fake data simulations}
+Another class of coding problems are subtler. They may not produce any error messages and can go unnoticed unless we actively search for them. One of the most powerful methods in this search is to use fake data simulations. In these cases we generate simulated data from a statistical process whose parameters we know for certain. We then compare our MCMC-estimated parameters with the true parameter values. Whilst there may be statistical reasons for discrepancies here (see section \ref{sec:StanJags_samplingIssues}) coding errors can also cause differences between the estimated and actual data.
+
+As an example imagine we are again estimating the height of individuals in three separate populations, in similar vein to that in section \ref{sec:StanJags_ragged}. We start by generating fake data from three populations of known means,
+
+\begin{minted}{R}
+mu <- c(1.3,1.6,2.1)
+Y <- vector()
+S <- vector(length=3)
+K <- 3
+for(i in 1:3){
+  S[i] <- rpois(1,10)
+  X <- rnorm(S[i],mu[i],0.1)
+  Y <- c(Y,X)
+}
+index <- c(1,1+cumsum(S))[-4]
+N <- length(Y)
+\end{minted}
+where as before index contains the starting position of each series, S holds the number of individuals in each sample. 
+
+We then write our model,
+
+\begin{minted}{stan}
+data {
+    int N; // number of samples across all studies
+    int K; // number of studies
+    real Y[N]; // heights for N all people
+    int S[K]; // sample sizes of each study
+    int index[K]; // start position of each study
+}
+
+parameters {
+    real mu[K]; // mean height in population
+    real<lower=0> sigma[K]; //sd of height pop distribution
+}
+
+model {
+    for(i in 1:(K-1)){
+        Y[index[i]:(index[i]+S[i]-1)] ~ normal(mu[i],sigma[i]);
+    }
+    mu ~ normal(1.5,0.8);
+    sigma ~ gamma(1,1);
+}
+\end{minted}
+
+and run the Stan model from R -- it compiles -- no errors here we think. However on printing the results we find,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,}\hlnum{0.5}\hlstd{,}\hlnum{0.75}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+##           mean se_mean   sd   25%   50%   75% n_eff Rhat
+## mu[1]     1.28    0.00 0.04  1.26  1.28  1.31   400 1.00
+## mu[2]     1.58    0.00 0.03  1.56  1.58  1.59   301 0.99
+## mu[3]     1.45    0.08 0.77  0.94  1.38  1.98   104 1.00
+## sigma[1]  0.12    0.00 0.03  0.10  0.12  0.14   210 1.03
+## sigma[2]  0.07    0.00 0.02  0.06  0.06  0.08   192 1.01
+## sigma[3]  1.24    0.12 1.15  0.37  0.99  1.81    97 1.05
+## lp__     29.98    0.18 1.94 28.86 30.38 31.37   110 1.05
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+so the first two means are well-replicated in our data but the latter one isn't. Why is this? It's because we failed to notice the $K-1$ in the for loop declaration -- tt should say, \mintinline{stan}{for(i in 1:K)}! We change this, rerun the model and print the results,
+
+\begin{knitrout}\small
+		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,}\hlnum{0.5}\hlstd{,}\hlnum{0.75}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
+##           mean se_mean   sd   25%   50%   75% n_eff Rhat
+## mu[1]     1.29    0.00 0.04  1.26  1.29  1.31   400 1.00
+## mu[2]     1.58    0.00 0.03  1.56  1.58  1.60   400 1.00
+## mu[3]     2.07    0.00 0.03  2.05  2.07  2.09   291 1.01
+## sigma[1]  0.12    0.00 0.03  0.10  0.11  0.13   143 1.02
+## sigma[2]  0.07    0.00 0.02  0.06  0.07  0.08    99 1.04
+## sigma[3]  0.12    0.00 0.03  0.10  0.11  0.13   143 1.01
+## lp__     50.46    0.14 1.71 49.48 50.81 51.72   154 1.01
+\end{verbatim}
+		\end{kframe}
+	\end{knitrout}
+
+to see that the posterior summary statistics are now in much better accordance with the true values.
+
+\subsubsection{Debugging by print}
+Another useful tool in debugging is use of the print statement,
+
+\begin{minted}{stan}
+real X;
+X = 1.0;
+print(X);
+\end{minted}
+
+which prints the value of a given variable to the output. This tool can be particularly useful when you want to determine the value of an element of a vector that is assigned in some sort of loop.
+
+\subsection{Sampling errors}\label{sec:StanJags_samplingIssues}
+Another class of problems are not coding errors, and instead have to do with issues arising with the MCMC sampling. These problems are, in general, more tricky to resolve than the aforementioned examples. However we believe that if you understand the basis of the issues that we introduce in this section you will know how to go about diagnosing this type of problems, should they appear. An important idea to always consider is Gelman's ``Folk Theorem'' -- that issues with sampling are usually due to problems with the model, not the sampling algorithm. Further it is important to remember that any MCMC sampling algorithm, Stan or otherwise, is \textit{approximate} in nature. The quality of the approximation hinges crucially on our ability to recognise and deal with any issues that arise. Stan is very good at pointing out these issues but it is our responsibility to act on them. Ignore the warning signs at your own peril! 
+
 \subsubsection{The real power of fake data}
 The following examples make clear the importance of fake data simulation for assessing a particular statistical model. In each of the cases we simulate data from a statistical process whose parameters we know for certain. In doing so we are able to test the limits of knowability using our models. If we didn't go through the exercise and instead began our analysis straight away on real data we wouldn't necessarily understand the reason for slow convergence, divergent iterations etc. Fake data simulation is thus a prerequisite for all data analyses. The exercise of generating fake data may seem annoying at times -- particularly for hierarchical models -- but there is \textit{always} a considerable improvement to your knowledge about the system at hand, if you do.
 
@@ -8816,10 +8916,25 @@ It has been a challenge to write this chapter to include enough common Stan issu
 
 If you experience a problem with your model (as inevitably you will), we encourage you to first attempt to find the cause of your issues using similar methods to those contained in this chapter. In particular we advocate attempting to reproduce the issue using the simplest version of your model possible. This is often best done with fake data so that you can see how characteristics of the data can affect your issue. Reproducing issues with simpler models is often very informative in itself, and you may know how to proceed without outside help. However there will be circumstances when you fail to understand the causes, or potential solutions to, a particular issue. Fortunately the Stan documentation is quite extensive; the manual, case studies and user forum are three essential resources here.
 
-There will be times however when, despite your best efforts, you are unable to solve a given issue. In these cases you can consider asking a question on the Stan user forum. However before you do so, it pays to create a bare-bones example model that reproduces the same issues.
+There will be times however when, despite your best efforts, you are unable to solve a given issue. In these cases you can consider asking a question on the Stan user forum. However before you do so, it pays to create a bare-bones example model that reproduces the same issues. When you post be sure to include your code, and potentially data, and try to make your question as succinct and clear as possible. The development team at Stan are usually very good at responding although this depends on the day of the week etc.
 
 \section{Chapter summary}
+In this chapter we have introduced Stan as a language for doing efficient MCMC. We believe that it is by far the best tool out there currently and hope that the examples contained within this chapter have convinced you of some of its benefits. 
+
+We have also covered some of the more common issues that users of Stan will encounter. These fell into two groups: coding errors and sampling issues. Coding errors are usually relatively simple to handle and can be diagnosed by intelligent use of print statements. Gelman's Folk Theorem states that sampling issues are almost invariably due to problems with the underlying statistical model, not the sampling algorithm. We cannot advocate this view strongly enough -- do not waste too much time fiddling with NUTS' sampling parameters. If you are having trouble with convergence or divergent iterations, then take a good hard look at your model, and consider using more informative priors, or reparameterising. Fortunately however Stan has considerable resources to consult if you do run into a problem you can't solve on your own. 
+
+Now that we have introduced Stan we are in a good position to tackle hierarchical models. In the final part of the book we introduce this concept and show its usefulness in a wide range of real life settings.
+
 \section{Chapter outcomes}
+After reading this chapter the student should be familiar with the following concepts:
+%
+\begin{enumerate}
+\item How to write basic Stan models and call these from R.
+\item How to do posterior predictive checks using the generated quantities block.
+\item How to troubleshoot when things go wrong with your Stan model.
+\item Understand that most problems with MCMC sampling are due to problems with the underlying model not the sampling algorithm (Gelman's Folk Theorem.)
+\end{enumerate}
+
 
 \part{Regression analysis and hierarchical models}\label{part:regressionHierarchical}
 \section{Part mission statement}
