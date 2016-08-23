@@ -6957,17 +6957,20 @@ Show how chains get stuck. Potential solutions are parallel tempering, adiabatic
 
 \chapter{Stan}\label{chap:StanJAGS}
 \section{Chapter mission statement}
-By the end of this chapter the reader will appreciate the benefits of using Stan to do MCMC, understand how to start coding up models in Stan, and importantly know what to do when things go wrong.
+By the end of this chapter the reader will appreciate the benefits of using Stan to do MCMC, understand how to code up models in Stan, and know what to do when things go wrong.
+
 \section{Chapter goals}
-Chapter \ref{chap:HMC} showed us the power of HMC compared to the older Random Walk Metropolis and Gibbs algorithms. However it must be said that this power comes at a cost of extra complexity. Further like Random Walk Metropolis there is a need to tune the algorithm to ensure that it efficiently traverses posterior space. These two aspects can make implementing HMC foreboding, even for more experienced MCMCers. Fortunately for many applications of Bayesian statistics we don't need to: Stan \citep{carpenter2016stan} does the hard work for us.
+Chapter \ref{chap:HMC} showed us the power of HMC compared to the older Random Walk Metropolis and Gibbs algorithms. However this power comes at a cost of extra complexity. Furthermore in HMC, like in Random Walk Metropolis there is a need to tune the algorithm to ensure that it efficiently traverses posterior space. These two aspects can make implementing HMC foreboding, even for more experienced MCMCers. Fortunately for many applications of Bayesian statistics we don't need to: Stan \citep{carpenter2016stan} does the hard work for us.
 
-Stan implements an improved version of HMC known as the No-U-Turn-Sampler (NUTS) that self-tunes for maximal algorithmic efficiency. This makes Stan fast, really fast. All that the user needs to do is use the intuitive, and easy-to-use Stan language to code up their model, and Stan does the rest. The language is being constantly updated and improved, using some of the best minds in the business. In particular the language is the brainchild of Andrew Gelman, one of the world's foremost Bayesians. 
+Stan actually implements an improved version of HMC known as the No-U-Turn-Sampler (NUTS) that self-tunes for maximal algorithmic efficiency. This makes Stan fast, really fast. All that the user needs to do is use the intuitive, and easy-to-learn Stan language to code up their model, and Stan does the rest. The language is being constantly updated and improved, using some of the best minds in the business. In particular the language is the brainchild of Andrew Gelman, one of the world's foremost Bayesians. 
 
-Stan is a probabilistic modelling language, and resultant ``black-box'' MCMC, that can be accessed through a variety of interfaces including R, Python, the command line, Matlab, Stata and Julia. The R interface is known as ``RStan'' and is probably the most popular of these interfaces. Its popularity means that it is well-tested and supported, and as such, in this chapter we provide examples using this package. However -- whilst we use ``RStan'' to call Stan -- the underlying models are always written in the same Stan language, meaning that the example Stan programmes we provide in this chapter do not change across interface.
+Stan is a probabilistic modelling language that implements ``black-box'' MCMC, that can be accessed through a variety of interfaces including R, Python, the command line, Matlab, Stata and Julia. The R interface is known as ``RStan'' and is probably the most popular of these. Its popularity means that it is well-tested and supported, and as such, in this chapter we provide examples using this package. However -- whilst we use ``RStan'' to call Stan -- the underlying models are always written in the same Stan language, meaning that the example Stan programs we provide in this chapter do not change across interfaces.
 
-Stan programmes are composed of a number of blocks used to specify a model. Whilst this variety may at first appear scary, having different sections in compartments actually makes things a lot easier. In this chapter we step individually through the different blocks so that the reader learns their use and significance in an overall Stan programme. Stan supports a range of data and parameter types from continuous variables to arrays to covariance matrices! In this chapter we will cover most of these, and explain how to find out more if you are faced with a new type of data. It also comes preloaded with a wide assortment of probability distributions - both discrete and continuous. Even if a distribution of choice isn't available, so long as you can write down its PDF, you can use it in Stan with a nice trick (see section \ref{sec:StanJags_customPDF}.)
+Stan programs are composed of a number of blocks used to specify a model. Whilst this variety may at first appear scary, having different sections in compartments actually makes things a lot easier. In this chapter we step individually through the different blocks so that the reader learns their use and significance in an overall Stan program. 
 
-The Stan language is popular. This is very important. When things go wrong with your Stan programme -- and they inevitably will at some point -- the popularity of Stan means that there are ample resources to help you through. From very active user-forums (staffed by Stan developers) to a thorough manual to numerous web case studies, Stan has got a lot of different ways to troubleshoot. In this chapter we walk the reader through these various ports, and explain how to get the most from them. There are numerous other, less popular, MCMC packages, although they are not nearly as well supported as Stan. If you are stuck, you are on your own, by the most part. Our advice -- use Stan!
+Stan supports a range of data and parameter types from continuous variables to arrays to covariance matrices! In this chapter we will cover most of these, and explain how to find out more if you are faced with a new type of data. It also comes preloaded with a wide assortment of probability distributions - both discrete and continuous. Even if a distribution of choice isn't available, so long as you can code its log pdf, you can use it in Stan (see section \ref{sec:StanJags_customPDF}.)
+
+The Stan language is popular. This is important. When things go wrong with your Stan program -- and they inevitably will at some point -- the popularity of Stan means that there are ample resources to help you through. From very active user-forums (staffed by Stan developers) to a thorough manual to numerous web case studies, Stan has got a lot of different ways to troubleshoot. In this chapter we walk the reader through these various ports, and explain how to get the most from them. There are numerous other, less popular, MCMC packages, although they are not nearly as well supported as Stan. If you use one of these and get stuck, you are on your own, by the most part. Our advice -- use Stan!
 
 The best way to get up and running with Stan is to try coding up particular examples. As such this chapter is littered with example code in both R and Stan, which should make getting started as easy as possible. However, we strongly encourage the reader to try to code up their respective models sooner rather than later. As with most things we learn most rapidly when we step out of our comfort zone!
 
@@ -6975,40 +6978,40 @@ The best way to get up and running with Stan is to try coding up particular exam
 This section explains in detail the benefits of Stan, and how to download and get up and running on the software.
 
 \subsection{When to use black-box MCMC rather than coding up the algorithms yourself}
-We have thus far been introduced to three basic flavours of MCMC algorithms: Random Walk Metropolis, Gibbs and HMC. Each of these has its strengths and weaknesses. Random Walk Metropolis is simple to code, and as such can be used in very general settings. However its generality comes at a cost - the algorithm can be very slow to converge - particularly for more complex models. Gibbs sampling can, at times, provide an increased rate of convergence, although it requires that we know the conditional distributions for parameters, and can sample from them. HMC is a generalisation of Metropolis, to include details of the posterior geometry, and is usually much faster than the other two. However, to code up HMC we need to know how to calculate the derivatives of the log density, which can be prohibitive for some classes of probability models, for example, systems of ODEs and PDEs. 
+We have thus far been introduced to three basic flavours of MCMC algorithms: Random Walk Metropolis, Gibbs and HMC. Each of these has its strengths and weaknesses. Random Walk Metropolis is simple to code, and as such can be used in very general settings. However its generality comes at a cost - the algorithm can be very slow to converge - particularly for more complex models. Gibbs sampling can, at times, provide an increased rate of convergence, although it requires that we know the conditional distributions for parameters, and can sample from them. HMC is a generalisation of Metropolis, to include details of the posterior geometry, and is usually much faster than the other two. However, to code up HMC we need to know how to calculate the derivatives of the log density, which can be prohibitive for some classes of probability models, for example, large systems of differential equations.
 
-Whilst the packages that implement variants of the three aforementioned algorithms are, in general, great, there are always be circumstances where they cannot be used. These circumstances can be due to the nature of the probability model as indicated above, or sometimes due to a mismatch in modelling software between elements of the model. As such, it pays to understand how these methods work so that they can be rewritten to suit different settings.
+Whilst the packages that implement variants of the three aforementioned algorithms are in general great, there are always be circumstances where they cannot be used. These circumstances can be due to the nature of the probability model as indicated above, or sometimes due to a mismatch in modelling software between elements of a model. It therefore pays to understand how these methods work so that they can be rewritten to suit different settings.
 
-Furthermore, there are very real benefits to implementing these algorithms yourself; you learn much more about how they work by doing so! These benefits are realised when you use so-called ``black-box'' MCMC software, such as Stan, BUGS and JAGS, since naive use of these languages can result in very misleading results. 
+Furthermore, there are benefits to implementing these algorithms yourself; you learn much more about how they work by doing so! These benefits are realised when you use so-called ``black-box'' MCMC software, such as Stan, BUGS and JAGS, since naive use of these languages can result in misleading results. 
 
-However there are many circumstances where it pays to rely on the well-tested MCMC software produced by others. One of the real benefits of using popular third-party software is that it can be potentially less bug-free than writing the MCMC algorithms yourself. Furthermore, in general the authors of these packages have put a lot of thought into the most efficient ways to implement these algorithms, meaning that they can be significantly faster than a custom implementation. An often-missed benefit of these packages is that they usually provide a raft of useful convergence summary statistics. These metrics typically allow a quick diagnosis of misbehaving chains, and can point to issues with the underlying statistical model.
+However there are many circumstances where it pays to rely on the well-tested MCMC software produced by others. One of the benefits of using popular third-party software is that it can be potentially less bug-free than writing the MCMC algorithms yourself. Furthermore, the authors of these packages typically put a lot of thought into the most efficient ways to implement these algorithms, meaning that they can be significantly faster than a custom implementation. An often-missed benefit of these packages is that they usually provide a raft of useful MCMC summary statistics. These metrics typically allow a quick diagnosis of misbehaving chains, and can point to issues with the underlying statistical model.
 
 Overall whether you choose to use a third-party MCMC implementation, or whether you use one yourself comes down to a trade-off between time saved by relying on the work of others versus convenience of the setup to the problem at hand, and the cost of learning a new programming language. As we noted above, there are definitely classes of problems that - at the moment - are not covered by packages. Although in the near future this may change since the speed of software development in this area tends to be unusually fast. As per the cost of learning a new language, we would argue that some are easier to learn than others (see section \ref{sec:StanJags_whatIsStan}.)
 
 \subsection{What is Stan?}\label{sec:StanJags_whatIsStan}
-Stan is an intuitive, yet sophisticated, probabilistic programming language that provides an interface to a modern extension to HMC known as NUTS \citep{carpenter2016stan}. The idea is that you code up a model using Stan's syntax, and then Stan does the MCMC for you. But what exactly is the nature of the Stan language, and how does it compare with the popular BUGS and JAGS languages?
+Stan is an intuitive, yet sophisticated, probabilistic programming language that provides an interface to a recently-proposed extension to HMC known as NUTS \citep{hoffman2014no,carpenter2016stan}. The idea is that you code up a model using Stan's syntax, and then Stan does the MCMC for you. But what exactly is the nature of the Stan language, and how does it compare with the popular BUGS and JAGS languages?
 
-Stan is what is known as an ``imperative'' programming language. We won't go into the details of what this means, but will just say that most traditional programming languages like R, Python, Matlab, C++ etc. all tend to behave in this way, at least approximately so. This is not true for BUGS and JAGS, which are known as ``declarative'' languages. This distinction is important for two reasons: 1. we believe learning Stan is easier if you are used to using other programming languages, and 2. partly because of being an ``imperative'' language Stan is a type of ``Turing-complete'' language that basically means that it can be used to code up a large swathe of models, in comparison to BUGS and JAGS.
+Stan is what is known as an ``imperative'' programming language. We won't go into the details of what this means, but will just say that most traditional programming languages like R, Python, Matlab, C++ etc. all tend to behave in this way, at least approximately so. This is not true for BUGS and JAGS, which are known as ``declarative'' languages. This distinction is important for two reasons: 1. we believe learning Stan is easier if you are used to using other programming languages, and 2. partly because of its ``imperative'' nature Stan is a type of ``Turing-complete'' language that basically means that it can be used to code up a large swathe of models, in comparison to BUGS and JAGS.
 
-We would also argue that even if you are already familiar with, and using, BUGS and JAGS, there are similarities between them and Stan (model blocks for one thing.) This means that the learning curve for Stan is not as steep as it might appear to be when approached from this direction.
+We would also argue that even if you are already familiar with and using, BUGS and JAGS, there are similarities between them and Stan (model blocks for one thing.) This means that the learning curve for Stan may not be particularly steep for existent BUGS and JAGS users.
 
 \subsection{Why choose Stan?}
-There are a multitude of MCMC packages out there, so why do we advocate using Stan above all others? There is number of reasons for this, but the most important one is its \textbf{popularity.} Whilst on first glances this might appear to be no more than suggesting users go with the status quo, there are very good reasons for going for a popular piece of software. An important reason is that software that is more popular is, in general, better-tested and as a consequence more bug-free. However a more pressing reason is that Stan, because of its popularity, has a huge range of resources generated by users and developers alike. This is particularly pertinent for MCMC because inevitably there will be times when things go wrong: your model doesn't compile, you get strange error messages or your chains fail to converge to name but a few common issues. In these circumstances it is important to know that there are places you can go to help solve your problem: the Stan manual, the user forum and the corpus of case studies produced for Stan are extremely helpful sources here. Other MCMC software does not have this wealth of materials and as such, if you get stuck, you are often stuck. Even if the software has all the bells and whistles available from all the latest papers (although doubtful it would rival Stan) there is really no substitute for popularity. However if you don't find the above reasoning particularly sexy, there are a large range of other reasons to use Stan that we detail below.
+There are a multitude of MCMC packages out there, so why do we suggest using Stan above all others? There is number of reasons for this, but the most important one is its \textbf{popularity.} Whilst on first glances this might appear to be no more than suggesting users go with the status quo, there are very good reasons for choosing a popular piece of software. An important reason is that more popular software is usually better-tested and as a consequence more bug-free. However a more pressing reason is that Stan, because of its popularity, has a huge range of resources generated by users and developers. This is particularly relevant for MCMC because inevitably there will be times when things go wrong: your model doesn't compile or your chains fail to converge, for example. In these circumstances it is important to know that there are places you can go to help solve your problem: the Stan manual, the user forum and the corpus of case studies produced for Stan are helpful sources here. Other MCMC software does not have this wealth of materials and because of this if you get stuck, you are often stuck. Even if the software has all the bells and whistles available from all the latest papers (although doubtful it would rival Stan) there is really no substitute for popularity. However if you don't find the above reasoning sexy, there are a bunch of other reasons to use Stan,
 
 \begin{itemize}
 \item \textbf{Stan is fast.} In general much faster than BUGS and JAGS, in terms of the number of effective samples generated per second. This is partly a result of implementing an extension to HMC, known as the No-U-Turn-Sampler (NUTS), but also because of other clever software quirks like using algorithmic differentiation to evaluate derivatives, and because it uses good software design principles.
-\item \textbf{Learning Stan is easy.} As already described in section \ref{sec:StanJags_whatIsStan} the imperative nature of the language means that it is similar to most other traditional programming languages. It is also not hard to make the switch from BUGS/JAGS because of commonality between them.
-\item \textbf{Stan is much more general than BUGS and JAGS.} Again as we noted in section \ref{sec:StanJags_whatIsStan} Stan is a ``Turing-complete'' language and hence can be used to code a much wider class of problems than BUGS/JAGS.
-\item \textbf{Stan is written by smart people.} Specifically it is the brainchild of Andrew Gelman, who more-or-less unequivocally is the world's foremost Bayesian statistician. There are a load of other theoretical and applied statisticians working on the project meaning that the language is frequently updated to include the latest methods, new data and parameter types, and things that make it generally better and more widely applicable.
-\item \textbf{The developers have translated most examples from the leading books in the field into Stan.} These include books that previously contained examples only in BUGS or JAGS, making it easier to transition from these to Stan.
+\item \textbf{Learning Stan is easy.} As already described in section \ref{sec:StanJags_whatIsStan} the imperative nature of the language means that it is similar to most other traditional programming languages. Also the switch from BUGS/JAGS is not difficult because of the commonality between them.
+\item \textbf{Stan is much more general than BUGS and JAGS.} We discussed in section \ref{sec:StanJags_whatIsStan} that Stan is a ``Turing-complete'' language and hence can be used to code a much wider class of problems than BUGS/JAGS.
+\item \textbf{Stan is written by smart people.} Specifically it is the brainchild of Andrew Gelman, who is more-or-less unequivocally the world's foremost Bayesian statistician. There are a load of other theoretical and applied statisticians working on the project meaning that the language is frequently updated to include the latest methods, new data and parameter types, and things that make it better.
+\item \textbf{The developers have translated most examples from the leading textbooks in the field into Stan.} These include books that previously contained examples only in BUGS or JAGS (for example the ``BUGS book'' \cite{lunn2012bugs}), making it easier to transition from these to Stan.
 \item \textbf{Recent books contain examples in Stan.} Following on from the previous case, many of the recent books written contain examples written in Stan, rather than BUGS/JAGS.
-\item \textbf{Shinystan makes inference fun.} Ok, maybe we're a bit biased here, but the interactive nature of the ``Shinystan'' R package makes inference a lot easier, and more of a pleasure than a chore. This is another reason why we advocate using R opposed to one of the other software packages that are available. 
+\item \textbf{Shinystan makes inference fun.} Ok, maybe we're a bit biased here, but the interactive nature of the ``Shinystan'' R package makes inference a lot easier, and more of a pleasure than a chore. This is another reason why we suggest using R opposed to one of the other software packages that are available. 
 \end{itemize}
 
 Overall Stan makes our life easier. Not a convert yet? Well, that's what this chapter is for. Let's get to it!
 
 \section{Getting setup with Stan using RStan}\label{sec:StanJags_installation}
-This section describes briefly how to get Stan setup on a computer. The reason for its brevity is mainly because there are detailed resources on this on the Stan website (\url{http://mc-stan.org/}). However, here we detail the basic steps for getting up and running using ``RStan'' - the R interface to the Stan language. 
+This section briefly describes how to get Stan set up on a computer. The reason for its brevity is mainly because there are detailed resources on this on the Stan website (\url{http://mc-stan.org/}). However, here we detail the basic steps for getting up and running using ``RStan'' - the R interface to the Stan language. 
 
 \paragraph{R}
 To begin with, since we are going to use R to call Stan, we need a newish version of it installed. To get this go to: \url{https://www.r-project.org/} and download the latest version for your particular system. 
@@ -7017,7 +7020,7 @@ To begin with, since we are going to use R to call Stan, we need a newish versio
 Whilst not essential we would strongly suggest using ``RStudio'' to write, edit and run R code. It's great even if you don't use Stan. However, if you do a particularly nice feature of this development environment is its capability to highlight Stan syntax as you write. To get RStudio go here: \url{https://www.rstudio.com/}.
 
 \paragraph{Toolchain}
-The Stan package relies on your computer having a few necessary tools for handling C++ files. Amongst other reasons this is because Stan code is, under the hood, actually translated into C++ code, and compiled. The best way to get the requisite software for a Windows or Mac computer is to install ``RTools''. The Stan website walks the user through this for both cases. If you are on a Linux computer, then you will need to install ``build-essential'' and a recent version of either g++ or clang++ compilers.
+The Stan package relies on your computer having a few necessary tools to handle C++ files. Amongst other reasons this is because Stan code is, under the hood, actually translated into C++ code, and compiled. The best way to get the requisite software for a Windows or Mac computer is to install ``RTools''. The Stan website walks the user through this for both cases. If you are on a Linux computer, then you will need to install ``build-essential'' and a recent version of either g++ or clang++ compilers.
 
 \paragraph{RStan}
 The only remaining thing we need is the ``RStan'' package itself. This can be done from within R/RStudio, using the following commands:
@@ -7035,8 +7038,10 @@ Sys.setenv(MAKEFLAGS = "-j4")
 where you replace `4' in the above with the number of processors available on your computer.
 
 \section{Our first words in Stan}
-\subsection{The building blocks of a Stan program}
-In order to explain the importance of each element of a typical Stan programme, we choose to use a simple example. Suppose that we are interested in inferring the mean height, $\mu$, in a population of interest. To carry out this inference we need some data, so we suppose we have recorded the height, $Y_i$, of 10 individuals drawn from that population. Further we suppose that the normal sampling model is appropriate given the multitude of different factors that affect the height of a person (see section \ref{sec:Probability_CLT}):
+This section describes how to code up a basic Stan model. Since the backbone of typical Stan programs does not vary considerably this section will form the basis for later, more complex, models.
+
+\subsection{The main blocks of a Stan program}
+In order to explain the importance of each element of a typical Stan program, we introduce a simple example. Suppose that we are interested in inferring the mean height, $\mu$, in a population of interest. To carry out this inference we need some data, so we suppose we have recorded the height, $Y_i$, of 10 individuals drawn from that population. Further we suppose that the normal sampling model is appropriate given the multitude of different factors that affect the height of a person (see section \ref{sec:Probability_CLT}):
 %
 \begin{equation}
 Y_i \sim N(\mu,\sigma)
@@ -7047,7 +7052,7 @@ where $\sigma$ is the standard deviation of the sampling distribution. To comple
 \mu &\sim N(1.5,0.1)\\
 \sigma &\sim gamma(1,1)
 \end{align}
-The completed Stan programme is shown in code block \ref{code:StanJags_fullSimple}. Before we describe the importance of each of these blocks we first take a moment to describe how best to write and save a Stan programme.
+The completed Stan program implementing the above model is shown in code block \ref{code:StanJags_fullSimple}. Before we describe the importance of each of these blocks we first take a moment to describe how best to write and save a Stan program.
 
 \begin{listing}[H]
 	\begin{minted}{stan}
@@ -7072,10 +7077,10 @@ model {
 	\label{code:StanJags_fullSimple}
 	\end{listing}
 
-\subsubsection{Writing a Stan programme}
-Stan programmes can be written in a text editor, and as long as they are saved with a ``.stan'' ending (for example, ``aModel.stan''), they can be executed. However this isn't best practice. Here we advocate that you either write your Stan models using ``R Studio'', or using ``emacs''. Both of these editors recognise Stan syntax, and hence help to minimise errors whilst writing your models. To write a model in R Studio you will need a fairly recent version of the software. You then must create a new text file, making sure to save it suffixed with ``.stan''. The other option ``emacs'' has a bit of a steeper learning curve, although has a great range of functionality that can speed up the model development process considerably.
+\subsubsection{Writing a Stan program}
+Stan programs can be written in a text editor, and as long as they are saved with a ``.stan'' ending (for example, ``aModel.stan''), they can be executed. However this isn't best practice. Here we suggest you write Stan models using ``R Studio'', or using ``emacs''. Both of these editors recognise Stan syntax, and hence help to minimise errors whilst writing your models. To write a model in R Studio you will need a fairly recent version of the software. You then must create a new text file, making sure to save it suffixed with ``.stan''. The other option ``emacs'' has a bit of a steeper learning curve, although has a great range of functionality that can speed up the model development process considerably.
 
-We now describe the three most important blocks of a typical Stan programme.
+We now describe the three most important blocks of a typical Stan program.
 
 \subsubsection{data}
 \begin{minted}{stan}
@@ -7097,7 +7102,7 @@ In the above we declare the variable $Y$ -- representing the heights of the 10 p
 \item \mintinline{stan}{matrix[3,3] Z[5,2];} A $5\times 2$ array of $3\times3$ matrices.
 \end{itemize}
 
-Amongst others in the above we introduced arrays, vectors and matrices. You may be wondering what the difference is between these various types. Vectors and matrices contain only entities of type \mintinline{stan}{real}, that is continuous variables. Whereas arrays can contain data of any type. In the above we show how we can declare arrays of integers and arrays respectively. So why ever use the more limited \mintinline{stan}{vector} and \mintinline{stan}{matrix} types? First they can be used to do linear algebra whereas arrays cannot. Second some functions (for example, multivariate normal distributions) use these types as inputs, rather than arrays. Third there are a few minor memory and speed benefits to using a matrix rather than a 2D array due to the way data is stored in memory.
+Amongst others in the above we introduced arrays, vectors and matrices. You may be wondering what the difference is between these three types. Vectors and matrices contain only elements of type \mintinline{stan}{real} -- that is continuous variables -- whereas arrays can contain data of any type. In the above we show how we can declare arrays of integers and matrices respectively. So why ever use the more limited \mintinline{stan}{vector} and \mintinline{stan}{matrix} types? First they can be used to do linear algebra whereas arrays cannot. Second some functions (for example, multivariate normal distributions) use these types as inputs, rather than arrays. Third there are a few minor memory and speed benefits to using a matrix rather than a 2D array due to the way data is stored in memory.
 
 You've probably also noticed that the Stan code has semi-colons ``;'' at the end of every statement where you assign something. So this happens for data declarations, and (as we'll see soon) for parameter declarations, and anywhere where you access an element of a data type, and assign it to something else. So one place they don't occur is at the start of any loops or conditional statements, where nothing is as yet assigned. However, to be honest it is usually pretty obvious when and where these statements should occur. Hopefully the rest of this example will illustrate this.
 
@@ -7116,15 +7121,15 @@ Here we declared the mean height in the population, which is a continuous variab
 As per the data block there are a range of data types that are available to us here. These include the \mintinline{stan}{vector}, \mintinline{stan}{matrix} and array types that we discussed previously, but also more exotic entities, some of which we show below.
 
 \begin{itemize}
-\item \mintinline{stan}{simplex[K] Z;} A vector of $K$ non-negative continuous variables whose sum is 1.
+\item \mintinline{stan}{simplex[K] Z;} A vector of $K$ non-negative continuous variables whose sum is 1. Simplexes are useful for parameters that represent probabilities.
 \item \mintinline{stan}{corr_matrix[K] Z;} A $K\times K$ dimensional correlation matrix (symmetric, positive definite matrix with unit diagonals, and all elements between -1 and 1.)
 \item \mintinline{stan}{ordered[K] Z;} A vector a $K$ continuous elements where either $Z[1] > Z[2] > ... > Z[K]$ or $Z[1] < Z[2] < ... < Z[K]$.
 \end{itemize}
 
-You'll notice that discrete parameters are missing from the above description. This isn't a mistake. Stan does not support integer-valued parameters, directly at least. This is because the theory of HMC for discrete parameters is not yet sufficiently developed. However the Stan development team are working on this, and hopefully at some point in the future this will be possible. Whilst this might seem like a serious issue since many models contain discrete parameters, it is possible to indirectly include discrete parameters by marginalising them out (see section \ref{sec:StanJags_discrete}.) This means that the majority of models that use discrete parameters, we can still use Stan!
+You'll notice that discrete parameters are missing from the above description. This isn't a mistake. Stan does not support integer-valued parameters, directly at least. This is because the theory of HMC for discrete parameters is not yet sufficiently developed. However the Stan development team are working on this, and hopefully at some point in the future this will be possible. Whilst this might seem like a serious issue since many models contain discrete parameters, it is possible to indirectly include discrete parameters by marginalising them out (see section \ref{sec:StanJags_discrete}.) This means that the majority of models that use discrete parameters can still be coded in Stan.
 
 \subsubsection{model}\label{sec:StanJags_model}
-The next part of a Stan programme we discuss is the ``model'' code block which is used to specify the likelihood and priors for a model.
+The next part of a Stan program we discuss is the ``model'' code block which is used to specify the likelihood and priors for a model.
 	\begin{minted}{stan}
 model {
     for(i in 1:10){
@@ -7134,23 +7139,40 @@ model {
     sigma ~ gamma(1,1); // prior for sigma
 }
 	\end{minted}
-\paragraph{Sampling statements.} One important thing to notice about the above is the use of so-called sampling statements written by ``$\tilde{~}$''. The term ``sampling statement'' is suggestive and not to be taken literally \cite{carpenter2016stan}. In the above we use a sampling statement for the individual elements of $Y$ because we assumed that the likelihood was normal: $Y\sim N(\mu,\sigma)$. Similarly, we assumed that the priors on the parameters were normal and gamma respectively, as suggested by the above code.
+\paragraph{Sampling statements.} One important thing to notice about the above is the use of so-called sampling statements written by ``$\tilde{~}$''. The term ``sampling statement'' is suggestive and not to be taken literally \cite{carpenter2016stan}. In the above we use a sampling statement for the individual elements of $Y$ because we assumed each height is drawn from a normal sampling distribution, $Y\sim N(\mu,\sigma)$. Similarly, we assumed that parameters mu and sigma can be viewed as being drawn from normal and gamma prior distributions.
 
-However do not think that Stan actually does the independent sampling that these statements seem to suggest. (If it could then we wouldn't need to do MCMC in the first place! See chapter \ref{chap:MCMC} if you can't remember why this is.) Remember that Stan essentially runs on HMC. HMC is an MCMC method that works in negative log posterior space. Because the overall posterior numerator is the product of a number of elements of the likelihood and prior this means the overall \textbf{log} posterior is the \textbf{sum} of the individual log probability of each element in the likelihood and prior.  Therefore in HMC all we need to do is evaluate the log probability of each of these elements and add them together. This is exactly what the sampling statements - the $\tilde{~}$ - help us to do. For each step in the HMC corresponding to a new value of $\mu$ and $\sigma$, we need to evaluate the (unnormalised, negative) log posterior density. So in each step Stan calculates a new log probability by starting with a value of zero and incrementing it each time a $\tilde{~}$ statement occurs. So
+However do not think that Stan actually does the independent sampling that these statements seem to suggest. (If it could then we wouldn't need to do MCMC in the first place! See chapter \ref{chap:MCMC} if you can't remember why this is.) Remember that Stan essentially runs on HMC. HMC is an MCMC method that works in negative log posterior space. Because the overall posterior numerator is the product of a number of elements of the likelihood and prior,
+
+\begin{align}
+p(\theta|X) &\propto p(X|\theta) \times p(\theta)\\
+&= \prod_{i=1}^{N} p(X_i|\theta) \times p(\theta)
+\end{align}
+
+which means the overall \textbf{log} posterior is the \textbf{sum} of the individual log probability of each element in the likelihood and prior,
+
+\begin{align}
+\text{log}\; p(\theta|X) &\propto \text{log}\; p(X|\theta) + \text{log}\; p(\theta)\\
+&= \sum_{i=1}^{N} \text{log}\;p(X_i|\theta) + \text{log}\; p(\theta)
+\end{align}
+
+Therefore in HMC all we need to do is evaluate the log probability of each of these elements and add them together. This is exactly what the sampling statements - the $\tilde{~}$ - help us to do. For each step in the HMC we get a new value of $\mu$ and $\sigma$, and hence need to evaluate the (unnormalised, negative) log posterior density. So in each step Stan calculates a new log probability by starting with a value of zero and incrementing it each time a $\tilde{~}$ statement occurs. So,
+
 	\begin{minted}{stan}
 for(i in 1:10){
     Y[i] ~ normal(mu,sigma);
 }
 	\end{minted}
-increments the log-probability by: $log(p(Y[i])) \propto -\frac{1}{2} log(\sigma^2)- \frac{Y[i]^2}{2\sigma^2}$ for the heights of each $i=1,..,10$ individuals. This is the normal pdf not including any constant terms - sampling statements throw away the constants as they are usually not needed for the model and never for HMC. Another way to express the above sampling statement is via an alternative Stan notation:
+	
+increments the log-probability by: $log(p(Y[i])) \propto -\frac{1}{2} log(\sigma^2)- \frac{(Y[i]-\mu)^2}{2\sigma^2}$ for the heights of each $i=1,..,10$ individuals. This is the normal pdf not including any constant terms - sampling statements throw away the constants as they are usually not needed for the model and never for HMC. Another way to express the above sampling statement is via an alternative Stan notation:
 	\begin{minted}{stan}
 for(i in 1:10){
     target += normal_lpdf(mu,sigma);
 }
 	\end{minted}
-which more transparently increments``target'' -- a container that holds the current value of the log posterior -- by a log probability corresponding to the log of the normal pdf. To be clear here ``target'' statements aren't actually the same as $\tilde{~}$ ones, because target statements keep any constants in the log density. Consequently Stan programmes with $\tilde{~}$ statements are generally quicker, however if you want the actual log probability of the model you may to use target statements.
+which more transparently increments``target'' -- a container that holds the current value of the log posterior -- by a log probability corresponding to the log of the normal pdf. To be clear here ``target'' statements aren't actually the same as $\tilde{~}$ ones, because target statements keep any constants in the log density. Consequently Stan programs with $\tilde{~}$ statements are generally quicker, however if you want the actual log probability of the model you need to use target statements.
 
-Why do we bring this distinction between what $\tilde{~}$ means statistically and what it means in the Stan language? Because you may get errors that you think are bugs in Stan, but are actually due to you interpreting $\tilde{~}$ statistically. Take the below excerpt from a Stan programme.
+Why do we bring this distinction between what $\tilde{~}$ means statistically and what it means in the Stan language? Because you may get errors that you think are bugs in Stan, but are actually due to you interpreting $\tilde{~}$ statistically. Take the below excerpt from a Stan program.
+
 	\begin{minted}{stan}
 parameters{
     real theta;
@@ -7160,7 +7182,8 @@ model{
     theta ~ uniform(0,1);
 }
 	\end{minted}
-On first glances it appears that the parameter ``theta'' should be constrained to lie between 0 and 1 because it has a continuous prior with those bounds. However, this is not the case. All the above sampling statement does is increment the log probability by an amount given by the log uniform pdf ($log(1)=0$, in this case.) This means that it is possible for theta to stray outside of the 0 and 1 bounds, and if you run this programme you may actually see this for a few iterations (Stan will output a statement of the form: ``Log probability evaluates to log(0)...''.)
+
+On first glances it appears that the parameter ``theta'' should be constrained to lie between 0 and 1 because it has a continuous prior with those bounds. However, this is not the case. All the above sampling statement does is increment the log probability by an amount given by the log uniform pdf. This means that it is possible for theta to stray outside of the 0 and 1 bounds, and if you run this program you may actually see this for a few iterations (Stan will output a statement of the form: ``Log probability evaluates to log(0)...''.)
 
 \paragraph{Vectorisation.} There is actually a more efficient and compact way to write our original model that takes advantage of the inherent ``vectorised'' nature of sampling statements, 
 	\begin{minted}{stan}
@@ -7171,25 +7194,25 @@ model {
 	\end{minted}
 where we have replaced the for loop that accesses each element of $Y$ individually by the above where we use the array $Y$ on the left-hand side. For more complex models using vectorised code can amount to serious speed ups in the MCMC because the code is better able to leverage the benefits of $C++$ when it is translated.
 
-\paragraph{Probability distributions.} Stan comes equipped with a vast array of useful probability distributions to cover a range of situations. We do not include all of these below because they are easily found in the Stan manual, and are constantly being updated. However a few or the more popular distributions,
+\paragraph{Probability distributions.} Stan comes equipped with a range of useful probability distributions. We do not include all of these below because they are easily found in the Stan manual, and are constantly being updated. However a few of the more popular distributions are,
 
 \begin{itemize}
 \item \textbf{Discrete:} bernoulli, binomial,  normal, poisson, beta-binomial, negative-binomial, categorical, multinomial.
 \item \textbf{Continuous unbounded:} normal, skew-normal, student-t, cauchy, logistic.
 \item\textbf{Continuous bounded:} uniform, beta, log-normal, exponential, gamma, chi-squared, inverse-chi-squared, weibull, wiener diffusion, pareto. 
 \item \textbf{Multivariate continuous:} normal, student-t, gaussian process.
-\item \textbf{Exotics:} dirichlet, LKJ correlation distribution, wishart and its inverse, von-mises.
+\item \textbf{Exotics:} dirichlet, LKJ correlation distribution, wishart and inverse-wishart, von-mises.
 \end{itemize}
 
-It is also worth noting that Stan also sometimes provides different parameterisations of the same probability distribution, which can make life easier. 
+It is also worth noting that Stan also sometimes provides different parameterisations of the same probability distribution (see the binomial and binomial\_logit distributions in the Stan manual, for example), which make life easier. 
 
-\subsection{Executing a Stan programme in R}
-Now that we understand the aforementioned data, parameters and model elements of a Stan programme, let's discuss how we execute it in R, using ``RStan''. Note that this section assumes that you have installed R, RStudio and RStan as described in section \ref{sec:StanJags_installation}. To get up and running follow,
+\subsection{Executing a Stan program from R}
+Now that we understand the aforementioned data, parameters and model elements of a Stan program, let's discuss how we execute it in R, using ``RStan''. Note that this section assumes that you have installed R, RStudio and RStan as described in section \ref{sec:StanJags_installation}. To get up and running follow,
 
 \begin{enumerate}
 \item Create a new folder `simple' that will contain our `.stan' file along with an R file that we use to call Stan.
 \item In R Studio create a new text file, and paste the code in code block \ref{code:StanJags_fullSimple} into it. Save this file in the newly-created folder as `simple.stan' (when you do so, you should see that RStudio highlights code in line with Stan's syntax.)
-\item In R Studio create a new R Script file, and save it as `s\_simple'.
+\item In R Studio create a new R Script file, and save it in the folder.
 \item In R Studio change the working directory to be the same as the newly-created folder. This can be done manually through the drop downs at the top of the window, or via a line of code that will look something like,
 \begin{minted}{R}
 setwd("~/simple")
@@ -7207,7 +7230,7 @@ options(mc.cores = parallel::detectCores())
 \begin{minted}{R}
 Y <- rnorm(10,1.5,0.2)
 \end{minted}
-\item Compile and run the MCMC using your Stan programme, by the following line in your R Script,
+\item Compile and run the MCMC using your Stan program, by the following line in your R Script,
 \begin{minted}{R}
 fit <- stan('simple.stan',iter=200,chains=4,
             data=list(Y=Y))
@@ -7228,7 +7251,7 @@ So (hopefully) we've successfully run our Stan model. How do we look at the resu
 \begin{minted}{R}
 print(fit,probs = c(0.25,0.5,0.75))
 \end{minted}
-where ``fit'' is the object in which we saved the result of our Stan run previously. This should output results that look something like the below. The exact numbers will differ because they depend on the exact fake data you created using \mintinline{R}{rnorm} before, however the below structure should look similar.
+where ``fit'' is the object in which we saved the result of our Stan run previously. This should output results that look something like the below. The exact numbers will differ because they depend on the exact fake data you created using \mintinline{R}{rnorm} before and because MCMC is stochastic. However the below structure should look similar.
 
 \begin{knitrout}\small
 		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -7243,7 +7266,7 @@ where ``fit'' is the object in which we saved the result of our Stan run previou
 ## 
 ##                mean se_mean   sd  25%  50%  75% n_eff Rhat
 ## mu             1.52    0.00 0.08 1.47 1.53 1.56   400 1.00
-## sigma          0.34    0.02 0.09 0.28 0.32 0.38    31 1.09
+## sigma          0.27    0.02 0.09 0.28 0.32 0.38    31 1.09
 ## lp__           4.87    0.09 1.15 4.51 5.18 5.66   167 1.03
 ## 
 ## Samples were drawn using NUTS(diag_e) at Wed Aug 17 00:31:27 2016.
@@ -7258,17 +7281,9 @@ where ``fit'' is the object in which we saved the result of our Stan run previou
 		\end{kframe}
 	\end{knitrout}
 
-So what do all the parts of the above mean? Well, the top part just states that 4 chains were run for 200 iterations in total. However, the first half of these chains were discarded as ``warm-up'' (see section \ref{sec:metropolisHastings_warmup}) meaning that there are only 100 samples kept as posterior samples for each chain, resulting in $400=4\times 100$ ``total post-warmup draws.'' The table in the output contains summary statistics for the two parameters of our model $(\mu,\sigma)$, as well as for the log-probability of the model ``lp\_\_''. The last two columns of the table are convergence diagnostics for each parameter: $n\_eff$ is the number of effective samples, and $Rhat = \hat{R}$. In this case we see that in all cases $\hat{R}<1.1$ giving us some confidence that our posterior shape won't change too much if we collected more samples. The first 6 columns of the table show summary measures for the posterior samples, including the mean (and its  standard error), the standard deviation, and the 3 quantiles we specified in our \mintinline{R}{print(fit,probs=c(0.25,0.5,0.75))} statement. The last part of the output contains information on the sampling algorithm used (NUTS) and the estimated Bayesian Fraction of Missing Information (see section XX.)
+So what do all the parts of the above mean? Well, the top part just states that 4 chains were run for 200 iterations in total. However, the first half of these chains were discarded as ``warm-up'' (see section \ref{sec:metropolisHastings_warmup}) meaning that there are only 100 samples kept as posterior samples for each chain, resulting in $400=4\times 100$ ``total post-warmup draws.'' The table in the output contains summary statistics for the two parameters of our model $(\mu,\sigma)$, as well as for the log-probability of the model ``lp\_\_''. The last two columns of the table are convergence diagnostics for each parameter: $n\_eff$ is the number of effective samples, and $Rhat = \hat{R}$. In this case we see that in all cases $\hat{R}<1.1$ giving us some confidence that our posterior shape won't change too much if we collected more samples. The first 6 columns of the table show summary measures for the posterior samples, including the mean (and its  standard error), the standard deviation, and the 3 quantiles we specified in our \mintinline{R}{print(fit,probs=c(0.25,0.5,0.75))} statement. The last part of the output contains information on the sampling algorithm used (NUTS) and the estimated Bayesian Fraction of Missing Information (BFMI) for each chain. BFMI is a newly-created criterion that measures the autocorrelation in energy distribution sampled by each chain, and values near 1 indicate efficient sampling \cite{betancourt2016diagnosing}.
 
 How do we extract the posterior samples, then graph them?
-
-\begin{minted}{R}
-library(ggplot2)
-mu <- extract(fit,'mu')[[[1]]
-qplot(mu)
-\end{minted}
-
-where \textit{extract} is a Stan function that pulls out any parameter we desire from a Stan fit object. We have chosen to use the ``ggplot2'' library to display a histogram of the data here.
 
 \begin{knitrout}
 \begin{alltt}
@@ -7278,6 +7293,8 @@ where \textit{extract} is a Stan function that pulls out any parameter we desire
 \end{alltt}
 \includegraphics[width=0.4\linewidth]{StanCode/figure/test1-1} 
 \end{knitrout}
+
+where \textit{extract} is a Stan function that pulls out any parameter we desire from a Stan fit object. We have chosen to use the ``ggplot2'' library to display a histogram of the data here.
 
 \paragraph{Shiny Stan.}\index{Shiny Stan} If you are using R there is another, more interactive (and hence fun!), way to view the results from a Stan run, using the Shiny Stan package. You can install this package from within R using,
 
@@ -7292,24 +7309,24 @@ aFit <- as.shinystan(fit)
 launch_shinystan(aFit)
 \end{minted}
 
-Upon executing the above your web browser should open up  in your web browser (you do not need to be connected to the internet), and you should see an intro screen with options including: DIAGNOSE, ESTIMATE and EXPLORE. DIAGNOSE allows you to view detailed MCMC diagnostic criteria by clicking through the various options, including convergence criteria such as $\hat{R}$, effective sample size, and divergent iterations. ESTIMATE provides tables and basic graphs of the parameters in your model. EXPLORE amongst other (fun) things this allows you to create scatter-plots of samples from each variable plotted against one another. This graph in particular can be very useful in diagnosing issues with your MCMC (see section \ref{sec:StanJags_divergentSolution}.) 
+Upon executing the above your web browser should open up (you do not need to be connected to the internet), and you should see an intro screen with options including: DIAGNOSE, ESTIMATE and EXPLORE. DIAGNOSE allows you to view detailed MCMC diagnostic criteria by clicking through the various options, including convergence criteria such as $\hat{R}$, effective sample size, and divergent iterations. ESTIMATE provides tables and basic graphs of the parameters in your model. EXPLORE amongst other things this allows you to create scatter-plots of samples from each variable plotted against one another. This graph in particular can be very useful in diagnosing issues with your MCMC (see section \ref{sec:StanJags_divergentSolution}.) 
 
 \subsection{The other blocks}
-The three previous code blocks are typically essential in a Stan programme (see section \ref{sec:StanJags_independent} for a counterexample), however there are other code blocks that can help make life even easier. In this section we describe these.
+The three previous code blocks are typically essential in a Stan program (see section \ref{sec:StanJags_independent} for a counterexample), however there are other code blocks that can help make life even easier. In this section we describe these.
 
 \subsubsection{generated quantities}
-The most widely useful of the ``other'' blocks is the ``generated quantities'' code block. One of the principle uses of this section is to do posterior predictive checks (see chapter \ref{chap:ModelFit}) of a model's fit. Once you know how this section works, we find that it is much easier to do posterior predictive checks here rather than do them afterwards in R, Python etc. This section of a Stan programme is executed once per sample, meaning that it does not typically pose a threat to efficiency (although it can significantly affect the memory used by Stan - see section \ref{sec:StanJags_efficiency}.)
+The most widely useful of the ``other'' blocks is the ``generated quantities'' code block. One of the principle uses of this section is to do posterior predictive checks of a model's fit (see chapter \ref{chap:ModelFit}). Once you know how this section works, we find that it is much easier to do posterior predictive checks here rather than afterwards in R, Python etc. This section of a Stan program is executed once per sample, meaning that it does not typically pose a threat to efficiency (although it can significantly affect the memory used by Stan - see section \ref{sec:StanJags_efficiency}.)
 
-The use of this section is best illustrated by an example. Suppose again we are using our heights example in the preceding sections. Further suppose we want to test whether our model is capable of generating the extremes that we see in our data. In particular we choose to count the fraction of posterior predictive samples -- each of the same size as our original data -- where the maximum or minimum of the simulated data is more extreme than the actual data. Whilst we can't do all of these tests in Stan, we can do much of the legwork using,
+The use of this code block is best illustrated by an example. Suppose again we are using our heights example of the preceding sections. Further suppose we want to test whether our model can generate the extremes that we see in our data. In particular we choose to count the fraction of posterior predictive samples -- each of the same size as our original data -- where the maximum or minimum of the simulated data is more extreme than the actual data. We do this using,
 
 \begin{minted}{stan}
 generated quantities{
-    vector[10] lSimData;
+    vector[N] lSimData;
     int aMax_indicator;
     int aMin_indicator;
       
     // Generate posterior predictive samples
-    for(i in 1:10){
+    for(i in 1:N){
       lSimData[i] = normal_rng(mu,sigma);
     }
      
@@ -7323,7 +7340,7 @@ The first part of the preceding code just declares the variables we intend to us
 
 You'll notice that to generate random samples from a given distribution, we use the ``\_rng'' suffix. So in the above \mintinline{stan}{Y=normal_rng(mu,sigma)} generates a single independent sample from a normal distribution with a mean of mu and a standard deviation of sigma. This is completely different to \mintinline{stan}{Y~normal(mu,sigma)} which remember means ``increment the overall log probability by an amount given by the log of a normal likelihood for a data point $Y$ with a mean of mu and standard deviation of sigma'' (see section \ref{sec:StanJags_model} if you need to remind yourself about this.) 
 
-If we run the whole programme, including the generated quantities section at the bottom, we obtain results that look something like the following,
+If we run the whole program, including the generated quantities section at the bottom, we obtain results that look something like the following,
 
 \begin{knitrout}\small
 		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -7359,10 +7376,10 @@ Another use of this code block is to generate the requisite data for measuring a
 Finally another use we'll mention but not discuss now is that the generated quantities block can be useful in summarising hierarchical models. See chapter \ref{chap:hierarchicalModels} here.
 
 \subsubsection{functions}
-Code can be made more easily readable, and less error prone, if we define functions to carry out any frequently-used operations. As an example suppose that, together with the height of individuals in our sample, we also had their weight. Further we believe that a reasonable approximation for the relationship between these two variables could be described by,
+Code can be made more readable, and less error prone, if we define functions to carry out any frequently-used operations. As an example suppose that, together with the height of individuals in our sample, we also had their weight. Further we believe that a reasonable approximation for the relationship between these two variables could be described by,
 %
 \begin{equation}
-Y_i \sim N(\beta log(X_i),\sigma)
+Y_i \sim N(\beta \text{log}(X_i),\sigma)
 \end{equation}
 %
 where $(X_i,Y_i)$ are the weight and height of individual $i$. Whilst this model doesn't have repetitions we might find it neater to use a function that calculates the mean of the normal,
@@ -7375,7 +7392,7 @@ functions{
 }
 \end{minted}
 
-where the first \mintinline{stan}{real} before the function name declares that the function will return a continuous variable. The elements contained within parentheses tell the function that it will accept two reals - $aX$ and $aBeta$ - as input. The \mintinline{stan}{return} statement then directly returns the required value. Note that it is possible to declare variables in a Stan function; here because the function is simple we choose to return the value directly. The whole Stan program then has the form,
+where the first \mintinline{stan}{real} before the function name declares that the function will return a continuous variable. The elements contained within parentheses tell the function that it will accept two reals - $aX$ and $aBeta$ - as input. The \mintinline{stan}{return} statement then passes back the required value. Note that it is possible to declare variables in a Stan function; here because the function is simple we choose to calculate the value and return it in a single line. The whole Stan program then has the form,
 
 \begin{minted}{stan}
 functions{
@@ -7403,7 +7420,7 @@ model {
     sigma ~ gamma(1,1);
 }
 \end{minted}
-where we have placed a $N(0,1)$ prior on the $\beta$ parameter. Note that we have now chosen to pass the sample size $N$ as data to the Stan programme. This is good practice since it makes the model more easier to be generalised to bigger samples, and otherwise just neatens things up. Also, note that functions \textit{must} be declared at the top of a Stan programme, otherwise the other blocks can't find the requisite functions when they are executed. If you save this file in your working directory (again, making sure to save it as `.stan') we can take it for a test drive. To do so, generate some fake data in R, then call Stan,
+where we have placed a $N(0,1)$ prior on the $\beta$ parameter. Note that we have now chosen to pass the sample size $N$ as data to the Stan program. This is good practice since it allows the model to generalise to bigger samples, and otherwise just neatens things up. Also, note that functions \textit{must} be declared at the top of a Stan program, otherwise the other blocks can't find the requisite functions when they are executed. If you save this file in your working directory (again, making sure to save it as `.stan') we can take it for a test drive. To do so, generate some fake data in R, then call Stan,
 \begin{minted}{R}
 N <- 100
 X <- rnorm(N,60,10)
@@ -7432,10 +7449,10 @@ And hopefully you should get posterior samples whose mean is pretty close to tha
 		\end{kframe}
 	\end{knitrout}
 
-Apart from helping you to create more transparent and reliable code, functions also have another use - they can be used to allow sampling from any distribution whose log pdf you can write down. So even if Stan doesn't have built in functionality for a particular distribution, you can still use Stan to sample from it! See section \ref{sec:StanJags_customPDF} for the recipe of this magic potion.
+Apart from helping you to create more transparent and reliable code, functions also have another use - they can be used to allow sampling from any distribution whose log pdf you can write in Stan code. So even if Stan doesn't have built in functionality for a particular distribution, you can still use Stan to sample from it! See section \ref{sec:StanJags_customPDF} for the recipe of this magic potion.
 
 \subsubsection{transformed parameters}
-There are occasions when it makes more sense to set priors, and sample from, parameters that are transformations of parameters of interest. In our original heights example (no covariates) imagine that instead of setting priors on the standard deviation parameters - sigma - you wish to do so on the variance. One way to do this is to use the ``transformed parameters'' block,
+There are occasions when either we want to generate samples for transformations of those parameters defined in the parameters block, and possibly even sample from these transforms. In our original heights example (no covariates) imagine that instead of setting priors on the standard deviation parameters - sigma - you wish to do so on the variance. However you also want to generate samples for sigma. One way to do this is to use the ``transformed parameters'' block,
 
 \begin{minted}{stan}
 data {
@@ -7461,7 +7478,7 @@ model {
     sigmaSq ~ gamma(5,1); // prior for variance
 }
 \end{minted}
-where we have now declared a parameter ``sigmaSq'' in the \mintinline{stan}{parameters} block that represents the variance of the sampling distribution; ``sigma'' its standard deviation is now declared in the \mintinline{stan}{transformed parameters} block. Notice that we have set priors on ``sigmaSq'' in this programme. Our results now,
+where we have now declared a parameter ``sigmaSq'' in the \mintinline{stan}{parameters} block that represents the variance of the sampling distribution; ``sigma'' its standard deviation is now declared in the \mintinline{stan}{transformed parameters} block. Notice that we have set priors on ``sigmaSq'' in this program. Our results now,
 
 \begin{knitrout}\small
 		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -7482,7 +7499,7 @@ where we have now declared a parameter ``sigmaSq'' in the \mintinline{stan}{para
 now contain posterior summaries for both of these parameters.
 
 \subsubsection{transformed data}
-The final code block is known as \mintinline{stan}{transformed data}, and as its name suggests can be used to make transformations to the data you pass to Stan. These transformations are carried out once at the beginning of the programme, so it usually does not significantly affect the efficiency of execution (see section \ref{sec:StanJags_efficiency}.) As a trivial example imagine that instead of fitting a model to the heights data itself, we wanted to make one to explain the squared deviation from the sample mean. One way to do this is to carry out the data transformation in Stan,
+The final code block is known as \mintinline{stan}{transformed data}, and as its name suggests can be used to make transformations to the data you pass to Stan. These transformations are carried out once at the beginning of the program, so it usually does not significantly affect the efficiency of execution (see section \ref{sec:StanJags_efficiency}.) As a silly example imagine that instead of fitting a model to the heights data itself, we wanted to make one to explain the squared deviation from the sample mean. One way to do this is to carry out the data transformation in Stan,
 
 \begin{minted}{stan}
 transformed data{
@@ -7496,7 +7513,7 @@ transformed data{
 Whilst data transforms can of course be carried out outside of Stan, sometimes it is convenient and neater to do these operations within the Stan script.
 
 \subsection{Efficiency and memory considerations for each block}\label{sec:StanJags_efficiency}
-When writing a Stan programme, like any other software, it is important to know where bottlenecks to efficiency are likely to occur. Further -- particularly if you are running Stan on a laptop -- it may also pay to be aware of the memory footprint of different parts of code. In this section we briefly discuss each of these issues.
+When writing a Stan program, like any other software, it is important to know where bottlenecks to efficiency are likely to occur. Further -- particularly if you are running Stan on a laptop -- it may also pay to be aware of the memory footprint of different parts of code. In this section we briefly discuss each of these issues.
 
 Different code blocks in Stan are executed a heterogeneous number of times in a typical Stan run,
 
@@ -7504,27 +7521,27 @@ Different code blocks in Stan are executed a heterogeneous number of times in a 
 \item \mintinline{stan}{data} - once at the beginning.
 \item \mintinline{stan}{parameters} - each time the log probability is evaluated.
 \item \mintinline{stan}{model} - each time the log probability is evaluated.
-\item \mintinline{stan}{generated parameters} - once per sample.
+\item \mintinline{stan}{generated quantities} - once per sample.
 \item \mintinline{stan}{transformed data} - once after the \mintinline{stan}{data} block is executed.
 \item \mintinline{stan}{transformed parameters} - each time the log probability is evaluated.
 \end{itemize} 
 
 We have left out the \mintinline{stan}{functions} block out of the above since the frequency it is called depends on its use. 
 
-From the above we see that there is considerable heterogeneity in the importance of each block for ensuring efficient MCMC. The log probability is evaluated each time the HMC/NUTS takes a step (multiple times per sample) and so are the biggest bottlenecks for efficiency. Typically the \mintinline{stan}{model} block is the biggest drain on CPU time, and so it pays to try to optimise the running of this section.
+From the above we see that there is considerable heterogeneity in the importance of each block for ensuring efficient MCMC. The log probability is evaluated each time the HMC/NUTS takes a step (multiple times per sample) and so are the biggest bottlenecks for efficiency. Typically the \mintinline{stan}{model} block is the biggest drain on CPU time, and so it pays to optimise it.
 
-Whichever parameters you declare in either the \mintinline{stan}{parameters} or \mintinline{stan}{transformed parameters} blocks will be represented by one sample in each iteration. This can cause problems for memory, particularly if you use a large number of MCMC iterations and/or the parameters are multi-element objects like vectors, matrices or arrays. Similarly we have experienced memory issues arising from the \mintinline{stan}{transformed parameters} block when undertaking posterior predictive checks when the data itself is highly-dimensional (if you generate simulated data you will get one replicate per sample!) In these circumstances it can pay to define variables locally in blocks of $\{\}$ parentheses which ensures that you will not obtain samples for these. 
+Whichever parameters you declare in either the parameters or transformed parameters blocks will have samples stored for each iteration. This can cause problems for memory, particularly if you use a large number of MCMC iterations and/or the parameters are multi-element objects like vectors, matrices or arrays. Similarly we have experienced memory issues arising from the generated quantities block when doing posterior predictive checks with highly-dimensional data (if you generate simulated data you will get one replicate per sample!) In these circumstances it can pay to define variables locally in blocks of $\{\}$ parentheses which ensures that you will not obtain samples for these. 
 
 As an example, consider our posterior predictive check of the original model where we compare the extremes of the simulated data with the actual maximum and minimum. We originally did this using,
 
 \begin{minted}{stan}
 generated quantities{
-    vector[10] lSimData;
+    vector[N] lSimData;
     int aMax_indicator;
     int aMin_indicator;
       
     // generate posterior predictive samples
-    for(i in 1:10){
+    for(i in 1:N){
       lSimData[i] = normal_rng(mu,sigma);
     }
      
@@ -7534,7 +7551,7 @@ generated quantities{
 }
 \end{minted}
 
-which kept the values of 10-element simulated data for each MCMC sample. Whilst this might not be onerous for data for 10 individuals' heights, it will be if we have data for 1000 people. An alternative way is to declare the vector that will hold the data in curly parentheses (indicating a local block):
+which kept the values of 10-element simulated data for each MCMC sample. Whilst this might not be onerous for data for N=10, it will be if we have data for N=1000 people. An alternative way is to declare the vector that will hold the data in curly parentheses (indicating a local block):
 
 \begin{minted}{stan}
 generated quantities{
@@ -7543,8 +7560,8 @@ generated quantities{
       
     // in local block generate 
     // posterior predictive samples
-    { vector[10] lSimData;
-      for(i in 1:10){
+    { vector[N] lSimData;
+      for(i in 1:N){
         lSimData[i] = normal_rng(mu,sigma);
       }
       // compare with real data 
@@ -7575,7 +7592,7 @@ The output now should not contain the simulated data itself but will have the tw
 
 
 \subsection{Loops and conditional statements}
-Stan has the typical array of loops and conditional statements that most mathematical programming languages possess. This allows a large variety of models to be coded up in Stan. Here we illustrate two looping constructs that Stan allows: \mintinline{stan}{for} and \mintinline{stan}{while} loops.
+Stan has the loops and conditional statements that most mathematical programming languages possess. This allows a large variety of models to be coded up in Stan. Here we illustrate two looping constructs that Stan allows: \mintinline{stan}{for} and \mintinline{stan}{while} loops.
 
 For loops just iterate through the elements as suggested in its argument,
 
@@ -7592,21 +7609,21 @@ while(i < 10){
     i = i + 1;
 }
 \end{minted} 
-will execute once where at the start of the loop $i = 1,...,9$. The condition will fail to be met however when $i=10$, and the loop will terminate.
+will execute where $i = 1,...,9$ at the start of the loop. The condition will fail to be met however when $i=10$, and the loop will terminate.
 
 Stan also allows conditional behaviour via \mintinline{stan}{if} and \mintinline{stan}{else} statements,
 \begin{minted}{stan}
 if(i < 2){
     do something;
-} else if(i == 3){
-    do something else;
-} else{
+} else if(i == 2){
     do another thing;
+} else{
+    do that thing;
 }
 \end{minted}
 
 \subsection{Essential Stan reading}
-The idea behind this section is to introduce the reader to a wide, and somewhat unconnected, range of tricks that we have found very useful in writing Stan programs. Even if you don't have an immediate use for these ideas then we believe that nonetheless it helps to be aware of them.
+This section introduces the reader to a wide, and somewhat unconnected, range of tricks that we have found very useful in writing Stan programs. Even if you don't find immediate use for these ideas we believe that it nonetheless helps to be aware of them.
 
 \subsubsection{Accessing elements using indices}
 Often we need to access elements of a given data or parameter object. For a vector or array this is straightforward using the square brackets notation in Stan, for example.
@@ -7665,7 +7682,7 @@ S <- c(3,4,2)
 index <- c(1,4,8)
 \end{minted}
 
-Next we create a Stan programme that analyses each of the studies separately - allowing individual-study estimates of the mean and standard deviation,
+Next we create a Stan program that analyses each of the studies separately - allowing individual-study estimates of the mean and standard deviation,
 
 \begin{minted}{stan}
 data {
@@ -7725,7 +7742,7 @@ fit <- stan('multipleStudies.stan',
 Hopefully this should sort the problem. See section \ref{sec:StanJags_divergentSolution} for further explanation of why this works.
 
 \subsubsection{Using Stan to generate independent samples}\label{sec:StanJags_independent}
-Sometimes it's useful to use Stan as a tool to generate independent samples from a distribution of interest. This may be useful in of itself, or can be because you wish to know how a given Stan distribution behaves. Suppose that we want to know what independent samples from the Stan \mintinline{stan}{neg_binomial_2} distribution look like. To do this we leverage the power of the \mintinline{stan}{generated quantities} block, and create a bare bones Stan program of the form,
+Sometimes it's helpful to use Stan as a tool to generate independent samples from a distribution of interest. This may be useful in of itself, or can be because we wish to know how a given Stan distribution behaves. Suppose that we want to know what independent samples from the Stan \mintinline{stan}{neg_binomial_2} distribution look like. To do this we leverage the power of the \mintinline{stan}{generated quantities} block, and create a bare bones Stan program of the form,
 
 \begin{minted}{stan}
 data{
@@ -7759,10 +7776,10 @@ where we have generated independent samples from this distribution with a mean o
 
 
 {\ttfamily\noindent\itshape\color{messagecolor}{\#\# `stat\_bin()` using `bins = 30`. Pick better value with `binwidth`.}}\end{kframe}
-\includegraphics[width=\linewidth]{StanCode/figure/normalCovariate-1} 
+\includegraphics[width=0.6\linewidth]{StanCode/figure/normalCovariate-1} 
 	\end{knitrout}
 
-\subsubsection{Translate and compile a model for use later on}
+\subsubsection{Translate and compile a model for later use}
 It would be good to avoid having to re-compile models each time you want to re-use them. Fortunately Stan has a number of ways of doing just this. The simplest is to use the option,
 
 \begin{minted}{R}
@@ -7821,7 +7838,7 @@ model {
 }
 \end{minted}
 
-where we have assigned a $\mu \sim N(0,2)$ prior. You'll notice in the above that we've suffixed our custom log pdf definion with ``\_lpdf''. This tells Stan to regard this function as a typical log pdf which we can use along with a `$\sim$' statement,
+where we have specified a $\mu \sim N(0,2)$ prior. You'll notice in the above that we've suffixed our custom log pdf definion with ``\_lpdf''. This tells Stan to regard this function as a typical log pdf which we can use along with a `$\sim$' statement resulting in the following,
 
 
 \begin{knitrout}\small
@@ -7830,6 +7847,7 @@ where we have assigned a $\mu \sim N(0,2)$ prior. You'll notice in the above tha
 \hlstd{N} \hlkwb{<-} \hlnum{4}
 \hlstd{X} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1.5}\hlstd{,}\hlnum{2.2}\hlstd{,}\hlnum{0.1}\hlstd{,}\hlopt{-}\hlnum{0.4}\hlstd{)}
 \hlstd{fit} \hlkwb{<-} \hlkwd{stan}\hlstd{(}\hlstr{'StanJags_customPDF.stan'}\hlstd{,}\hlkwc{iter}\hlstd{=}\hlnum{200}\hlstd{,}\hlkwc{chains}\hlstd{=}\hlnum{4}\hlstd{,}\hlkwc{data}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N}\hlstd{=N,}\hlkwc{X}\hlstd{=X))}
+\hlkwd{print}\hlstd{(fit,}\hlkwc{probs} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{0.25}\hlstd{,} \hlnum{0.5}\hlstd{,} \hlnum{0.75}\hlstd{))}
 			\end{alltt}
 			\begin{verbatim}
 ##       mean se_mean   sd   25%   50%   75% n_eff Rhat
@@ -7847,14 +7865,14 @@ real normalCustom_lpdf(real aX,real aMu,real aSigma)
 
 would implement a log pdf function that we call using,
 \begin{minted}{stan}
-Y ~ normalCustom(mu,theta);
+X ~ normalCustom(mu,theta);
 \end{minted}
 or alternatively using,
 \begin{minted}{stan}
-target += normalCustom_lpdf(Y|theta,phi);
+target += normalCustom_lpdf(X|theta,phi);
 \end{minted}
 
-Let's prove it works for a distribution that exists in R and Stan -- the normal. The Stan model can be written as,
+Let's prove this works for a distribution that exists in R and Stan -- the normal. The Stan model can be written as,
 
 \begin{minted}{stan}
 functions{
@@ -7901,10 +7919,12 @@ where we have assigned normal and log-normal priors on mu and sigma respectively
 		\end{kframe}
 	\end{knitrout}
 
+which works pretty well here since mu and sigma are close to their actual values.
+
 So the moral here is that -- so long as you can write a function in Stan that returns the log pdf of a distribution -- you can use Stan to sample from it!
 
 \subsubsection{Calculating WAIC, LOO-CV and other measures}\label{sec:StanJags_WAICLOO}
-Often we want to evaluate the predictive performance of a model to compare it with others, in order to choose between competing hypotheses. In chapter \ref{chap:ModelFit} we discussed various alternative metrics and advocated, where possible, that researchers should repeatedly partition their data into training and test sets (i.e. use cross-validation). The training sets are used to fit the model, and the test are used to estimate the out-of-sample predictive capability of the model. However there are circumstances where repeated partitioning is not feasible due to the computational cost of estimating a model. However in these cases we can use WAIC and estimates of LOO-CV to estimate the out-of-sample predictive capability of a model. In this section we show how to estimate a model's predictive capability using cross-validation, WAIC and LOO-CV. In order to do so we consider an example. Suppose that we generate some fake data from a Student t distribution (see section \ref{sec:Distributions_tDist}),
+Often we want to estimate the predictive performance of a model to compare it with others, in order to choose between competing hypotheses. In chapter \ref{chap:ModelFit} we discussed various alternative metrics and advocated, where possible, that researchers should repeatedly partition their data into training and test sets (i.e. use cross-validation). The training sets are used to fit the model, and the test sets are used to estimate the out-of-sample predictive capability of the model. However there are circumstances where repeated partitioning is not feasible due to the computational cost of estimating a model. However in these cases we can use WAIC and estimates of LOO-CV to estimate the out-of-sample predictive capability of a model. In this section we show how to estimate a model's predictive capability using cross-validation, WAIC and LOO-CV. In order to do so we consider an example. Suppose that we generate some fake data from a Student t distribution (see section \ref{sec:Distributions_tDist}),
 
 \begin{minted}{R}
 N <- 10000
@@ -7912,7 +7932,7 @@ N <- 10000
 X <- rt(N,5)
 \end{minted}
 
-We then fit two models to the data -- one is a normal sampling distribution and the other assumes a Student t sampling distribution. Whilst here we know the Student t distribution should perform better since we used it to generate our data, we use this toy problem to illustrate how cross-validation, WAIC and LOO-CV can be calculated.
+We then fit two models to the data -- one is a normal sampling distribution and the other assumes a Student t sampling distribution. Here we know the Student t distribution should perform better since we used it to generate our data, and hence we use this toy problem to illustrate how cross-validation, WAIC and LOO-CV can be calculated.
 
 \paragraph{WAIC and LOO-CV.}
 We start by considering WAIC and LOO-CV since these are more easily handled than explicit cross-validation. These methods require that we calculate the log-likelihood for all data points across all posterior samples (see chapter \ref{chap:ModelFit}.) This is quite straightforward to handle using the generated quantities block. We illustrate this for the normal model first,
@@ -7925,7 +7945,7 @@ generated quantities{
   }
 }
 \end{minted}
-where $N$ is the number of elements in our $X$ data vector. In the above we iterate across all elements in our data and record the log-likelihood for these. Furthermore this loop is undertaken for each posterior sample of (mu,sigma) and hence we get out a matrix of log-likelihoods.
+In the above we iterate across all N elements in our data and record the log-likelihood for these. Furthermore this loop is undertaken for each posterior sample of (mu,sigma) and hence a matrix of log-likelihoods is obtained overall.
 
 The Student t model is similar although we have an extra nu parameter in its log pdf,
 
@@ -7938,7 +7958,7 @@ generated quantities{
 }
 \end{minted}
 
-We set the following priors for both models, $mu\sim N(0,1)$, $sigma\sim lognormal(0,1)$, and $nu\sim lognormal(0,1)$ for the Student t model. 
+We set the following priors for both models, $mu\sim N(0,1)$, $sigma\sim \text{lognormal}(0,1)$, and $nu\sim \text{lognormal}(0,1)$ for the Student t model. 
 
 To calculate WAIC we use the excellent ``loo'' package \cite{vehtari2015efficient}. Since we have saved the log-likelihood for each model this is actually quite easy to do,
 
@@ -7973,7 +7993,7 @@ To calculate WAIC we use the excellent ``loo'' package \cite{vehtari2015efficien
 		\end{kframe}
 	\end{knitrout}
 
-and we see that the Student t model has a higher estimated expected log pointwise predictive density (-16,467.8, which $\times -2$ corresponds to a lower WAIC.) However to determine whether this difference represents anything other than sampling error we compare these two models in the correct -- pairwise -- way using,
+and we see that the Student t model has a higher estimated expected log pointwise predictive density (elpd=-16,467.8, which $\times -2$ corresponds to a lower WAIC.) However to determine whether this difference represents anything other than sampling error we compare these two models in the correct -- pairwise -- way using,
 
 \begin{knitrout}\small
 		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -7993,7 +8013,7 @@ from the same package and we see that the difference in elpd is much greater tha
 Pr(z\geq \frac{534.9}{76.8}) \approx 10^{-12}
 \end{equation}
 
-Whilst we aren't in general fond of classical hypothesis tests this is the current state of the art here. In this case it indicates that there is basically zero probability of this difference occurring if both models actually performed the same, in general. 
+Whilst we aren't in general fond of classical hypothesis tests this is the current state of the art here. In this case it indicates that there is basically zero probability of this difference occurring if both models actually performed the same. 
 
 The same package allows us to estimate elpd via LOO-CV without doing explicit cross-validation. This proceeds as before except we substitute $\text{loo}\rightarrow\text{waic}$,
 
@@ -8038,16 +8058,16 @@ The same package allows us to estimate elpd via LOO-CV without doing explicit cr
 		\end{kframe}
 	\end{knitrout}
 
-with a p value of the same magnitude as before when using the standard normal in a hypothesis test as above.
+which produces the same estimates of elpd as for the WAIC, in this case.
 
-In both cases we find that the difference between the estimated expected log pointwise predictive density is greater for the Student t model than for the normal, as expected. In general we prefer to use the LOO-CV measure, if possible since it represents a better approximation to the out-of-sample error. However it is important to note that it's not uncommon to get warnings about either the ``p\_waic exceeding ...'' or ``Pareto k estimates exceeding...''. Whilst we refer the interested reader to the details of the loo paper itself \cite{vehtari2015efficient} we mention here that it is important to take heed of these warnings! These warnings typically indicate that one or more of the approximations used to estimate these criteria are likely violated, and hence inferences about model performance cannot be trusted. In these cases it may be better to use explicit cross-validation, to which we turn our attentions now.
+In both cases we find that the estimated expected log pointwise predictive density is greater for the Student t model than for the normal, as expected. In general we prefer to use the LOO-CV measure if possible since it represents a better approximation to the out-of-sample error. However it is important to note that it's not uncommon to get warnings about either the ``p\_waic exceeding ...'' or ``Pareto k estimates exceeding...''. Whilst we refer the interested reader to the details of the loo paper itself \cite{vehtari2015efficient} we mention here that it is important to take heed of these warnings! These warnings typically indicate that one or more of the approximations used to estimate these criteria are likely violated, and hence inferences about model performance cannot be trusted. In these cases it may be better to use explicit cross-validation, to which we turn our attentions now.
 
 \paragraph{Explicit cross-validation.} 
-We recommend that where possible the reader use explicit cross-validation to estimate a model's out-of-sample predictive performance. The reason for this recommendation is twofold: first the aforementioned WAIC and LOO-CV methods can fail to produce reasonable estimates of out-of-sample predictive error if one/more of a number of conditions aren't met; second it is always best to use a measure of out-of-sample predictive performance using a test set that mimic's the model's eventual use. 
+We recommend that where possible the reader use explicit cross-validation to estimate a model's out-of-sample predictive performance. The reason for this recommendation is twofold: first the aforementioned WAIC and LOO-CV methods can fail to produce reasonable estimates of out-of-sample predictive error if one/more of a number of conditions aren't met; second because explicit cross-validation allows us to manually select a test set that may better mimic the model's eventual use.
 
-Using an poorly-chosen partitioning can lead to very inadequate measures of a model's performance, and so we recommend thinking carefully here. If the model will be used to estimate batches of new data, then perhaps a k-fold cross-validation scheme is best. Alternatively if the model will be re-estimated for each new data point, then perhaps a leave-one-out cross-validation scheme is best.
+Using an poorly-chosen partitioning can lead to very inadequate measures of a model's performance, and so we recommend thinking carefully here. If the model will be used to estimate batches of new data, then perhaps a K-Fold cross-validation scheme is best. Alternatively if the model will be re-estimated for each new data point, then perhaps a leave-one-out cross-validation scheme is best. (Time series and hierarchically-structured data can be a bit tricky here.)
 
-Lacking any preference for an explicit cross-validation scheme we suggest using k-fold cross-validation, since it is less computationally onerous than leave-one-out cross-validation. In k-fold cross-validation the data is repeatedly partitioned into training and test sets. The process continues until each data point has been included once (and once only) in a test set.
+Lacking any preference for an explicit cross-validation scheme we suggest using K-Fold cross-validation, since it is less computationally onerous than leave-one-out cross-validation. In K-Fold cross-validation the data is repeatedly partitioned into training and test sets. The process continues until each data point has been included once (and once only) in a test set.
 
 We continue the previous example but now show how to estimate model performance on a test set for the normal model, 
 
@@ -8079,7 +8099,7 @@ generated quantities{
 }
 \end{minted}
 
-where we fit the model on the training set and calculate the log probability on the test set. To do K-Fold cross-validation we use the brilliant Caret R package (which is our favourite for machine learning) to generate equally-sized randomised test sets, where each data point features once and once only in each test set \cite{caret2012},
+where we fit the model on the training set ``XTrain'' and calculate the log probability on the test set ``XTest''. To do K-Fold cross-validation we use the brilliant Caret R package (which is our favourite library for machine learning) to generate equally-sized randomised test sets, where each data point features once and once only in each test set \cite{caret2012},
 
 \begin{minted}{R}
 library(caret)
@@ -8149,7 +8169,7 @@ which we then use to compare the normal and Student t models,
 	\end{knitrout}
 
 
-noting that again the Student t distribution performs worse than the normal (above we calculate the standard deviation on the difference in log pointwise predictive density, to calculate a z score.) We also note the similarity in estimates compared with the more approximate WAIC and LOO-CV methods described above.
+noting that again the Student t distribution performs worse than the normal (above we calculate the standard deviation on the difference in log pointwise predictive density, to calculate a z score.) We also note the similarity in estimates compared with the more approximate WAIC and LOO-CV methods described above, which is reassuring.
 
 \subsubsection{Jacobians: when do we need these?}
 Suppose we have a uniformly distributed variable, $\theta$ and draw samples for it,
@@ -8177,7 +8197,7 @@ then we square the samples. What does the distribution of $\theta^2$ look like?
 \includegraphics[width=0.6\linewidth]{StanCode/figure/jacobians1-1} 
 \end{knitrout}
 
-which is definitely \textit{not} uniform! Whenever we apply a non-linear transform a variables its probability distribution is stretched in some areas, and squashed in others. The correct way to mathematically calculate this stretching is known as the \textbf{Jacobian} transform. 
+which is definitely \textit{not} uniform! Whenever we apply a non-linear transform to a variable its probability distribution is stretched in some areas, and squashed in others. The correct way to mathematically calculate this stretching is known as the \textbf{Jacobian} transform. 
 
 In Stan we are required to manually specify this Jacobian if we ever sample from a transformed parameter. As an example \cite{carpenter2016stan}\footnote{Inspired by Bob Carpenter's example here: \url{http://mc-stan.org/documentation/case-studies/mle-params.html.}} imagine we have some binary data $X=(0,0,1,0)$ that represents the outcomes of some sort of test -- where individual data points can either be a success (1) or failure (0). We model each outcome as a bernoulli distribution (see \ref{sec:Distributions_bernoulli}) and choose to use the following Stan model,
 
@@ -8242,7 +8262,7 @@ which indicates that we are sampling from a transformation of the alpha paramete
 
 So here we have a posterior mean of theta -- the probability of success -- being 0.25. However we know that since the uniform prior is actually a beta(1,1) distribution, that the posterior is a beta(1+1,1+4-1)=beta(2,4) distribution (see chapter \ref{chap:conjugate}.) This has a mean of $\bar{\theta} =\frac{2}{2+4} \approx 0.33$, which is not what we obtained! 
 
-The reason we obtained this bias was because we failed to account for our change of variables. In particular, since we set a prior on a transformation of alpha we get a bias in our posterior samples. So how do we correct this? We first have to calculate the Jacobian. For $\alpha=\text{logit}(\theta)$ we have that,
+The reason we obtained this bias was because we failed to account for our change of variables. In particular, since we set a prior on a transformation of alpha we get a bias in our posterior samples. So how do we correct this? We first have to calculate the Jacobian. For $\alpha=\text{logit}(\theta)$ we find that the density satisfies,
 
 \begin{equation}
 p(\alpha) = p(\theta) | \frac{\mathrm{d}}{\mathrm{d}\alpha} \text{logit}^{-1}(\alpha)| 
@@ -8256,7 +8276,7 @@ where the second term on the right hand side is the Jacobian. The inverse logit 
 &= \theta \times (1-\theta)
 \end{align}
 
-Which we log then use to increment the log probability in a line in our model block,
+which we log then use to increment the log probability in a line in our model block,
 
 \begin{minted}{stan}
 model { 
@@ -8268,7 +8288,7 @@ model {
 } 
 \end{minted}
 
-which when we run the new Stan programme and look at the posterior summaries gives,
+which when we run the new Stan program and look at the posterior summaries gives,
 
 \begin{knitrout}\small
 		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -8318,7 +8338,7 @@ model {
 } 
 \end{minted}
 
-there is no need for a Jacobian term because we have defined theta as a parameter (which we sample from) and alpha the transformed. So here we get the correct posterior summaries,
+there is no need for a Jacobian term because we have defined theta as a parameter (which we sample from) and alpha as the transformed. So here we get the correct posterior summaries,
 
 \begin{knitrout}\small
 		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -8351,7 +8371,7 @@ However we must do so on the log probability scale because this is what Stan use
 &= \text{log}\_\text{sum}\_\text{exp}_{i=1}^{K}(\text{log}\; p(\beta,\theta_i))
 \end{align}
 
-where we have got to the second line from the first by using $exp(log(x)) = x$. To reiterate we need the second line because Stan uses $log \;p$ not $p$ itself. The last line uses the definition of a function of a function available in Stan,
+where we have got to the second line from the first by using $exp(log(x)) = x$. To reiterate we need the second line because Stan uses $log \;p$ not $p$ itself. The last line uses the definition of a function available in Stan,
 
 \begin{equation}
 \text{log}\_\text{sum}\_\text{exp}_{i=1}^{K} \alpha  = \text{log} \sum_{i=1}^{K} exp\left( \alpha \right)
@@ -8389,7 +8409,7 @@ where $theta[s]$ is the probability of heads for coin type $s\in[1,2]$, and $\te
 log(0.5) + binomial_lpmf(X|N,theta[s]);
 \end{minted}
 
-where \mintinline{stan}{binomial_lpmf} is the log probability mass for a binomial distribution. In our Stan programme we store the log probability for each coin type $s$ in a vector for each experiment. This amounts to storing all the results in a 20$\times$2 matrix, $lp$, where a single row corresponds to an individual experiment,
+where \mintinline{stan}{binomial_lpmf} is the log probability mass for a binomial distribution. In our Stan program we store the log probability for each coin type $s$ in a vector for each experiment. This amounts to storing all the results in a 20$\times$2 matrix, $lp$, where a single row corresponds to an individual experiment,
 
 \begin{minted}{stan}
 transformed parameters{
@@ -8404,7 +8424,7 @@ transformed parameters{
 }
 \end{minted}
 
-where we have marginalised out the discrete coin type $s$ by summing over it. We actually find it easier to make use of Stan's logit formulation of the binomial, where we pass an unconstrained \mintinline{stan}{real} parameter to the distribution. Writing the entire programme now,
+where we have marginalised out the discrete coin type $s$ by summing over it. We actually find it easier to make use of Stan's logit formulation of the binomial, where we pass an unconstrained \mintinline{stan}{real} parameter to the distribution. Writing the entire program now,
 
 \begin{minted}{stan}
 data { 
@@ -8453,7 +8473,7 @@ where we have used the Stan type \mintinline{stan}{ordered} to ensure that one o
 We use the \mintinline{stan}{generated quantities} block to estimate the probabilities of state $s=1$ in each different experiment by averaging over all $L$ posterior draws,
 
 \begin{equation}
-q(s=1|X) \approx \frac{1}{L} \sum_{i=1}^{L} q(s=1,alpha[s=1]|X)
+q(s=1|X) \approx \frac{1}{L} \sum_{i=1}^{L} q(s=1,\text{alpha}[s=1]|X)
 \end{equation}
 
 where $q(.)$ is the unnormalised posterior density. The averaging over all posterior draws is necessary to marginalize out the alpha parameter. To normalise the posterior density we therefore divide the above by the sum of the unnormalised probability across both states,
@@ -8538,7 +8558,7 @@ where we see the model has correctly inferred the probabilities of throwing head
 	\end{knitrout}
 
 \section{What to do when things go wrong}
-Rarely in life do things run entirely smoothly. This is particularly true with statistical modelling. However this is only part of the problem in statistics. The other part of the problem is recognising that something is actually wrong. In this section we describe how to see and interpret the ample warning signs that Stan provides us with. There are broadly two categories of errors: coding errors and sampling issues. Coding errors are, in general, easier to diagnose and typically can be resolved fairly quickly. Sampling issues can be a bit trickier since their resolution is typically quite problem specific. Although once you've got a few models under your belt you should start to be able to understand the source of these issues. At the heart of sampling/model issues is the principle of Gelman's Folk Theorem, ``A problem with MCMC is usually a problem with the model, not the sampling algorithm.'' If you remember this dictum you'll save time fiddling with MCMC parameters and find yourself spending more time thinking about what really matters -- the statistical model. We divide the following sections into coding errors and sampling issues because diagnosis and solution differs quite considerably between the two. 
+Rarely in life do things run entirely smoothly. This is particularly true with statistical modelling. However this is only part of the problem in statistics. The other part of the problem is recognising that something is actually wrong. In this section we describe how to see and interpret the ample warning signs that Stan provides us with. There are broadly two categories of errors: coding errors and sampling issues. Coding errors are, in general, easier to diagnose and typically can be resolved fairly quickly. Sampling issues can be a bit trickier since their resolution is typically quite problem specific. Although once you've got a few models under your belt you should start to understand the source of these issues. At the heart of sampling/model issues is the principle of Gelman's Folk Theorem, ``A problem with MCMC is usually a problem with the model, not the sampling algorithm.'' If you remember this dictum you'll save time fiddling with MCMC parameters and find yourself spending more time thinking about what really matters -- the statistical model. We divide the following sections into coding errors and sampling issues because diagnosis and solution differs quite considerably between the two. 
 
 In the last sections of this chapter we consider how to get further help should you need it. Fortunately Stan has excellent resources here, and we explain how to make best use of them.
 
@@ -8685,7 +8705,7 @@ and run the Stan model from R -- it compiles -- no errors here we think. However
 		\end{kframe}
 	\end{knitrout}
 
-so the first two means are well-replicated in our data but the latter one isn't. Why is this? It's because we failed to notice the $K-1$ in the for loop declaration -- tt should say, \mintinline{stan}{for(i in 1:K)}! We change this, rerun the model and print the results,
+so the first two means are well-replicated in our data but the latter one isn't. Why is this? It's because we failed to notice the $K-1$ in the for loop declaration -- it should say \mintinline{stan}{for(i in 1:K)}! We change this, rerun the model and print the results,
 
 \begin{knitrout}\small
 		\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -8718,8 +8738,8 @@ print(X);
 
 which prints the value of a given variable to the output. This tool can be particularly useful when you want to determine the value of an element of a vector that is assigned in some sort of loop.
 
-\subsection{Sampling errors}\label{sec:StanJags_samplingIssues}
-Another class of problems are not coding errors, and instead have to do with issues arising with the MCMC sampling. These problems are, in general, more tricky to resolve than the aforementioned examples. However we believe that if you understand the basis of the issues that we introduce in this section you will know how to go about diagnosing this type of problems, should they appear. An important idea to always consider is Gelman's ``Folk Theorem'' -- that issues with sampling are usually due to problems with the model, not the sampling algorithm. Further it is important to remember that any MCMC sampling algorithm, Stan or otherwise, is \textit{approximate} in nature. The quality of the approximation hinges crucially on our ability to recognise and deal with any issues that arise. Stan is very good at pointing out these issues but it is our responsibility to act on them. Ignore the warning signs at your own peril! 
+\subsection{Sampling issues}\label{sec:StanJags_samplingIssues}
+Another class of problems are not coding errors, and instead have to do with issues arising with the MCMC sampling. These problems are, in general, more tricky to resolve than the aforementioned examples. However we believe that if you understand the basis of the issues we introduce in this section you will know how to go about diagnosing this type of problem, should they appear. An important idea to always consider is Gelman's ``Folk Theorem'' -- that issues with sampling are usually due to problems with the model, not the sampling algorithm. Further it is important to remember that any MCMC sampling algorithm, Stan or otherwise, is \textit{approximate} in nature. The quality of the approximation hinges crucially on our ability to recognise and deal with any issues that arise. Stan is very good at pointing out these issues but it is our responsibility to act on them. Ignore the warning signs at your own peril! 
 
 \subsubsection{The real power of fake data}
 The following examples make clear the importance of fake data simulation for assessing a particular statistical model. In each of the cases we simulate data from a statistical process whose parameters we know for certain. In doing so we are able to test the limits of knowability using our models. If we didn't go through the exercise and instead began our analysis straight away on real data we wouldn't necessarily understand the reason for slow convergence, divergent iterations etc. Fake data simulation is thus a prerequisite for all data analyses. The exercise of generating fake data may seem annoying at times -- particularly for hierarchical models -- but there is \textit{always} a considerable improvement to your knowledge about the system at hand, if you do.
@@ -8729,7 +8749,7 @@ Fake data generation can also be useful before we receive data, for example when
 
 \subsubsection{Slow convergence indicated by $\hat{R} > 1.1$.} You may notice that one or more of your parameters has a value of $\hat{R}>1.1$. This is \textit{always} something to be concerned about. It means that there is some area of parameter space that has not been adequately explored. Further you cannot assume that since all of your ``important'' parameters have $\hat{R} < 1.1$ that you can forget about the few that are yet to converge. Parameters depend on one another and so it is entirely possible that exploring a new area of parameter space for one ``unimportant'' parameter may lead to exploration of new areas for an ``important'' one. These ``epistatic'' interactions\footnote{This term is borrowed from genetics where it means that one gene's effect can depend on whether other genes are present.} mean that we cannot forget about a lack of convergence in nuisance parameters.
 
-So why are some models slow to converge? Generally it means that there is a lack of strong posterior curvature in some areas of parameter space meaning that the posterior has long thin tails. These long tails mean that MCMC samplers take much longer to explore parameter space, and as a result convergence is slow. The lack of curvature can also make it difficult to separate the effect of one parameter from another one, i.e. there is an identification issue. Unfortunately poor identification can be caused by a wide variety of reasons: inadequate data, uninformative priors and ill-conceived models are common causes. However common to all of these causes is idea that the data provides insufficient information to tease apart the effect of one parameter from another.
+So why are some models slow to converge? Generally it means that there is a lack of strong posterior curvature in some areas of parameter space meaning that the posterior has long thin tails. These extended tails mean that MCMC samplers take much longer to explore parameter space, and as a result convergence is slow. The lack of curvature can also make it difficult to separate the effect of one parameter from another one, i.e. there is an identification issue. Unfortunately poor identification can be caused by a wide variety of reasons: inadequate data, uninformative priors and ill-conceived models are common causes. However common to all of these causes is idea that the data provides insufficient information to tease apart the effect of one parameter from another.
 
 For example suppose we generate 10 data points from a Student t distribution with $\nu=3$, $\sigma=1$ and $\mu=2$,
 
@@ -8764,7 +8784,7 @@ where we have not specified priors on the three parameters, meaning that Stan wi
 		\end{kframe}
 	\end{knitrout}
 
-where we see that the values of $\hat{R}$ are a long way from 1! 
+we see that the values of $\hat{R}$ are a long way from 1! 
 
 So what's the problem? The issue here is that the current data does not provide enough information to estimate the parameters of the Student t distribution. So if we generate more data -- say 1,000 data points -- we then get much faster convergence,
 
@@ -8811,13 +8831,13 @@ Whilst these priors have quite a gentle curvature this is sufficient to identify
 		\end{kframe}
 	\end{knitrout}
 
-Increasing the number of MCMC samples will facilitate convergence to the posterior. However in many circumstances the rate of convergence is so low that we have to run our samplers for an inordinate amount of time to adequately explore posterior space. Furthermore we argue that this isn't really addressing the cause of the problem; your time would be better spent trying to diagnose the reasons behind slow convergence! Remember Gelman's ``Folk Theorem'' states that problems with MCMC sampling is usually due to problems with the underlying model, not the sampling algorithm. As a rule of thumb we recommend that if, after a few thousand iterations (obviously this depends a bit on model complexity) there is not convergence, then we think about making changes to our model. 
+Increasing the number of MCMC samples will facilitate convergence to the posterior. However in many circumstances the rate of convergence is so low that we have to run our samplers for an inordinate amount of time to adequately explore posterior space. Furthermore we argue that this isn't really addressing the cause of the problem; your time would be better spent trying to diagnose the reasons behind slow convergence! Remember Gelman's ``Folk Theorem'' states that problems with MCMC sampling is usually due to problems with the underlying model, not the sampling algorithm. As a rule of thumb we recommend that if, after a few thousand iterations (obviously this depends a bit on model complexity) there is not convergence, then we need to think about making changes to our model. 
 
 
 \subsubsection{Divergent iterations}\label{sec:StanJags_divergentSolution}
-Suppose that we work as economists for the government of a small country. Part of our job is to try to estimate the length of time that typical paper currency remains in domestic circulation before becoming lost, broken, or travelling abroad. Furthermore suppose that the governmental mint who print the note do not include the date of printing, making it hard to accurately estimate the age of a given note. However the mint can add a marking to the note that shows up under UV light. 
+Suppose that we work as economists for the government of a small country. Part of our job is to try to estimate the length of time that typical paper currency remains in domestic circulation before becoming lost, broken, or travelling abroad. Furthermore suppose that the governmental mint who print the notes do not include the date of printing on the currency, making it hard to accurately estimate the age of a given note. However the mint can add a marking to the note that shows up under UV light. 
 
-To estimate the lifespan of currency we decide to create an experiment where we release 3000 marked notes into circulation. Like many countries the central bank has a physical bank where individuals can go and exchange coins for notes (or vice versa) or alternatively exchange foreign currency for domestic. The workers in the bank have a UV machine that will allow them to determine whether a given note is marked. The idea behind our experiment is to monitor the returns of marked bank notes over time, as a way of determining their lifespan in circulation. If notes leave circulation quickly there will be a corresponding rapid decline in the numbers collected in the central bank. If notes last a long time, then there shouldn't be too much change in note circulation over time.
+To estimate the lifespan of currency we decide to create an experiment where we release 3000 marked notes into circulation. Like many countries the central bank has a physical bank where individuals can go and exchange coins for notes (or vice versa) or alternatively exchange foreign currency for domestic. The workers in the bank have a UV machine that will allow them to determine whether a given note is marked. The idea behind our experiment is to monitor the returns of marked bank notes over time, as a way of determining their lifespan in circulation. If notes leave circulation quickly there will be a corresponding rapid decline in the numbers of marked notes collected in the central bank. If notes last a long time, then there shouldn't be too much change in the numbers of notes collected over time.
 
 We choose to model the number of notes $Y_t$ collected in year $t$ as having a binomial sampling distribution, 
 
@@ -8875,9 +8895,9 @@ We run Stan (with 2000 iterations across 8 chains) using the fake data we genera
 		\end{kframe}
 	\end{knitrout}
 
-that indicates that the sampler experienced 203 divergent iterations (you may need to run the above Stan model a few times to generate a similar number of divergent iterations.) What does this mean, and is it something to worry about? 
+that indicates that the sampler experienced 203 divergent iterations (you may need to run the above Stan model a few times to generate a comparable number of divergent iterations.) What does this mean, and is it something to worry about? 
 
-Divergent iterations occur when the methods used to approximate the path of our fictitious particle in parameter space result in paths that are poor approximations to the exact solution. The NUTS sampler is able to determine if these divergences likely occur and terminates the simulation of the particle -- for this particular iteration of the sampler -- early. The number of divergent iterations that is reported is then the total number of these divergent iterations (after warmup) that occur. So what causes divergent iterations? The most usual cause is step sizes that are too large relative to the posterior curvature in certain areas of parameter space. Taking steps that are too big results in a crude approximation to the exact path of our particle and we get a divergence (see chapter \ref{chap:HMC}.)  
+Divergent iterations occur when the methods used to approximate the path of our fictitious particle in parameter space produce paths that are poor approximations to the exact solution. The NUTS sampler is able to determine if these divergences likely occur and terminates the simulation of the particle -- for this particular iteration of the sampler -- early. The number of divergent iterations reported is then the total number of these divergent iterations (after warmup) that occur. So what causes divergent iterations? The most usual cause is step sizes that are too large relative to the posterior curvature in certain areas of parameter space. Taking steps that are too big results in a crude approximation to the exact path of our particle and we get a divergence (see chapter \ref{chap:HMC}.)  
 
 Divergent iterations are definitely something to worry about. Since NUTS terminates early for these iterations this causes a bias away from this area of parameter space. This bias means that we do not explore posterior space fully and our posterior summaries will not faithfully reproduce the exact posterior. 
 
@@ -8894,7 +8914,7 @@ So looking at our banknote example why do we get divergences? The best way to di
 		\end{kframe}
 	\end{knitrout}
 
-on the plot any samples with divergent iterations are shown in red. From this we see that there are quite distinct regions where divergent iterations occur. For example, in the plots of mu against beta we see that many divergent iterations occur in the ``neck'' region of the posterior samples. This makes sense because in this region small changes in either parameter can strongly affect the behaviour of the model -- the posterior is highly curved in this region, and small step sizes are warranted. By contrast in the tails of this scatter plot large changes in either mu or beta (mu in bottom-right, and beta in top-left) change fairly little about the model's behaviour. The resultant posterior density here is more gently-curved and large step sizes make most sense. Therefore a step size that is globally optimal may fail to be appropriate in these two regions. In the tails the exploration of posterior space is inefficient, in the neck the step sizes are too low and we get divergent iterations.
+on the plot any samples with divergent iterations are shown in red. From this we see that there are quite distinct regions where divergent iterations occur. For example, in the plots of mu against beta we see that many divergent iterations occur in the ``neck'' region of the posterior samples. This makes sense because in this region small changes in either parameter can strongly affect the behaviour of the model -- the posterior is highly curved in this region, and small step sizes are warranted. By contrast in the tails of this scatter plot, large changes in either mu or beta (mu in bottom-right, and beta in top-left) change fairly little about the model's behaviour. The resultant posterior density here is more gently-curved and large step sizes make most sense. Therefore a step size that is globally optimal may fail to be appropriate in these two regions. In the tails the exploration of posterior space is inefficient, in the neck the step sizes are too large and we get divergent iterations.
 
 How can we deal with these divergent iterations? As a first step we can try decreasing the step size and increasing the target acceptance rate of NUTS. Both of these have the effect of tuning down the global step size of the sampler which should help to mitigate against divergent iterations. To do this we make the following call to Stan in R,
 
@@ -8906,22 +8926,22 @@ fit <- stan('aModel.stan',data=list(N=N,Y=X,
 
 and the resultant pairs plots should now be devoid of divergent iterations. 
 
-In more serious cases it may not be possible to entirely eliminate divergent iterations by modifying the target acceptance rate and step size of the sampler. As a rule of thumb we say that if changing a target acceptance rate to 0.99 does not remove divergent iterations then we need to think carefully about their cause. This is another example of Gelman's ``Folk Theorem'' in action. Often a reparameterised model may be available and avoid some of the identification issues that result in divergent iterations, or slow convergence (the two often go hand in hand.) In the above example we might choose to constrain beta=1 in our simulations if we believe that there isn't a strong effect of banknote age on whether a note leaves circulation. 
+In more serious cases it may not be possible to entirely eliminate divergent iterations by modifying the target acceptance rate and step size of the sampler. As a rule of thumb we say that if changing a target acceptance rate to 0.99 does not remove divergent iterations then we need to think carefully about their cause. This is another example of Gelman's ``Folk Theorem'' in action. Often a reparameterised model may be available and avoid some of the issues that result in divergent iterations, or slow convergence (the two often go hand in hand.) In the above example we might choose to constrain beta=1 in our simulations if we believe that there isn't a strong effect of banknote age on whether a note leaves circulation. 
 
 \subsubsection{Tree depth exceeding maximum}
 In some circumstances the posterior may be complex resulting in NUTS using small step sizes. These small step sizes can mean that it takes the sampler a long time to explore posterior space. The small step size can cause the NUTS sampler to hit the maximum tree depth with resultant inefficiencies in the sampler (see chapter \ref{chap:HMC}.) These inefficiencies in themselves aren't problematic for inferences, but they often go hand in hand with slow convergence or divergent iterations. As before we suggest attempting to get to the bottom of the problems rather than side-stepping them by changing NUTS parameters manually. 
 
-\section{How to get further help, if you need it}
-It has been a challenge to write this chapter to include enough common Stan issues without the book becoming a more boring version of War and Peace. Inevitably we have had to leave off cases in order to save space. However it was never a goal of ours to write a fully-comprehensive guide to Stan. There are a few reasons for this: 1. Bayesian inference problems are usually quite problem-specific meaning that there are as many issues as there are problems! 2. The existing documentation -- both the Stan website case studies and the Stan manual -- contain thorough examples, and 3. the Stan user forum is a great place to troubleshoot.
+\section{How to get further help}
+It has been a challenge to write this chapter to include enough commonly-encountered Stan issues without the book becoming a more boring version of War and Peace. Inevitably we have had to leave off cases in order to save space. However it was never a goal of ours to write a fully-comprehensive guide to Stan. There are a few reasons for this: 1. Bayesian inference problems are usually quite problem-specific meaning that there are as many issues as there are problems! 2. The existing documentation -- both the Stan website case studies and the Stan manual -- contain thorough examples, and 3. the Stan user forum is a great place to troubleshoot.
 
-If you experience a problem with your model (as inevitably you will), we encourage you to first attempt to find the cause of your issues using similar methods to those contained in this chapter. In particular we advocate attempting to reproduce the issue using the simplest version of your model possible. This is often best done with fake data so that you can see how characteristics of the data can affect your issue. Reproducing issues with simpler models is often very informative in itself, and you may know how to proceed without outside help. However there will be circumstances when you fail to understand the causes, or potential solutions to, a particular issue. Fortunately the Stan documentation is quite extensive; the manual, case studies and user forum are three essential resources here.
+If you experience a problem with your model (as inevitably you will), we encourage you to first attempt to find the cause of your issues using similar methods to those contained in this chapter. In particular we suggest attempting to reproduce the issue using the simplest version of your model possible. This is often best done with fake data so that you can see how characteristics of the data can affect your issue. Reproducing issues with simpler models is often very informative in itself, and you may know how to proceed without outside help. However there will be circumstances when you fail to understand the causes, or potential solutions to, a particular issue. Fortunately the Stan documentation is quite extensive; the manual, case studies and user forum are three essential resources here.
 
-There will be times however when, despite your best efforts, you are unable to solve a given issue. In these cases you can consider asking a question on the Stan user forum. However before you do so, it pays to create a bare-bones example model that reproduces the same issues. When you post be sure to include your code, and potentially data, and try to make your question as succinct and clear as possible. The development team at Stan are usually very good at responding although this depends on the day of the week etc.
+There will be times however when, despite your best efforts, you are unable to solve a given issue. In these cases you can consider asking a question on the Stan user forum. However before you do so, it pays to create a bare-bones example model that reproduces the same issues. When you post be sure to include your code, and potentially data, and try to make your question as succinct and clear as possible. The development team at Stan are usually very good at responding although this depends on the day of the week etc. and the quality of your question!
 
 \section{Chapter summary}
 In this chapter we have introduced Stan as a language for doing efficient MCMC. We believe that it is by far the best tool out there currently and hope that the examples contained within this chapter have convinced you of some of its benefits. 
 
-We have also covered some of the more common issues that users of Stan will encounter. These fell into two groups: coding errors and sampling issues. Coding errors are usually relatively simple to handle and can be diagnosed by intelligent use of print statements. Gelman's Folk Theorem states that sampling issues are almost invariably due to problems with the underlying statistical model, not the sampling algorithm. We cannot advocate this view strongly enough -- do not waste too much time fiddling with NUTS' sampling parameters. If you are having trouble with convergence or divergent iterations, then take a good hard look at your model, and consider using more informative priors, or reparameterising. Fortunately however Stan has considerable resources to consult if you do run into a problem you can't solve on your own. 
+We have also covered some of the more common issues that users of Stan will encounter. These fell into two groups: coding errors and sampling issues. Coding errors are usually relatively simple to handle and can be diagnosed by intelligent use of fake data and print statements. Gelman's Folk Theorem states that sampling issues are almost invariably due to problems with the underlying statistical model, not the sampling algorithm. We cannot advocate this view strongly enough -- do not waste too much time fiddling with NUTS' sampling parameters. If you are having trouble with convergence or divergent iterations, then take a good hard look at your model, and consider using more informative priors, or reparameterising. Fortunately however Stan has considerable resources to consult if you do run into a problem you can't solve on your own. 
 
 Now that we have introduced Stan we are in a good position to tackle hierarchical models. In the final part of the book we introduce this concept and show its usefulness in a wide range of real life settings.
 
