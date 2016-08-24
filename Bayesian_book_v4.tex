@@ -5648,7 +5648,7 @@ The reader should now be familiar with the following concepts:
 
 \part{A practical guide to doing real life Bayesian analysis: Computational Bayes}\label{part:computationalBayes}
 \section{Part mission statement}
-This Part aims to introduce the reader to Bayesian inference in practice. We start by introducing the most commonly-used algorithms that sit behind computational attempts to compute posterior distributions. Fortunately for us, for many purposes we do not need to rewrite these algorithms ourselves, since others have already produced software which implements them, and are well-tuned for Bayesian inference. In chapter \ref{chap:StanJAGS} we provide a thorough introduction to two of these languages: Stan and JAGS, providing a base which should allow the reader to write their own programs to suit the majority of circumstances.
+This Part aims to introduce the reader to Bayesian inference in practice. We start by introducing the most commonly-used algorithms that sit behind computational attempts to compute posterior distributions. Fortunately for us, for many purposes we do not need to rewrite these algorithms ourselves, since others have already produced software which implements them, and are well-tuned for Bayesian inference. In chapter \ref{chap:StanJAGS} we provide a thorough introduction to one of the most advanced of these languages: Stan, providing a base which should allow the reader to write their own programs to suit the majority of circumstances.
 
 \section{Part goals}
 We are now familiar with the range of distributions which we have at our disposal for both the likelihood and prior in the Bayesian formula. In chapter \ref{chap:conjugate} we illustrated how, in certain simplified circumstances, we can compute posteriors exactly, by choice of priors that are conjugate to the likelihood in question. Whilst this can be useful as a starting point to an analysis, we should not let an analysis be dictated solely by ease of calculation! In most real-world circumstances using conjugate priors is overly-restrictive. However, we shall see in chapter \ref{chap:MCMC} that choosing a non-conjugate prior poses difficulties in calculating the posterior, meaning that in most cases it is difficult, or impossible, to carry out this calculation. 
@@ -8956,11 +8956,28 @@ After reading this chapter the student should be familiar with the following con
 \end{enumerate}
 
 
-\part{Regression analysis and hierarchical models}\label{part:regressionHierarchical}
+\part{Hierarchical models and regression}\label{part:regressionHierarchical}
 \section{Part mission statement}
+This part introduces the student to hierarchical models. We shall see that hierarchical thinking can be applied to a range of different settings, including regression models, and often yields results that are preferable to more traditional modelling frameworks. Whilst we argue that hierarchical models actually simplify many analyses, it can be harder to efficiently sample from them. In this setting Stan's lightning-fast speed is a key weapon in the data scientist's toolbox, and we show in this section how to use this language to effectively sample from many different hierarchical models. Along the way we shall cover how best to specify, estimate and test linear and generalised linear regression models -- themselves ubiquitous tools in the social and physical sciences.
+
 \section{Part goals}
+In real life we are often required to analyse data that structured in some hierarchical way. For example, we might collect data on individual students' SAT scores. These individuals can be viewed as belonging to particular classes within particular schools within particular states. We expect that individuals in different classes may perform differently in the SATs due to differences in teaching and peers. Further we might believe that individuals in different schools also score differently in the SATs due to differences in school quality and the local neighbourhood. Finally individuals from separate states may experience different school curricula and live in varying geographies, both of which might affect how they fare on tests. Implicit to this example is the supposition that individuals within the same class are more similar than individuals in the same school (not in the same class), which in turn are more similar than two randomly-chosen individuals from the same state. Here we would like to estimate a model that accounts for the within-group similarity yet allows for a gradation of differences between groups in accordance with the hierarchical structure of the data. Hierarchical Bayesian models do just this. They bridge a gap between methods that estimate a separate model for each individual group and a ``lumped'' model where we allow for no inter-group differences. Furthermore where hierarchical models lie on this spectrum is not specified by the analyst -- the data determines it!
+
+By making more sensible assumptions about the data generating process hierarchical models produce more reliable estimates that are less susceptible to outliers. Whilst hierarchical models may appear at first to be more complex than non-hierarchical equivalents, they are actually in a way, simpler. Since the parameters across different groups are related to one another in hierarchical models their effective model complexity is less than for completely heterogeneous models that estimate separate models for each group. As a consequence hierarchical models produce the best forecasts -- an example use is Nate Silver's correct prediction of the 2008 election results.
+
+Hierarchical models simplify the process of specifying a reasonable model yet do pose some difficulties to estimation. These models are typically too complex to do exact inference, and so are best handled by MCMC. However it is in general easier to specify an unidentified model in hierarchical settings. These model pathologies manifest through Gelman's ``Folk Theorem'' to have a range of effects on resultant attempts to sample using MCMC. In this setting we need to use all the good practices we learned in chapter \ref{chap:StanJAGS} -- fake data simulation in particular being essential. 
+
+A particularly-important use of hierarchical models is in regression, where the data can often be structured in nature. Fortunately in the Bayesian paradigm there isn't really any difference between regression and many other types of model that we've already covered. However there are some techniques and ideas that are worth discussing, and so we devote the latter two chapters of this part to this purpose -- chapter \ref{chap:linearRegression} to linear regression and chapter \ref{chap:GLM} to generalised linear models.
 
 \chapter{Hierarchical models}\label{chap:hierarchicalModels}
+\section{Chapter mission statement}
+This chapter introduces the concept of hierarchical models, and describes the benefits of this framework over more traditional, non-hierarchical models. We also explain how best to specify and estimate these types of models.
+
+\section{Chapter goals}
+Suppose we want to bring together the results of all previously-published studies that estimated the decrement to life expectancy for an individual who smokes for one year during their teens. Whilst we may believe that each of the studies follows good experimental and statistical protocol, there are differences between the studies. For example, suppose the research in each study was carried out by unique teams, and further that the clinical methodology varies across studies. On the one hand we could just take the raw data from each study, and apply a common statistical procedure to each separately to arrive at individual estimates of the effect of smoking. We then could use graphs to illustrate any consensus across all the heterogeneous estimates.
+
+In this chapter we apply Stan to these types of problems, since we believe that the benefits and consequences of using a hierarchical model are best exemplified through examples. 
+
 \section{The spectrum from pooled to heterogeneous}
 \subsection{The logic and benefits of partial pooling}
 \subsection{Shrinkage towards the mean}
@@ -8974,13 +8991,13 @@ Increases robustness naturally, and prevents overfitting.
 \subsubsection{Non-centred parameterisations}
 
 
-\chapter{Linear regression models}
+\chapter{Linear regression models}\label{chap:linearRegression}
 Include Gelman recommendations here about standardising your data beforehand: \url{https://groups.google.com/forum/?fromgroups=#!topic/stan-users/RMgEEFwCsQk}
 
 \section{Choosing covariates: model averaging}\label{sec:Regression_modelAveraging}
 Include model averaging for 
 
-\chapter{Generalised linear models}
+\chapter{Generalised linear models}\label{chap:GLM}
 \section{Malarial example of complex meta-analysis}
 \section{Practical computational inference}
 \subsection{The importance of pre-simulation MLE}\label{sec:GLM_preSimMLE}
