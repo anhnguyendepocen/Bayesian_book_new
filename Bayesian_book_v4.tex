@@ -4472,7 +4472,7 @@ variance&: var[\theta] = not\;well\;characterised
 \end{empheq}
 \end{subequations}
 
-\subsubsection{Log-normal}
+\subsubsection{Log-normal}\label{sec:Distributions_logNormal}
 Prior checklist (\textbf{want this in a different colour/shading. Not sure whether to have it at the end or the beginning. It would be good to have ticks next to these points.})
 
 \begin{enumerate} 
@@ -6041,9 +6041,9 @@ The reader should now be familiar with the following concepts:
 \subsection{Computationally investigate the die example}
 \subsection{Evaluate the mean and variance of the posterior for the BSE example}\label{sec:MCMC_problemBSE}
 
-\chapter{The Metropolis algorithm}\label{chap:metropolisHastings}
+\chapter{Random Walk Metropolis}\label{chap:metropolisHastings}
 \section{Chapter mission statement}
-This chapter introduces the reader to one of the most common algorithms used in MCMC sampling, that of the \textit{Metropolis} algorithm. Furthermore, after reading this chapter the reader should understand the methods used to judge convergence of such an algorithm.
+This chapter introduces the reader to one of the most common algorithms used in MCMC sampling, that of the \textit{Random Walk Metropolis} algorithm. Furthermore, after reading this chapter the reader should understand the methods used to judge convergence of such an algorithm.
 
 \section{Chapter goals}
 We now know that independent sampling from a posterior is generally impossible, but that we can still generate dependent samples from this distribution. The idea is that whilst we are unable to survey the global structure of the posterior, we are nevertheless able to build a picture of it, from doing local exploration; where the next sample value depends on the current value. Whilst not as efficient as independent sampling, dependent sampling has the benefit that it is easily implemented, and that we can use the unnormalised posterior, meaning that we are not required to calculate the troublesome denominator term.
@@ -6052,7 +6052,9 @@ We also know that Monte Carlo Markov Chains are typically used to do this type o
 
 On first glances, it might appear that whatever we select for these two components, we will eventually survey the whole of posterior space. This is not quite correct, and also not the focus of doing the sampling. The idea of sampling from the posterior is that we generate samples \textit{in proportion} to the value of the posterior density at each point in parameter space. If we selected a next step that was always higher than the current point, then we would only explore up until the closest mode of the distribution. If instead we chose to next step to a point completely randomly - not taking into account its height - then we would generate samples from the posterior that were not in proportion to its value. 
 
-Clearly we need to design our stepping routine so that it is just right; sampling more from the peaks of the distribution, and less from the low steppes. One of the most commonly-used routines that satisfies these conditions is known as the \textit{Metropolis} algorithm, and is the focus of this chapter. We will spend the majority of time developing an intuition as to why this algorithm works, and only a small portion of time on its mathematical underpinnings.
+Clearly we need to design our stepping routine so that it is just right; sampling more from the peaks of the distribution, and less from the low steppes. One of the most commonly-used routines that satisfies these conditions is known as the \textit{Random Walk Metropolis} algorithm, and is the focus of this chapter. We will spend the majority of time developing an intuition as to why this algorithm works, and only a small portion of time on its mathematical underpinnings.
+
+The pure Metropolis algorithm is a general algorithm but has its limits -- it can only be used (straightforwardly) to sample from an unconstrained parameter. By unconstrained here we mean one whose value can be \textit{any} real number. This is a problem since many distributions have parameters that are constrained, either to be non-negative or to lie between particular bounds. In these circumstances the standard Metropolis algorithm does not work, and so we are left with two choices: either we can transform our parameter so that its transformed value is unconstrained and run Metropolis on it, or we can switch algorithm to use \textit{Metropolis-Hastings}\index{Metropolis-Hastings}. This algorithm allows for constrained stepping such that we can ensure that our Markov Chains never stray outside of the correct bounds of a particular parameter. Fortunately once we understand pure Metropolis it is not much harder to grasp Metropolis-Hastings, and we shall discuss this newer algorithm at this point in our learning.
 
 An important consideration for practical MCMC is how to know when the sampling has converged to the posterior distribution. You may ask, why do we need to wait any time at all? Isn't the point of the MCMC that it \textit{will} generate samples from the posterior? Well, under a wide range of conditions, it will, \textit{eventually}. Remember that we need to generate sufficient samples such that our sample-reconstructed surface looks exactly like the posterior. This takes time. We also have to decide where to start our chains. If we were seeking efficiency, the best way to start them would be to have the starting point be a random variable whose value is an independent sample from the posterior. However, we generally don't know the posterior, nor how to generate an independent sample from it. This is why we started doing MCMC sampling in the first place! So, because we can't achieve this optimality, we instead usually choose a random starting point; unlikely to be representative of an independent sample in practice. However, the good news is that, whilst our early sampling may not represent samples from the posterior, if we run our chains for long enough, they will eventually get there. But, just how long do we need to wait to reach this goal? This is a difficult question, which we will address in section \ref{sec:metropolisHastings_convergence}.
 
@@ -6143,8 +6145,8 @@ Taking stock of the situation, we realise that what we would ideally want is an 
 \begin{equation}
 r =
 \begin{cases}
-1 & , If\; p(\theta|data)_{proposed} \geq p(\theta|data)_{current}\\
- \frac{p(\theta|data)_{proposed}}{p(\theta|data)_{current}}& , If\; p(\theta|data)_{proposed} < p(\theta|data)_{current}
+1 & , \text{If}\; p(\theta_{t+1}|data) \geq p(\theta_t|data)\\
+ \frac{p(\theta_{t+1}|data)}{p(\theta_{t}|data)}& , \text{If}\; p(\theta_{t+1}|data) < p(\theta_{t}|data)
 \end{cases}
 \end{equation}
 %
@@ -6368,6 +6370,46 @@ There are some characteristics of a posterior density that may prevent this sort
 Ultimately, there are no quick fixes, no simple ways to correct a problematic Markov Chain, or a given statistical model, in order to ensure that it quickly produces a sampling distribution similar to the posterior. MCMC is a subtle art, but nonetheless there are guiding principles that we will discuss in Part \ref{part:regressionHierarchical}, that will help avoid some of its pitfalls. In practice, we have found that a helpful rule, which Andrew Gelman calls the `Folk Theorem'\index{folk theorem}, is that if you have problems with MCMC converging, then 99\% of the time is that this corresponds to a problem with the statistical model, \textit{not} the algorithm itself.
 
 However, we are yet to adequately describe how we measure convergence in practice. This is the topic of section \ref{sec:metropolisHastings_convergence}.
+
+\section{Metropolis-Hastings}
+Suppose that we believe that stock returns $X_t$ can be adequately modelled by a normal distribution (see section \ref{sec:Distributions_normal}),
+
+\begin{equation}
+X_t \sim N(\mu,\sigma)
+\end{equation}
+
+where $\mu$ is the mean stock returns, and $\sigma$ is its standard deviation. Whilst $\mu$ can in theory be negative, it is not meaningful for $\sigma<0$, since a standard deviation must always be positive! Unfortunately this causes problems for our Metropolis algorithm since the nature of the proposal distribution means that it is likely that we will obtain a negative value of $\sigma$ at some point during the path of our Markov Chain. Further when $\sigma<0$ the normal pdf is undefined and hence we cannot use our Metropolis update rule to determine whether to accept the step. 
+
+Naively we might think that we can simply reject all steps that propose $\sigma<0$ and still sample from the posterior density. However this is not the case. If we reject all steps where $\sigma<0$ we will eventually under sample from areas of parameter space where $\sigma$ is close to zero (see figure \ref{fig:metropolisHastings_underSampling}). Intuitively those areas near zero have only one side from which they can be reached -- positive values of $\sigma$. This contrasts with more moderate parameter values that can be realistically reached from either side. This asymmetry in neighbours means that we eventually get under-sampling near zero. 
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{metropolisHastings_underSampling.pdf}}
+\caption{\textbf{Using rejection sampling to sample a non-negative value of the standard deviation parameter of a normal ($\sigma$).} Here we have assumed that the marginal posterior density is flat with respect to $\sigma$.}\label{fig:metropolisHastings_underSampling}
+\end{figure}
+
+We see that the simple Metropolis algorithm does not work properly when we have boundaries in parameter values. So how can we fix things? One way is to transform parameters so that they have unconstrained support, and then sample from this transformed parameter. In our stock example, one way to transform $\sigma$ would be to log it. Since $log(\sigma)$ can be positive or negative, we can use the Metropolis algorithm to sample from it, and then re-transform back to $\sigma$ space. However, because we have changed variables we need to use something called a \textbf{Jacobian} to ensure that we account for the squashing and stretching of probability mass. Whilst not difficult for this example, in more complex settings it can become cumbersome to use Jacobians, and instead we use the \textbf{Metropolis-Hastings} algorithm.
+
+The Metropolis-Hastings algorithm is a modification we make to the basic Metropolis algorithm to allow for us to have an \textbf{asymmetric} proposal distribution. What does this mean? As discussed previously, the Metropolis algorithm is characterised by a mean proposed value that is equal to the current value of the sampler. However even if the mean satisfies the parameter constraints it is possible that the proposed value can lie on the wrong side of this central location.  What we need is a proposal distribution that always produces parameter values in the correct area of parameter space. In our $\sigma$ example one way to do this would be to use a log-normal distribution that naturally only has support for positive parameter values (see section \ref{sec:Distributions_logNormal}). Accordingly we choose to use the following distribution as a proposal,
+
+\begin{equation}
+\sigma_{t+1} \sim \text{log-normal}\left(log(\sigma_t)- \frac{1}{2}d^2 ,d\right)
+\end{equation}
+
+where $\sigma_t$ is the current value of the parameter, and $d$ characterises the step length (see figure \ref{fig:metropolisHastings_aymmetricJumping}). The reason we choose this parameterisation of the distribution is because now it has a mean of $\sigma_t$. However unlike the normal case this distribution is not symmetric, and only allows positive parameter values.
+
+\begin{figure}
+\centerline{\includegraphics[width=1\textwidth]{metropolisHastings_asymmetricJumping.pdf}}
+\caption{\textbf{A jumping distribution for non-negative parameters.} The distribution here is a log-normal ($log(mean) - \frac{1}{2} d^2,d$).}\label{fig:metropolisHastings_aymmetricJumping}
+\end{figure}
+
+We have fixed the proposal distribution so that it won't give us infeasible parameter values. However now we need to correct the accept/reject rule to ensure that we still end up sampling from the posterior. Fortunately this modification to the basic Metropolis accept/reject rule is simple, with the ratio $r$ being changed to,
+
+\begin{equation}
+r = \frac{p(\theta_{t+1}|data)}{p(\theta_t|data)} \times \frac{J(\theta_t|\theta_{t+1})}{J(\theta_{t+1}|\theta_{t})}
+\end{equation}
+
+where the first part of the expression is the same as basic Metropolis, and the second is the correction due to asymmetric jumping. Here $J(\theta_t|\theta_{t+1})$ is the probability density at $\theta_t$ if the current position of the sampler is $\theta_{t+1}$. Note, when $J(\theta_t|\theta_{t+1}) = J(\theta_{t+1}|\theta_{t})$ the proposal distribution is symmetric and $r$ collapses down to the previous ratio. If we use this new ratio $r$ instead of the basic Metropolis one in our stepping algorithm we are assured asymptotic convergence to the posterior density.
+
 
 \section{Judging convergence}\label{sec:metropolisHastings_convergence}\index{MCMC convergence}
 We have talked about what it means for a Markov Chain to converge the posterior distribution. In figure \ref{fig:metropolisHastings_rateOfConvergence1} we even measured it! If we knew the posterior distribution, then we know some of the ways we could measure the degree of correspondence between the sampling distribution and the actual; we previously used the Kolmogorov-Smirnov test statistic as an approximate measure; a better attempt might use the Kullback-Leibler\index{kullback-leibler} measure (see section \ref{sec:Evaluation_idealAccuracy} for an explanation), although there are an array of choices here dependent on the goals of an analysis. 
@@ -7622,7 +7664,7 @@ if(i < 2){
 }
 \end{minted}
 
-\subsection{Essential Stan reading}
+\section{Essential Stan reading}
 This section introduces the reader to a wide, and somewhat unconnected, range of tricks that we have found very useful in writing Stan programs. Even if you don't find immediate use for these ideas we believe that it nonetheless helps to be aware of them.
 
 \subsubsection{Accessing elements using indices}
@@ -8158,7 +8200,7 @@ which we then use to compare the normal and Student t models,
 \end{verbatim}
 \begin{alltt}
 \hlstd{difference} \hlkwb{<-} \hlkwd{sum}\hlstd{(lELPD2)} \hlopt{-} \hlkwd{sum}\hlstd{(lELPD1)}
-\hlstd{sd} \hlkwb{<-} \hlkwd{sd}\hlstd{(lELPD2} \hlopt{-} \hlstd{lELPD1)}
+\hlstd{sd} \hlkwb{<-} sqrt(1000)*\hlkwd{sd}\hlstd{(lELPD2} \hlopt{-} \hlstd{lELPD1)}
 \hlstd{pvalue} \hlkwb{<-} 1- \hlkwd{pnorm}\hlstd{(difference}\hlopt{/}\hlstd{sd)}
 \hlkwd{print}\hlstd{(pvalue)}
 \end{alltt}
